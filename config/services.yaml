@@ -38,3 +38,8 @@ services:
             - options:
                 - protocol_version: 3
                 - referrals: false
+
+    App\EventListener\PasswordEncoderSubscriber:
+        autowire: true
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
