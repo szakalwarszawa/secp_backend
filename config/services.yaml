@@ -26,14 +26,15 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Symfony\Component\Serializer\Normalizer\ObjectNormalizer:
-        class: Symfony\Component\Serializer\Normalizer\ObjectNormalizer
-        public: false
-        tags:
-            - { name: 'serializer.normalizer' }
+    Symfony\Component\Ldap\Ldap:
+        arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
 
-    Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer:
-        class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
-        public: false
-        tags:
-            - { name: 'serializer.normalizer' }
+    Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
+        arguments:
+            - host: '%env(resolve:LDAP_HOST)%'
+            - port: '%env(resolve:LDAP_PORT)%'
+#                encryption: '%env(resolve:LDAP_ENCRYPTION)%'
+            - debug: true
+            - options:
+                - protocol_version: 3
+                - referrals: false

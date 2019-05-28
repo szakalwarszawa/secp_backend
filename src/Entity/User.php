@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * @ORM\Table(name="`users`")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @Orm\Table(name="`users`")
+ * @ApiResource()
  */
 class User implements UserInterface
 {
