@@ -32,18 +32,10 @@ security:
 #                dn_string: 'sAMAccountName={username},DC=egain,DC=local'
 ##                query_string: '(&(sAMAccountName={username})(DC=egain,DC=local))'
 
-        api:
-            pattern: ^/api/
+        login:
+            pattern:  ^/authentication_token
             stateless: true
             anonymous: true
-            provider: app_user_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-        main:
-            anonymous: true
-            stateless: true
-            provider: app_user_provider
             json_login:
                 check_path: /authentication_token
                 username_path: username
@@ -51,7 +43,31 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
+        docs:
+            pattern: ^/api/docs
+            stateless: true
+            anonymous: true
+
+        api:
+            pattern: ^/api/
+            stateless: true
+            anonymous: false
+            provider: app_user_provider
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+#        main:
+#            anonymous: true
+#            stateless: true
+#            provider: app_user_provider
+#            json_login:
+#                check_path: /authentication_token
+#                username_path: username
+#                password_path: password
+#                success_handler: lexik_jwt_authentication.handler.authentication_success
+#                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
     access_control:
-#        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
