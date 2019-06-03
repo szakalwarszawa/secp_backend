@@ -46,9 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "groups"={
  *                      "get",
  *                      "get-user-with-department",
- *                      "get-user-with-section",
- *                      "get-user-with-managed-departments",
- *                      "get-user-with-managed-sections"
+ *                      "get-user-with-section"
  *                  }
  *              },
  *          },
@@ -64,6 +62,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      },
  *      normalizationContext={
  *          "groups"={
+ *              "get",
  *              "get-user-with-department",
  *              "get-user-with-section",
  *              "get-user-with-managed-departments",
@@ -75,8 +74,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      SearchFilter::class,
  *      properties={
  *          "id": "exact",
- *          "username": "exact",
- *          "email": "exact"
+ *          "username": "iexact",
+ *          "email": "iexact",
+ *          "firstName": "istart",
+ *          "lastName": "istart"
  *      }
  * )
  */
@@ -89,14 +90,14 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get"})
+     * @Groups({"get", "get-department-with-users", "get-section-with-users", "get-section-with-managers"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get", "post"})
      * @Assert\NotBlank(groups={"post"})
+     * @Groups({"get", "post"})
      * @Assert\Length(min=6, max=255, groups={"post"})
      */
     private $username;

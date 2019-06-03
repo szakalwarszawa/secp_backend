@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +18,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
- *                  "groups"={"get", "get-user-with-department"}
+ *                  "groups"={
+ *                      "get",
+ *                      "get-department-with-users",
+ *                      "get-department-with-sections",
+ *                      "get-department-with-managers"
+ *                  }
  *              }
  *          },
  *          "put"={
@@ -31,7 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      collectionOperations={
  *          "get"={
  *              "normalization_context"={
- *                  "groups"={"get", "get-user-with-department"}
+ *                  "groups"={"get", "get-department-with-sections", "get-user-with-department"}
  *              },
  *          },
  *          "post"={
@@ -43,6 +50,23 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              },
  *              "validation_groups"={"post"}
  *          }
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "get",
+ *              "get-department-with-users",
+ *              "get-department-with-sections",
+ *              "get-department-with-managers"
+ *          }
+ *      }
+ * )
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "id": "exact",
+ *          "name": "ipartial",
+ *          "shortName": "iexact",
+ *          "active": "exact"
  *      }
  * )
  */
@@ -52,43 +76,46 @@ class Department
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get", "get-user-with-department"})
+     * @Groups({"get", "get-user-with-department", "get-section-with-department"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)\
      * @Assert\NotBlank(groups={"post"})
-     * @Groups({"get", "post", "put", "get-user-with-department"})
+     * @Groups({"get", "post", "put"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"post"})
-     * @Groups({"get", "post", "put", "get-user-with-department"})
+     * @Groups({"get", "post", "put"})
      */
     private $shortName;
 
     /**
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank(groups={"post"})
-     * @Groups({"get", "post", "put", "get-user-with-department"})
+     * @Groups({"get", "post", "put"})
      */
     private $active;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="department")
+     * @Groups({"get-department-with-users"})
      */
     private $users;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Section", mappedBy="department")
+     * @Groups({"get-department-with-sections"})
      */
     private $sections;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="managedDepartments")
+     * @Groups({"get-department-with-managers"})
      */
     private $managers;
 
@@ -211,6 +238,10 @@ class Department
         return $this->sections;
     }
 
+    /**
+     * @param Section $section
+     * @return Department
+     */
     public function addSection(Section $section): self
     {
         if (!$this->sections->contains($section)) {
@@ -221,6 +252,10 @@ class Department
         return $this;
     }
 
+    /**
+     * @param Section $section
+     * @return Department
+     */
     public function removeSection(Section $section): self
     {
         if ($this->sections->contains($section)) {
@@ -242,6 +277,10 @@ class Department
         return $this->managers;
     }
 
+    /**
+     * @param User $manager
+     * @return Department
+     */
     public function addManager(User $manager): self
     {
         if (!$this->managers->contains($manager)) {
@@ -251,6 +290,10 @@ class Department
         return $this;
     }
 
+    /**
+     * @param User $manager
+     * @return Department
+     */
     public function removeManager(User $manager): self
     {
         if ($this->managers->contains($manager)) {

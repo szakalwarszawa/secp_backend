@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +19,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
- *                  "groups"={"get"}
+ *                  "groups"={
+ *                      "get",
+ *                      "get-section-with-users",
+ *                      "get-section-with-department",
+ *                      "get-section-with-managers"
+ *                  }
  *              }
  *          },
  *          "put"={
@@ -32,7 +39,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      collectionOperations={
  *          "get"={
  *              "normalization_context"={
- *                  "groups"={"get"}
+ *                  "groups"={"get", "get-section-with-department"}
  *              },
  *          },
  *          "post"={
@@ -44,6 +51,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              },
  *              "validation_groups"={"post"}
  *          }
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "get",
+ *              "get-section-with-users",
+ *              "get-section-with-department",
+ *              "get-section-with-managers"
+ *          }
+ *      }
+ * )
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "id": "exact",
+ *          "name": "ipartial",
+ *          "active": "exact"
  *      }
  * )
  */
@@ -53,37 +76,40 @@ class Section
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get", "get-user-with-section"})
+     * @Groups({"get", "get-user-with-section", "get-department-with-sections"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"post"})
-     * @Groups({"get", "post", "get-user-with-section"})
+     * @Groups({"get", "post"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank(groups={"post"})
-     * @Groups({"get", "post", "put", "get-user-with-section"})
+     * @Groups({"get", "post", "put"})
      */
     private $active;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="section")
+     * @Groups({"get-section-with-users"})
      */
     private $users;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="sections")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get-section-with-department"})
      */
     private $department;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="managedSections")
+     * @Groups({"get-section-with-managers"})
      */
     private $managers;
 
