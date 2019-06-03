@@ -14,10 +14,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="`users`")
+ * @ORM\Table(
+ *     name="`users`",
+ *     indexes={
+ *          @ORM\Index(name="idx_users_username", columns={"username"}),
+ *          @ORM\Index(name="idx_users_sam_account_name", columns={"sam_account_name"}),
+ *          @ORM\Index(name="idx_users_email", columns={"email"}),
+ *          @ORM\Index(name="idx_users_last_name", columns={"last_name"}),
+ *          @ORM\Index(name="idx_users_first_name", columns={"first_name"}),
+ *          @ORM\Index(name="idx_users_department_id", columns={"department_id"}),
+ *          @ORM\Index(name="idx_users_section_id", columns={"section_id"})
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("username", errorPath="username", groups={"post"})
  * @UniqueEntity("email", groups={"post"})
+ * @UniqueEntity("samAccountName", groups={"post"})
  * @ApiResource(
  *      itemOperations={
  *          "get"={
@@ -77,7 +89,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "username": "iexact",
  *          "email": "iexact",
  *          "firstName": "istart",
- *          "lastName": "istart"
+ *          "lastName": "istart",
+ *          "title": "ipartial"
  *      }
  * )
  */
@@ -95,13 +108,19 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max=256, groups={"post"})
+     * @Groups({"get", "post"})
+     */
+    private $samAccountName;
+
+    /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"post"})
-     * @Groups({"get", "post"})
      * @Assert\Length(min=6, max=255, groups={"post"})
+     * @Groups({"get", "post"})
      */
     private $username;
-
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank()
@@ -112,17 +131,17 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get", "post", "put"})
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=3, max=255, groups={"post", "put"})
+     * @Groups({"get", "post", "put"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get", "post", "put"})
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=3, max=255, groups={"post", "put"})
+     * @Groups({"get", "post", "put"})
      */
     private $lastName;
 
@@ -145,6 +164,20 @@ class User implements UserInterface
      * @Groups({"user_prohibited"})
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(max=255, groups={"post"})
+     * @Groups({"get", "post"})
+     */
+    private $distinguishedName;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(max=255, groups={"post"})
+     * @Groups({"get", "post"})
+     */
+    private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="users")
@@ -179,6 +212,42 @@ class User implements UserInterface
     {
         $this->managedDepartments = new ArrayCollection();
         $this->managedSections = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     * @return User
+     */
+    public function setTitle($title): User
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSamAccountName(): string
+    {
+        return $this->samAccountName;
+    }
+
+    /**
+     * @param string $samAccountName
+     * @return User
+     */
+    public function setSamAccountName($samAccountName): User
+    {
+        $this->samAccountName = $samAccountName;
+        return $this;
     }
 
     /**
@@ -443,6 +512,24 @@ class User implements UserInterface
             $managedSection->removeManager($this);
         }
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDistinguishedName(): string
+    {
+        return $this->distinguishedName;
+    }
+
+    /**
+     * @param string $distinguishedName
+     * @return User
+     */
+    public function setDistinguishedName($distinguishedName): self
+    {
+        $this->distinguishedName = $distinguishedName;
         return $this;
     }
 }

@@ -13,7 +13,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @ORM\Table(name="`sections`")
+ * @ORM\Table(
+ *     name="`sections`",
+ *     indexes={
+ *          @ORM\Index(name="idx_sections_name", columns={"name"}),
+ *          @ORM\Index(name="idx_sections_active", columns={"active"}),
+ *          @ORM\Index(name="idx_sections_department_id", columns={"department_id"})
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\SectionRepository")
  * @ApiResource(
  *      itemOperations={
@@ -109,6 +116,7 @@ class Section
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="managedSections")
+     * @ORM\JoinTable(name="section_managers")
      * @Groups({"get-section-with-managers"})
      */
     private $managers;

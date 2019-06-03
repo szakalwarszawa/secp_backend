@@ -12,7 +12,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="`departments`")
+ * @ORM\Table(
+ *     name="`departments`",
+ *     indexes={
+ *          @ORM\Index(name="idx_departments_name", columns={"name"}),
+ *          @ORM\Index(name="idx_departments_short_name", columns={"short_name"}),
+ *          @ORM\Index(name="idx_departments_active", columns={"active"})
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\DepartmentRepository")
  * @ApiResource(
  *      itemOperations={
@@ -115,6 +122,7 @@ class Department
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="managedDepartments")
+     * @ORM\JoinTable(name="department_managers")
      * @Groups({"get-department-with-managers"})
      */
     private $managers;
