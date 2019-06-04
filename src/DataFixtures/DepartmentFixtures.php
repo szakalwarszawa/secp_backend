@@ -4,27 +4,28 @@ namespace App\DataFixtures;
 
 use App\Entity\Department;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Faker\Factory as Faker;
 
-class DepartmentFixtures extends Fixture //implements DependentFixtureInterface
+class DepartmentFixtures extends Fixture
 {
     /**
-     * @var \Faker\Factory
+     * @var Faker
      */
     private $faker;
 
+    /**
+     * DepartmentFixtures constructor.
+     */
     public function __construct()
     {
-        $this->faker = \Faker\Factory::create();
+        $this->faker = Faker::create('pl_PL');
     }
 
-//    public function getDependencies()
-//    {
-//        return array();
-//    }
-
-    public function load(ObjectManager $manager)
+    /**
+     * @param ObjectManager $manager
+     */
+    public function load(ObjectManager $manager): void
     {
         $department = new Department();
         $department->setName('Biuro Informatyki');

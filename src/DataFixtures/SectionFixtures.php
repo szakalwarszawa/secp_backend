@@ -6,27 +6,37 @@ use App\Entity\Section;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Faker\Factory as Faker;
 
 class SectionFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
-     * @var \Faker\Factory
+     * @var Faker
      */
     private $faker;
 
+    /**
+     * SectionFixtures constructor.
+     */
     public function __construct()
     {
-        $this->faker = \Faker\Factory::create();
+        $this->faker = Faker::create('pl_PL');
     }
 
-    public function getDependencies()
+    /**
+     * @return array
+     */
+    public function getDependencies(): array
     {
         return array(
             DepartmentFixtures::class,
         );
     }
 
-    public function load(ObjectManager $manager)
+    /**
+     * @param ObjectManager $manager
+     */
+    public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < 30; $i++) {
             $section = new Section();

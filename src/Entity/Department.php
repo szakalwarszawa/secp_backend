@@ -116,7 +116,7 @@ class Department
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Section", mappedBy="department")
-     * @Groups({"get-department-with-sections"})
+     * @Groups({"put", "get-department-with-sections"})
      */
     private $sections;
 

@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Exception\SectionNotBelongToDepartmentException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,6 +28,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity("username", errorPath="username", groups={"post"})
  * @UniqueEntity("email", groups={"post"})
  * @UniqueEntity("samAccountName", groups={"post"})
@@ -110,7 +112,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=256)
      * @Assert\Length(max=256, groups={"post"})
-     * @Groups({"get", "post"})
+     * @Groups({"get", "put", "post"})
      */
     private $samAccountName;
 
@@ -118,7 +120,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=6, max=255, groups={"post"})
-     * @Groups({"get", "post"})
+     * @Groups({"get", "put", "post"})
      */
     private $username;
     /**
@@ -168,28 +170,28 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max=255, groups={"post"})
-     * @Groups({"get", "post"})
+     * @Groups({"get", "put", "post"})
      */
     private $distinguishedName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max=255, groups={"post"})
-     * @Groups({"get", "post"})
+     * @Groups({"get", "put", "post"})
      */
     private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get-user-with-department", "Department-get_get-user-with-department"})
+     * @Groups({"put", "get-user-with-department", "Department-get_get-user-with-department"})
      */
     private $department;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Section", inversedBy="users")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups({"get-user-with-section"})
+     * @Groups({"put", "get-user-with-section"})
      */
     private $section;
 
@@ -215,9 +217,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -408,42 +410,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Department|null
-     */
-    public function getDepartment(): ?Department
-    {
-        return $this->department;
-    }
-
-    /**
-     * @param Department|null $department
-     * @return User
-     */
-    public function setDepartment(?Department $department): self
-    {
-        $this->department = $department;
-        return $this;
-    }
-
-    /**
-     * @return Section|null
-     */
-    public function getSection(): ?Section
-    {
-        return $this->section;
-    }
-
-    /**
-     * @param Section|null $section
-     * @return User
-     */
-    public function setSection(?Section $section): self
-    {
-        $this->section = $section;
-        return $this;
-    }
-
-    /**
      * @return Collection|Department[]
      */
     public function getManagedDepartments(): Collection
@@ -516,9 +482,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDistinguishedName(): string
+    public function getDistinguishedName(): ?string
     {
         return $this->distinguishedName;
     }
@@ -530,6 +496,57 @@ class User implements UserInterface
     public function setDistinguishedName($distinguishedName): self
     {
         $this->distinguishedName = $distinguishedName;
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreFlush()
+     * @throws SectionNotBelongToDepartmentException
+     */
+    public function checkSameSectionAsDepartmentValidate(): void
+    {
+        if ($this->getSection() !== null &&
+            $this->getDepartment() !== null &&
+            !$this->getDepartment()->getSections()->contains($this->getSection())
+        ) {
+            throw new SectionNotBelongToDepartmentException();
+        }
+    }
+
+    /**
+     * @return Section|null
+     */
+    public function getSection(): ?Section
+    {
+        return $this->section;
+    }
+
+    /**
+     * @param Section|null $section
+     * @return User
+     */
+    public function setSection(?Section $section): self
+    {
+        $this->section = $section;
+        return $this;
+    }
+
+    /**
+     * @return Department|null
+     */
+    public function getDepartment(): ?Department
+    {
+        return $this->department;
+    }
+
+    /**
+     * @param Department|null $department
+     * @return User
+     */
+    public function setDepartment(?Department $department): self
+    {
+        $this->department = $department;
         return $this;
     }
 }

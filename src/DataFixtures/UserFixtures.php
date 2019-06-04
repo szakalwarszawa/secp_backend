@@ -2,11 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Section;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Faker\Factory as Faker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
@@ -17,17 +17,24 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     private $passwordEncoder;
 
     /**
-     * @var \Faker\Factory
+     * @var Faker
      */
     private $faker;
 
+    /**
+     * UserFixtures constructor.
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     */
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
-        $this->faker = \Faker\Factory::create('pl_PL');
+        $this->faker = Faker::create('pl_PL');
     }
 
-    public function getDependencies()
+    /**
+     * @return array
+     */
+    public function getDependencies(): array
     {
         return array(
             DepartmentFixtures::class,
@@ -35,7 +42,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         );
     }
 
-    public function load(ObjectManager $manager)
+    /**
+     * @param ObjectManager $manager
+     * @throws \Exception
+     */
+    public function load(ObjectManager $manager): void
     {
         $user = new User();
         $user->setUsername('admin');
@@ -75,12 +86,26 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user->setRoles([User::ROLE_USER]);
             $user->setDepartment($this->getReference('department_' . rand(0, 19)));
 
+            $departmentSections = $user->getDepartment()->getSections();
+            if ($departmentSections !== null && $departmentSections->count() > 0) {
+                $section = $departmentSections->get(
+                    $departmentSections->getKeys()[random_int(0, count($departmentSections->getKeys()) - 1)]
+                );
+                $user->setSection($section);
+            }
+
             $user->setPassword(
                 $this->passwordEncoder->encodePassword(
                     $user,
                     'test'
                 )
             );
+
+            if ($this->faker->boolean(20)) {
+                $user->getDepartment()->addManager($user);
+            } else if ($this->faker->boolean(20) && $user->getSection() !== null) {
+                $user->getSection()->addManager($user);
+            }
 
             $manager->persist($user);
 
