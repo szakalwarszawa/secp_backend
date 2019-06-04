@@ -26,6 +26,7 @@
         "fzaninotto/faker": "^1.8",
         "roave/security-advisories": "dev-master",
         "symfony/maker-bundle": "^1.11",
+        "symfony/phpunit-bridge": "4.2.*",
         "symfony/var-dumper": "4.2.*",
         "symfony/web-server-bundle": "4.2.*"
     },
