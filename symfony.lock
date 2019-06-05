@@ -134,6 +134,9 @@
             "./config/packages/lexik_jwt_authentication.yaml"
         ]
     },
+    "liip/functional-test-bundle": {
+        "version": "2.0.0-alpha16"
+    },
     "monolog/monolog": {
         "version": "1.24.0"
     },
@@ -191,6 +194,9 @@
     "symfony/asset": {
         "version": "v4.2.8"
     },
+    "symfony/browser-kit": {
+        "version": "v4.2.9"
+    },
     "symfony/cache": {
         "version": "v4.2.8"
     },
@@ -221,6 +227,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v4.2.8"
+    },
+    "symfony/dom-crawler": {
+        "version": "v4.2.9"
     },
     "symfony/dotenv": {
         "version": "v4.2.8"
