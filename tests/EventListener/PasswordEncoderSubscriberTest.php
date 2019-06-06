@@ -4,10 +4,11 @@ namespace App\Tests\EventListener;
 
 use App\Entity\User;
 use App\EventListener\PasswordEncoderSubscriber;
+use App\Tests\AbstractWebTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class PasswordEncoderSubscriberTest extends WebTestCase
+class PasswordEncoderSubscriberTest extends AbstractWebTestCase
 {
     /**
      * @var PasswordEncoderSubscriber
