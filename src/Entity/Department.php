@@ -110,20 +110,20 @@ class Department
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="department")
-     * @Groups({"get-department-with-users"})
+     * @Groups({"get-department-with-users", "put"})
      */
     private $users;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Section", mappedBy="department")
-     * @Groups({"put", "get-department-with-sections"})
+     * @Groups({"get-department-with-sections", "put"})
      */
     private $sections;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="managedDepartments")
      * @ORM\JoinTable(name="department_managers")
-     * @Groups({"get-department-with-managers"})
+     * @Groups({"get-department-with-managers", "put"})
      */
     private $managers;
 
@@ -239,7 +239,7 @@ class Department
     }
 
     /**
-     * @return Collection|Section[]
+     * @return Section[]|Collection
      */
     public function getSections(): Collection
     {

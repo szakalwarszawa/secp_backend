@@ -5,7 +5,6 @@ namespace App\Tests\EventListener;
 use App\Entity\User;
 use App\EventListener\PasswordEncoderSubscriber;
 use App\Tests\AbstractWebTestCase;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class PasswordEncoderSubscriberTest extends AbstractWebTestCase
@@ -19,16 +18,6 @@ class PasswordEncoderSubscriberTest extends AbstractWebTestCase
      * @var UserPasswordEncoderInterface
      */
     private $passwordEncoder;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        self::bootKernel();
-        $container = self::$kernel->getContainer();
-        $this->passwordEncoder = $container->get('security.password_encoder');
-        $this->subscriber = new PasswordEncoderSubscriber($this->passwordEncoder);
-    }
 
     public function testConfiguration(): void
     {
@@ -47,5 +36,15 @@ class PasswordEncoderSubscriberTest extends AbstractWebTestCase
 
         $this->assertStringContainsString('$argon2i', $user->getPassword());
         $this->assertTrue($this->passwordEncoder->isPasswordValid($user, 'test'));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+        $container = self::$kernel->getContainer();
+        $this->passwordEncoder = $container->get('security.password_encoder');
+        $this->subscriber = new PasswordEncoderSubscriber($this->passwordEncoder);
     }
 }

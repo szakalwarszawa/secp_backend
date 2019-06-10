@@ -102,7 +102,8 @@ abstract class AbstractWebTestCase extends WebTestCase
     /**
      * @param string $method
      * @param string $route
-     * @param array $payload
+     * @param string $payload
+     * @param array $parameters
      * @param int $expectedStatus
      * @param string $userReference
      * @param string $contentTypeAccept
@@ -112,20 +113,24 @@ abstract class AbstractWebTestCase extends WebTestCase
     protected function getActionResponse(
         $method = self::HTTP_GET,
         $route = '/',
-        $payload = [],
+        $payload = null,
+        $parameters = [],
         $expectedStatus = 200,
         $userReference = self::REF_ADMIN,
-        $contentTypeAccept = self::CONTENT_TYPE_JSON
-    ): ?Response
-    {
+        $contentTypeAccept = self::CONTENT_TYPE_LD_JSON
+    ): ?Response {
         $client = $this->makeAuthenticatedClient($userReference);
 
         $client->request(
             $method,
             $route,
-            $payload,
+            $parameters,
             [],
-            ['HTTP_Accept' => $contentTypeAccept]
+            [
+                'HTTP_Accept' => $contentTypeAccept,
+                'CONTENT_TYPE' => 'application/json',
+            ],
+            $payload
         );
 
         $this->assertJsonResponse($client->getResponse(), $expectedStatus);
@@ -168,5 +173,67 @@ abstract class AbstractWebTestCase extends WebTestCase
                 $response->headers
             );
         }
+    }
+
+    /**
+     * @param array $theArray
+     * @param string $keyName
+     * @param mixed $value
+     */
+    protected function assertArrayContainsSameKeyWithValue($theArray, $keyName, $value): void
+    {
+        foreach ($theArray as $arrayItem) {
+            if (!array_key_exists( $keyName, $arrayItem)) {
+                $this->assertTrue(
+                    false,
+                    sprintf('Array not contains given key: [%s]', $keyName)
+                );
+            }
+
+            if ($arrayItem->$keyName == $value) {
+                $this->assertTrue(true);
+                return;
+            }
+        }
+
+        $this->assertTrue(
+            false,
+            sprintf('Array not contains given value: [%s => %s]', $keyName, $value)
+        );
+    }
+
+    /**
+     * @param object $listObject
+     * @param string $attributeName
+     * @param mixed $value
+     */
+    protected function assertListContainsSameObjectWithValue($listObject, $attributeName, $value): void
+    {
+        foreach ($listObject as $item) {
+            $objectVars = get_class_vars(get_class($item));
+            $objectMethods = get_class_methods(get_class($item));
+
+            if (array_key_exists( $attributeName, $objectVars)) {
+                if ($item->$attributeName == $value) {
+                    $this->assertTrue(true);
+                    return;
+                }
+            } elseif (in_array( $attributeName, $objectMethods, true)) {
+                if ($item->$attributeName() == $value) {
+                    $this->assertTrue(true);
+                    return;
+                }
+            } else {
+                $this->assertTrue(
+                    false,
+                    sprintf('Object not contains given attribute: [%s]', $attributeName)
+                );
+            }
+        }
+
+        $this->assertTrue(
+            false,
+            sprintf('List not contains object with given value: [%s => %s]', $attributeName, $value)
+        );
     }
 }
