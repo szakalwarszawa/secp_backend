@@ -19,7 +19,8 @@
         "symfony/orm-pack": "^1.0",
         "symfony/property-access": "4.2.*",
         "symfony/security-bundle": "4.2.*",
-        "symfony/yaml": "4.2.*"
+        "symfony/yaml": "4.2.*",
+        "ext-calendar": "*"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.1",
