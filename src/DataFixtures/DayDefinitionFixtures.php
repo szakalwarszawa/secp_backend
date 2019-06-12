@@ -30,7 +30,7 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
             $day = $this->createDayDefinitionForDay(new \DateTime("+$i days"));
             $manager->persist($day);
 
-            $this->setReference("working_day_$i", $day);
+            $this->setReference("day_definition_$i", $day);
         }
         $manager->flush();
     }

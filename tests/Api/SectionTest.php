@@ -40,12 +40,12 @@ class SectionTest extends AbstractWebTestCase
         /* @var $sectionDB Section */
 
         $response = $this->getActionResponse('GET', '/api/sections/' . $sectionDB->getId());
-        $userJSON = json_decode($response->getContent(), false);
+        $sectionJSON = json_decode($response->getContent(), false);
 
-        $this->assertNotNull($userJSON);
-        $this->assertEquals($sectionDB->getId(), $userJSON->id);
-        $this->assertEquals($sectionDB->getName(), $userJSON->name);
-        $this->assertEquals($sectionDB->getActive(), $userJSON->active);
+        $this->assertNotNull($sectionJSON);
+        $this->assertEquals($sectionDB->getId(), $sectionJSON->id);
+        $this->assertEquals($sectionDB->getName(), $sectionJSON->name);
+        $this->assertEquals($sectionDB->getActive(), $sectionJSON->active);
     }
 
     /**

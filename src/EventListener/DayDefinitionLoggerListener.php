@@ -6,9 +6,8 @@ use App\Entity\DayDefinition;
 use App\Entity\DayDefinitionLog;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -16,11 +15,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class DayDefinitionLoggerListener
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
     /**
      * @var TokenInterface|null
      */
@@ -33,45 +27,75 @@ class DayDefinitionLoggerListener
 
     /**
      * DayDefinitionLoggerListener constructor.
-     * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
-        $this->entityManager = $entityManager;
         $this->token = $tokenStorage->getToken();
     }
 
     /**
-     * @param LifecycleEventArgs $args
+     * @param PreUpdateEventArgs $args
      */
-    public function preUpdate(LifecycleEventArgs $args): void
+    public function preUpdate(PreUpdateEventArgs $args): void
     {
         $entity = $args->getObject();
         if (!$entity instanceof DayDefinition) {
             return;
         }
 
+        if ($args->hasChangedField('workingDay') && $args->getOldValue('workingDay') !== $args->getNewValue('workingDay')) {
+            $this->addDayDefinitionLog(
+                $args,
+                $entity,
+                $args->getNewValue('workingDay') ? 'Dzień został ustawiony jako pracujący' : 'Dzień został ustawiony jako niepracujący'
+            );
+        }
+
+        if ($args->hasChangedField('notice') && $args->getOldValue('notice') !== $args->getNewValue('notice')) {
+            $this->addDayDefinitionLog(
+                $args,
+                $entity,
+                sprintf(
+                    "Zmieniono opis z:\n%s\nna:\n%s",
+                    $args->getOldValue('notice'),
+                    $args->getNewValue('notice')
+                )
+            );
+        }
+    }
+
+    /**
+     * @param PreUpdateEventArgs $args
+     * @param DayDefinition $entity
+     * @param string $notice
+     */
+    private function addDayDefinitionLog(PreUpdateEventArgs $args, DayDefinition $entity, string $notice): void
+    {
         $log = new DayDefinitionLog();
         $log->setDayDefinition($entity);
         $log->setLogDate(date('Y-m-d H:i:s'));
-        $log->setOwner($this->getCurrentUser());
-        $log->setNotice('');
+        $log->setOwner($this->getCurrentUser($args->getEntityManager()));
+        $log->setNotice($notice);
 
         $this->dayDefinitionLogs[] = $log;
     }
 
     /**
+     * @param EntityManager $entityManager
      * @return User|null
      */
-    private function getCurrentUser(): ?User
+    private function getCurrentUser(EntityManager $entityManager): ?User
     {
         /* @var User $user */
         if (null === $this->token) {
-            $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'admin']);
+            $userName = 'admin';
         } else {
-            $user = $this->token->getUser();
+            $userName = $this->token->getUser()->getUsername();
+
         }
+
+        $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);
 
         return $user;
     }
@@ -87,6 +111,7 @@ class DayDefinitionLoggerListener
             $em = $args->getEntityManager();
 
             foreach ($this->dayDefinitionLogs as $log) {
+                $log->getDayDefinition()->addDayDefinitionLog($log);
                 $em->persist($log);
             }
 
