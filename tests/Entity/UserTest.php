@@ -46,6 +46,7 @@ class UserTest extends AbstractWebTestCase
 
         $user = new User();
         $user->setDepartment($this->getEntityFromReference('department_1'));
+        $user->setDefaultWorkScheduleProfile($this->getEntityFromReference('work_schedule_profile_0'));
         $user->setSamAccountName('sam_account_name_1');
         $user->setUsername('user_name_1');
         $user->setEmail('user_email_1@example.com');

@@ -5,8 +5,10 @@ namespace App\Tests\Api;
 
 use App\Entity\Department;
 use App\Entity\User;
+use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
+use Exception;
 
 class UserTest extends AbstractWebTestCase
 {
@@ -16,7 +18,6 @@ class UserTest extends AbstractWebTestCase
      */
     public function apiGetSections(): void
     {
-        $usersDB = $this->entityManager->getRepository(User::class)->findAll();
         /* @var $userDB User */
         $usersDB = $this->entityManager->getRepository(User::class)->findAll();
         $response = $this->getActionResponse('GET', '/api/users');
@@ -36,7 +37,7 @@ class UserTest extends AbstractWebTestCase
     public function apiGetUser($referenceName): void
     {
         $userDB = $this->fixtures->getReference($referenceName);
-        /* @var $userDB \App\Entity\User */
+        /* @var $userDB User */
 
         $response = $this->getActionResponse('GET', '/api/users/' . $userDB->getId());
         $userJSON = json_decode($response->getContent(), false);
@@ -50,11 +51,16 @@ class UserTest extends AbstractWebTestCase
         $this->assertEquals($userDB->getLastName(), $userJSON->lastName);
         $this->assertEquals($userDB->getRoles(), $userJSON->roles);
         $this->assertEquals($userDB->getTitle(), $userJSON->title);
+        $this->assertEquals($userDB->getDepartment()->getId(), $userJSON->department->id);
+        $this->assertEquals(
+            $userDB->getDefaultWorkScheduleProfile()->getId(),
+            $userJSON->defaultWorkScheduleProfile->id
+        );
     }
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function apiGetUserProvider(): array
     {
@@ -74,10 +80,11 @@ class UserTest extends AbstractWebTestCase
      */
     public function apiPostUser(): void
     {
-        $departmentRef = $this->fixtures->getReference('department_0');
-        /* @var $departmentRef Department */
+        $workScheduleProfileRef = $this->fixtures->getReference('work_schedule_profile_0');
+        /* @var $workScheduleProfileRef WorkScheduleProfile */
 
-        $id = $departmentRef->getId();
+        $departmentRef = $this->fixtures->getReference('department_4');
+        /* @var $departmentRef Department */
 
         $payload = <<<JSON
 {
@@ -92,7 +99,8 @@ class UserTest extends AbstractWebTestCase
     "distinguishedName": null,
     "title": "Pan Test",
     "plainPassword": "test",
-    "department": "/api/departments/{$departmentRef->getId()}"
+    "department": "/api/departments/{$departmentRef->getId()}",
+    "defaultWorkScheduleProfile": "/api/work_schedule_profiles/{$workScheduleProfileRef->getId()}"
 }
 JSON;
 
@@ -136,12 +144,17 @@ JSON;
         $this->assertEquals($userDB->getLastName(), $userJSON->lastName);
         $this->assertEquals($userDB->getRoles(), $userJSON->roles);
         $this->assertEquals($userDB->getTitle(), $userJSON->title);
+        $this->assertEquals($userDB->getDepartment()->getId(), $userJSON->department->id);
+        $this->assertEquals(
+            $userDB->getDefaultWorkScheduleProfile()->getId(),
+            $userJSON->defaultWorkScheduleProfile->id
+        );
     }
 
     /**
      * @test
      * @throws NotFoundReferencedUserException
-     * @throws \Exception
+     * @throws Exception
      */
     public function apiPutUser(): void
     {
@@ -150,8 +163,6 @@ JSON;
 
         $departmentRef = $this->fixtures->getReference('department_admin');
         /* @var $departmentRef Department */
-
-        $id = $departmentRef->getId();
 
         $payload = <<<JSON
 {
@@ -216,17 +227,18 @@ JSON;
     /**
      * @test
      * @throws NotFoundReferencedUserException
-     * @throws \Exception
+     * @throws Exception
      */
     public function apiPutUserWithManagedDepartment(): void
     {
         $userREF = $this->fixtures->getReference('user_' . random_int(0, 99));
         /* @var $userREF User */
 
+        $defaultWorkScheduleProfileREF = $this->fixtures->getReference('work_schedule_profile_' . random_int(0, 4));
+        /* @var $defaultWorkScheduleProfileREF WorkScheduleProfile */
+
         $departmentREF = $this->fixtures->getReference('department_' . random_int(0, 19));
         /* @var $departmentREF Department */
-
-        $id = $departmentREF->getId();
 
         $payload = <<<JSON
 {
@@ -243,6 +255,7 @@ JSON;
     "plainPassword": "test",
     "section": null,
     "department": "/api/departments/{$departmentREF->getId()}",
+    "defaultWorkScheduleProfile": "/api/work_schedule_profiles/{$defaultWorkScheduleProfileREF->getId()}",
     "managedDepartments": ["/api/departments/{$departmentREF->getId()}"]
 }
 JSON;
@@ -287,6 +300,11 @@ JSON;
         $this->assertEquals($userDB->getLastName(), $userJSON->lastName);
         $this->assertEquals($userDB->getRoles(), $userJSON->roles);
         $this->assertEquals($userDB->getTitle(), $userJSON->title);
+        $this->assertEquals($userDB->getDepartment()->getId(), $userJSON->department->id);
+        $this->assertEquals(
+            $userDB->getDefaultWorkScheduleProfile()->getId(),
+            $userJSON->defaultWorkScheduleProfile->id
+        );
 
         $this->assertListContainsSameObjectWithValue(
             $userDB->getManagedDepartments(),

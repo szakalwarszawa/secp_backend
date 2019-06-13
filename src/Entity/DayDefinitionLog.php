@@ -52,7 +52,7 @@ class DayDefinitionLog
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\DayDefinition", inversedBy="dayDefinitionLogs")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, columnDefinition="CHAR(10) NOT NULL")
      * @Groups({"get"})
      */
     private $dayDefinition;

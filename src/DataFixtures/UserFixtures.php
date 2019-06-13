@@ -39,6 +39,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         return array(
             DepartmentFixtures::class,
             SectionFixtures::class,
+            WorkScheduleProfileFixtures::class,
         );
     }
 
@@ -56,6 +57,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user->setLastName('Admin');
         $user->setRoles([User::ROLE_ADMIN]);
         $user->setDepartment($this->getReference('department_admin'));
+        $user->setDefaultWorkScheduleProfile($this->getReference('work_schedule_profile_0'));
 
         $user->setPassword(
             $this->passwordEncoder->encodePassword(
@@ -84,7 +86,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user->setEmail($user->getUsername() . '@' . $this->faker->safeEmailDomain);
             $user->setTitle($this->faker->realText(50));
             $user->setRoles([User::ROLE_USER]);
-            $user->setDepartment($this->getReference('department_' . rand(0, 19)));
+            $user->setDepartment($this->getReference('department_' . random_int(0, 19)));
+            $user->setDefaultWorkScheduleProfile($this->getReference('work_schedule_profile_0'));
 
             $departmentSections = $user->getDepartment()->getSections();
             if ($departmentSections !== null && $departmentSections->count() > 0) {
