@@ -10,11 +10,11 @@ use Faker\Factory as Faker;
 class WorkScheduleProfileFixtures extends Fixture
 {
     private $profiles = [
-        'Domyślny',
-        'Indywidualny',
-        'Ruchomy',
-        'Harmonogram',
-        'Brak',
+        ['Domyślny', '08:30', '08:30', '16:30', '16:30', 8.00],
+        ['Indywidualny', '08:30', '08:30', '16:30', '16:30', 8.00],
+        ['Ruchomy', '08:00', '10:00', '16:00', '18:00', 8.00],
+        ['Harmonogram', '08:30', '08:30', '16:30', '16:30', 8.00],
+        ['Brak', '08:30', '08:30', '16:30', '16:30', 8.00],
     ];
 
     /**
@@ -38,7 +38,12 @@ class WorkScheduleProfileFixtures extends Fixture
         $i = 0;
         foreach ($this->profiles as $profile) {
             $workScheduleProfile = new WorkScheduleProfile();
-            $workScheduleProfile->setName($profile);
+            $workScheduleProfile->setName($profile[0]);
+            $workScheduleProfile->setDayStartTimeFrom($profile[1]);
+            $workScheduleProfile->setDayStartTimeTo($profile[2]);
+            $workScheduleProfile->setDayEndTimeFrom($profile[3]);
+            $workScheduleProfile->setDayEndTimeTo($profile[4]);
+            $workScheduleProfile->setDailyWorkingTime($profile[5]);
             $manager->persist($workScheduleProfile);
 
             $this->setReference('work_schedule_profile_' . $i++, $workScheduleProfile);
