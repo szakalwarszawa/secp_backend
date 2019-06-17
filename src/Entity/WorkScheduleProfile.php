@@ -50,12 +50,14 @@ class WorkScheduleProfile
      * @Groups({"get", "get-user-with-default_work_schedule_profile"})
      */
     private $id;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
      * @Assert\NotBlank()
      * @Groups({"get"})
      */
     private $name;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotNull()
@@ -250,18 +252,18 @@ class WorkScheduleProfile
     }
 
     /**
-     * @return mixed
+     * @return float
      */
-    public function getDailyWorkingTime()
+    public function getDailyWorkingTime(): float
     {
         return $this->dailyWorkingTime;
     }
 
     /**
-     * @param $dailyWorkingTime
+     * @param float $dailyWorkingTime
      * @return WorkScheduleProfile
      */
-    public function setDailyWorkingTime($dailyWorkingTime): self
+    public function setDailyWorkingTime(float $dailyWorkingTime): self
     {
         $this->dailyWorkingTime = $dailyWorkingTime;
 

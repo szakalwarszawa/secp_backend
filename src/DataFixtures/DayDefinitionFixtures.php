@@ -27,7 +27,7 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         for ($i = 0; $i < 1000; $i++) {
-            $day = $this->createDayDefinitionForDay(new \DateTime("+$i days"));
+            $day = $this->createDayDefinitionForDay(new \DateTime("2019-05-01 +$i days"));
             $manager->persist($day);
 
             $this->setReference("day_definition_$i", $day);

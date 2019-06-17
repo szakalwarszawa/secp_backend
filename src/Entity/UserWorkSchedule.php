@@ -1,0 +1,226 @@
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Table(
+ *     name="`user_work_schedules`",
+ *     indexes={
+ *          @ORM\Index(name="idx_user_work_schedules_status", columns={"status"}),
+ *          @ORM\Index(name="idx_user_work_schedules_from_date", columns={"from_date"}),
+ *          @ORM\Index(name="idx_user_work_schedules_to_date", columns={"to_date"}),
+ *          @ORM\Index(name="idx_user_work_schedules_owner_id", columns={"owner_id"}),
+ *          @ORM\Index(name="idx_user_work_schedules_work_schedule_profile_id", columns={"work_schedule_profile_id"})
+ *     }
+ * )
+ * @ORM\Entity(repositoryClass="App\Repository\UserWorkScheduleRepository")
+ * @ApiResource()
+ */
+class UserWorkSchedule
+{
+    public const STATUS_OWNER_EDIT = 0;
+    public const STATUS_OWNER_ACCEPT = 1;
+    public const STATUS_MANAGER_ACCEPT = 2;
+    public const STATUS_HR_ACCEPT = 3;
+
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="date")
+     * @Assert\NotBlank()
+     * @Assert\Date()
+     */
+    private $fromDate;
+
+    /**
+     * @ORM\Column(type="date")
+     * @Assert\NotBlank()
+     * @Assert\Date()
+     */
+    private $toDate;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Choice(callback="getStatuses")
+     * @ORM\Column(type="integer")
+     */
+    private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $owner;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\WorkScheduleProfile")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $workScheduleProfile;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserWorkScheduleDay", mappedBy="userWorkSchedule", orphanRemoval=true)
+     */
+    private $userWorkScheduleDays;
+
+    public function __construct()
+    {
+        $this->userWorkScheduleDays = new ArrayCollection();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getFromDate(): ?\DateTimeInterface
+    {
+        return $this->fromDate;
+    }
+
+    /**
+     * @param \DateTimeInterface $fromDate
+     * @return UserWorkSchedule
+     */
+    public function setFromDate(\DateTimeInterface $fromDate): self
+    {
+        $this->fromDate = $fromDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getToDate(): ?\DateTimeInterface
+    {
+        return $this->toDate;
+    }
+
+    /**
+     * @param \DateTimeInterface $toDate
+     * @return UserWorkSchedule
+     */
+    public function setToDate(\DateTimeInterface $toDate): self
+    {
+        $this->toDate = $toDate;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     * @return UserWorkSchedule
+     */
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param User|null $owner
+     * @return UserWorkSchedule
+     */
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return WorkScheduleProfile|null
+     */
+    public function getWorkScheduleProfile(): ?WorkScheduleProfile
+    {
+        return $this->workScheduleProfile;
+    }
+
+    /**
+     * @param WorkScheduleProfile|null $workScheduleProfile
+     * @return UserWorkSchedule
+     */
+    public function setWorkScheduleProfile(?WorkScheduleProfile $workScheduleProfile): self
+    {
+        $this->workScheduleProfile = $workScheduleProfile;
+
+        return $this;
+    }
+
+    public function getStatuses(): array
+    {
+        return [
+            self::STATUS_OWNER_EDIT,
+            self::STATUS_OWNER_ACCEPT,
+            self::STATUS_MANAGER_ACCEPT,
+            self::STATUS_HR_ACCEPT,
+        ];
+    }
+
+    /**
+     * @return Collection|UserWorkScheduleDay[]
+     */
+    public function getUserWorkScheduleDays(): Collection
+    {
+        return $this->userWorkScheduleDays;
+    }
+
+    public function addUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): self
+    {
+        if (!$this->userWorkScheduleDays->contains($userWorkScheduleDay)) {
+            $this->userWorkScheduleDays[] = $userWorkScheduleDay;
+            $userWorkScheduleDay->setUserWorkSchedule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): self
+    {
+        if ($this->userWorkScheduleDays->contains($userWorkScheduleDay)) {
+            $this->userWorkScheduleDays->removeElement($userWorkScheduleDay);
+            // set the owning side to null (unless already changed)
+            if ($userWorkScheduleDay->getUserWorkSchedule() === $this) {
+                $userWorkScheduleDay->setUserWorkSchedule(null);
+            }
+        }
+
+        return $this;
+    }
+}

@@ -18,4 +18,23 @@ class DayDefinitionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, DayDefinition::class);
     }
+
+
+    /**
+     * @param string $dateFrom
+     * @param string $dateTo
+     * @return DayDefinition[]
+     */
+    public function findAllBetweenDate($dateFrom, $dateTo): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->andWhere('TO_DATE(p.id) >= :dateFrom')
+            ->andWhere('TO_DATE(p.id) <= :dateTo')
+            ->setParameter('dateFrom', $dateFrom)
+            ->setParameter('dateTo', $dateTo)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery();
+
+        return $qb->execute();
+    }
 }
