@@ -27,24 +27,51 @@ class DepartmentFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $department = new Department();
-        $department->setName('Biuro Informatyki');
-        $department->setShortName('BI');
-        $department->setActive(true);
-        $manager->persist($department);
-
-        $this->setReference('department_admin', $department);
+        $department = $this->makeDepartment(
+            $manager,
+            'department_admin',
+            'Biuro Informatyki',
+            'BI',
+            true
+        );
 
         for ($i = 0; $i < 20; $i++) {
-            $department = new Department();
-            $department->setName($this->faker->realText());
-            $department->setShortName($this->faker->realText(20));
-            $department->setActive($this->faker->boolean(80));
-            $manager->persist($department);
-
-            $this->setReference("department_$i", $department);
+            $department = $this->makeDepartment(
+                $manager,
+                "department_$i",
+                $this->faker->realText(),
+                $this->faker->realText(20),
+                $this->faker->boolean(80)
+            );
         }
 
         $manager->flush();
+    }
+
+    /**
+     * @param ObjectManager $manager
+     * @param string $referenceName
+     * @param string $name
+     * @param string $shortName
+     * @param bool $active
+     * @return Department
+     */
+    private function makeDepartment(
+        ObjectManager $manager,
+        string $referenceName,
+        string $name,
+        string $shortName,
+        bool $active
+    ): Department {
+        $department = new Department();
+        $department->setName($name)
+            ->setShortName($shortName)
+            ->setActive($active);
+
+        $manager->persist($department);
+
+        $this->setReference($referenceName, $department);
+
+        return $department;
     }
 }

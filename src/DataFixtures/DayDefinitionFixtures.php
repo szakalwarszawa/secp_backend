@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\DayDefinition;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -27,24 +26,32 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         for ($i = 0; $i < 1000; $i++) {
-            $day = $this->createDayDefinitionForDay(new \DateTime("2019-05-01 +$i days"));
-            $manager->persist($day);
-
-            $this->setReference("day_definition_$i", $day);
+            $day = $this->createDayDefinitionForDay(
+                $manager,
+                "day_definition_$i",
+                new \DateTime("2019-05-01 +$i days")
+            );
         }
+
         $manager->flush();
     }
 
     /**
+     * @param ObjectManager $manager
+     * @param string $referenceName
      * @param \DateTime $day
      * @return DayDefinition
      */
-    private function createDayDefinitionForDay(\DateTime $day): DayDefinition
+    private function createDayDefinitionForDay(ObjectManager $manager, string $referenceName, \DateTime $day): DayDefinition
     {
         $dayDefinition = new DayDefinition();
         $dayDefinition->setId($day->format('Y-m-d'));
         $dayDefinition->setWorkingDay($this->getWorkingDay($day) === null);
         $dayDefinition->setNotice($this->getWorkingDay($day));
+
+        $manager->persist($dayDefinition);
+
+        $this->setReference($referenceName, $dayDefinition);
 
         return $dayDefinition;
     }

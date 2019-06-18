@@ -38,12 +38,13 @@ class WorkScheduleProfileFixtures extends Fixture
         $i = 0;
         foreach ($this->profiles as $profile) {
             $workScheduleProfile = new WorkScheduleProfile();
-            $workScheduleProfile->setName($profile[0]);
-            $workScheduleProfile->setDayStartTimeFrom($profile[1]);
-            $workScheduleProfile->setDayStartTimeTo($profile[2]);
-            $workScheduleProfile->setDayEndTimeFrom($profile[3]);
-            $workScheduleProfile->setDayEndTimeTo($profile[4]);
-            $workScheduleProfile->setDailyWorkingTime($profile[5]);
+            $workScheduleProfile->setName($profile[0])
+                ->setDayStartTimeFrom($profile[1])
+                ->setDayStartTimeTo($profile[2])
+                ->setDayEndTimeFrom($profile[3])
+                ->setDayEndTimeTo($profile[4])
+                ->setDailyWorkingTime($profile[5]);
+
             $manager->persist($workScheduleProfile);
 
             $this->setReference('work_schedule_profile_' . $i++, $workScheduleProfile);

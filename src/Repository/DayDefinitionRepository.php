@@ -28,8 +28,8 @@ class DayDefinitionRepository extends ServiceEntityRepository
     public function findAllBetweenDate($dateFrom, $dateTo): array
     {
         $qb = $this->createQueryBuilder('p')
-            ->andWhere('TO_DATE(p.id) >= :dateFrom')
-            ->andWhere('TO_DATE(p.id) <= :dateTo')
+            ->andWhere('p.id >= :dateFrom')
+            ->andWhere('p.id <= :dateTo')
             ->setParameter('dateFrom', $dateFrom)
             ->setParameter('dateTo', $dateTo)
             ->orderBy('p.id', 'ASC')

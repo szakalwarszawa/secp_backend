@@ -23,7 +23,3 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
-        dql:
-            string_functions:
-                str_to_date: DoctrineExtensions\Query\Postgresql\StrToDate
-                date: DoctrineExtensions\Query\Sqlite\Date
