@@ -78,7 +78,7 @@ class UserWorkScheduleTest extends AbstractWebTestCase
         $userRef = $this->fixtures->getReference(UserFixtures::REF_USER_USER);
         /* @var $userRef User */
 
-        $workScheduleProfileRef = $this->fixtures->getReference('work_schedule_profile_0');
+        $workScheduleProfileRef = $this->fixtures->getReference('work_schedule_profile_4');
         /* @var $workScheduleProfileRef WorkScheduleProfile */
 
         $payload = <<<JSON
