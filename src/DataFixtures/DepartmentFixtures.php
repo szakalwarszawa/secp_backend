@@ -9,6 +9,8 @@ use Faker\Factory as Faker;
 
 class DepartmentFixtures extends Fixture
 {
+    public const REF_DEPARTMENT_ADMIN = 'department_admin';
+
     /**
      * @var Faker
      */
@@ -29,7 +31,7 @@ class DepartmentFixtures extends Fixture
     {
         $department = $this->makeDepartment(
             $manager,
-            'department_admin',
+            self::REF_DEPARTMENT_ADMIN,
             'Biuro Informatyki',
             'BI',
             true

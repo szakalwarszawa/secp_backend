@@ -21,7 +21,45 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserWorkScheduleRepository")
- * @ApiResource()
+ * @ApiResource(
+ *      itemOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={
+ *                      "get"
+ *                  }
+ *              }
+ *          },
+ *          "put"={
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              },
+ *              "denormalization_context"={
+ *                  "groups"={"put"}
+ *              }
+ *          },
+ *      },
+ *      collectionOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              }
+ *          },
+ *          "post"={
+ *              "denormalization_context"={
+ *                  "groups"={"post"}
+ *              },
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              }
+ *          }
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "get"
+ *          }
+ *      }
+ * )
  */
 class UserWorkSchedule
 {
@@ -34,6 +72,7 @@ class UserWorkSchedule
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get"})
      */
     private $id;
 
@@ -41,6 +80,7 @@ class UserWorkSchedule
      * @ORM\Column(type="date")
      * @Assert\NotBlank()
      * @Assert\Date()
+     * @Groups({"get", "post"})
      */
     private $fromDate;
 
@@ -48,6 +88,7 @@ class UserWorkSchedule
      * @ORM\Column(type="date")
      * @Assert\NotBlank()
      * @Assert\Date()
+     * @Groups({"get", "post"})
      */
     private $toDate;
 
@@ -55,18 +96,21 @@ class UserWorkSchedule
      * @Assert\NotBlank()
      * @Assert\Choice(callback="getStatuses")
      * @ORM\Column(type="integer")
+     * @Groups({"get", "post", "put"})
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get", "post"})
      */
     private $owner;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\WorkScheduleProfile")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get", "post"})
      */
     private $workScheduleProfile;
 

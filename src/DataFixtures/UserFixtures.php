@@ -13,6 +13,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const REF_USER_ADMIN = 'user_admin';
+    public const REF_USER_MANAGER = 'user_manager';
+    public const REF_USER_USER = 'user_user';
+
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -53,14 +57,14 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     {
         $user = $this->makeUser(
             $manager,
-            'user_admin',
+            self::REF_USER_ADMIN,
             'admin',
             'admin',
             'admin@quest.info.pl',
             'Adam',
             'Admin',
             [User::ROLE_ADMIN],
-            $this->getReference('department_admin'),
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
             $this->getReference('work_schedule_profile_0')
         );
 
@@ -71,14 +75,14 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
         $user = $this->makeUser(
             $manager,
-            'user_manager',
+            self::REF_USER_MANAGER,
             'manager',
             'manager',
             'manager@quest.info.pl',
             'Mariusz',
             'Manager',
             [User::ROLE_USER],
-            $this->getReference('department_admin'),
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
             $this->getReference('work_schedule_profile_1')
         );
 
@@ -91,14 +95,14 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
         $user = $this->makeUser(
             $manager,
-            'user_user',
+            self::REF_USER_USER,
             'user',
             'user',
             'user@quest.info.pl',
             'Urszula',
             'User',
             [User::ROLE_USER],
-            $this->getReference('department_admin'),
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
             $this->getReference('work_schedule_profile_3')
         );
 
