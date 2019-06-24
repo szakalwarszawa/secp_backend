@@ -68,7 +68,7 @@ class UserWorkScheduleListener
      */
     private function addUserWorkScheduleLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
     {
-        return; // @todo Do dodania tabela z logami zmian i dodawanie do niej danych
+        return; // @Todo Do dodania tabela z logami zmian i dodawanie do niej danych
         $log = new DayDefinitionLog();
         $log->setDayDefinition($entity);
         $log->setLogDate(date('Y-m-d H:i:s'));
@@ -99,6 +99,20 @@ class UserWorkScheduleListener
 
     /**
      * @param LifecycleEventArgs $args
+     */
+    public function prePersist(LifecycleEventArgs $args): void
+    {
+        $userWorkSchedule = $args->getObject();
+        /* @var $userWorkSchedule UserWorkSchedule */
+        if (!$userWorkSchedule instanceof UserWorkSchedule) {
+            return;
+        }
+
+        // @Todo dodać tabele z logami i dopisywać zmiany
+    }
+
+    /**
+     * @param LifecycleEventArgs $args
      * @throws ORMException
      */
     public function postPersist(LifecycleEventArgs $args): void
@@ -115,6 +129,9 @@ class UserWorkScheduleListener
                 $userWorkSchedule->getToDate()->format('Y-m-d')
             );
         /* @var $dayDefinitions DayDefinition[] */
+
+        // @Todo Dodać sprawdzanie czy w zadanym okresie czasu są definicje dni [DayDefinition] jeśli nie ma to albo exception albo dodawać definicje
+
         foreach ($dayDefinitions as $dayDefinition) {
             $userWorkScheduleProfile = $userWorkSchedule->getWorkScheduleProfile();
 
