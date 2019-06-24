@@ -8,6 +8,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class AbsenceTypeFixtures extends Fixture
 {
+    public const FIXTURES_RECORD_COUNT = 27;
+
     private $absenceTypes = [
         ['UW', 'urlop wypoczynkowy', true],
         ['UR', 'dodatkowy urlop dla niepełnosprawnego', true],

@@ -8,6 +8,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class PresenceTypeFixtures extends Fixture
 {
+    public const FIXTURES_RECORD_COUNT = 7;
+
     private $presenceTypes = [
         ['O', 'obecność', true],
         ['HO', 'home office', true],

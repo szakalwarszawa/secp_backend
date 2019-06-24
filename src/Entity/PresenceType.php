@@ -26,15 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                      "get"
  *                  }
  *              }
- *          },
- *          "put"={
- *              "normalization_context"={
- *                  "groups"={"get"}
- *              },
- *              "denormalization_context"={
- *                  "groups"={"put"}
- *              }
- *          },
+ *          }
  *      },
  *      collectionOperations={
  *          "get"={
