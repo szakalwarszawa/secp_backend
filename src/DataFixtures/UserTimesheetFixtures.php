@@ -26,6 +26,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
             UserFixtures::class,
             DayDefinitionFixtures::class,
             WorkScheduleProfileFixtures::class,
+            UserWorkScheduleFixtures::class,
         );
     }
 

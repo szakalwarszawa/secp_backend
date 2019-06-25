@@ -79,7 +79,7 @@ class UserWorkSchedule
     /**
      * @ORM\Column(type="date")
      * @Assert\NotBlank()
-     * @Assert\Date()
+     * @Assert\Type(type="DateTimeInterface")
      * @Groups({"get", "post"})
      */
     private $fromDate;
@@ -87,7 +87,7 @@ class UserWorkSchedule
     /**
      * @ORM\Column(type="date")
      * @Assert\NotBlank()
-     * @Assert\Date()
+     * @Assert\Type(type="DateTimeInterface")
      * @Groups({"get", "post"})
      */
     private $toDate;
