@@ -227,6 +227,10 @@ class UserWorkSchedule
         return $this;
     }
 
+    /**
+     * Return possible statuses, used by status validator
+     * @return array
+     */
     public function getStatuses(): array
     {
         return [

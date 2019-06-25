@@ -285,12 +285,18 @@ class User implements UserInterface
     private $dailyWorkingTime = 8.00;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserTimesheet", mappedBy="owner")
+     */
+    private $userTimesheets;
+
+    /**
      * User constructor.
      */
     public function __construct()
     {
         $this->managedDepartments = new ArrayCollection();
         $this->managedSections = new ArrayCollection();
+        $this->userTimesheets = new ArrayCollection();
     }
 
     /**
@@ -736,6 +742,37 @@ class User implements UserInterface
     public function setDailyWorkingTime($dailyWorkingTime): self
     {
         $this->dailyWorkingTime = $dailyWorkingTime;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserTimesheet[]
+     */
+    public function getUserTimesheets(): Collection
+    {
+        return $this->userTimesheets;
+    }
+
+    public function addUserTimesheet(UserTimesheet $userTimesheet): self
+    {
+        if (!$this->userTimesheets->contains($userTimesheet)) {
+            $this->userTimesheets[] = $userTimesheet;
+            $userTimesheet->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserTimesheet(UserTimesheet $userTimesheet): self
+    {
+        if ($this->userTimesheets->contains($userTimesheet)) {
+            $this->userTimesheets->removeElement($userTimesheet);
+            // set the owning side to null (unless already changed)
+            if ($userTimesheet->getOwner() === $this) {
+                $userTimesheet->setOwner(null);
+            }
+        }
 
         return $this;
     }
