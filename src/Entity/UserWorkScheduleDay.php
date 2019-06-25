@@ -193,10 +193,10 @@ class UserWorkScheduleDay
     }
 
     /**
-     * @param string $dayEndTimeFrom
+     * @param string|null $dayEndTimeFrom
      * @return UserWorkScheduleDay
      */
-    public function setDayEndTimeFrom(string $dayEndTimeFrom): self
+    public function setDayEndTimeFrom(?string $dayEndTimeFrom): self
     {
         $this->dayEndTimeFrom = $dayEndTimeFrom;
 
@@ -212,10 +212,10 @@ class UserWorkScheduleDay
     }
 
     /**
-     * @param string $dayEndTimeTo
+     * @param string|null $dayEndTimeTo
      * @return UserWorkScheduleDay
      */
-    public function setDayEndTimeTo(string $dayEndTimeTo): self
+    public function setDayEndTimeTo(?string $dayEndTimeTo): self
     {
         $this->dayEndTimeTo = $dayEndTimeTo;
 

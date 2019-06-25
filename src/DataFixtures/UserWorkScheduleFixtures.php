@@ -113,23 +113,6 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             $fromDate,
             $toDate
         );
-
-        $dayDefinitions = $manager->getRepository(DayDefinition::class)
-            ->findAllBetweenDate(
-                $userWorkSchedule->getFromDate()->format('Y-m-d'),
-                $userWorkSchedule->getToDate()->format('Y-m-d')
-            );
-        /* @var $dayDefinitions DayDefinition[] */
-        foreach ($dayDefinitions as $dayDefinition) {
-            $userWorkScheduleProfile = $userWorkSchedule->getWorkScheduleProfile();
-
-            $userWorkScheduleDay = $this->makeUserWorkScheduleDay(
-                $manager,
-                $dayDefinition,
-                $userWorkScheduleProfile,
-                $userWorkSchedule
-            );
-        }
     }
 
     /**

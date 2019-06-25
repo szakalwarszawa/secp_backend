@@ -131,20 +131,26 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
                     'presence_type_' . random_int(0, PresenceTypeFixtures::FIXTURES_RECORD_COUNT - 1)
                 );
                 $absenceType = null;
+                $dayStartTime = '08:30';
+                $dayEndTime = '16:30';
+                $workingTime = 8.00;
 
                 if ($presenceType->getShortName() === 'N') {
                     $absenceType = $this->getReference(
                         'absence_type_' . random_int(0, AbsenceTypeFixtures::FIXTURES_RECORD_COUNT - 1)
                     );
+                    $dayStartTime = null;
+                    $dayEndTime = null;
+                    $workingTime = 0.00;
                 }
 
                 $this->makeUserWorkScheduleDay(
                     $manager,
                     $userTimesheet,
                     $userWorkScheduleDay,
-                    '08:30',
-                    '16:30',
-                    8.00,
+                    $dayStartTime,
+                    $dayEndTime,
+                    $workingTime,
                     $presenceType,
                     $absenceType
                 );
@@ -181,8 +187,8 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
      * @param ObjectManager $manager
      * @param UserTimesheet $userTimesheet
      * @param UserWorkScheduleDay $userWorkScheduleDay
-     * @param string $dayStartTime
-     * @param string $dayEndTime
+     * @param string|null $dayStartTime
+     * @param string|null $dayEndTime
      * @param float $workingTime
      * @param PresenceType $presenceType
      * @param AbsenceType $absenceType
@@ -192,8 +198,8 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
         ObjectManager $manager,
         UserTimesheet $userTimesheet,
         UserWorkScheduleDay $userWorkScheduleDay,
-        string $dayStartTime,
-        string $dayEndTime,
+        ?string $dayStartTime,
+        ?string $dayEndTime,
         float $workingTime,
         PresenceType $presenceType,
         ?AbsenceType $absenceType
