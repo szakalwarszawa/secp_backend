@@ -15,6 +15,12 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const REF_USER_TIMESHEET_ADMIN_EDIT = 'user_timesheet_admin_edit';
+    public const REF_USER_TIMESHEET_MANAGER_HR = 'user_timesheet_manager_hr';
+    public const REF_USER_TIMESHEET_MANAGER_EDIT = 'user_timesheet_manager_edit';
+    public const REF_USER_TIMESHEET_USER_HR = 'user_timesheet_user_hr';
+    public const REF_USER_TIMESHEET_USER_EDIT = 'user_timesheet_user_edit';
+
     /**
      * @return array
      */
@@ -38,7 +44,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
     {
         $this->makeUserTimesheetSets(
             $manager,
-            'user_timesheet_admin_edit',
+            self::REF_USER_TIMESHEET_ADMIN_EDIT,
             $this->getReference('user_admin'),
             '2019-06',
             UserTimesheet::STATUS_OWNER_EDIT,
@@ -48,7 +54,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
 
         $this->makeUserTimesheetSets(
             $manager,
-            'user_timesheet_manager_hr',
+            self::REF_USER_TIMESHEET_MANAGER_HR,
             $this->getReference('user_manager'),
             '2019-05',
             UserTimesheet::STATUS_HR_ACCEPT,
@@ -58,7 +64,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
 
         $this->makeUserTimesheetSets(
             $manager,
-            'user_timesheet_manager_edit',
+            self::REF_USER_TIMESHEET_MANAGER_EDIT,
             $this->getReference('user_manager'),
             '2019-05',
             UserTimesheet::STATUS_OWNER_EDIT,
@@ -68,7 +74,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
 
         $this->makeUserTimesheetSets(
             $manager,
-            'user_timesheet_user_hr',
+            self::REF_USER_TIMESHEET_USER_HR,
             $this->getReference('user_user'),
             '2019-05',
             UserTimesheet::STATUS_HR_ACCEPT,
@@ -78,7 +84,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
 
         $this->makeUserTimesheetSets(
             $manager,
-            'user_timesheet_user_edit',
+            self::REF_USER_TIMESHEET_USER_EDIT,
             $this->getReference('user_user'),
             '2019-06',
             UserTimesheet::STATUS_OWNER_EDIT,

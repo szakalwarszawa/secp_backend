@@ -88,6 +88,29 @@ class UserTimesheetDay
     private $absenceType;
 
     /**
+     * @var string
+     */
+    private $dayDate;
+
+    /**
+     * @return string|null
+     */
+    public function getDayDate(): ?string
+    {
+        return $this->dayDate;
+    }
+
+    /**
+     * @param string|null $dayDate
+     * @return UserTimesheetDay
+     */
+    public function setDayDate(?string $dayDate): UserTimesheetDay
+    {
+        $this->dayDate = $dayDate;
+        return $this;
+    }
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -172,15 +195,15 @@ class UserTimesheetDay
     }
 
     /**
-     * @return mixed
+     * @return float
      */
-    public function getWorkingTime()
+    public function getWorkingTime(): float
     {
         return $this->workingTime;
     }
 
     /**
-     * @param $workingTime
+     * @param float $workingTime
      * @return UserTimesheetDay
      */
     public function setWorkingTime($workingTime): self

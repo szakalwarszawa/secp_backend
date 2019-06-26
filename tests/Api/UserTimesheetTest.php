@@ -1,0 +1,196 @@
+<?php
+
+
+namespace App\Tests\Api;
+
+use App\DataFixtures\UserFixtures;
+use App\DataFixtures\UserTimesheetFixtures;
+use App\Entity\User;
+use App\Entity\UserTimesheet;
+use App\Tests\AbstractWebTestCase;
+use App\Tests\NotFoundReferencedUserException;
+use Exception;
+
+class UserTimesheetTest extends AbstractWebTestCase
+{
+    /**
+     * @test
+     * @throws NotFoundReferencedUserException
+     */
+    public function apiGetUserTimesheets(): void
+    {
+        $userTimesheetDB = $this->entityManager->getRepository(UserTimesheet::class)->findAll();
+        /* @var $userTimesheetDB UserTimesheet */
+        $response = $this->getActionResponse(self::HTTP_GET, '/api/user_timesheets');
+        $userTimesheetJSON = json_decode($response->getContent(), false);
+
+        $this->assertNotNull($userTimesheetJSON);
+        $this->assertEquals(count($userTimesheetDB), $userTimesheetJSON->{'hydra:totalItems'});
+    }
+
+    /**
+     * @test
+     * @dataProvider apiGetUserTimesheetProvider
+     * @param string $referenceName
+     * @throws NotFoundReferencedUserException
+     */
+    public function apiGetUserTimesheet($referenceName): void
+    {
+        $userTimesheetDB = $this->fixtures->getReference($referenceName);
+        /* @var $userTimesheetDB UserTimesheet */
+
+        $response = $this->getActionResponse(
+            self::HTTP_GET,
+            '/api/user_timesheets/' . $userTimesheetDB->getId()
+        );
+        $this->assertJson($response->getContent());
+        $userTimesheetJSON = json_decode($response->getContent(), false);
+
+        $this->assertNotNull($userTimesheetJSON);
+        $this->assertEquals($userTimesheetDB->getId(), $userTimesheetJSON->id);
+        $this->assertEquals($userTimesheetDB->getPeriod(), $userTimesheetJSON->period);
+        $this->assertEquals($userTimesheetDB->getOwner()->getId(), $userTimesheetJSON->owner->id);
+        $this->assertEquals($userTimesheetDB->getStatus(), $userTimesheetJSON->status);
+    }
+
+    /**
+     * @test
+     * @dataProvider apiGetUserTimesheetProvider
+     * @param string $referenceName
+     * @throws NotFoundReferencedUserException
+     */
+    public function apiGetUserTimesheetWithDays($referenceName): void
+    {
+        $userTimesheetDB = $this->fixtures->getReference($referenceName);
+        /* @var $userTimesheetDB UserTimesheet */
+
+        $response = $this->getActionResponse(
+            self::HTTP_GET,
+            '/api/user_timesheets/' . $userTimesheetDB->getId() . '/user_timesheet_days'
+        );
+        $this->assertJson($response->getContent());
+        $userTimesheetJSON = json_decode($response->getContent(), false);
+        $this->assertNotNull($userTimesheetJSON);
+
+        $this->assertEquals(count($userTimesheetDB->getUserTimesheetDays()), $userTimesheetJSON->{'hydra:totalItems'});
+        $this->assertCount(count($userTimesheetDB->getUserTimesheetDays()), $userTimesheetJSON->{'hydra:member'});
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function apiGetUserTimesheetProvider(): array
+    {
+        $referenceList = [
+            ['user_timesheet_admin_edit'],
+            ['user_timesheet_manager_hr'],
+            ['user_timesheet_manager_edit'],
+            ['user_timesheet_user_hr'],
+            ['user_timesheet_user_edit'],
+        ];
+
+        return $referenceList;
+    }
+
+    /**
+     * @test
+     * @throws NotFoundReferencedUserException
+     */
+    public function apiPostUserTimesheet(): void
+    {
+        $userRef = $this->fixtures->getReference(UserFixtures::REF_USER_USER);
+        /* @var $userRef User */
+
+        $payload = <<<JSON
+{
+    "owner": "/api/users/{$userRef->getId()}",
+    "period": "2019-08",
+    "status": 0
+}
+JSON;
+
+        $response = $this->getActionResponse(
+            self::HTTP_POST,
+            '/api/user_timesheets',
+            $payload,
+            [],
+            201,
+            self::REF_ADMIN
+        );
+
+        $userTimesheetJSON = json_decode($response->getContent(), false);
+
+        $this->assertNotNull($userTimesheetJSON);
+        $this->assertIsNumeric($userTimesheetJSON->id);
+        $this->assertEquals($userRef->getId(), $userTimesheetJSON->owner->id);
+        $this->assertEquals('2019-08', $userTimesheetJSON->period);
+        $this->assertEquals(0, $userTimesheetJSON->status);
+
+        $response = $this->getActionResponse(
+            self::HTTP_GET,
+            '/api/user_timesheets/' . $userTimesheetJSON->id
+        );
+
+        $userTimesheetDB = $this->entityManager->getRepository(UserTimesheet::class)->find(
+            $userTimesheetJSON->id
+        );
+        /* @var $userTimesheetDB UserTimesheet */
+
+        $userTimesheetJSON = json_decode($response->getContent(), false);
+
+        $this->assertNotNull($userTimesheetJSON);
+        $this->assertEquals($userTimesheetDB->getId(), $userTimesheetJSON->id);
+        $this->assertEquals(
+            $userTimesheetDB->getOwner()->getId(),
+            $userTimesheetJSON->owner->id
+        );
+        $this->assertEquals($userTimesheetDB->getPeriod(), $userTimesheetJSON->period);
+        $this->assertEquals($userTimesheetDB->getStatus(), $userTimesheetJSON->status);
+    }
+
+    /**
+     * @test
+     * @throws NotFoundReferencedUserException
+     * @throws Exception
+     */
+    public function apiPutUserTimesheet(): void
+    {
+        $userTimesheetREF = $this->fixtures->getReference(UserTimesheetFixtures::REF_USER_TIMESHEET_USER_EDIT);
+        /* @var $userTimesheetREF UserTimesheet */
+
+        $newStatus = UserTimesheet::STATUS_OWNER_ACCEPT;
+
+        $payload = <<<JSON
+{
+    "status": {$newStatus}
+}
+JSON;
+
+        $response = $this->getActionResponse(
+            self::HTTP_PUT,
+            '/api/user_timesheets/' . $userTimesheetREF->getId(),
+            $payload,
+            [],
+            200,
+            UserFixtures::REF_USER_MANAGER
+        );
+
+        $userJSON = json_decode($response->getContent(), false);
+
+        $this->assertNotNull($userJSON);
+        $this->assertIsNumeric($userJSON->id);
+        $this->assertEquals($newStatus, $userJSON->status);
+
+        $userTimesheetDB = $this->entityManager->getRepository(UserTimesheet::class)->find(
+            $userTimesheetREF->getId()
+        );
+        /* @var $userTimesheetDB UserTimesheet */
+
+        $userJSON = json_decode($response->getContent(), false);
+
+        $this->assertNotNull($userJSON);
+        $this->assertEquals($userTimesheetDB->getId(), $userJSON->id);
+        $this->assertEquals($userTimesheetDB->getStatus(), $userJSON->status);
+    }
+}

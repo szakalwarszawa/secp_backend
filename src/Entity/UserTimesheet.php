@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,10 +28,26 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                      "get"
  *                  }
  *              }
- *          }
+ *          },
+ *          "put"={
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              },
+ *              "denormalization_context"={
+ *                  "groups"={"put"}
+ *              }
+ *          },
  *      },
  *      collectionOperations={
  *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              }
+ *          },
+ *          "post"={
+ *              "denormalization_context"={
+ *                  "groups"={"post"}
+ *              },
  *              "normalization_context"={
  *                  "groups"={"get"}
  *              }
@@ -61,13 +78,13 @@ class UserTimesheet
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userTimesheets")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get"})
+     * @Groups({"get", "post"})
      */
     private $owner;
 
     /**
      * @ORM\Column(type="string", length=7, nullable=false)
-     * @Groups({"get"})
+     * @Groups({"get", "post"})
      */
     private $period;
 
@@ -75,12 +92,13 @@ class UserTimesheet
      * @Assert\NotBlank()
      * @Assert\Choice(callback="getStatuses")
      * @ORM\Column(type="integer")
-     * @Groups({"get", "put"})
+     * @Groups({"get", "post", "put"})
      */
     private $status;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserTimesheetDay", mappedBy="userTimesheet")
+     * @ApiSubresource()
      */
     private $userTimesheetDays;
 
