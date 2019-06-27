@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Table(
@@ -24,10 +25,26 @@ use Doctrine\ORM\Mapping as ORM;
  *                      "get"
  *                  }
  *              }
- *          }
+ *          },
+ *          "put"={
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              },
+ *              "denormalization_context"={
+ *                  "groups"={"put"}
+ *              }
+ *          },
  *      },
  *      collectionOperations={
  *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              }
+ *          },
+ *          "post"={
+ *              "denormalization_context"={
+ *                  "groups"={"post"}
+ *              },
  *              "normalization_context"={
  *                  "groups"={"get"}
  *              }
@@ -46,44 +63,52 @@ class UserTimesheetDay
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\UserTimesheet", inversedBy="userTimesheetDays")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get", "post"})
      */
     private $userTimesheet;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\UserWorkScheduleDay", inversedBy="userTimesheetDay", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get", "post"})
      */
     private $userWorkScheduleDay;
 
     /**
      * @ORM\Column(type="string", length=5, nullable=true)
+     * @Groups({"get", "post", "put"})
      */
     private $dayStartTime;
 
     /**
      * @ORM\Column(type="string", length=5, nullable=true)
+     * @Groups({"get", "post", "put"})
      */
     private $dayEndTime;
 
     /**
      * @ORM\Column(type="decimal", precision=4, scale=2)
+     * @Groups({"get", "post", "put"})
      */
     private $workingTime;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PresenceType")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get", "post", "put"})
      */
     private $presenceType;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AbsenceType")
+     * @Groups({"get", "post", "put"})
      */
     private $absenceType;
 

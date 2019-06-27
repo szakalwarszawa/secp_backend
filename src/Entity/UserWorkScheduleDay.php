@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -23,7 +24,29 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserWorkScheduleDayRepository")
- * @ApiResource()
+ * @ApiResource(
+ *      itemOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={
+ *                      "get"
+ *                  }
+ *              }
+ *          }
+ *      },
+ *      collectionOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              }
+ *          }
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "get"
+ *          }
+ *      }
+ * )
  */
 class UserWorkScheduleDay
 {
@@ -31,6 +54,7 @@ class UserWorkScheduleDay
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get"})
      */
     private $id;
 
