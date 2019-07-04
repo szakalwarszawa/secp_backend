@@ -1,0 +1,11 @@
+image: "gitlab.parp.gov.pl:5055/ci/lsi1420:latest"
+
+stages:
+    - build
+
+build:
+    stage: build
+    script:
+        - echo "initial CI conf"
+    artifacts:
+        expire_in: 1 day
