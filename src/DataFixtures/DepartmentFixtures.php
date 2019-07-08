@@ -41,8 +41,8 @@ class DepartmentFixtures extends Fixture
             $department = $this->makeDepartment(
                 $manager,
                 "department_$i",
-                $this->faker->realText(),
-                $this->faker->realText(20),
+                $this->faker->realText(30),
+                $this->faker->realText(10),
                 $this->faker->boolean(80)
             );
         }
