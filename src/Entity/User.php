@@ -158,6 +158,7 @@ class User implements UserInterface
      * @Groups({"get", "put", "post"})
      */
     private $username;
+    
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank()
@@ -258,7 +259,7 @@ class User implements UserInterface
      *     options={"default"="07:30"}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dayStartTimeFrom = '07:30';
 
@@ -271,7 +272,7 @@ class User implements UserInterface
      *     options={"default"="07:30"}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dayStartTimeTo = '07:30';
 
@@ -284,7 +285,7 @@ class User implements UserInterface
      *     options={"default"="16:30"}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dayEndTimeFrom = '16:30';
 
@@ -297,7 +298,7 @@ class User implements UserInterface
      *     options={"default"="16:30"}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dayEndTimeTo = '16:30';
 
@@ -311,7 +312,7 @@ class User implements UserInterface
      *     options={"default"=8.00}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dailyWorkingTime = 8.00;
 
