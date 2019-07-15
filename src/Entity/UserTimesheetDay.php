@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -22,23 +25,32 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "get"={
  *              "normalization_context"={
  *                  "groups"={
- *                      "get"
+ *                      "get",
+ *                      "get-user-timesheet-day-with-user_work_schedule_day"
  *                  }
  *              }
  *          },
  *          "put"={
  *              "normalization_context"={
- *                  "groups"={"get"}
+ *                  "groups"={
+ *                      "get",
+ *                      "get-user-timesheet-day-with-user_work_schedule_day"
+ *                  }
  *              },
  *              "denormalization_context"={
- *                  "groups"={"put"}
+ *                  "groups"={
+ *                      "put"
+ *                  }
  *              }
  *          },
  *      },
  *      collectionOperations={
  *          "get"={
  *              "normalization_context"={
- *                  "groups"={"get"}
+ *                  "groups"={
+ *                      "get",
+ *                      "get-user-timesheet-day-with-user_work_schedule_day"
+ *                  }
  *              }
  *          },
  *          "post"={
@@ -46,15 +58,52 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                  "groups"={"post"}
  *              },
  *              "normalization_context"={
- *                  "groups"={"get"}
+ *                  "groups"={
+ *                      "get",
+ *                      "get-user-timesheet-day-with-user_work_schedule_day"
+ *                  }
  *              }
  *          }
  *      },
  *      normalizationContext={
  *          "groups"={
- *              "get"
+ *              "get",
+ *              "get-user-timesheet-day-with-user_work_schedule_day"
  *          }
  *      }
+ * )
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "id": "exact",
+ *          "userTimesheet.period": "istart",
+ *          "userTimesheet.owner.username": "iexact",
+ *          "userTimesheet.owner.email": "iexact",
+ *          "userTimesheet.owner.firstName": "istart",
+ *          "userTimesheet.owner.lastName": "istart",
+ *          "userWorkScheduleDay.dayDefinition.id": "istart",
+ *          "presenceType.id": "exact",
+ *          "absenceType.id": "exact",
+ *          "dayStartTime": "exact",
+ *          "dayEndTime": "exact",
+ *          "workingTime": "exact"
+ *      }
+ * )
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={
+ *         "id",
+ *         "userTimesheet.period",
+ *         "userTimesheet.owner.firstName",
+ *         "userTimesheet.owner.lastName",
+ *         "userWorkScheduleDay.dayDefinition.id",
+ *         "presenceType.name",
+ *         "absenceType.name",
+ *         "dayStartTime",
+ *         "dayEndTime",
+ *         "workingTime"
+ *     },
+ *     arguments={"orderParameterName"="_order"}
  * )
  */
 class UserTimesheetDay
@@ -77,7 +126,7 @@ class UserTimesheetDay
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\UserWorkScheduleDay", inversedBy="userTimesheetDay", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get", "post"})
+     * @Groups({"post", "get-user-timesheet-day-with-user_work_schedule_day"})
      */
     private $userWorkScheduleDay;
 
