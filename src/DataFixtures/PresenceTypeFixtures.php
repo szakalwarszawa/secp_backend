@@ -11,13 +11,13 @@ class PresenceTypeFixtures extends Fixture
     public const FIXTURES_RECORD_COUNT = 7;
 
     private $presenceTypes = [
-        ['O', 'obecność', true],
-        ['HO', 'home office', true],
-        ['S', 'szkolenie', true],
-        ['D', 'delegację', true],
-        ['N', 'nieobecność', true],
-        ['DD', 'dyżur domowy', true],
-        ['DP', 'dyżur w pracy', true],
+        ['O', 'obecność', false, true, true],
+        ['HO', 'home office', false, true, true],
+        ['S', 'szkolenie', false, false, true],
+        ['D', 'delegację', false, true, true],
+        ['N', 'nieobecność', true, false, true],
+        ['DD', 'dyżur domowy', false, false, true],
+        ['DP', 'dyżur w pracy', false, false, true],
     ];
 
     public function load(ObjectManager $manager)
@@ -27,7 +27,9 @@ class PresenceTypeFixtures extends Fixture
             $newPresenceType = new PresenceType();
             $newPresenceType->setShortName($presenceType[0])
                 ->setName($presenceType[1])
-                ->setActive($presenceType[2]);
+                ->setIsAbsence($presenceType[2])
+                ->setIsTimed($presenceType[3])
+                ->setActive($presenceType[4]);
 
             $manager->persist($newPresenceType);
 

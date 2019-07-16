@@ -124,7 +124,11 @@ class UserTimesheetDay
     private $userTimesheet;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserWorkScheduleDay", inversedBy="userTimesheetDay", cascade={"persist", "remove"})
+     * @ORM\OneToOne(
+     *     targetEntity="App\Entity\UserWorkScheduleDay",
+     *     inversedBy="userTimesheetDay",
+     *     cascade={"persist", "remove"}
+     * )
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"post", "get-user-timesheet-day-with-user_work_schedule_day"})
      */
