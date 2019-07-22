@@ -30,7 +30,7 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
         UserWorkSchedule $userWorkSchedule,
         string $dayDate
     ): ?UserWorkScheduleDay {
-        $qb = $this->createQueryBuilder('p')
+        $query = $this->createQueryBuilder('p')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
             ->andWhere('p.userWorkSchedule = :userWorkSchedule')
             ->andWhere('dayDefinition.id = :dayDate')
@@ -39,7 +39,7 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery();
 
-        $result = $qb->getResult();
+        $result = $query->getResult();
 
         return $result[0] ?? null;
     }
@@ -51,7 +51,8 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
      */
     public function findWorkDay($owner, $dayDate): ?UserWorkScheduleDay
     {
-        $qb = $this->createQueryBuilder('p')
+        // @Todo dodać uwzględnianie tylko zatwierdzonych harmonogramów
+        $query = $this->createQueryBuilder('p')
             ->innerJoin('p.userWorkSchedule', 'userWorkSchedule')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
             ->andWhere('userWorkSchedule.owner = :owner')
@@ -61,8 +62,33 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery();
 
-        $result = $qb->getResult();
+        $result = $query->getResult();
 
         return $result[0] ?? null;
+    }
+
+    /**
+     * @param User $owner
+     * @param string $dayFromDate
+     * @param string $dayToDate
+     * @return UserWorkScheduleDay[]|null
+     */
+    public function findWorkDayBetweenDate($owner, $dayFromDate, $dayToDate): ?array
+    {
+        // @Todo dodać uwzględnianie tylko zatwierdzonych harmonogramów
+        $query = $this->createQueryBuilder('p')
+            ->innerJoin('p.userWorkSchedule', 'userWorkSchedule')
+            ->innerJoin('p.dayDefinition', 'dayDefinition')
+            ->andWhere('userWorkSchedule.owner = :owner')
+            ->setParameter('owner', $owner)
+            ->andWhere('dayDefinition.id >= :dateFrom')
+            ->setParameter('dateFrom', $dayFromDate)
+            ->andWhere('dayDefinition.id <= :dateTo')
+            ->setParameter('dateTo', $dayToDate)
+            ->getQuery();
+
+        $result = $query->getResult();
+
+        return $result ?? null;
     }
 }
