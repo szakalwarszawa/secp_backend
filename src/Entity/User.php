@@ -24,7 +24,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          @ORM\Index(name="idx_users_last_name", columns={"last_name"}),
  *          @ORM\Index(name="idx_users_first_name", columns={"first_name"}),
  *          @ORM\Index(name="idx_users_department_id", columns={"department_id"}),
- *          @ORM\Index(name="idx_users_section_id", columns={"section_id"})
+ *          @ORM\Index(name="idx_users_section_id", columns={"section_id"}),
+ *          @ORM\Index(name="idx_users_default_work_schedule_profile_id", columns={"default_work_schedule_profile_id"})
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -41,7 +42,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                      "get-user-with-department",
  *                      "get-user-with-section",
  *                      "get-user-with-managed-departments",
- *                      "get-user-with-managed-sections"
+ *                      "get-user-with-managed-sections",
+ *                      "get-user-with-default_work_schedule_profile"
  *                  }
  *              }
  *          },
@@ -60,7 +62,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "groups"={
  *                      "get",
  *                      "get-user-with-department",
- *                      "get-user-with-section"
+ *                      "get-user-with-section",
+ *                      "get-user-with-default_work_schedule_profile"
  *                  }
  *              },
  *          },
@@ -80,7 +83,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "get-user-with-department",
  *              "get-user-with-section",
  *              "get-user-with-managed-departments",
- *              "get-user-with-managed-sections"
+ *              "get-user-with-managed-sections",
+ *              "get-user-with-default_work_schedule_profile"
  *          }
  *      }
  * )
@@ -206,6 +210,13 @@ class User implements UserInterface
      * @Groups({"get-user-with-managed-sections", "put"})
      */
     private $managedSections;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\WorkScheduleProfile")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"put", "post", "get-user-with-default_work_schedule_profile"})
+     */
+    private $defaultWorkScheduleProfile;
 
     /**
      * User constructor.
@@ -547,6 +558,24 @@ class User implements UserInterface
     public function setDepartment(?Department $department): self
     {
         $this->department = $department;
+        return $this;
+    }
+
+    /**
+     * @return WorkScheduleProfile|null
+     */
+    public function getDefaultWorkScheduleProfile(): ?WorkScheduleProfile
+    {
+        return $this->defaultWorkScheduleProfile;
+    }
+
+    /**
+     * @param WorkScheduleProfile|null $defaultWorkScheduleProfile
+     * @return User
+     */
+    public function setDefaultWorkScheduleProfile(?WorkScheduleProfile $defaultWorkScheduleProfile): self
+    {
+        $this->defaultWorkScheduleProfile = $defaultWorkScheduleProfile;
         return $this;
     }
 }

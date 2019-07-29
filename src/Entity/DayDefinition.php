@@ -56,7 +56,7 @@ class DayDefinition
 {
     /**
      * @ORM\Id()
-     * @ORM\Column(type="string", length=10, nullable=false, unique=true)
+     * @ORM\Column(type="string", length=10, nullable=false, unique=true, options={"fixed" = true})
      * @Assert\NotBlank()
      * @Groups({"get"})
      */
