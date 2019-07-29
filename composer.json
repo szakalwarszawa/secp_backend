@@ -3,6 +3,7 @@
     "license": "proprietary",
     "require": {
         "php": "^7.1.3",
+        "ext-calendar": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.2",
@@ -19,8 +20,7 @@
         "symfony/orm-pack": "^1.0",
         "symfony/property-access": "4.2.*",
         "symfony/security-bundle": "4.2.*",
-        "symfony/yaml": "4.2.*",
-        "ext-calendar": "*"
+        "symfony/yaml": "4.2.*"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.1",

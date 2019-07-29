@@ -47,5 +47,13 @@ services:
     App\EventListener\DayDefinitionLoggerListener:
         autowire: true
         tags:
-            - { name: doctrine.event_listener, event: preUpdate, connection: default }
-            - { name: doctrine.event_listener, event: postFlush, connection: default }
+            - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
+
+    App\EventListener\UserWorkScheduleListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: prePersist, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: postPersist, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }

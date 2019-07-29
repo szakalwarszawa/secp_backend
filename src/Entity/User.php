@@ -213,10 +213,76 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\WorkScheduleProfile")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, columnDefinition="INT NOT NULL DEFAULT 1")
      * @Groups({"put", "post", "get-user-with-default_work_schedule_profile"})
      */
     private $defaultWorkScheduleProfile;
+
+    /**
+     * @ORM\Column(
+     *     type="string",
+     *     length=5,
+     *     nullable=false,
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '07:30'",
+     *     options={"default"="07:30"}
+     * )
+     * @Assert\NotNull()
+     * @Groups({"get"})
+     */
+    private $dayStartTimeFrom = '07:30';
+
+    /**
+     * @ORM\Column(
+     *     type="string",
+     *     length=5,
+     *     nullable=false,
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '07:30'",
+     *     options={"default"="07:30"}
+     * )
+     * @Assert\NotNull()
+     * @Groups({"get"})
+     */
+    private $dayStartTimeTo = '07:30';
+
+    /**
+     * @ORM\Column(
+     *     type="string",
+     *     length=5,
+     *     nullable=false,
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '16:30'",
+     *     options={"default"="16:30"}
+     * )
+     * @Assert\NotNull()
+     * @Groups({"get"})
+     */
+    private $dayEndTimeFrom = '16:30';
+
+    /**
+     * @ORM\Column(
+     *     type="string",
+     *     length=5,
+     *     nullable=false,
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '16:30'",
+     *     options={"default"="16:30"}
+     * )
+     * @Assert\NotNull()
+     * @Groups({"get"})
+     */
+    private $dayEndTimeTo = '16:30';
+
+    /**
+     * @ORM\Column(
+     *     type="decimal",
+     *     precision=4,
+     *     scale=2,
+     *     nullable=false,
+     *     columnDefinition="NUMERIC(4, 2) NOT NULL DEFAULT 8.00",
+     *     options={"default"=8.00}
+     * )
+     * @Assert\NotNull()
+     * @Groups({"get"})
+     */
+    private $dailyWorkingTime = 8.00;
 
     /**
      * User constructor.
@@ -576,6 +642,101 @@ class User implements UserInterface
     public function setDefaultWorkScheduleProfile(?WorkScheduleProfile $defaultWorkScheduleProfile): self
     {
         $this->defaultWorkScheduleProfile = $defaultWorkScheduleProfile;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDayStartTimeFrom(): ?string
+    {
+        return $this->dayStartTimeFrom;
+    }
+
+    /**
+     * @param string $dayStartTimeFrom
+     * @return User
+     */
+    public function setDayStartTimeFrom(string $dayStartTimeFrom): self
+    {
+        $this->dayStartTimeFrom = $dayStartTimeFrom;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDayStartTimeTo(): ?string
+    {
+        return $this->dayStartTimeTo;
+    }
+
+    /**
+     * @param string $dayStartTimeTo
+     * @return User
+     */
+    public function setDayStartTimeTo(string $dayStartTimeTo): self
+    {
+        $this->dayStartTimeTo = $dayStartTimeTo;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDayEndTimeFrom(): ?string
+    {
+        return $this->dayEndTimeFrom;
+    }
+
+    /**
+     * @param string $dayEndTimeFrom
+     * @return User
+     */
+    public function setDayEndTimeFrom(string $dayEndTimeFrom): self
+    {
+        $this->dayEndTimeFrom = $dayEndTimeFrom;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDayEndTimeTo(): ?string
+    {
+        return $this->dayEndTimeTo;
+    }
+
+    /**
+     * @param string $dayEndTimeTo
+     * @return User
+     */
+    public function setDayEndTimeTo(string $dayEndTimeTo): self
+    {
+        $this->dayEndTimeTo = $dayEndTimeTo;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDailyWorkingTime()
+    {
+        return $this->dailyWorkingTime;
+    }
+
+    /**
+     * @param $dailyWorkingTime
+     * @return User
+     */
+    public function setDailyWorkingTime($dailyWorkingTime): self
+    {
+        $this->dailyWorkingTime = $dailyWorkingTime;
+
         return $this;
     }
 }

@@ -19,32 +19,22 @@ class DayDefinitionRepository extends ServiceEntityRepository
         parent::__construct($registry, DayDefinition::class);
     }
 
-    // /**
-    //  * @return DayDefinition[] Returns an array of DayDefinition objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?DayDefinition
+    /**
+     * @param string $dateFrom
+     * @param string $dateTo
+     * @return DayDefinition[]
+     */
+    public function findAllBetweenDate($dateFrom, $dateTo): array
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.id >= :dateFrom')
+            ->andWhere('p.id <= :dateTo')
+            ->setParameter('dateFrom', $dateFrom)
+            ->setParameter('dateTo', $dateTo)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery();
+
+        return $qb->execute();
     }
-    */
 }

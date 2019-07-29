@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Department;
 use App\Entity\Section;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -39,15 +40,42 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < 100; $i++) {
-            $section = new Section();
-            $section->setName($this->faker->realText());
-            $section->setActive($this->faker->boolean(80));
-            $section->setDepartment($this->getReference('department_' . rand(0, 16)));
-            $manager->persist($section);
-
-            $this->setReference("section_$i", $section);
+            $section = $this->makeSection(
+                $manager,
+                "section_$i",
+                $this->faker->realText(),
+                $this->faker->boolean(80),
+                $this->getReference('department_' . rand(0, 16))
+            );
         }
 
         $manager->flush();
+    }
+
+    /**
+     * @param ObjectManager $manager
+     * @param string $referenceName
+     * @param string $name
+     * @param bool $active
+     * @param Department $department
+     * @return Section
+     */
+    private function makeSection(
+        ObjectManager $manager,
+        string $referenceName,
+        string $name,
+        bool $active,
+        Department $department
+    ): Section {
+        $section = new Section();
+        $section->setName($name)
+            ->setActive($active);
+
+        $manager->persist($section);
+        $section->setDepartment($department);
+
+        $this->setReference($referenceName, $section);
+
+        return $section;
     }
 }

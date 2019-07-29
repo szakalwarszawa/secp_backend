@@ -18,33 +18,4 @@ class DayDefinitionLogRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, DayDefinitionLog::class);
     }
-
-    // /**
-    //  * @return DayDefinitionLog[] Returns an array of DayDefinitionLog objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?DayDefinitionLog
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

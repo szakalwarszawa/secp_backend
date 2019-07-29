@@ -2,7 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Department;
 use App\Entity\User;
+use App\Entity\WorkScheduleProfile;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -11,6 +13,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const REF_USER_ADMIN = 'user_admin';
+    public const REF_USER_MANAGER = 'user_manager';
+    public const REF_USER_USER = 'user_user';
+
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -49,45 +55,80 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $user->setUsername('admin');
-        $user->setSamAccountName('admin');
-        $user->setEmail('admin@quest.info.pl');
-        $user->setFirstName('Adam');
-        $user->setLastName('Admin');
-        $user->setRoles([User::ROLE_ADMIN]);
-        $user->setDepartment($this->getReference('department_admin'));
-        $user->setDefaultWorkScheduleProfile($this->getReference('work_schedule_profile_0'));
-
-        $user->setPassword(
-            $this->passwordEncoder->encodePassword(
-                $user,
-                'test'
-            )
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_ADMIN,
+            'admin',
+            'admin',
+            'admin@quest.info.pl',
+            'Adam',
+            'Admin',
+            [User::ROLE_ADMIN],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
+            $this->getReference('work_schedule_profile_0')
         );
 
-        $manager->persist($user);
         $manager->flush();
-        $this->addReference('user_admin', $user);
 
         $user->getDepartment()->addUser($user);
         $user->getDepartment()->addManager($user);
-        $manager->persist($user);
+
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_MANAGER,
+            'manager',
+            'manager',
+            'manager@quest.info.pl',
+            'Mariusz',
+            'Manager',
+            [User::ROLE_USER],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
+            $this->getReference('work_schedule_profile_1')
+        );
+
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $user->getDepartment()->addManager($user);
+
+        $manager->flush();
+
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_USER,
+            'user',
+            'user',
+            'user@quest.info.pl',
+            'Urszula',
+            'User',
+            [User::ROLE_USER],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
+            $this->getReference('work_schedule_profile_3')
+        );
+
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+
         $manager->flush();
 
         for ($i = 0; $i < 100; $i++) {
             $firstName = $this->faker->firstName();
             $lastName = $this->faker->lastName;
-            $user = new User();
-            $user->setUsername(strtolower(sprintf('%s_%s', $lastName, $firstName)));
-            $user->setSamAccountName($user->getUsername());
-            $user->setFirstName($firstName);
-            $user->setLastName($lastName);
-            $user->setEmail($user->getUsername() . '@' . $this->faker->safeEmailDomain);
-            $user->setTitle($this->faker->realText(50));
-            $user->setRoles([User::ROLE_USER]);
-            $user->setDepartment($this->getReference('department_' . random_int(0, 19)));
-            $user->setDefaultWorkScheduleProfile($this->getReference('work_schedule_profile_0'));
+            $username = strtolower(sprintf('%s_%s_%s', $lastName, $firstName, $this->faker->randomNumber(3)));
+
+            $user = $this->makeUser(
+                $manager,
+                "user_$i",
+                $username,
+                $username,
+                $username . '@' . $this->faker->safeEmailDomain,
+                $firstName,
+                $lastName,
+                [User::ROLE_USER],
+                $this->getReference('department_' . random_int(0, 19)),
+                $this->getReference('work_schedule_profile_0')
+            );
 
             $departmentSections = $user->getDepartment()->getSections();
             if ($departmentSections !== null && $departmentSections->count() > 0) {
@@ -97,24 +138,59 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
                 $user->setSection($section);
             }
 
-            $user->setPassword(
-                $this->passwordEncoder->encodePassword(
-                    $user,
-                    'test'
-                )
-            );
-
             if ($this->faker->boolean(20)) {
                 $user->getDepartment()->addManager($user);
             } else if ($this->faker->boolean(20) && $user->getSection() !== null) {
                 $user->getSection()->addManager($user);
             }
-
-            $manager->persist($user);
-
-            $this->setReference("user_$i", $user);
         }
 
         $manager->flush();
+    }
+
+    /**
+     * @param ObjectManager $manager
+     * @param string $referenceName
+     * @param string $username
+     * @param string $samAccountName
+     * @param string $email
+     * @param string $firstName
+     * @param string $lastName
+     * @param array $roles
+     * @param Department $department
+     * @param WorkScheduleProfile $defaultWorkScheduleProfile
+     * @return User
+     */
+    private function makeUser(
+        ObjectManager $manager,
+        string $referenceName,
+        string $username,
+        string $samAccountName,
+        string $email,
+        string $firstName,
+        string $lastName,
+        array $roles,
+        Department $department,
+        WorkScheduleProfile $defaultWorkScheduleProfile
+    ): User {
+        $user = new User();
+        $user->setUsername($username)
+            ->setSamAccountName($samAccountName)
+            ->setEmail($email)
+            ->setFirstName($firstName)
+            ->setLastName($lastName)
+            ->setRoles($roles)
+            ->setDepartment($department)
+            ->setDefaultWorkScheduleProfile($defaultWorkScheduleProfile)
+            ->setPassword(
+            $this->passwordEncoder->encodePassword(
+                $user,
+                'test'
+            )
+        );
+
+        $this->addReference($referenceName, $user);
+        $manager->persist($user);
+        return $user;
     }
 }

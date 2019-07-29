@@ -6,7 +6,9 @@ use App\DataFixtures\DayDefinitionFixtures;
 use App\DataFixtures\DepartmentFixtures;
 use App\DataFixtures\SectionFixtures;
 use App\DataFixtures\UserFixtures;
+use App\DataFixtures\UserWorkScheduleFixtures;
 use App\DataFixtures\WorkScheduleProfileFixtures;
+use App\Entity\UserWorkSchedule;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
@@ -24,6 +26,7 @@ class Fixtures extends WebTestCase
                 SectionFixtures::class,
                 UserFixtures::class,
                 DayDefinitionFixtures::class,
+                UserWorkScheduleFixtures::class,
             ]
         )->getReferenceRepository();
     }
