@@ -29,9 +29,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity("username", errorPath="username", groups={"post"})
- * @UniqueEntity("email", groups={"post"})
- * @UniqueEntity("samAccountName", groups={"post"})
+ * @UniqueEntity("username", errorPath="username", groups={"post", "put"})
+ * @UniqueEntity("email", groups={"post", "put"})
+ * @UniqueEntity("samAccountName", groups={"post", "put"})
  * @ApiResource(
  *      itemOperations={
  *          "get"={
@@ -184,26 +184,26 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"put", "get-user-with-department", "Department-get_get-user-with-department"})
+     * @Groups({"put", "post", "get-user-with-department", "Department-get_get-user-with-department"})
      */
     private $department;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Section", inversedBy="users")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups({"put", "get-user-with-section"})
+     * @Groups({"put", "post", "get-user-with-section"})
      */
     private $section;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Department", mappedBy="managers")
-     * @Groups({"get-user-with-managed-departments"})
+     * @Groups({"get-user-with-managed-departments", "put"})
      */
     private $managedDepartments;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Section", mappedBy="managers")
-     * @Groups({"get-user-with-managed-sections"})
+     * @Groups({"get-user-with-managed-sections", "put"})
      */
     private $managedSections;
 
@@ -377,7 +377,7 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }

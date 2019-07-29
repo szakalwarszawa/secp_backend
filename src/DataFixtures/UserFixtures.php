@@ -66,7 +66,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->persist($user);
         $manager->flush();
-        $this->addReference('user-admin', $user);
+        $this->addReference('user_admin', $user);
 
         $user->getDepartment()->addUser($user);
         $user->getDepartment()->addManager($user);

@@ -90,7 +90,7 @@ class Section
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"post"})
-     * @Groups({"get", "post"})
+     * @Groups({"get", "post", "put"})
      */
     private $name;
 
@@ -103,21 +103,21 @@ class Section
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="section")
-     * @Groups({"get-section-with-users"})
+     * @Groups({"get-section-with-users", "put"})
      */
     private $users;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="sections")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get-section-with-department"})
+     * @Groups({"get-section-with-department", "put", "post"})
      */
     private $department;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="managedSections")
      * @ORM\JoinTable(name="section_managers")
-     * @Groups({"get-section-with-managers"})
+     * @Groups({"get-section-with-managers", "put", "post"})
      */
     private $managers;
 

@@ -38,7 +38,7 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $section = new Section();
             $section->setName($this->faker->realText());
             $section->setActive($this->faker->boolean(80));
