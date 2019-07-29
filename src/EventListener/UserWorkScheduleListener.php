@@ -164,8 +164,8 @@ class UserWorkScheduleListener
             ->setWorkingDay($dayDefinition->getWorkingDay())
             ->setDayStartTimeFrom($userWorkScheduleProfile->getDayStartTimeFrom())
             ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
-            ->setDayEndTimeFrom($userWorkScheduleProfile->getDayStartTimeFrom())
-            ->setDayEndTimeTo($userWorkScheduleProfile->getDayStartTimeTo());
+            ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
+            ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo());
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $entityManager->persist($userWorkScheduleDay);

@@ -41,7 +41,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             $manager,
             self::REF_USER_WORK_SCHEDULE_ADMIN_HR,
             $this->getReference(UserFixtures::REF_USER_ADMIN),
-            $this->getReference('work_schedule_profile_0'),
+            $this->getReference('work_schedule_profile_2'),
             UserWorkSchedule::STATUS_HR_ACCEPT,
             '2019-05-01',
             '2019-08-31'
@@ -51,7 +51,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             $manager,
             self::REF_USER_WORK_SCHEDULE_ADMIN_EDIT,
             $this->getReference(UserFixtures::REF_USER_ADMIN),
-            $this->getReference('work_schedule_profile_0'),
+            $this->getReference('work_schedule_profile_2'),
             UserWorkSchedule::STATUS_OWNER_EDIT,
             '2019-07-01',
             '2019-08-31'
@@ -172,8 +172,8 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             ->setWorkingDay($dayDefinition->getWorkingDay())
             ->setDayStartTimeFrom($userWorkScheduleProfile->getDayStartTimeFrom())
             ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
-            ->setDayEndTimeFrom($userWorkScheduleProfile->getDayStartTimeFrom())
-            ->setDayEndTimeTo($userWorkScheduleProfile->getDayStartTimeTo());
+            ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
+            ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo());
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $manager->persist($userWorkScheduleDay);
