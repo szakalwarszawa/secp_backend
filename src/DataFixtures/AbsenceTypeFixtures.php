@@ -6,6 +6,10 @@ use App\Entity\AbsenceType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class AbsenceTypeFixtures
+ * @package App\DataFixtures
+ */
 class AbsenceTypeFixtures extends Fixture
 {
     public const FIXTURES_RECORD_COUNT = 27;
@@ -41,6 +45,9 @@ class AbsenceTypeFixtures extends Fixture
         ['WŚ', 'dzień wolny z tytułu święta', true],
     ];
 
+    /**
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $i = 0;

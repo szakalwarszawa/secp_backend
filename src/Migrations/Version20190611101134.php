@@ -12,11 +12,18 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190611101134 extends AbstractMigration
 {
+    /**
+     * @return string
+     */
     public function getDescription() : string
     {
         return '';
     }
 
+    /**
+     * @param Schema $schema
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
@@ -36,6 +43,9 @@ final class Version20190611101134 extends AbstractMigration
         $this->addSql('ALTER TABLE "day_definition_logs" ADD CONSTRAINT FK_A126FF9F7E3C61F9 FOREIGN KEY (owner_id) REFERENCES "users" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
+    /**
+     * @param Schema $schema
+     */
     public function down(Schema $schema) : void
     {
         $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');

@@ -119,6 +119,9 @@ class UserWorkSchedule
      */
     private $userWorkScheduleDays;
 
+    /**
+     * UserWorkSchedule constructor.
+     */
     public function __construct()
     {
         $this->userWorkScheduleDays = new ArrayCollection();
@@ -249,6 +252,10 @@ class UserWorkSchedule
         return $this->userWorkScheduleDays;
     }
 
+    /**
+     * @param UserWorkScheduleDay $userWorkScheduleDay
+     * @return UserWorkSchedule
+     */
     public function addUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): self
     {
         if (!$this->userWorkScheduleDays->contains($userWorkScheduleDay)) {
@@ -259,6 +266,10 @@ class UserWorkSchedule
         return $this;
     }
 
+    /**
+     * @param UserWorkScheduleDay $userWorkScheduleDay
+     * @return UserWorkSchedule
+     */
     public function removeUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): self
     {
         if ($this->userWorkScheduleDays->contains($userWorkScheduleDay)) {

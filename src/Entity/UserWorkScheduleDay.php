@@ -312,11 +312,18 @@ class UserWorkScheduleDay
         return $this;
     }
 
+    /**
+     * @return UserTimesheetDay|null
+     */
     public function getUserTimesheetDay(): ?UserTimesheetDay
     {
         return $this->userTimesheetDay;
     }
 
+    /**
+     * @param UserTimesheetDay $userTimesheetDay
+     * @return UserWorkScheduleDay
+     */
     public function setUserTimesheetDay(UserTimesheetDay $userTimesheetDay): self
     {
         $this->userTimesheetDay = $userTimesheetDay;

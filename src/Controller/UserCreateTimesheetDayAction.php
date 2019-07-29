@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controller;
 
 use App\Entity\User;
@@ -16,6 +15,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * Class UserCreateTimesheetDayAction
+ * @package App\Controller
+ */
 class UserCreateTimesheetDayAction extends AbstractController
 {
     /**

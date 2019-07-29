@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\EventSubscriber;
 
 use App\Entity\User;
@@ -8,6 +7,10 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+/**
+ * Class PasswordEncoderSubscriber
+ * @package App\EventSubscriber
+ */
 class PasswordEncoderSubscriber implements EventSubscriber
 {
     /**

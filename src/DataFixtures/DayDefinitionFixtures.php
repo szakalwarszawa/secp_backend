@@ -7,6 +7,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class DayDefinitionFixtures
+ * @package App\DataFixtures
+ */
 class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
@@ -42,8 +46,11 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
      * @param \DateTime $day
      * @return DayDefinition
      */
-    private function createDayDefinitionForDay(ObjectManager $manager, string $referenceName, \DateTime $day): DayDefinition
-    {
+    private function createDayDefinitionForDay(
+        ObjectManager $manager,
+        string $referenceName,
+        \DateTime $day
+    ): DayDefinition {
         $dayDefinition = new DayDefinition();
         $dayDefinition->setId($day->format('Y-m-d'));
         $dayDefinition->setWorkingDay($this->getWorkingDay($day) === null);

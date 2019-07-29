@@ -11,6 +11,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory as Faker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+/**
+ * Class UserFixtures
+ * @package App\DataFixtures
+ */
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
     public const REF_USER_ADMIN = 'user_admin';

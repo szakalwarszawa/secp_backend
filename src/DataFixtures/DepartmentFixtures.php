@@ -7,6 +7,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory as Faker;
 
+/**
+ * Class DepartmentFixtures
+ * @package App\DataFixtures
+ */
 class DepartmentFixtures extends Fixture
 {
     public const REF_DEPARTMENT_ADMIN = 'department_admin';

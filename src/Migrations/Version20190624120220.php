@@ -12,11 +12,18 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190624120220 extends AbstractMigration
 {
+    /**
+     * @return string
+     */
     public function getDescription() : string
     {
         return '';
     }
 
+    /**
+     * @param Schema $schema
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
@@ -81,6 +88,9 @@ SQL
 
     }
 
+    /**
+     * @param Schema $schema
+     */
     public function down(Schema $schema) : void
     {
         $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');

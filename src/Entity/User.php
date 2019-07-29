@@ -801,6 +801,10 @@ class User implements UserInterface
         return $this->userTimesheets;
     }
 
+    /**
+     * @param UserTimesheet $userTimesheet
+     * @return User
+     */
     public function addUserTimesheet(UserTimesheet $userTimesheet): self
     {
         if (!$this->userTimesheets->contains($userTimesheet)) {
@@ -811,6 +815,10 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @param UserTimesheet $userTimesheet
+     * @return User
+     */
     public function removeUserTimesheet(UserTimesheet $userTimesheet): self
     {
         if ($this->userTimesheets->contains($userTimesheet)) {

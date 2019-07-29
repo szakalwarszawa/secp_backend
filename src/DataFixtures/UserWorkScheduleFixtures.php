@@ -11,6 +11,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class UserWorkScheduleFixtures
+ * @package App\DataFixtures
+ */
 class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterface
 {
     public const REF_USER_WORK_SCHEDULE_ADMIN_HR = 'user_work_schedule_admin_hr';

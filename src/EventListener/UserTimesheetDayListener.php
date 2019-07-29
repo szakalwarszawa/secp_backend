@@ -19,6 +19,10 @@ use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+/**
+ * Class UserTimesheetDayListener
+ * @package App\EventListener
+ */
 class UserTimesheetDayListener
 {
     /**
