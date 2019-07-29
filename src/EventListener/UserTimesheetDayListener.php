@@ -113,7 +113,6 @@ class UserTimesheetDayListener
         if (!$userTimesheetDay instanceof UserTimesheetDay) {
             return;
         }
-
         if ($userTimesheetDay->getUserTimesheet() !== null) {
             return;
         }
@@ -145,7 +144,8 @@ class UserTimesheetDayListener
             $entityManager->getClassMetadata(UserTimesheet::class),
             $userTimesheet
         );
-//        $userTimesheet->addUserTimesheetDay(clone $userTimesheetDay);
+
+        $userTimesheetDay->setUserTimesheet($userTimesheet);
 
         // @Todo dodać tabele z logami i dopisywać zmiany
     }

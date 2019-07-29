@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use App\Controller\UserCreateTimesheetDayAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -54,6 +55,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              }
  *          },
  *          "post"={
+ *              "denormalization_context"={
+ *                  "groups"={"post"}
+ *              },
+ *              "normalization_context"={
+ *                  "groups"={
+ *                      "get",
+ *                      "get-user-timesheet-day-with-user_work_schedule_day"
+ *                  }
+ *              }
+ *          },
+ *          "post-users-create-timesheet-day"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *              "method"="POST",
+ *              "path"="/user_timesheet_days/create_timesheet_day/{day}",
+ *              "controller"=UserCreateTimesheetDayAction::class,
  *              "denormalization_context"={
  *                  "groups"={"post"}
  *              },
