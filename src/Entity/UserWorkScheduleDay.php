@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 /**
  * @ORM\Table(
@@ -37,7 +39,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      collectionOperations={
  *          "get"={
  *              "normalization_context"={
- *                  "groups"={"get"}
+ *                  "groups"={
+ *                      "get"
+ *                  }
  *              }
  *          }
  *      },
@@ -54,25 +58,28 @@ class UserWorkScheduleDay
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get"})
+     * @Groups({"get", "get-user-timesheet-day-with-user_work_schedule_day"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\UserWorkSchedule", inversedBy="userWorkScheduleDays")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get"})
      */
     private $userWorkSchedule;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\DayDefinition")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get"})
      */
     private $dayDefinition;
 
     /**
      * @ORM\Column(type="boolean", nullable=false)
      * @Assert\NotNull()
+     * @Groups({"get"})
      */
     private $workingDay;
 
@@ -85,6 +92,7 @@ class UserWorkScheduleDay
      *     options={"default"="07:30"}
      * )
      * @Assert\NotNull()
+     * @Groups({"get"})
      */
     private $dayStartTimeFrom = '07:30';
 
@@ -97,6 +105,7 @@ class UserWorkScheduleDay
      *     options={"default"="07:30"}
      * )
      * @Assert\NotNull()
+     * @Groups({"get"})
      */
     private $dayStartTimeTo = '07:30';
 
@@ -109,6 +118,7 @@ class UserWorkScheduleDay
      *     options={"default"="16:30"}
      * )
      * @Assert\NotNull()
+     * @Groups({"get"})
      */
     private $dayEndTimeFrom = '16:30';
 
@@ -121,6 +131,7 @@ class UserWorkScheduleDay
      *     options={"default"="16:30"}
      * )
      * @Assert\NotNull()
+     * @Groups({"get"})
      */
     private $dayEndTimeTo = '16:30';
 
@@ -134,6 +145,7 @@ class UserWorkScheduleDay
      *     options={"default"=8.00}
      * )
      * @Assert\NotNull()
+     * @Groups({"get"})
      */
     private $dailyWorkingTime = 8.00;
 

@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -41,6 +45,29 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          }
  *      }
  * )
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "id": "exact",
+ *          "name": "istart"
+ *      }
+ * )
+ * @ApiFilter(
+ *      BooleanFilter::class,
+ *      properties={
+ *          "isAbsence",
+ *          "isTimed",
+ *          "active"
+ *      }
+ * )
+ * @ApiFilter(
+ *      OrderFilter::class,
+ *      properties={
+ *          "id",
+ *          "name"
+ *      },
+ *      arguments={"orderParameterName"="_order"}
+ * )
  */
 class PresenceType
 {
@@ -67,11 +94,69 @@ class PresenceType
     private $name;
 
     /**
+     * @ORM\Column(
+     *     type="boolean",
+     *     nullable=true,
+     *     options={"default"=false}
+     * )
+     * @Assert\NotNull()
+     * @Groups({"get"})
+     */
+    private $isAbsence;
+
+    /**
+     * @ORM\Column(
+     *     type="boolean",
+     *     nullable=true,
+     *     options={"default"=true}
+     * )
+     * @Assert\NotNull()
+     * @Groups({"get"})
+     */
+    private $isTimed;
+
+    /**
      * @ORM\Column(type="boolean", nullable=false)
      * @Assert\NotNull()
      * @Groups({"get"})
      */
     private $active;
+
+    /**
+     * @return bool|null
+     */
+    public function getIsAbsence(): ?bool
+    {
+        return $this->isAbsence;
+    }
+
+    /**
+     * @param bool $isAbsence
+     * @return PresenceType
+     */
+    public function setIsAbsence(bool $isAbsence): self
+    {
+        $this->isAbsence = $isAbsence;
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsTimed(): ?bool
+    {
+        return $this->isTimed;
+    }
+
+    /**
+     * @param bool $isTimed
+     * @return PresenceType
+     */
+    public function setIsTimed(bool $isTimed): self
+    {
+        $this->isTimed = $isTimed;
+        return $this;
+    }
 
     /**
      * @return int|null

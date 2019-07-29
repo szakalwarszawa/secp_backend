@@ -112,7 +112,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "email": "iexact",
  *          "firstName": "istart",
  *          "lastName": "istart",
- *          "title": "ipartial"
+ *          "title": "ipartial",
+ *          "department.id",
+ *          "section.id",
+ *          "defaultWorkScheduleProfile.id"
  *      }
  * )
  * @ApiFilter(

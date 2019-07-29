@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -40,6 +44,27 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "get"
  *          }
  *      }
+ * )
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "id": "exact",
+ *          "name": "istart"
+ *      }
+ * )
+ * @ApiFilter(
+ *      BooleanFilter::class,
+ *      properties={
+ *          "active"
+ *      }
+ * )
+ * @ApiFilter(
+ *      OrderFilter::class,
+ *      properties={
+ *          "id",
+ *          "name"
+ *      },
+ *      arguments={"orderParameterName"="_order"}
  * )
  */
 class AbsenceType
