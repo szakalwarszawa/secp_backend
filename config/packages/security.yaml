@@ -17,7 +17,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                property: username
 
     firewalls:
         dev:
@@ -47,6 +47,10 @@ security:
             pattern: ^/api/docs
             stateless: true
             anonymous: true
+#        contexts:
+#            pattern: ^/api/contexts
+#            stateless: true
+#            anonymous: true
 
         api:
             pattern: ^/api/
@@ -70,4 +74,5 @@ security:
     access_control:
         - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/contexts, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
