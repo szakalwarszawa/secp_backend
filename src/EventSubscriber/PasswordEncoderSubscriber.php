@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\EventListener;
+namespace App\EventSubscriber;
 
 use App\Entity\User;
 use Doctrine\Common\EventSubscriber;

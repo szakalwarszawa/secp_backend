@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\EventListener;
+namespace App\Tests\EventSubscriber;
 
 use App\Entity\User;
-use App\EventListener\PasswordEncoderSubscriber;
+use App\EventSubscriber\PasswordEncoderSubscriber;
 use App\Tests\AbstractWebTestCase;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 

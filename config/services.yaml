@@ -39,7 +39,13 @@ services:
                 - protocol_version: 3
                 - referrals: false
 
-    App\EventListener\PasswordEncoderSubscriber:
+    App\EventSubscriber\PasswordEncoderSubscriber:
         autowire: true
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    App\EventListener\DayDefinitionLoggerListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate, connection: default }
+            - { name: doctrine.event_listener, event: postFlush, connection: default }
