@@ -43,7 +43,7 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
             $section = $this->makeSection(
                 $manager,
                 "section_$i",
-                $this->faker->realText(),
+                $this->faker->realText(30),
                 $this->faker->boolean(80),
                 $this->getReference('department_' . rand(0, 16))
             );

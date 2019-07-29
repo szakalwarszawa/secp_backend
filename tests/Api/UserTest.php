@@ -3,11 +3,13 @@
 
 namespace App\Tests\Api;
 
+use App\DataFixtures\UserFixtures;
 use App\Entity\Department;
 use App\Entity\User;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
+use Doctrine\Tests\Common\DataFixtures\TestFixtures\UserFixture;
 use Exception;
 
 class UserTest extends AbstractWebTestCase
@@ -16,7 +18,7 @@ class UserTest extends AbstractWebTestCase
      * @test
      * @throws NotFoundReferencedUserException
      */
-    public function apiGetSections(): void
+    public function apiGetUsers(): void
     {
         /* @var $userDB User */
         $usersDB = $this->entityManager->getRepository(User::class)->findAll();
@@ -311,5 +313,63 @@ JSON;
             'getId',
             $departmentREF->getId()
         );
+    }
+
+    /**
+     * @test
+     * @dataProvider apiGetOwnUserDataProvider
+     * @param string $referenceName
+     * @throws NotFoundReferencedUserException
+     */
+    public function apiGetOwnUserData($referenceName): void
+    {
+        $userDB = $this->fixtures->getReference($referenceName);
+        /* @var $userDB User */
+
+        $response = $this->getActionResponse(
+            'GET',
+            '/api/users/me',
+            null,
+            [],
+            200,
+            $referenceName
+        );
+        $this->assertJson($response->getContent());
+        $userJSON = json_decode($response->getContent(), false);
+
+        $this->assertNotNull($userJSON);
+        $this->assertEquals($userDB->getId(), $userJSON->id);
+        $this->assertEquals($userDB->getUsername(), $userJSON->username);
+        $this->assertEquals($userDB->getSamAccountName(), $userJSON->samAccountName);
+        $this->assertEquals($userDB->getEmail(), $userJSON->email);
+        $this->assertEquals($userDB->getFirstName(), $userJSON->firstName);
+        $this->assertEquals($userDB->getLastName(), $userJSON->lastName);
+        $this->assertEquals($userDB->getRoles(), $userJSON->roles);
+        $this->assertEquals($userDB->getTitle(), $userJSON->title);
+        $this->assertEquals($userDB->getDepartment()->getId(), $userJSON->department->id);
+        $this->assertEquals(
+            $userDB->getDefaultWorkScheduleProfile()->getId(),
+            $userJSON->defaultWorkScheduleProfile->id
+        );
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function apiGetOwnUserDataProvider(): array
+    {
+        $referenceList = [
+            [UserFixtures::REF_USER_ADMIN],
+            [UserFixtures::REF_USER_MANAGER],
+            [UserFixtures::REF_USER_USER],
+        ];
+
+        for ($i = 0; $i < 20; $i++) {
+            $randomUser = random_int(0, 99);
+            $referenceList[] = ['user_' . $randomUser];
+        }
+
+        return $referenceList;
     }
 }

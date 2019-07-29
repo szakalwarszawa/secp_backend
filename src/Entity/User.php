@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use App\Controller\UserMeAction;
 use App\Exception\SectionNotBelongToDepartmentException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -54,9 +56,23 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "denormalization_context"={
  *                  "groups"={"put"}
  *              }
- *          },
+ *          }
  *      },
  *      collectionOperations={
+ *          "get-users-me"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *              "method"="GET",
+ *              "path"="/users/me",
+ *              "controller"=UserMeAction::class,
+ *              "normalization_context"={
+ *                  "groups"={
+ *                      "get",
+ *                      "get-user-with-department",
+ *                      "get-user-with-section",
+ *                      "get-user-with-default_work_schedule_profile"
+ *                  }
+ *              }
+ *          },
  *          "get"={
  *              "normalization_context"={
  *                  "groups"={
@@ -99,6 +115,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "title": "ipartial"
  *      }
  * )
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={
+ *         "id",
+ *         "samAccountName",
+ *         "username",
+ *         "email",
+ *         "firstName",
+ *         "lastName",
+ *         "department.name",
+ *         "section.name",
+ *         "defaultWorkScheduleProfile.id"
+ *     },
+ *     arguments={"orderParameterName"="_order"}
+ * )
  */
 class User implements UserInterface
 {
@@ -127,6 +158,7 @@ class User implements UserInterface
      * @Groups({"get", "put", "post"})
      */
     private $username;
+    
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank()
@@ -227,7 +259,7 @@ class User implements UserInterface
      *     options={"default"="07:30"}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dayStartTimeFrom = '07:30';
 
@@ -240,7 +272,7 @@ class User implements UserInterface
      *     options={"default"="07:30"}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dayStartTimeTo = '07:30';
 
@@ -253,7 +285,7 @@ class User implements UserInterface
      *     options={"default"="16:30"}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dayEndTimeFrom = '16:30';
 
@@ -266,7 +298,7 @@ class User implements UserInterface
      *     options={"default"="16:30"}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dayEndTimeTo = '16:30';
 
@@ -280,7 +312,7 @@ class User implements UserInterface
      *     options={"default"=8.00}
      * )
      * @Assert\NotNull()
-     * @Groups({"get"})
+     * @Groups({"get", "put"})
      */
     private $dailyWorkingTime = 8.00;
 
