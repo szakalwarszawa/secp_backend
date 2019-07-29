@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -14,10 +15,38 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     indexes={
  *          @ORM\Index(name="idx_user_work_schedule_days_user_work_schedule_id", columns={"user_work_schedule_id"}),
  *          @ORM\Index(name="idx_user_work_schedule_days_working_day", columns={"working_day"})
+ *     },
+ *     uniqueConstraints={
+ *         @UniqueConstraint(
+ *             name="idx_user_work_schedule_days_user_work_user_timesheet_day_id",
+ *             columns={"user_timesheet_day_id"}
+ *         )
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserWorkScheduleDayRepository")
- * @ApiResource()
+ * @ApiResource(
+ *      itemOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={
+ *                      "get"
+ *                  }
+ *              }
+ *          }
+ *      },
+ *      collectionOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              }
+ *          }
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "get"
+ *          }
+ *      }
+ * )
  */
 class UserWorkScheduleDay
 {
@@ -25,6 +54,7 @@ class UserWorkScheduleDay
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get"})
      */
     private $id;
 
@@ -108,6 +138,12 @@ class UserWorkScheduleDay
     private $dailyWorkingTime = 8.00;
 
     /**
+     * @ORM\OneToOne(targetEntity="App\Entity\UserTimesheetDay", mappedBy="userWorkScheduleDay", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $userTimesheetDay;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -181,10 +217,10 @@ class UserWorkScheduleDay
     }
 
     /**
-     * @param string $dayEndTimeFrom
+     * @param string|null $dayEndTimeFrom
      * @return UserWorkScheduleDay
      */
-    public function setDayEndTimeFrom(string $dayEndTimeFrom): self
+    public function setDayEndTimeFrom(?string $dayEndTimeFrom): self
     {
         $this->dayEndTimeFrom = $dayEndTimeFrom;
 
@@ -200,10 +236,10 @@ class UserWorkScheduleDay
     }
 
     /**
-     * @param string $dayEndTimeTo
+     * @param string|null $dayEndTimeTo
      * @return UserWorkScheduleDay
      */
-    public function setDayEndTimeTo(string $dayEndTimeTo): self
+    public function setDayEndTimeTo(?string $dayEndTimeTo): self
     {
         $this->dayEndTimeTo = $dayEndTimeTo;
 
@@ -263,6 +299,23 @@ class UserWorkScheduleDay
     public function setDailyWorkingTime(float $dailyWorkingTime): self
     {
         $this->dailyWorkingTime = $dailyWorkingTime;
+
+        return $this;
+    }
+
+    public function getUserTimesheetDay(): ?UserTimesheetDay
+    {
+        return $this->userTimesheetDay;
+    }
+
+    public function setUserTimesheetDay(UserTimesheetDay $userTimesheetDay): self
+    {
+        $this->userTimesheetDay = $userTimesheetDay;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $userTimesheetDay->getUserWorkScheduleDay()) {
+            $userTimesheetDay->setUserWorkScheduleDay($this);
+        }
 
         return $this;
     }

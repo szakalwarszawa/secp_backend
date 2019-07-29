@@ -79,7 +79,7 @@ class UserWorkSchedule
     /**
      * @ORM\Column(type="date")
      * @Assert\NotBlank()
-     * @Assert\Date()
+     * @Assert\Type(type="DateTimeInterface")
      * @Groups({"get", "post"})
      */
     private $fromDate;
@@ -87,7 +87,7 @@ class UserWorkSchedule
     /**
      * @ORM\Column(type="date")
      * @Assert\NotBlank()
-     * @Assert\Date()
+     * @Assert\Type(type="DateTimeInterface")
      * @Groups({"get", "post"})
      */
     private $toDate;
@@ -227,6 +227,10 @@ class UserWorkSchedule
         return $this;
     }
 
+    /**
+     * Return possible statuses, used by status validator
+     * @return array
+     */
     public function getStatuses(): array
     {
         return [

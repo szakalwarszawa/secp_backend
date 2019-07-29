@@ -13,6 +13,12 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const REF_USER_WORK_SCHEDULE_ADMIN_HR = 'user_work_schedule_admin_hr';
+    public const REF_USER_WORK_SCHEDULE_ADMIN_EDIT = 'user_work_schedule_admin_edit';
+    public const REF_USER_WORK_SCHEDULE_MANAGER_HR = 'user_work_schedule_manager_hr';
+    public const REF_USER_WORK_SCHEDULE_USER_HR = 'user_work_schedule_user_hr';
+    public const REF_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT = 'user_work_schedule_user_owner_accept';
+
     /**
      * @return array
      */
@@ -33,8 +39,8 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
     {
         $this->makeUserWorkScheduleSets(
             $manager,
-            'user_work_schedule_admin_hr',
-            $this->getReference('user_admin'),
+            self::REF_USER_WORK_SCHEDULE_ADMIN_HR,
+            $this->getReference(UserFixtures::REF_USER_ADMIN),
             $this->getReference('work_schedule_profile_0'),
             UserWorkSchedule::STATUS_HR_ACCEPT,
             '2019-05-01',
@@ -43,8 +49,8 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
 
         $this->makeUserWorkScheduleSets(
             $manager,
-            'user_work_schedule_admin_edit',
-            $this->getReference('user_admin'),
+            self::REF_USER_WORK_SCHEDULE_ADMIN_EDIT,
+            $this->getReference(UserFixtures::REF_USER_ADMIN),
             $this->getReference('work_schedule_profile_0'),
             UserWorkSchedule::STATUS_OWNER_EDIT,
             '2019-07-01',
@@ -53,8 +59,8 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
 
         $this->makeUserWorkScheduleSets(
             $manager,
-            'user_work_schedule_manager_hr',
-            $this->getReference('user_manager'),
+            self::REF_USER_WORK_SCHEDULE_MANAGER_HR,
+            $this->getReference(UserFixtures::REF_USER_MANAGER),
             $this->getReference('work_schedule_profile_0'),
             UserWorkSchedule::STATUS_HR_ACCEPT,
             '2019-05-01',
@@ -63,8 +69,8 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
 
         $this->makeUserWorkScheduleSets(
             $manager,
-            'user_work_schedule_user_hr',
-            $this->getReference('user_user'),
+            self::REF_USER_WORK_SCHEDULE_USER_HR,
+            $this->getReference(UserFixtures::REF_USER_USER),
             $this->getReference('work_schedule_profile_0'),
             UserWorkSchedule::STATUS_HR_ACCEPT,
             '2019-05-01',
@@ -73,8 +79,8 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
 
         $this->makeUserWorkScheduleSets(
             $manager,
-            'user_work_schedule_user_owner_accept',
-            $this->getReference('user_user'),
+            self::REF_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT,
+            $this->getReference(UserFixtures::REF_USER_USER),
             $this->getReference('work_schedule_profile_0'),
             UserWorkSchedule::STATUS_OWNER_ACCEPT,
             '2019-07-01',
@@ -113,23 +119,6 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             $fromDate,
             $toDate
         );
-
-        $dayDefinitions = $manager->getRepository(DayDefinition::class)
-            ->findAllBetweenDate(
-                $userWorkSchedule->getFromDate()->format('Y-m-d'),
-                $userWorkSchedule->getToDate()->format('Y-m-d')
-            );
-        /* @var $dayDefinitions DayDefinition[] */
-        foreach ($dayDefinitions as $dayDefinition) {
-            $userWorkScheduleProfile = $userWorkSchedule->getWorkScheduleProfile();
-
-            $userWorkScheduleDay = $this->makeUserWorkScheduleDay(
-                $manager,
-                $dayDefinition,
-                $userWorkScheduleProfile,
-                $userWorkSchedule
-            );
-        }
     }
 
     /**
