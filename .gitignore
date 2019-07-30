@@ -28,4 +28,5 @@
 ###> local_phars ###
 composer.phar
 phpmd.phar
+phpunit*.phar
 ###< local_phars ###
