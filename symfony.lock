@@ -164,6 +164,9 @@
     "ocramius/proxy-manager": {
         "version": "2.2.2"
     },
+    "pdepend/pdepend": {
+        "version": "2.5.2"
+    },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
     },
@@ -172,6 +175,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpmd/phpmd": {
+        "version": "2.6.1"
     },
     "psr/cache": {
         "version": "1.0.1"

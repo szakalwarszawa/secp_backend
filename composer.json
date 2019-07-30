@@ -11,16 +11,16 @@
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.6",
         "lexik/jwt-authentication-bundle": "^2.6",
-        "symfony/console": "4.3.*",
-        "symfony/dotenv": "4.3.*",
+        "symfony/console": "4.2.*",
+        "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "4.3.*",
-        "symfony/ldap": "4.3.*",
+        "symfony/framework-bundle": "4.2.*",
+        "symfony/ldap": "4.2.*",
         "symfony/monolog-bundle": "^3.4",
         "symfony/orm-pack": "^1.0",
-        "symfony/property-access": "4.3.*",
-        "symfony/security-bundle": "4.3.*",
-        "symfony/yaml": "4.3.*"
+        "symfony/property-access": "4.2.*",
+        "symfony/security-bundle": "4.2.*",
+        "symfony/yaml": "4.2.*"
     },
     "require-dev": {
         "ext-json": "*",
@@ -29,9 +29,10 @@
         "liip/functional-test-bundle": "~2.0@alpha",
         "roave/security-advisories": "dev-master",
         "symfony/maker-bundle": "^1.12",
-        "symfony/phpunit-bridge": "4.3.*",
-        "symfony/var-dumper": "4.3.*",
-        "symfony/web-server-bundle": "4.3.*"
+        "symfony/phpunit-bridge": "4.2.*",
+        "symfony/var-dumper": "4.2.*",
+        "symfony/web-server-bundle": "4.2.*",
+        "phpmd/phpmd" : "@stable"
     },
     "config": {
         "preferred-install": {
@@ -75,7 +76,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.3.*"
+            "require": "4.2.*"
         }
     }
 }

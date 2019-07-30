@@ -83,7 +83,7 @@ class DayDefinitionTest extends AbstractWebTestCase
 }
 JSON;
 
-        $response = $this->getActionResponse(
+        $this->getActionResponse(
             self::HTTP_POST,
             '/api/day_definitions',
             $payload,

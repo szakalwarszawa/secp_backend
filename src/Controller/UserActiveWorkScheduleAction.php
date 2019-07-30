@@ -41,10 +41,9 @@ class UserActiveWorkScheduleAction extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return JsonResponse
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
         $currentUser = $this->token->getUser();
         /* @var $currentUser User */

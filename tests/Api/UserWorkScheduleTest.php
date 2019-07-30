@@ -147,9 +147,6 @@ JSON;
         $userWorkScheduleREF = $this->fixtures->getReference(UserFixtures::REF_USER_MANAGER);
         /* @var $userWorkScheduleREF UserWorkSchedule */
 
-        $userREF = $this->fixtures->getReference(UserFixtures::REF_USER_MANAGER);
-        /* @var $userREF User */
-
         $newStatus = UserWorkSchedule::STATUS_MANAGER_ACCEPT;
 
         $payload = <<<JSON

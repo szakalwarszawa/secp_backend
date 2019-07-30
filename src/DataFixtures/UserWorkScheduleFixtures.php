@@ -114,7 +114,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
         string $fromDate,
         string $toDate
     ): void {
-        $userWorkSchedule = $this->makeUserWorkSchedule(
+        $this->makeUserWorkSchedule(
             $manager,
             $referenceName,
             $owner,
@@ -155,32 +155,5 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
         $manager->persist($userWorkSchedule);
         $this->addReference($referenceName, $userWorkSchedule);
         return $userWorkSchedule;
-    }
-
-    /**
-     * @param ObjectManager $manager
-     * @param DayDefinition $dayDefinition
-     * @param WorkScheduleProfile|null $userWorkScheduleProfile
-     * @param UserWorkSchedule $userWorkSchedule
-     * @return UserWorkScheduleDay
-     */
-    private function makeUserWorkScheduleDay(
-        ObjectManager $manager,
-        DayDefinition $dayDefinition,
-        ?WorkScheduleProfile $userWorkScheduleProfile,
-        UserWorkSchedule $userWorkSchedule
-    ): UserWorkScheduleDay {
-        $userWorkScheduleDay = new UserWorkScheduleDay();
-        $userWorkScheduleDay->setDayDefinition($dayDefinition)
-            ->setDailyWorkingTime($userWorkScheduleProfile->getDailyWorkingTime())
-            ->setWorkingDay($dayDefinition->getWorkingDay())
-            ->setDayStartTimeFrom($userWorkScheduleProfile->getDayStartTimeFrom())
-            ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
-            ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
-            ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo());
-
-        $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
-        $manager->persist($userWorkScheduleDay);
-        return $userWorkScheduleDay;
     }
 }
