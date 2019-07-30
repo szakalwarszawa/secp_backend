@@ -22,6 +22,8 @@ build:
 phpunit:
     stage: tests
     allow_failure: false
+    dependencies: 
+        - build
     script:
         - /root/.composer/vendor/bin/phpunit --testdox --config="./.gitlab-ci/phpunit.xml" ./tests
 
