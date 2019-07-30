@@ -40,6 +40,7 @@ class DayDefinitionLoggerListener
 
     /**
      * @param PreUpdateEventArgs $args
+     * @return void
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {
@@ -73,6 +74,7 @@ class DayDefinitionLoggerListener
      * @param PreUpdateEventArgs $args
      * @param DayDefinition $entity
      * @param string $notice
+     * @return void
      */
     private function addDayDefinitionLog(PreUpdateEventArgs $args, DayDefinition $entity, string $notice): void
     {
@@ -106,6 +108,7 @@ class DayDefinitionLoggerListener
 
     /**
      * @param PostFlushEventArgs $args
+     * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */

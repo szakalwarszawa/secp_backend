@@ -40,6 +40,7 @@ class PasswordEncoderSubscriber implements EventSubscriber
 
     /**
      * @param LifecycleEventArgs $args
+     * @return void
      */
     public function prePersist(LifecycleEventArgs $args): void
     {
@@ -53,6 +54,7 @@ class PasswordEncoderSubscriber implements EventSubscriber
 
     /**
      * @param User $user
+     * @return void
      */
     private function encodePassword(User $user): void
     {
@@ -68,6 +70,7 @@ class PasswordEncoderSubscriber implements EventSubscriber
 
     /**
      * @param LifecycleEventArgs $args
+     * @return void
      */
     public function preUpdate(LifecycleEventArgs $args): void
     {

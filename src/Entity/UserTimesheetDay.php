@@ -224,7 +224,7 @@ class UserTimesheetDay
      * @param UserTimesheet|null $userTimesheet
      * @return UserTimesheetDay
      */
-    public function setUserTimesheet(?UserTimesheet $userTimesheet): self
+    public function setUserTimesheet(?UserTimesheet $userTimesheet): UserTimesheetDay
     {
         $this->userTimesheet = $userTimesheet;
 
@@ -243,7 +243,7 @@ class UserTimesheetDay
      * @param UserWorkScheduleDay $userWorkScheduleDay
      * @return UserTimesheetDay
      */
-    public function setUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): self
+    public function setUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): UserTimesheetDay
     {
         $this->userWorkScheduleDay = $userWorkScheduleDay;
 
@@ -262,7 +262,7 @@ class UserTimesheetDay
      * @param string|null $dayStartTime
      * @return UserTimesheetDay
      */
-    public function setDayStartTime(?string $dayStartTime): self
+    public function setDayStartTime(?string $dayStartTime): UserTimesheetDay
     {
         $this->dayStartTime = $dayStartTime;
 
@@ -281,7 +281,7 @@ class UserTimesheetDay
      * @param string|null $dayEndTime
      * @return UserTimesheetDay
      */
-    public function setDayEndTime(?string $dayEndTime): self
+    public function setDayEndTime(?string $dayEndTime): UserTimesheetDay
     {
         $this->dayEndTime = $dayEndTime;
 
@@ -300,7 +300,7 @@ class UserTimesheetDay
      * @param float $workingTime
      * @return UserTimesheetDay
      */
-    public function setWorkingTime($workingTime): self
+    public function setWorkingTime($workingTime): UserTimesheetDay
     {
         $this->workingTime = $workingTime;
 
@@ -319,7 +319,7 @@ class UserTimesheetDay
      * @param PresenceType|null $presenceType
      * @return UserTimesheetDay
      */
-    public function setPresenceType(?PresenceType $presenceType): self
+    public function setPresenceType(?PresenceType $presenceType): UserTimesheetDay
     {
         $this->presenceType = $presenceType;
 
@@ -338,7 +338,7 @@ class UserTimesheetDay
      * @param AbsenceType|null $absenceType
      * @return UserTimesheetDay
      */
-    public function setAbsenceType(?AbsenceType $absenceType): self
+    public function setAbsenceType(?AbsenceType $absenceType): UserTimesheetDay
     {
         $this->absenceType = $absenceType;
 

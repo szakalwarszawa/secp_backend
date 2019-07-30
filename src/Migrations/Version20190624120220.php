@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -15,32 +16,41 @@ final class Version20190624120220 extends AbstractMigration
     /**
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
     /**
      * @param Schema $schema
-     * @throws \Doctrine\DBAL\DBALException
+     * @return void
+     * @throws DBALException
      */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
+            'Migration can only be executed safely on \'postgresql\'.'
+        );
 
         $this->addSql('CREATE SEQUENCE "absence_types_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE "presence_types_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE "absence_types" (id INT NOT NULL, short_name VARCHAR(10) NOT NULL, name VARCHAR(255) NOT NULL, active BOOLEAN NOT NULL, PRIMARY KEY(id))');
+        $this->addSql(
+            'CREATE TABLE "absence_types" (id INT NOT NULL, short_name VARCHAR(10) NOT NULL, name VARCHAR(255) NOT NULL, active BOOLEAN NOT NULL, PRIMARY KEY(id))'
+        );
         $this->addSql('CREATE INDEX idx_absence_types_short_name ON "absence_types" (short_name)');
         $this->addSql('CREATE INDEX idx_absence_types_name ON "absence_types" (active, name)');
         $this->addSql('CREATE INDEX idx_absence_types_active ON "absence_types" (active)');
-        $this->addSql('CREATE TABLE "presence_types" (id INT NOT NULL, short_name VARCHAR(10) NOT NULL, name VARCHAR(255) NOT NULL, active BOOLEAN NOT NULL, PRIMARY KEY(id))');
+        $this->addSql(
+            'CREATE TABLE "presence_types" (id INT NOT NULL, short_name VARCHAR(10) NOT NULL, name VARCHAR(255) NOT NULL, active BOOLEAN NOT NULL, PRIMARY KEY(id))'
+        );
         $this->addSql('CREATE INDEX idx_presence_types_short_name ON "presence_types" (short_name)');
         $this->addSql('CREATE INDEX idx_presence_types_name ON "presence_types" (active, name)');
         $this->addSql('CREATE INDEX idx_presence_types_active ON "presence_types" (active)');
 
-        $this->addSql(<<<SQL
+        $this->addSql(
+            <<<SQL
 INSERT INTO "absence_types" ("id", "short_name", "name", "active") VALUES 
 (1, 'UW', 'urlop wypoczynkowy', true),
 (2, 'UR', 'dodatkowy urlop dla niepełnosprawnego', true),
@@ -73,7 +83,8 @@ INSERT INTO "absence_types" ("id", "short_name", "name", "active") VALUES
 SQL
         );
 
-        $this->addSql(<<<SQL
+        $this->addSql(
+            <<<SQL
 INSERT INTO "presence_types" ("id", "short_name", "name", "active") VALUES 
 (1, 'O', 'obecność', true),
 (2, 'HO', 'home office', true),
@@ -90,8 +101,9 @@ SQL
 
     /**
      * @param Schema $schema
+     * @return void
      */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
     }

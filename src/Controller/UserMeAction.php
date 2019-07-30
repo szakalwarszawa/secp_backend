@@ -30,7 +30,7 @@ class UserMeAction extends AbstractController
     /**
      * @return JsonResponse
      */
-    public function __invoke()
+    public function __invoke(): JsonResponse
     {
         return $this->json($this->token->getUser());
     }

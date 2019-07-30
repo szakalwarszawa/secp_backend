@@ -147,7 +147,7 @@ class UserWorkSchedule
      * @param \DateTimeInterface $fromDate
      * @return UserWorkSchedule
      */
-    public function setFromDate(\DateTimeInterface $fromDate): self
+    public function setFromDate(\DateTimeInterface $fromDate): UserWorkSchedule
     {
         $this->fromDate = $fromDate;
 
@@ -166,7 +166,7 @@ class UserWorkSchedule
      * @param \DateTimeInterface $toDate
      * @return UserWorkSchedule
      */
-    public function setToDate(\DateTimeInterface $toDate): self
+    public function setToDate(\DateTimeInterface $toDate): UserWorkSchedule
     {
         $this->toDate = $toDate;
 
@@ -185,7 +185,7 @@ class UserWorkSchedule
      * @param int $status
      * @return UserWorkSchedule
      */
-    public function setStatus(int $status): self
+    public function setStatus(int $status): UserWorkSchedule
     {
         $this->status = $status;
 
@@ -204,7 +204,7 @@ class UserWorkSchedule
      * @param User|null $owner
      * @return UserWorkSchedule
      */
-    public function setOwner(?User $owner): self
+    public function setOwner(?User $owner): UserWorkSchedule
     {
         $this->owner = $owner;
 
@@ -223,7 +223,7 @@ class UserWorkSchedule
      * @param WorkScheduleProfile|null $workScheduleProfile
      * @return UserWorkSchedule
      */
-    public function setWorkScheduleProfile(?WorkScheduleProfile $workScheduleProfile): self
+    public function setWorkScheduleProfile(?WorkScheduleProfile $workScheduleProfile): UserWorkSchedule
     {
         $this->workScheduleProfile = $workScheduleProfile;
 
@@ -256,7 +256,7 @@ class UserWorkSchedule
      * @param UserWorkScheduleDay $userWorkScheduleDay
      * @return UserWorkSchedule
      */
-    public function addUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): self
+    public function addUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): UserWorkSchedule
     {
         if (!$this->userWorkScheduleDays->contains($userWorkScheduleDay)) {
             $this->userWorkScheduleDays[] = $userWorkScheduleDay;
@@ -270,7 +270,7 @@ class UserWorkSchedule
      * @param UserWorkScheduleDay $userWorkScheduleDay
      * @return UserWorkSchedule
      */
-    public function removeUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): self
+    public function removeUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): UserWorkSchedule
     {
         if ($this->userWorkScheduleDays->contains($userWorkScheduleDay)) {
             $this->userWorkScheduleDays->removeElement($userWorkScheduleDay);

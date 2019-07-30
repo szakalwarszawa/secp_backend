@@ -25,3 +25,7 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> phpdoccheck ###
+.phpdoccheck
+###< phpdoccheck ###

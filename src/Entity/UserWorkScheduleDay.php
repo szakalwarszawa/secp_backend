@@ -172,7 +172,7 @@ class UserWorkScheduleDay
      * @param UserWorkSchedule|null $userWorkSchedule
      * @return UserWorkScheduleDay
      */
-    public function setUserWorkSchedule(?UserWorkSchedule $userWorkSchedule): self
+    public function setUserWorkSchedule(?UserWorkSchedule $userWorkSchedule): UserWorkScheduleDay
     {
         $this->userWorkSchedule = $userWorkSchedule;
 
@@ -191,7 +191,7 @@ class UserWorkScheduleDay
      * @param DayDefinition|null $dayDefinition
      * @return UserWorkScheduleDay
      */
-    public function setDayDefinition(?DayDefinition $dayDefinition): self
+    public function setDayDefinition(?DayDefinition $dayDefinition): UserWorkScheduleDay
     {
         $this->dayDefinition = $dayDefinition;
 
@@ -210,7 +210,7 @@ class UserWorkScheduleDay
      * @param bool $workingDay
      * @return UserWorkScheduleDay
      */
-    public function setWorkingDay(bool $workingDay): self
+    public function setWorkingDay(bool $workingDay): UserWorkScheduleDay
     {
         $this->workingDay = $workingDay;
 
@@ -229,7 +229,7 @@ class UserWorkScheduleDay
      * @param string|null $dayEndTimeFrom
      * @return UserWorkScheduleDay
      */
-    public function setDayEndTimeFrom(?string $dayEndTimeFrom): self
+    public function setDayEndTimeFrom(?string $dayEndTimeFrom): UserWorkScheduleDay
     {
         $this->dayEndTimeFrom = $dayEndTimeFrom;
 
@@ -248,7 +248,7 @@ class UserWorkScheduleDay
      * @param string|null $dayEndTimeTo
      * @return UserWorkScheduleDay
      */
-    public function setDayEndTimeTo(?string $dayEndTimeTo): self
+    public function setDayEndTimeTo(?string $dayEndTimeTo): UserWorkScheduleDay
     {
         $this->dayEndTimeTo = $dayEndTimeTo;
 
@@ -267,7 +267,7 @@ class UserWorkScheduleDay
      * @param string $dayStartTimeFrom
      * @return UserWorkScheduleDay
      */
-    public function setDayStartTimeFrom(string $dayStartTimeFrom): self
+    public function setDayStartTimeFrom(string $dayStartTimeFrom): UserWorkScheduleDay
     {
         $this->dayStartTimeFrom = $dayStartTimeFrom;
 
@@ -286,7 +286,7 @@ class UserWorkScheduleDay
      * @param string $dayStartTimeTo
      * @return UserWorkScheduleDay
      */
-    public function setDayStartTimeTo(string $dayStartTimeTo): self
+    public function setDayStartTimeTo(string $dayStartTimeTo): UserWorkScheduleDay
     {
         $this->dayStartTimeTo = $dayStartTimeTo;
 
@@ -305,7 +305,7 @@ class UserWorkScheduleDay
      * @param float $dailyWorkingTime
      * @return UserWorkScheduleDay
      */
-    public function setDailyWorkingTime(float $dailyWorkingTime): self
+    public function setDailyWorkingTime(float $dailyWorkingTime): UserWorkScheduleDay
     {
         $this->dailyWorkingTime = $dailyWorkingTime;
 
@@ -324,7 +324,7 @@ class UserWorkScheduleDay
      * @param UserTimesheetDay $userTimesheetDay
      * @return UserWorkScheduleDay
      */
-    public function setUserTimesheetDay(UserTimesheetDay $userTimesheetDay): self
+    public function setUserTimesheetDay(UserTimesheetDay $userTimesheetDay): UserWorkScheduleDay
     {
         $this->userTimesheetDay = $userTimesheetDay;
 

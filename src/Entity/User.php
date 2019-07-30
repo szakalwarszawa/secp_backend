@@ -394,7 +394,7 @@ class User implements UserInterface
      * @param string $lastName
      * @return User
      */
-    public function setLastName($lastName): self
+    public function setLastName($lastName): User
     {
         $this->lastName = $lastName;
         return $this;
@@ -412,7 +412,7 @@ class User implements UserInterface
      * @param string $firstName
      * @return User
      */
-    public function setFirstName($firstName): self
+    public function setFirstName($firstName): User
     {
         $this->firstName = $firstName;
         return $this;
@@ -430,7 +430,7 @@ class User implements UserInterface
      * @param string $plainPassword
      * @return User
      */
-    public function setPlainPassword($plainPassword): self
+    public function setPlainPassword($plainPassword): User
     {
         $this->plainPassword = $plainPassword;
         return $this;
@@ -456,7 +456,7 @@ class User implements UserInterface
      * @param string $email
      * @return User
      */
-    public function setEmail(string $email): self
+    public function setEmail(string $email): User
     {
         $this->email = $email;
         return $this;
@@ -466,6 +466,7 @@ class User implements UserInterface
      * A visual identifier that represents this user.
      *
      * @see UserInterface
+     * @return string
      */
     public function getUsername(): string
     {
@@ -476,7 +477,7 @@ class User implements UserInterface
      * @param string $username
      * @return User
      */
-    public function setUsername($username): self
+    public function setUsername($username): User
     {
         $this->username = $username;
         return $this;
@@ -484,6 +485,7 @@ class User implements UserInterface
 
     /**
      * @see UserInterface
+     * @return array
      */
     public function getRoles(): array
     {
@@ -498,7 +500,7 @@ class User implements UserInterface
      * @param array $roles
      * @return User
      */
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles): User
     {
         $this->roles = $roles;
         return $this;
@@ -506,6 +508,7 @@ class User implements UserInterface
 
     /**
      * @see UserInterface
+     * @return string|null
      */
     public function getPassword(): ?string
     {
@@ -516,7 +519,7 @@ class User implements UserInterface
      * @param string $password
      * @return User
      */
-    public function setPassword(string $password): self
+    public function setPassword(string $password): User
     {
         $this->password = $password;
         return $this;
@@ -532,6 +535,7 @@ class User implements UserInterface
 
     /**
      * @see UserInterface
+     * @return void
      */
     public function eraseCredentials(): void
     {
@@ -551,7 +555,7 @@ class User implements UserInterface
      * @param Department $managedDepartment
      * @return User
      */
-    public function addManagedDepartment(Department $managedDepartment): self
+    public function addManagedDepartment(Department $managedDepartment): User
     {
         if (!$this->managedDepartments->contains($managedDepartment)) {
             $this->managedDepartments[] = $managedDepartment;
@@ -565,7 +569,7 @@ class User implements UserInterface
      * @param Department $managedDepartment
      * @return User
      */
-    public function removeManagedDepartment(Department $managedDepartment): self
+    public function removeManagedDepartment(Department $managedDepartment): User
     {
         if ($this->managedDepartments->contains($managedDepartment)) {
             $this->managedDepartments->removeElement($managedDepartment);
@@ -587,7 +591,7 @@ class User implements UserInterface
      * @param Section $managedSection
      * @return User
      */
-    public function addManagedSection(Section $managedSection): self
+    public function addManagedSection(Section $managedSection): User
     {
         if (!$this->managedSections->contains($managedSection)) {
             $this->managedSections[] = $managedSection;
@@ -601,7 +605,7 @@ class User implements UserInterface
      * @param Section $managedSection
      * @return User
      */
-    public function removeManagedSection(Section $managedSection): self
+    public function removeManagedSection(Section $managedSection): User
     {
         if ($this->managedSections->contains($managedSection)) {
             $this->managedSections->removeElement($managedSection);
@@ -623,7 +627,7 @@ class User implements UserInterface
      * @param string $distinguishedName
      * @return User
      */
-    public function setDistinguishedName($distinguishedName): self
+    public function setDistinguishedName($distinguishedName): User
     {
         $this->distinguishedName = $distinguishedName;
         return $this;
@@ -632,6 +636,7 @@ class User implements UserInterface
     /**
      * @ORM\PrePersist()
      * @ORM\PreFlush()
+     * @return void
      * @throws SectionNotBelongToDepartmentException
      */
     public function checkSameSectionAsDepartmentValidate(): void
@@ -656,7 +661,7 @@ class User implements UserInterface
      * @param Section|null $section
      * @return User
      */
-    public function setSection(?Section $section): self
+    public function setSection(?Section $section): User
     {
         $this->section = $section;
         return $this;
@@ -674,7 +679,7 @@ class User implements UserInterface
      * @param Department|null $department
      * @return User
      */
-    public function setDepartment(?Department $department): self
+    public function setDepartment(?Department $department): User
     {
         $this->department = $department;
         return $this;
@@ -692,7 +697,7 @@ class User implements UserInterface
      * @param WorkScheduleProfile|null $defaultWorkScheduleProfile
      * @return User
      */
-    public function setDefaultWorkScheduleProfile(?WorkScheduleProfile $defaultWorkScheduleProfile): self
+    public function setDefaultWorkScheduleProfile(?WorkScheduleProfile $defaultWorkScheduleProfile): User
     {
         $this->defaultWorkScheduleProfile = $defaultWorkScheduleProfile;
         return $this;
@@ -710,7 +715,7 @@ class User implements UserInterface
      * @param string $dayStartTimeFrom
      * @return User
      */
-    public function setDayStartTimeFrom(string $dayStartTimeFrom): self
+    public function setDayStartTimeFrom(string $dayStartTimeFrom): User
     {
         $this->dayStartTimeFrom = $dayStartTimeFrom;
 
@@ -729,7 +734,7 @@ class User implements UserInterface
      * @param string $dayStartTimeTo
      * @return User
      */
-    public function setDayStartTimeTo(string $dayStartTimeTo): self
+    public function setDayStartTimeTo(string $dayStartTimeTo): User
     {
         $this->dayStartTimeTo = $dayStartTimeTo;
 
@@ -748,7 +753,7 @@ class User implements UserInterface
      * @param string $dayEndTimeFrom
      * @return User
      */
-    public function setDayEndTimeFrom(string $dayEndTimeFrom): self
+    public function setDayEndTimeFrom(string $dayEndTimeFrom): User
     {
         $this->dayEndTimeFrom = $dayEndTimeFrom;
 
@@ -767,7 +772,7 @@ class User implements UserInterface
      * @param string $dayEndTimeTo
      * @return User
      */
-    public function setDayEndTimeTo(string $dayEndTimeTo): self
+    public function setDayEndTimeTo(string $dayEndTimeTo): User
     {
         $this->dayEndTimeTo = $dayEndTimeTo;
 
@@ -786,7 +791,7 @@ class User implements UserInterface
      * @param $dailyWorkingTime
      * @return User
      */
-    public function setDailyWorkingTime($dailyWorkingTime): self
+    public function setDailyWorkingTime($dailyWorkingTime): User
     {
         $this->dailyWorkingTime = $dailyWorkingTime;
 
@@ -805,7 +810,7 @@ class User implements UserInterface
      * @param UserTimesheet $userTimesheet
      * @return User
      */
-    public function addUserTimesheet(UserTimesheet $userTimesheet): self
+    public function addUserTimesheet(UserTimesheet $userTimesheet): User
     {
         if (!$this->userTimesheets->contains($userTimesheet)) {
             $this->userTimesheets[] = $userTimesheet;
@@ -819,7 +824,7 @@ class User implements UserInterface
      * @param UserTimesheet $userTimesheet
      * @return User
      */
-    public function removeUserTimesheet(UserTimesheet $userTimesheet): self
+    public function removeUserTimesheet(UserTimesheet $userTimesheet): User
     {
         if ($this->userTimesheets->contains($userTimesheet)) {
             $this->userTimesheets->removeElement($userTimesheet);

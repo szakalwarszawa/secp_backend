@@ -44,6 +44,7 @@ class UserWorkScheduleListener
 
     /**
      * @param PreUpdateEventArgs $args
+     * @return void
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {
@@ -69,6 +70,7 @@ class UserWorkScheduleListener
      * @param PreUpdateEventArgs $args
      * @param UserWorkSchedule $entity
      * @param string $notice
+     * @return void
      */
     private function addUserWorkScheduleLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
     {
@@ -103,6 +105,7 @@ class UserWorkScheduleListener
 
     /**
      * @param LifecycleEventArgs $args
+     * @return void
      */
     public function prePersist(LifecycleEventArgs $args): void
     {
@@ -117,6 +120,7 @@ class UserWorkScheduleListener
 
     /**
      * @param LifecycleEventArgs $args
+     * @return void
      * @throws ORMException
      */
     public function postPersist(LifecycleEventArgs $args): void
@@ -152,7 +156,7 @@ class UserWorkScheduleListener
      * @param EntityManager $entityManager
      * @param DayDefinition $dayDefinition
      * @param UserWorkSchedule $userWorkSchedule
-     * @param WorkScheduleProfile|null $userWorkScheduleProfile
+     * @param WorkScheduleProfile $userWorkScheduleProfile
      * @return UserWorkScheduleDay
      * @throws ORMException
      */
@@ -178,6 +182,7 @@ class UserWorkScheduleListener
 
     /**
      * @param PostFlushEventArgs $args
+     * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */
