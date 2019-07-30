@@ -95,7 +95,6 @@ class UserWorkScheduleListener
             $userName = 'admin';
         } else {
             $userName = $this->token->getUser()->getUsername();
-
         }
 
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);

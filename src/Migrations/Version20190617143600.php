@@ -74,7 +74,6 @@ CREATE TABLE "user_work_schedules"
     PRIMARY KEY(id)
 )
 SQL
-
         );
         $this->addSql('CREATE INDEX idx_user_work_schedules_status ON "user_work_schedules" (status)');
         $this->addSql('CREATE INDEX idx_user_work_schedules_from_date ON "user_work_schedules" (from_date)');

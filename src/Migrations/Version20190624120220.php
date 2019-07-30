@@ -96,8 +96,6 @@ INSERT INTO "presence_types" ("id", "short_name", "name", "active") VALUES
 (7, 'DP', 'dyżur w pracy', true);
 SQL
         );
-
-
     }
 
     /**

@@ -187,11 +187,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setDepartment($department)
             ->setDefaultWorkScheduleProfile($defaultWorkScheduleProfile)
             ->setPassword(
-            $this->passwordEncoder->encodePassword(
-                $user,
-                'test'
-            )
-        );
+                $this->passwordEncoder->encodePassword(
+                    $user,
+                    'test'
+                )
+            );
 
         $this->addReference($referenceName, $user);
         $manager->persist($user);
