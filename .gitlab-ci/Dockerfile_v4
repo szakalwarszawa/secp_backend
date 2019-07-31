@@ -27,6 +27,7 @@ RUN apk add --no-cache php7 \
                        php7-calendar \
                        php7-dev \
                        php7-sqlite3 \
+                       php7-pdo_sqlite \
                        php7-sodium
 RUN ln -sf /usr/bin/php7 /usr/bin/php
 RUN echo 'date.timezone = "Europe/Warsaw"' > /etc/php7/conf.d/timezone.ini
