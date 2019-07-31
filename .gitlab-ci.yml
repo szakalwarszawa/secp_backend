@@ -25,6 +25,7 @@ phpunit:
     dependencies: 
         - build
     script:
+        - sed -i 's/memory_limit = 128M/memory_limit = 1G/g' /etc/php7/php.ini
         - /root/.composer/vendor/bin/phpunit --testdox --config="./.gitlab-ci/phpunit.xml" ./tests
 
 parallellint:
