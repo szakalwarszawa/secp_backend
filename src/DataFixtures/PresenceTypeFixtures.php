@@ -6,6 +6,10 @@ use App\Entity\PresenceType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class PresenceTypeFixtures
+ * @package App\DataFixtures
+ */
 class PresenceTypeFixtures extends Fixture
 {
     public const FIXTURES_RECORD_COUNT = 7;
@@ -20,6 +24,9 @@ class PresenceTypeFixtures extends Fixture
         ['DP', 'dyżur w pracy', false, false, true],
     ];
 
+    /**
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $i = 0;

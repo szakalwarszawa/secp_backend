@@ -16,6 +16,10 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class UserWorkScheduleDayRepository extends ServiceEntityRepository
 {
+    /**
+     * UserWorkScheduleDayRepository constructor.
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, UserWorkScheduleDay::class);
@@ -71,9 +75,9 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
      * @param User $owner
      * @param string $dayFromDate
      * @param string $dayToDate
-     * @return UserWorkScheduleDay[]|null
+     * @return UserWorkScheduleDay[] | null
      */
-    public function findWorkDayBetweenDate($owner, $dayFromDate, $dayToDate): ?array
+    public function findWorkDayBetweenDate(User $owner, string $dayFromDate, string $dayToDate): ?array
     {
         // @Todo dodać uwzględnianie tylko zatwierdzonych harmonogramów
         $query = $this->createQueryBuilder('p')

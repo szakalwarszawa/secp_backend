@@ -25,6 +25,10 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
+###> phpdoccheck ###
+.phpdoccheck
+###< phpdoccheck ###
+
 ###> local_phars ###
 composer.phar
 phpmd.phar

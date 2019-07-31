@@ -9,6 +9,10 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory as Faker;
 
+/**
+ * Class SectionFixtures
+ * @package App\DataFixtures
+ */
 class SectionFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
@@ -40,7 +44,7 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < 100; $i++) {
-            $section = $this->makeSection(
+            $this->makeSection(
                 $manager,
                 "section_$i",
                 $this->faker->realText(30),

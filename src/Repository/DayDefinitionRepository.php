@@ -14,11 +14,14 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class DayDefinitionRepository extends ServiceEntityRepository
 {
+    /**
+     * DayDefinitionRepository constructor.
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, DayDefinition::class);
     }
-
 
     /**
      * @param string $dateFrom

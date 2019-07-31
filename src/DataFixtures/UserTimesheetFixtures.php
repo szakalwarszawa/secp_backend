@@ -13,6 +13,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class UserTimesheetFixtures
+ * @package App\DataFixtures
+ */
 class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
 {
     public const REF_USER_TIMESHEET_ADMIN_EDIT = 'user_timesheet_admin_edit';

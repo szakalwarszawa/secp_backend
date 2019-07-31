@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -12,11 +13,20 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190617143600 extends AbstractMigration
 {
+    /**
+     * @return string
+     */
     public function getDescription(): string
     {
         return '';
     }
 
+    /**
+     * @param Schema $schema
+     * @return void
+     * @throws DBALException
+     * @SuppressWarnings("unused")
+     */
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
@@ -64,7 +74,6 @@ CREATE TABLE "user_work_schedules"
     PRIMARY KEY(id)
 )
 SQL
-
         );
         $this->addSql('CREATE INDEX idx_user_work_schedules_status ON "user_work_schedules" (status)');
         $this->addSql('CREATE INDEX idx_user_work_schedules_from_date ON "user_work_schedules" (from_date)');
@@ -88,6 +97,11 @@ SQL
         $this->addSql('ALTER TABLE users ALTER default_work_schedule_profile_id DROP DEFAULT');
     }
 
+    /**
+     * @param Schema $schema
+     * @return void
+     * @SuppressWarnings("unused")
+     */
     public function down(Schema $schema): void
     {
         $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');

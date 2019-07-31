@@ -7,6 +7,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class DayDefinitionFixtures
+ * @package App\DataFixtures
+ */
 class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
@@ -26,7 +30,7 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         for ($i = 0; $i < 1000; $i++) {
-            $day = $this->createDayDefinitionForDay(
+            $this->createDayDefinitionForDay(
                 $manager,
                 "day_definition_$i",
                 new \DateTime("2019-05-01 +$i days")
@@ -42,8 +46,11 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
      * @param \DateTime $day
      * @return DayDefinition
      */
-    private function createDayDefinitionForDay(ObjectManager $manager, string $referenceName, \DateTime $day): DayDefinition
-    {
+    private function createDayDefinitionForDay(
+        ObjectManager $manager,
+        string $referenceName,
+        \DateTime $day
+    ): DayDefinition {
         $dayDefinition = new DayDefinition();
         $dayDefinition->setId($day->format('Y-m-d'));
         $dayDefinition->setWorkingDay($this->getWorkingDay($day) === null);
@@ -67,10 +74,10 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
         $easter = date('m-d', easter_date($day->format('Y')));
         $date = strtotime($day->format('Y') . '-' . $easter);
         $easterSec = date('m-d', strtotime('+1 day', $date));
-        $cc = date('m-d', strtotime('+60 days', $date));
+        $ccDate = date('m-d', strtotime('+60 days', $date));
         $bankHoliday[] = $easter;
         $bankHoliday[] = $easterSec;
-        $bankHoliday[] = $cc;
+        $bankHoliday[] = $ccDate;
 
         if (in_array($day->format('m-d'), $bankHoliday, true)) {
             return 'Święto';

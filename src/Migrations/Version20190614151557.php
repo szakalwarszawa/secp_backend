@@ -13,6 +13,9 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190614151557 extends AbstractMigration
 {
+    /**
+     * @return string
+     */
     public function getDescription(): string
     {
         return '';
@@ -20,7 +23,9 @@ final class Version20190614151557 extends AbstractMigration
 
     /**
      * @param Schema $schema
+     * @return void
      * @throws DBALException
+     * @SuppressWarnings("unused")
      */
     public function up(Schema $schema): void
     {
@@ -46,6 +51,11 @@ final class Version20190614151557 extends AbstractMigration
         $this->addSql('ALTER TABLE users ADD daily_working_time NUMERIC(4, 2) NOT NULL DEFAULT 8.00');
     }
 
+    /**
+     * @param Schema $schema
+     * @return void
+     * @SuppressWarnings("unused")
+     */
     public function down(Schema $schema): void
     {
         $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
