@@ -144,7 +144,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
             if ($this->faker->boolean(20)) {
                 $user->getDepartment()->addManager($user);
-            } else if ($this->faker->boolean(20) && $user->getSection() !== null) {
+            } elseif ($this->faker->boolean(20) && $user->getSection() !== null) {
                 $user->getSection()->addManager($user);
             }
         }

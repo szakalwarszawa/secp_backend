@@ -4,9 +4,9 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Controller\UserCreateTimesheetDayAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -69,7 +69,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "post-users-create-timesheet-day"={
  *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="POST",
- *              "path"="/user_timesheet_days/create_timesheet_day/{day}",
+ *              "path"="/user_timesheet_days/own/create/{day}",
+ *              "requirements"={"day"="\d{4}-\d{2}-\d{2}"},
  *              "controller"=UserCreateTimesheetDayAction::class,
  *              "denormalization_context"={
  *                  "groups"={"post"}
@@ -81,18 +82,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                  }
  *              }
  *          },
- *          "get-users-own-timesheet-days"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
- *              "method"="GET",
- *              "path"="/user_timesheet_days/own",
- *              "controller"=UserOwnTimesheetDayAction::class,
- *              "normalization_context"={
- *                  "groups"={
- *                      "get",
- *                      "get-user-timesheet-day-with-user_work_schedule_day"
- *                  }
- *              }
- *          }
  *      },
  *      normalizationContext={
  *          "groups"={

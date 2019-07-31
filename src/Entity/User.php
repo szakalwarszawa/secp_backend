@@ -7,7 +7,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Controller\UserMeAction;
-use App\Controller\UserActiveWorkScheduleAction;
 use App\Exception\SectionNotBelongToDepartmentException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -71,17 +70,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                      "get-user-with-department",
  *                      "get-user-with-section",
  *                      "get-user-with-default_work_schedule_profile"
- *                  }
- *              }
- *          },
- *          "get-users-active-work-schedule"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
- *              "method"="GET",
- *              "path"="/users/activeWorkSchedule/{dateFrom}/{dateTo}",
- *              "controller"=UserActiveWorkScheduleAction::class,
- *              "normalization_context"={
- *                  "groups"={
- *                      "get"
  *                  }
  *              }
  *          },

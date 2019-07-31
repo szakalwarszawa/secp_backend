@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use App\Controller\UserActiveWorkScheduleAction;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -42,7 +43,19 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                      "get"
  *                  }
  *              }
- *          }
+ *          },
+ *          "get-active-work-schedule"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *              "method"="GET",
+ *              "path"="/user_work_schedule_days/own/active/{dateFrom}/{dateTo}",
+ *              "requirements"={"dateFrom"="\d{4}-\d{2}-\d{2}", "dateTo"="\d{4}-\d{2}-\d{2}"},
+ *              "controller"=UserActiveWorkScheduleAction::class,
+ *              "normalization_context"={
+ *                  "groups"={
+ *                      "get"
+ *                  }
+ *              }
+ *          },
  *      },
  *      normalizationContext={
  *          "groups"={
@@ -155,7 +168,11 @@ class UserWorkScheduleDay
     private $dailyWorkingTime = 8.00;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserTimesheetDay", mappedBy="userWorkScheduleDay", cascade={"persist", "remove"})
+     * @ORM\OneToOne(
+     *     targetEntity="App\Entity\UserTimesheetDay",
+     *     mappedBy="userWorkScheduleDay",
+     *     cascade={"persist", "remove"}
+     * )
      * @ORM\JoinColumn(nullable=true)
      */
     private $userTimesheetDay;

@@ -49,11 +49,15 @@ class DayDefinitionLoggerListener
             return;
         }
 
-        if ($args->hasChangedField('workingDay') && $args->getOldValue('workingDay') !== $args->getNewValue('workingDay')) {
+        if ($args->hasChangedField('workingDay')
+            && $args->getOldValue('workingDay') !== $args->getNewValue('workingDay')
+        ) {
             $this->addDayDefinitionLog(
                 $args,
                 $entity,
-                $args->getNewValue('workingDay') ? 'Dzień został ustawiony jako pracujący' : 'Dzień został ustawiony jako niepracujący'
+                $args->getNewValue('workingDay')
+                    ? 'Dzień został ustawiony jako pracujący'
+                    : 'Dzień został ustawiony jako niepracujący'
             );
         }
 

@@ -27,7 +27,6 @@ class UserTest extends AbstractWebTestCase
 
         $this->assertNotNull($usersJSON);
         $this->assertEquals(count($usersDB), $usersJSON->{'hydra:totalItems'});
-
     }
 
     /**

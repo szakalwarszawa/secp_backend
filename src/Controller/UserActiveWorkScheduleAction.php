@@ -40,12 +40,11 @@ class UserActiveWorkScheduleAction
     }
 
     /**
-     * @param Request $request
      * @param $dateFrom
      * @param $dateTo
-     * @return JsonResponse
+     * @return UserWorkScheduleDay[]
      */
-    public function __invoke($dateFrom, $dateTo)
+    public function __invoke($dateFrom, $dateTo): array
     {
         $currentUser = $this->token->getUser();
         /* @var $currentUser User */
