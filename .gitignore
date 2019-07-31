@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -29,3 +28,9 @@
 ###> phpdoccheck ###
 .phpdoccheck
 ###< phpdoccheck ###
+
+###> local_phars ###
+composer.phar
+phpmd.phar
+phpunit*.phar
+###< local_phars ###
