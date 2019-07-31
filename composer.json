@@ -27,12 +27,13 @@
         "doctrine/doctrine-fixtures-bundle": "^3.2",
         "fzaninotto/faker": "^1.8",
         "liip/functional-test-bundle": "~2.0@alpha",
+        "phpmd/phpmd": "@stable",
         "roave/security-advisories": "dev-master",
+        "sebastian/phpcpd": "^4.1",
         "symfony/maker-bundle": "^1.12",
         "symfony/phpunit-bridge": "4.2.*",
         "symfony/var-dumper": "4.2.*",
-        "symfony/web-server-bundle": "4.2.*",
-        "phpmd/phpmd" : "@stable"
+        "symfony/web-server-bundle": "4.2.*"
     },
     "config": {
         "preferred-install": {
