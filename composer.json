@@ -1,4 +1,6 @@
 {
+    "name": "parp/secp",
+    "description": "System Ewidencji Czasu Pracy w PARP",
     "type": "project",
     "license": "proprietary",
     "require": {
