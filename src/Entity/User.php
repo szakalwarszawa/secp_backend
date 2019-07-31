@@ -77,7 +77,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "get-users-active-work-schedule"={
  *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="GET",
- *              "path"="/users/activeWorkSchedule",
+ *              "path"="/users/activeWorkSchedule/{dateFrom}/{dateTo}",
  *              "controller"=UserActiveWorkScheduleAction::class,
  *              "normalization_context"={
  *                  "groups"={

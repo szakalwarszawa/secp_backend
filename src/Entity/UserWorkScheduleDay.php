@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -47,6 +49,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "get"
  *          }
  *      }
+ * )
+ * @ApiFilter(
+ *     RangeFilter::class,
+ *     properties={
+ *         "dayDefinition.id"
+ *     }
  * )
  */
 class UserWorkScheduleDay

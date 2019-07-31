@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Controller\UserCreateTimesheetDayAction;
@@ -79,6 +80,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                      "get-user-timesheet-day-with-user_work_schedule_day"
  *                  }
  *              }
+ *          },
+ *          "get-users-own-timesheet-days"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *              "method"="GET",
+ *              "path"="/user_timesheet_days/own",
+ *              "controller"=UserOwnTimesheetDayAction::class,
+ *              "normalization_context"={
+ *                  "groups"={
+ *                      "get",
+ *                      "get-user-timesheet-day-with-user_work_schedule_day"
+ *                  }
+ *              }
  *          }
  *      },
  *      normalizationContext={
@@ -104,6 +117,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "dayEndTime": "exact",
  *          "workingTime": "exact"
  *      }
+ * )
+ * @ApiFilter(
+ *     RangeFilter::class,
+ *     properties={
+ *         "userWorkScheduleDay.dayDefinition.id"
+ *     }
  * )
  * @ApiFilter(
  *     OrderFilter::class,
