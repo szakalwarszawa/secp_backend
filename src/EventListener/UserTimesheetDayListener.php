@@ -19,6 +19,10 @@ use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+/**
+ * Class UserTimesheetDayListener
+ * @package App\EventListener
+ */
 class UserTimesheetDayListener
 {
     /**
@@ -42,6 +46,7 @@ class UserTimesheetDayListener
 
     /**
      * @param PreUpdateEventArgs $args
+     * @return void
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {
@@ -67,6 +72,7 @@ class UserTimesheetDayListener
      * @param PreUpdateEventArgs $args
      * @param UserWorkSchedule $entity
      * @param string $notice
+     * @return void
      */
     private function addUserWorkScheduleLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
     {
@@ -91,7 +97,6 @@ class UserTimesheetDayListener
             $userName = 'user';
         } else {
             $userName = $this->token->getUser()->getUsername();
-
         }
 
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);
@@ -101,6 +106,7 @@ class UserTimesheetDayListener
 
     /**
      * @param LifecycleEventArgs $args
+     * @return void
      * @throws \RuntimeException
      * @throws ORMException
      */
@@ -152,6 +158,7 @@ class UserTimesheetDayListener
 
     /**
      * @param LifecycleEventArgs $args
+     * @return void
      * @throws ORMException
      */
     public function postPersist(LifecycleEventArgs $args): void
@@ -187,7 +194,7 @@ class UserTimesheetDayListener
      * @param EntityManager $entityManager
      * @param DayDefinition $dayDefinition
      * @param UserWorkSchedule $userWorkSchedule
-     * @param WorkScheduleProfile|null $userWorkScheduleProfile
+     * @param WorkScheduleProfile $userWorkScheduleProfile
      * @return UserWorkScheduleDay
      * @throws ORMException
      */
@@ -213,6 +220,7 @@ class UserTimesheetDayListener
 
     /**
      * @param PostFlushEventArgs $args
+     * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */

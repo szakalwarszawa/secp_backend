@@ -11,6 +11,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class UserWorkScheduleFixtures
+ * @package App\DataFixtures
+ */
 class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterface
 {
     public const REF_USER_WORK_SCHEDULE_ADMIN_HR = 'user_work_schedule_admin_hr';
@@ -110,7 +114,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
         string $fromDate,
         string $toDate
     ): void {
-        $userWorkSchedule = $this->makeUserWorkSchedule(
+        $this->makeUserWorkSchedule(
             $manager,
             $referenceName,
             $owner,
@@ -151,32 +155,5 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
         $manager->persist($userWorkSchedule);
         $this->addReference($referenceName, $userWorkSchedule);
         return $userWorkSchedule;
-    }
-
-    /**
-     * @param ObjectManager $manager
-     * @param DayDefinition $dayDefinition
-     * @param WorkScheduleProfile|null $userWorkScheduleProfile
-     * @param UserWorkSchedule $userWorkSchedule
-     * @return UserWorkScheduleDay
-     */
-    private function makeUserWorkScheduleDay(
-        ObjectManager $manager,
-        DayDefinition $dayDefinition,
-        ?WorkScheduleProfile $userWorkScheduleProfile,
-        UserWorkSchedule $userWorkSchedule
-    ): UserWorkScheduleDay {
-        $userWorkScheduleDay = new UserWorkScheduleDay();
-        $userWorkScheduleDay->setDayDefinition($dayDefinition)
-            ->setDailyWorkingTime($userWorkScheduleProfile->getDailyWorkingTime())
-            ->setWorkingDay($dayDefinition->getWorkingDay())
-            ->setDayStartTimeFrom($userWorkScheduleProfile->getDayStartTimeFrom())
-            ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
-            ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
-            ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo());
-
-        $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
-        $manager->persist($userWorkScheduleDay);
-        return $userWorkScheduleDay;
     }
 }

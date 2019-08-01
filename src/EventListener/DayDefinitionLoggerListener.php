@@ -13,6 +13,10 @@ use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+/**
+ * Class DayDefinitionLoggerListener
+ * @package App\EventListener
+ */
 class DayDefinitionLoggerListener
 {
     /**
@@ -36,6 +40,7 @@ class DayDefinitionLoggerListener
 
     /**
      * @param PreUpdateEventArgs $args
+     * @return void
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {
@@ -69,6 +74,7 @@ class DayDefinitionLoggerListener
      * @param PreUpdateEventArgs $args
      * @param DayDefinition $entity
      * @param string $notice
+     * @return void
      */
     private function addDayDefinitionLog(PreUpdateEventArgs $args, DayDefinition $entity, string $notice): void
     {
@@ -92,7 +98,6 @@ class DayDefinitionLoggerListener
             $userName = 'admin';
         } else {
             $userName = $this->token->getUser()->getUsername();
-
         }
 
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);
@@ -102,6 +107,7 @@ class DayDefinitionLoggerListener
 
     /**
      * @param PostFlushEventArgs $args
+     * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */

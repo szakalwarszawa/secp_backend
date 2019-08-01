@@ -1,14 +1,12 @@
 <?php
 
-
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\UserTimesheetDay;
-use App\Entity\UserWorkScheduleDay;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use mysql_xdevapi\Exception;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +14,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * Class UserCreateTimesheetDayAction
+ * @package App\Controller
+ */
 class UserCreateTimesheetDayAction extends AbstractController
 {
     /**
@@ -49,10 +51,13 @@ class UserCreateTimesheetDayAction extends AbstractController
     }
 
     /**
+     * @param string $day
+     * @param Request $request
      * @return JsonResponse
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function __invoke($day, Request $request)
+    public function __invoke($day, Request $request): JsonResponse
     {
         $dayDate = date('Y-m-d', strtotime($day));
 

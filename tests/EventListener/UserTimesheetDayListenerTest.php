@@ -12,7 +12,7 @@ use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
-class UserTimesheetDayListenerT_est extends AbstractWebTestCase
+class UserTimesheetDayListenerTest extends AbstractWebTestCase
 {
     private const TEST_USER_WORK_SCHEDULE_STATUS = UserTimesheet::STATUS_HR_ACCEPT;
     private const TEST_USER_WORK_SCHEDULE_FROM_DATE = '2020-01-01';
@@ -72,7 +72,7 @@ class UserTimesheetDayListenerT_est extends AbstractWebTestCase
     }
 
     /**
-     * @_test
+     * @test
      */
     public function updateUserWorkSchedule(): void
     {

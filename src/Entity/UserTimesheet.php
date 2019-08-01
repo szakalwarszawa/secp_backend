@@ -130,7 +130,7 @@ class UserTimesheet
      * @param User|null $owner
      * @return UserTimesheet
      */
-    public function setOwner(?User $owner): self
+    public function setOwner(?User $owner): UserTimesheet
     {
         $this->owner = $owner;
 
@@ -149,7 +149,7 @@ class UserTimesheet
      * @param string $period
      * @return UserTimesheet
      */
-    public function setPeriod(string $period): self
+    public function setPeriod(string $period): UserTimesheet
     {
         $this->period = $period;
 
@@ -168,7 +168,7 @@ class UserTimesheet
      * @param int $status
      * @return UserTimesheet
      */
-    public function setStatus(int $status): self
+    public function setStatus(int $status): UserTimesheet
     {
         $this->status = $status;
 
@@ -187,7 +187,7 @@ class UserTimesheet
      * @param UserTimesheetDay $userTimesheetDay
      * @return UserTimesheet
      */
-    public function addUserTimesheetDay(UserTimesheetDay $userTimesheetDay): self
+    public function addUserTimesheetDay(UserTimesheetDay $userTimesheetDay): UserTimesheet
     {
         if (!$this->userTimesheetDays->contains($userTimesheetDay)) {
             $this->userTimesheetDays[] = $userTimesheetDay;
@@ -201,7 +201,7 @@ class UserTimesheet
      * @param UserTimesheetDay $userTimesheetDay
      * @return UserTimesheet
      */
-    public function removeUserTimesheetDay(UserTimesheetDay $userTimesheetDay): self
+    public function removeUserTimesheetDay(UserTimesheetDay $userTimesheetDay): UserTimesheet
     {
         if ($this->userTimesheetDays->contains($userTimesheetDay)) {
             $this->userTimesheetDays->removeElement($userTimesheetDay);

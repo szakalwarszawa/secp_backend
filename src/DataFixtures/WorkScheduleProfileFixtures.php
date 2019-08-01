@@ -7,6 +7,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory as Faker;
 
+/**
+ * Class WorkScheduleProfileFixtures
+ * @package App\DataFixtures
+ */
 class WorkScheduleProfileFixtures extends Fixture
 {
     private $profiles = [

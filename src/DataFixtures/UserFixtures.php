@@ -11,6 +11,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory as Faker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+/**
+ * Class UserFixtures
+ * @package App\DataFixtures
+ */
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
     public const REF_USER_ADMIN = 'user_admin';
@@ -183,11 +187,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setDepartment($department)
             ->setDefaultWorkScheduleProfile($defaultWorkScheduleProfile)
             ->setPassword(
-            $this->passwordEncoder->encodePassword(
-                $user,
-                'test'
-            )
-        );
+                $this->passwordEncoder->encodePassword(
+                    $user,
+                    'test'
+                )
+            );
 
         $this->addReference($referenceName, $user);
         $manager->persist($user);

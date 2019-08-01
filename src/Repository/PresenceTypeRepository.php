@@ -14,6 +14,10 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class PresenceTypeRepository extends ServiceEntityRepository
 {
+    /**
+     * PresenceTypeRepository constructor.
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, PresenceType::class);

@@ -169,7 +169,7 @@ class WorkScheduleProfile
      * @param string $name
      * @return WorkScheduleProfile
      */
-    public function setName(string $name): self
+    public function setName(string $name): WorkScheduleProfile
     {
         $this->name = $name;
         return $this;
@@ -187,7 +187,7 @@ class WorkScheduleProfile
      * @param string|null $notice
      * @return WorkScheduleProfile
      */
-    public function setNotice(?string $notice): self
+    public function setNotice(?string $notice): WorkScheduleProfile
     {
         $this->notice = $notice;
         return $this;
@@ -205,7 +205,7 @@ class WorkScheduleProfile
      * @param string $dayStartTimeFrom
      * @return WorkScheduleProfile
      */
-    public function setDayStartTimeFrom(string $dayStartTimeFrom): self
+    public function setDayStartTimeFrom(string $dayStartTimeFrom): WorkScheduleProfile
     {
         $this->dayStartTimeFrom = $dayStartTimeFrom;
 
@@ -224,7 +224,7 @@ class WorkScheduleProfile
      * @param string $dayStartTimeTo
      * @return WorkScheduleProfile
      */
-    public function setDayStartTimeTo(string $dayStartTimeTo): self
+    public function setDayStartTimeTo(string $dayStartTimeTo): WorkScheduleProfile
     {
         $this->dayStartTimeTo = $dayStartTimeTo;
 
@@ -243,7 +243,7 @@ class WorkScheduleProfile
      * @param string $dayEndTimeFrom
      * @return WorkScheduleProfile
      */
-    public function setDayEndTimeFrom(string $dayEndTimeFrom): self
+    public function setDayEndTimeFrom(string $dayEndTimeFrom): WorkScheduleProfile
     {
         $this->dayEndTimeFrom = $dayEndTimeFrom;
 
@@ -262,7 +262,7 @@ class WorkScheduleProfile
      * @param string $dayEndTimeTo
      * @return WorkScheduleProfile
      */
-    public function setDayEndTimeTo(string $dayEndTimeTo): self
+    public function setDayEndTimeTo(string $dayEndTimeTo): WorkScheduleProfile
     {
         $this->dayEndTimeTo = $dayEndTimeTo;
 
@@ -281,7 +281,7 @@ class WorkScheduleProfile
      * @param float $dailyWorkingTime
      * @return WorkScheduleProfile
      */
-    public function setDailyWorkingTime(float $dailyWorkingTime): self
+    public function setDailyWorkingTime(float $dailyWorkingTime): WorkScheduleProfile
     {
         $this->dailyWorkingTime = $dailyWorkingTime;
 

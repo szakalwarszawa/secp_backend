@@ -11,7 +11,7 @@ class AuthorizationTest extends AbstractWebTestCase
     public function testApiGetUsersAsUnauthorizedUser(): void
     {
         $client = $this->makeClient();
-        $crawler = $client->request('GET', '/api/users');
+        $client->request('GET', '/api/users');
         self::assertStatusCode(401, $client);
     }
 
@@ -20,6 +20,6 @@ class AuthorizationTest extends AbstractWebTestCase
      */
     public function testApiGetUsersAsAuthorizedUser(): void
     {
-        $response = $this->getActionResponse('GET', '/api/users');
+        $this->getActionResponse('GET', '/api/users');
     }
 }

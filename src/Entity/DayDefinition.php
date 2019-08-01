@@ -81,6 +81,9 @@ class DayDefinition
      */
     private $dayDefinitionLogs;
 
+    /**
+     * DayDefinition constructor.
+     */
     public function __construct()
     {
         $this->dayDefinitionLogs = new ArrayCollection();
