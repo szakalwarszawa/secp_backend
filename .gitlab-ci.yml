@@ -69,8 +69,7 @@ phpcpd:
     stage: stats
     allow_failure: true
     script:
-        - sed -i 's/memory_limit = 128M/memory_limit = 1G/g' /etc/php7/php.ini
-        - /root/.composer/vendor/bin/phpcpd --min-lines=10 --min-tokens=100 --verbose --exclude="tests/" src/
+        - php -d memory_limit=2G /root/.composer/vendor/bin/phpcpd --min-lines=10 --min-tokens=100 --verbose --exclude="tests/" src/
 
 phploc:
     stage: stats
