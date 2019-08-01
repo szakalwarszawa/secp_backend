@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  * Class UserCreateTimesheetDayAction
  * @package App\Controller
  */
-class UserCreateTimesheetDayAction extends AbstractController
+class UserCreateTimesheetDayAction
 {
     /**
      * @var TokenInterface|null
@@ -53,11 +53,11 @@ class UserCreateTimesheetDayAction extends AbstractController
     /**
      * @param string $day
      * @param Request $request
-     * @return JsonResponse
+     * @return UserTimesheetDay
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function __invoke($day, Request $request): JsonResponse
+    public function __invoke($day, Request $request): UserTimesheetDay
     {
         $dayDate = date('Y-m-d', strtotime($day));
 
@@ -68,6 +68,6 @@ class UserCreateTimesheetDayAction extends AbstractController
         $this->entityManager->persist($userTimesheetDay);
         $this->entityManager->flush();
 
-        return $this->json($userTimesheetDay);
+        return $userTimesheetDay;
     }
 }

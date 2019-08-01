@@ -183,7 +183,7 @@ abstract class AbstractWebTestCase extends WebTestCase
     protected function assertArrayContainsSameKeyWithValue($theArray, $keyName, $value): void
     {
         foreach ($theArray as $arrayItem) {
-            if (!array_key_exists( $keyName, $arrayItem)) {
+            if (!array_key_exists($keyName, $arrayItem)) {
                 $this->assertTrue(
                     false,
                     sprintf('Array not contains given key: [%s]', $keyName)
@@ -213,12 +213,12 @@ abstract class AbstractWebTestCase extends WebTestCase
             $objectVars = get_class_vars(get_class($item));
             $objectMethods = get_class_methods(get_class($item));
 
-            if (array_key_exists( $attributeName, $objectVars)) {
+            if (array_key_exists($attributeName, $objectVars)) {
                 if ($item->$attributeName == $value) {
                     $this->assertTrue(true);
                     return;
                 }
-            } elseif (in_array( $attributeName, $objectMethods, true)) {
+            } elseif (in_array($attributeName, $objectMethods, true)) {
                 if ($item->$attributeName() == $value) {
                     $this->assertTrue(true);
                     return;

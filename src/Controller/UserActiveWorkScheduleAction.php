@@ -7,7 +7,6 @@ use App\Entity\User;
 use App\Entity\UserWorkScheduleDay;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -17,7 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  * Class UserActiveWorkScheduleAction
  * @package App\Controller
  */
-class UserActiveWorkScheduleAction extends AbstractController
+class UserActiveWorkScheduleAction
 {
     /**
      * @var TokenInterface|null
@@ -41,16 +40,18 @@ class UserActiveWorkScheduleAction extends AbstractController
     }
 
     /**
-     * @return JsonResponse
+     * @param $dateFrom
+     * @param $dateTo
+     * @return UserWorkScheduleDay[]
      */
-    public function __invoke(): JsonResponse
+    public function __invoke($dateFrom, $dateTo): array
     {
         $currentUser = $this->token->getUser();
         /* @var $currentUser User */
 
         $userWorkSchedules = $this->entityManager->getRepository(UserWorkScheduleDay::class)
-            ->findWorkDayBetweenDate($currentUser, '2019-05-01', '2019-08-31');
+            ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo);
 
-        return $this->json($userWorkSchedules);
+        return $userWorkSchedules;
     }
 }

@@ -8,7 +8,6 @@ use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
-
 class UserTest extends AbstractWebTestCase
 {
     /**

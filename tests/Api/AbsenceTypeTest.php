@@ -96,7 +96,9 @@ JSON;
      */
     public function apiPutAbsenceTypeShouldBeProhibited(): void
     {
-        $absenceTypeREF = $this->fixtures->getReference('absence_type_' . random_int(0, AbsenceTypeFixtures::FIXTURES_RECORD_COUNT - 1));
+        $absenceTypeREF = $this->fixtures->getReference(
+            'absence_type_' . random_int(0, AbsenceTypeFixtures::FIXTURES_RECORD_COUNT - 1)
+        );
         /* @var $absenceTypeREF AbsenceType */
 
         $payload = <<<'JSON'
