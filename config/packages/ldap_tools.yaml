@@ -1,0 +1,10 @@
+ldap_tools:
+  security:
+    guard:
+      username_parameter: username
+      password_parameter: password
+  domains:
+    active_directory:
+      domain_name: '%env(resolve:LDAP_DOMAIN)%'
+      servers: ['%env(resolve:LDAP_HOST)%']
+      bind_format: '%env(resolve:LDAP_BIND_FORMAT)%'

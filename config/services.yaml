@@ -62,3 +62,17 @@ services:
         autowire: true
         tags:
             - { name: doctrine.event_listener, event: prePersist, connection: default, lazy: true }
+
+    App\Security\Authentication\Guard\JsonLdapGuardAuthenticator:
+        arguments:
+            - '%security.authentication.hide_user_not_found%'
+            - '@ldap_tools.security.user.ldap_user_checker'
+            - '@ldap_tools.ldap_manager'
+            - '@lexik_jwt_authentication.security.guard.jwt_token_authenticator' # Instead of '@ldap_tools.security.authentication.form_entry_point'
+            - '@event_dispatcher'
+            - '@lexik_jwt_authentication.handler.authentication_success' # Instead of '@ldap_tools.security.auth_success_handler'
+            - '@lexik_jwt_authentication.handler.authentication_failure' # Instead of '@ldap_tools.security.auth_failure_handler'
+            - '%ldap_tools.security.guard.options%'
+            - '@ldap_tools.security.user.ldap_user_provider'
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]

@@ -42,6 +42,9 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            guard:
+                authenticators:
+                    - App\Security\Authentication\Guard\JsonLdapGuardAuthenticator
 
         docs:
             pattern: ^/api/docs
