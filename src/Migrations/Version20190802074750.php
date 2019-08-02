@@ -12,11 +12,20 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190802074750 extends AbstractMigration
 {
+    /**
+     * @return string
+     */
     public function getDescription() : string
     {
         return '';
     }
 
+    /**
+     * @param Schema $schema
+     * @return void
+     * @throws DBALException
+     * @SuppressWarnings("unused")
+     */
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
@@ -25,6 +34,11 @@ final class Version20190802074750 extends AbstractMigration
         $this->addSql('ALTER TABLE users ALTER password DROP NOT NULL');
     }
 
+    /**
+     * @param Schema $schema
+     * @return void
+     * @SuppressWarnings("unused")
+     */
     public function down(Schema $schema) : void
     {
     }
