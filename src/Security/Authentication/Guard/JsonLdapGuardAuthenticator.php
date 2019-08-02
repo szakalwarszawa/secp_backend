@@ -59,6 +59,8 @@ class JsonLdapGuardAuthenticator extends LdapGuardAuthenticator
     /**
      * @param Request $request
      * @return null|string
+     *
+     * @SuppressWarnings("unused")
      */
     protected function getRequestDomain(Request $request): ?string
     {
