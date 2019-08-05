@@ -86,7 +86,7 @@ class JsonLdapGuardAuthenticator extends LdapGuardAuthenticator
     /**
      * Set entityManager
      *
-     * @param EntityManagerInterface
+     * @param EntityManagerInterface $entityManager
      *
      * @return void
      */
