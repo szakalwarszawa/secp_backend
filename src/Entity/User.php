@@ -161,7 +161,7 @@ class User implements UserInterface
      * @Groups({"get", "put", "post"})
      */
     private $username;
-    
+
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank()
@@ -201,7 +201,7 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="string", length=256, nullable=true)
      * @Groups({"user_prohibited"})
      */
     private $password;
@@ -504,10 +504,10 @@ class User implements UserInterface
     }
 
     /**
-     * @param string $password
+     * @param string|null $password
      * @return User
      */
-    public function setPassword(string $password): User
+    public function setPassword(?string $password = null): User
     {
         $this->password = $password;
         return $this;
