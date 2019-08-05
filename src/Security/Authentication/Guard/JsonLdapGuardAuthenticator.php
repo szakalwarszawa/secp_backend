@@ -76,7 +76,7 @@ class JsonLdapGuardAuthenticator extends LdapGuardAuthenticator
     {
         $content = $this->getContent($request);
 
-        if (isset($content[$param])) {
+        return $content[$param] ?? null;
             return $content[$param];
         }
 
