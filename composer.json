@@ -8,6 +8,7 @@
         "ext-calendar": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "psr/simple-cache": "^1.0",
         "api-platform/api-pack": "^1.2",
         "doctrine/doctrine-bundle": "^1.11",
         "doctrine/doctrine-migrations-bundle": "^2.0",
