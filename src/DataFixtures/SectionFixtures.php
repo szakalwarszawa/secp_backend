@@ -16,6 +16,16 @@ use Faker\Factory as Faker;
 class SectionFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
+     * @var string
+     */
+    const REF_BI_SECTION = 'section_bi';
+
+    /**
+     * @var string
+     */
+    const REF_BP_SECION = 'section_bp';
+
+    /**
      * @var Faker
      */
     private $faker;
@@ -43,6 +53,22 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
+        $this->makeSection(
+            $manager,
+            self::REF_BI_SECTION,
+            'Sekcja Rozwoju Oprogramowania',
+            true,
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN)
+        );
+
+        $this->makeSection(
+            $manager,
+            self::REF_BP_SECION,
+            'Sekcja Prezesowa',
+            true,
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_BP)
+        );
+
         for ($i = 0; $i < 100; $i++) {
             $this->makeSection(
                 $manager,

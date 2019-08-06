@@ -16,6 +16,11 @@ class DepartmentFixtures extends Fixture
     public const REF_DEPARTMENT_ADMIN = 'department_admin';
 
     /**
+     * @var string
+     */
+    const REF_DEPARTMENT_BP = 'department_bp';
+
+    /**
      * @var Faker
      */
     private $faker;
@@ -38,6 +43,14 @@ class DepartmentFixtures extends Fixture
             self::REF_DEPARTMENT_ADMIN,
             'Biuro Informatyki',
             'BI',
+            true
+        );
+
+        $this->makeDepartment(
+            $manager,
+            self::REF_DEPARTMENT_BP,
+            'Biuro Prezesa',
+            'BP',
             true
         );
 

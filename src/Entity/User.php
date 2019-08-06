@@ -163,24 +163,21 @@ class User implements UserInterface
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      * @Assert\Email()
      * @Groups({"get", "post", "put"})
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(groups={"post"})
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(min=3, max=255, groups={"post", "put"})
      * @Groups({"get", "post", "put"})
      */
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(groups={"post"})
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(min=3, max=255, groups={"post", "put"})
      * @Groups({"get", "post", "put"})
      */
@@ -371,36 +368,36 @@ class User implements UserInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
 
     /**
-     * @param string $lastName
+     * @param null|string $lastName
      * @return User
      */
-    public function setLastName($lastName): User
+    public function setLastName(?string $lastName = null): User
     {
         $this->lastName = $lastName;
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
 
     /**
-     * @param string $firstName
+     * @param null|string $firstName
      * @return User
      */
-    public function setFirstName($firstName): User
+    public function setFirstName(?string $firstName = null): User
     {
         $this->firstName = $firstName;
         return $this;
@@ -441,10 +438,10 @@ class User implements UserInterface
     }
 
     /**
-     * @param string $email
+     * @param null|string $email
      * @return User
      */
-    public function setEmail(string $email): User
+    public function setEmail(?string $email = null): User
     {
         $this->email = $email;
         return $this;
