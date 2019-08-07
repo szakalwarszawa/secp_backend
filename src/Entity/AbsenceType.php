@@ -162,4 +162,9 @@ class AbsenceType
 
         return $this;
     }
+
+    public function VeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLineVeryVeryLongLine()
+    {
+        return;
+    }
 }
