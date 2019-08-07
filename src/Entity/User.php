@@ -170,14 +170,16 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=3, max=255, groups={"post", "put"})
      * @Groups({"get", "post", "put"})
      */
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=3, max=255, groups={"post", "put"})
      * @Groups({"get", "post", "put"})
      */
@@ -368,36 +370,36 @@ class User implements UserInterface
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getLastName(): ?string
+    public function getLastName(): string
     {
         return $this->lastName;
     }
 
     /**
-     * @param null|string $lastName
+     * @param string $lastName
      * @return User
      */
-    public function setLastName(?string $lastName = null): User
+    public function setLastName(string $lastName): User
     {
         $this->lastName = $lastName;
         return $this;
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
 
     /**
-     * @param null|string $firstName
+     * @param string $firstName
      * @return User
      */
-    public function setFirstName(?string $firstName = null): User
+    public function setFirstName(string $firstName): User
     {
         $this->firstName = $firstName;
         return $this;

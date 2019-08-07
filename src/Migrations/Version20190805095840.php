@@ -32,8 +32,6 @@ final class Version20190805095840 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE users ALTER email DROP NOT NULL');
-        $this->addSql('ALTER TABLE users ALTER first_name DROP NOT NULL');
-        $this->addSql('ALTER TABLE users ALTER last_name DROP NOT NULL');
     }
 
     /**

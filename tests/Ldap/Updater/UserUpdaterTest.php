@@ -87,6 +87,26 @@ class UserUpdaterTest extends AbstractWebTestCase
             ->add($ldapObjectFailDueToDepartmentIsNotExists)
         ;
 
+        /**
+         * User that will not be saved into database.
+         * This user has no first name defined.
+         */
+        $ldapObjectFailHasNoFirstName = new LdapObject([
+            'lastname' => 'Krawczyk',
+            'firstname' => null,
+            'mail' => 'krzysztof_krawczyk@parp.gov.pl',
+            'dn' => 'CN=Krawczyk Krzysztof,OU=BRK,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
+            UserAttributes::DEPARTMENT_SHORT => 'BP',
+            UserAttributes::POSITION => 'specjalista',
+            UserAttributes::SECTION => $this->fixtures->getReference(SectionFixtures::REF_BP_SECION)->getName(),
+            UserAttributes::DEPARTMENT => 'Biuro Prezesa',
+            UserAttributes::SUPERVISOR => 'CN=Guy Random,OU=BP,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
+            UserAttributes::SAMACCOUNTNAME => 'krzysztof_krafczyk',
+        ], 'user');
+        $ldapObjectsCollection
+            ->add($ldapObjectFailHasNoFirstName)
+        ;
+
         $doctrineRegistry = self::$container->get('doctrine');
 
         foreach ($ldapObjectsCollection as $ldapObject) {
@@ -107,7 +127,13 @@ class UserUpdaterTest extends AbstractWebTestCase
         $userUpdater->update();
 
         $this->assertEquals($userUpdater->getSuccessfulCount(), 2);
-        $this->assertEquals($userUpdater->getFailedCount(), 1);
+
+        /**
+         * 2 is number of failed users.
+         * ldapObjectFailHasNoFirstName
+         * ldapObjectFailDueToDepartmentIsNotExists
+         */
+        $this->assertEquals($userUpdater->getFailedCount(), 2);
 
         /**
          * This user should not exist in database.
@@ -120,7 +146,11 @@ class UserUpdaterTest extends AbstractWebTestCase
                 ]);
         $this->assertNull($userThatShouldNotExist);
 
+        /**
+         * Unset failed elements.
+         */
         $ldapObjectsCollection->removeElement($ldapObjectFailDueToDepartmentIsNotExists);
+        $ldapObjectsCollection->removeElement($ldapObjectFailHasNoFirstName);
 
         foreach ($ldapObjectsCollection as $ldapObject) {
             $userThatShouldExists = $doctrineRegistry

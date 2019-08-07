@@ -62,6 +62,7 @@ final class UserUpdater extends AbstractUpdater
     /**
      * Create or update user.
      * Additionally, it sets up section and department managers.
+     * If user has no first, last name or department defined it will be skipped.
      *
      * @param LdapObject $userData
      *
@@ -69,6 +70,15 @@ final class UserUpdater extends AbstractUpdater
      */
     private function createOrUpdateUser(LdapObject $userData): bool
     {
+        $userFirstName = $userData->get('firstname');
+        $userLastName = $userData->get('lastname');
+
+        if (!$userFirstName || !$userLastName) {
+            $this->countFail();
+
+            return false;
+        }
+
         $user = $this
             ->entityManager
             ->getRepository(User::class)
@@ -112,8 +122,8 @@ final class UserUpdater extends AbstractUpdater
         $section = $department->getSectionByName($userData->get(UserAttributes::SECTION));
 
         $user
-            ->setFirstName($userData->get('firstname'))
-            ->setLastName($userData->get('lastname'))
+            ->setFirstName($userFirstName)
+            ->setLastName($userLastName)
             ->setEmail($userData->get('email'))
             ->setDepartment($department)
             ->setSection($section)
