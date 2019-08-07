@@ -37,8 +37,8 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('p')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
             ->andWhere('p.userWorkSchedule = :userWorkSchedule')
-            ->andWhere('dayDefinition.id = :dayDate')
             ->setParameter('userWorkSchedule', $userWorkSchedule)
+            ->andWhere('dayDefinition.id = :dayDate')
             ->setParameter('dayDate', $dayDate)
             ->setMaxResults(1)
             ->getQuery();
@@ -55,14 +55,15 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
      */
     public function findWorkDay($owner, $dayDate): ?UserWorkScheduleDay
     {
-        // @Todo dodać uwzględnianie tylko zatwierdzonych harmonogramów
         $query = $this->createQueryBuilder('p')
             ->innerJoin('p.userWorkSchedule', 'userWorkSchedule')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
             ->andWhere('userWorkSchedule.owner = :owner')
-            ->andWhere('dayDefinition.id = :dayDate')
             ->setParameter('owner', $owner)
+            ->andWhere('dayDefinition.id = :dayDate')
             ->setParameter('dayDate', $dayDate)
+            ->andWhere('userWorkSchedule.status = :status')
+            ->setParameter('status', UserWorkSchedule::STATUS_HR_ACCEPT)
             ->setMaxResults(1)
             ->getQuery();
 
@@ -79,7 +80,6 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
      */
     public function findWorkDayBetweenDate(User $owner, string $dayFromDate, string $dayToDate): ?array
     {
-        // @Todo dodać uwzględnianie tylko zatwierdzonych harmonogramów
         $query = $this->createQueryBuilder('p')
             ->innerJoin('p.userWorkSchedule', 'userWorkSchedule')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
@@ -89,6 +89,8 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
             ->setParameter('dateFrom', $dayFromDate)
             ->andWhere('dayDefinition.id <= :dateTo')
             ->setParameter('dateTo', $dayToDate)
+            ->andWhere('userWorkSchedule.status = :status')
+            ->setParameter('status', UserWorkSchedule::STATUS_HR_ACCEPT)
             ->getQuery();
 
         $result = $query->getResult();
