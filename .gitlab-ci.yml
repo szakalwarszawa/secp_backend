@@ -47,7 +47,7 @@ psr2:
         - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard=PSR2 --extensions=php src/
 
 linelength:
-    stage: build
+    stage: standards
     allow_failure: true
     script:
         - /root/.composer/vendor/bin/phpcs --config-set encoding utf-8
