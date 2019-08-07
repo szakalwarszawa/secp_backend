@@ -23,6 +23,7 @@ linelength:
     stage: build
     allow_failure: false
     script:
+        - /root/.composer/vendor/bin/phpcs --config-set encoding utf-8
         - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard="./.gitlab-ci/phpcs_line_length.xml" --extensions=php src/
 
 phpunit:
