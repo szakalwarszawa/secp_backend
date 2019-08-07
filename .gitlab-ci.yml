@@ -19,13 +19,6 @@ build:
         expire_in: 1 day
         untracked: true
 
-linelength:
-    stage: build
-    allow_failure: false
-    script:
-        - /root/.composer/vendor/bin/phpcs --config-set encoding utf-8
-        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard="./.gitlab-ci/phpcs_line_length.xml" --extensions=php src/
-
 phpunit:
     stage: tests
     allow_failure: false
@@ -52,6 +45,13 @@ psr2:
     allow_failure: false
     script:
         - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard=PSR2 --extensions=php src/
+
+linelength:
+    stage: build
+    allow_failure: true
+    script:
+        - /root/.composer/vendor/bin/phpcs --config-set encoding utf-8
+        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard="./.gitlab-ci/phpcs_line_length.xml" --extensions=php src/
 
 twigcs:
     stage: standards
