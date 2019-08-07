@@ -30,6 +30,11 @@ class LdapImport
      */
     private $logger;
 
+    /**
+     * @param UsersFetcher $usersFetcher
+     * @param EntityManagerInterface $entityManager
+     * @param LoggerInterface $logger
+     */
     public function __construct(
         UsersFetcher $usersFetcher,
         EntityManagerInterface $entityManager,
