@@ -37,7 +37,6 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
 
         $this->assertNotNull($userWorkScheduleUpdated);
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkScheduleUpdated->getWorkScheduleProfile());
-//        $this->assertEquals($workScheduleProfile->getId(), $userWorkScheduleUpdated->getWorkScheduleProfile()->getId());
         $this->assertEquals(self::TEST_STATUS, $userWorkScheduleUpdated->getStatus());
         $this->assertEquals(self::TEST_FROM_DATE, $userWorkScheduleUpdated->getFromDate()->format('Y-m-d'));
         $this->assertEquals(self::TEST_TO_DATE, $userWorkScheduleUpdated->getToDate()->format('Y-m-d'));
