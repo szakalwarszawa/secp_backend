@@ -137,7 +137,8 @@ class UserWorkScheduleListener
             );
         /* @var $dayDefinitions DayDefinition[] */
 
-        // @Todo Dodać sprawdzanie czy w zadanym okresie czasu są definicje dni [DayDefinition] jeśli nie ma to albo exception albo dodawać definicje
+        // @Todo Dodać sprawdzanie czy w zadanym okresie czasu są definicje dni [DayDefinition]
+        // jeśli nie ma to albo exception albo dodawać definicje
 
         foreach ($dayDefinitions as $dayDefinition) {
             $userWorkScheduleProfile = $userWorkSchedule->getWorkScheduleProfile();

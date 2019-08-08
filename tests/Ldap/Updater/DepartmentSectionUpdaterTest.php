@@ -2,16 +2,16 @@
 
 namespace App\Tests\Ldap\Updater;
 
+use App\DataFixtures\DepartmentFixtures;
+use App\DataFixtures\SectionFixtures;
 use App\Entity\Department;
+use App\Entity\Section;
 use App\Entity\User;
+use App\Ldap\Constants\UserAttributes;
+use App\Ldap\Import\Updater\DepartmentSectionUpdater;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use LdapTools\Object\LdapObject;
-use App\Ldap\Constants\UserAttributes;
-use App\Entity\Section;
-use App\DataFixtures\SectionFixtures;
-use App\DataFixtures\DepartmentFixtures;
-use App\Ldap\Import\Updater\DepartmentSectionUpdater;
 
 /**
  * Class DepartmentSectionUpdaterTest
@@ -59,7 +59,9 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
             UserAttributes::DEPARTMENT_SHORT => 'BP',
             UserAttributes::POSITION => 'dyrektor',
             UserAttributes::SECTION => $this->fixtures->getReference(SectionFixtures::REF_BP_SECION)->getName(),
-            UserAttributes::DEPARTMENT => $this->fixtures->getReference(DepartmentFixtures::REF_DEPARTMENT_BP)->getName(),
+            UserAttributes::DEPARTMENT => $this->fixtures
+                ->getReference(DepartmentFixtures::REF_DEPARTMENT_BP)
+                ->getName(),
             UserAttributes::SUPERVISOR => 'CN=Bolton Ramsay,OU=BP,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::SAMACCOUNTNAME => 'yerba_mate',
         ], 'user');

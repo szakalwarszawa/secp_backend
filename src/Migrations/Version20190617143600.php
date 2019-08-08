@@ -54,9 +54,15 @@ CREATE TABLE "user_work_schedule_days"
 )
 SQL
         );
-        $this->addSql('CREATE INDEX IDX_E73543F281F0C051 ON "user_work_schedule_days" (day_definition_id)');
         $this->addSql(
-            'CREATE INDEX idx_user_work_schedule_days_user_work_schedule_id ON "user_work_schedule_days" (user_work_schedule_id)'
+            <<<SQL
+CREATE INDEX IDX_E73543F281F0C051 ON "user_work_schedule_days" (day_definition_id)
+SQL
+        );
+        $this->addSql(
+            <<<SQL
+CREATE INDEX idx_user_work_schedule_days_user_work_schedule_id ON "user_work_schedule_days" (user_work_schedule_id)
+SQL
         );
         $this->addSql(
             'CREATE INDEX idx_user_work_schedule_days_working_day ON "user_work_schedule_days" (working_day)'
@@ -80,19 +86,41 @@ SQL
         $this->addSql('CREATE INDEX idx_user_work_schedules_to_date ON "user_work_schedules" (to_date)');
         $this->addSql('CREATE INDEX idx_user_work_schedules_owner_id ON "user_work_schedules" (owner_id)');
         $this->addSql(
-            'CREATE INDEX idx_user_work_schedules_work_schedule_profile_id ON "user_work_schedules" (work_schedule_profile_id)'
+            <<<SQL
+CREATE INDEX idx_user_work_schedules_work_schedule_profile_id ON "user_work_schedules" (work_schedule_profile_id)
+SQL
         );
         $this->addSql(
-            'ALTER TABLE "user_work_schedule_days" ADD CONSTRAINT FK_E73543F2C6DF60CB FOREIGN KEY (user_work_schedule_id) REFERENCES "user_work_schedules" (id) NOT DEFERRABLE INITIALLY IMMEDIATE'
+            <<<SQL
+ALTER TABLE "user_work_schedule_days"
+    ADD CONSTRAINT FK_E73543F2C6DF60CB
+    FOREIGN KEY (user_work_schedule_id)
+    REFERENCES "user_work_schedules" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+SQL
         );
         $this->addSql(
-            'ALTER TABLE "user_work_schedule_days" ADD CONSTRAINT FK_E73543F281F0C051 FOREIGN KEY (day_definition_id) REFERENCES "day_definitions" (id) NOT DEFERRABLE INITIALLY IMMEDIATE'
+            <<<SQL
+ALTER TABLE "user_work_schedule_days"
+    ADD CONSTRAINT FK_E73543F281F0C051
+    FOREIGN KEY (day_definition_id)
+    REFERENCES "day_definitions" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+SQL
         );
         $this->addSql(
-            'ALTER TABLE "user_work_schedules" ADD CONSTRAINT FK_38B6AB827E3C61F9 FOREIGN KEY (owner_id) REFERENCES "users" (id) NOT DEFERRABLE INITIALLY IMMEDIATE'
+            <<<SQL
+ALTER TABLE "user_work_schedules"
+    ADD CONSTRAINT FK_38B6AB827E3C61F9
+    FOREIGN KEY (owner_id)
+    REFERENCES "users" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+SQL
         );
         $this->addSql(
-            'ALTER TABLE "user_work_schedules" ADD CONSTRAINT FK_38B6AB8253BD4E7B FOREIGN KEY (work_schedule_profile_id) REFERENCES "work_schedule_profiles" (id) NOT DEFERRABLE INITIALLY IMMEDIATE'
+            <<<SQL
+ALTER TABLE "user_work_schedules"
+    ADD CONSTRAINT FK_38B6AB8253BD4E7B
+    FOREIGN KEY (work_schedule_profile_id)
+    REFERENCES "work_schedule_profiles" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+SQL
         );
         $this->addSql('ALTER TABLE users ALTER default_work_schedule_profile_id DROP DEFAULT');
     }
