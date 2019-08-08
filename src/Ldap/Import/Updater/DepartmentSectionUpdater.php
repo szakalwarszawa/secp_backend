@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Department;
 use App\Entity\Section;
 use Countable;
-use App\Ldap\Import\Updater\AbstractUpdater;
 use LdapTools\Object\LdapObject;
 use InvalidArgumentException;
 
