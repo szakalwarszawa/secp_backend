@@ -76,3 +76,8 @@ services:
             - '@ldap_tools.security.user.ldap_user_provider'
         calls:
             - [setEntityManager, ['@doctrine.orm.entity_manager']]
+    App\Ldap\Fetch\UsersFetcher:
+        autowire: true
+        arguments:
+            $usersBaseDn: '%env(resolve:LDAP_USERS_BASE_DN)%'
+            $inactiveUsersBaseDn: '%env(resolve:LDAP_INACTIVE_USERS_BASE_DN)%'

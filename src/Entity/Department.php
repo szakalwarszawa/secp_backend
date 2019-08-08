@@ -247,6 +247,28 @@ class Department
     }
 
     /**
+     * Get section by name
+     *
+     * @param string $sectionName
+     *
+     * @return null|Section
+     */
+    public function getSectionByName(?string $sectionName): ?Section
+    {
+        if (null === $sectionName) {
+            return null;
+        }
+
+        foreach ($this->sections as $section) {
+            if ($sectionName === $section->getName()) {
+                return $section;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param Section $section
      * @return Department
      */

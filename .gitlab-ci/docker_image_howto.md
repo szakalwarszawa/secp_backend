@@ -13,3 +13,14 @@ Zakładając, że pracujemy w katalogu zawierającym aktualny Dockerfile:
 
 Pod 'X' należy podstawić numer kolejnej wersji.
 Konieczność użycia 'sudo' może być zależna od konfiguracji konkretnego systemu operacyjnego.
+
+# Przebudowa obrazu
+
+Wymuszenie przebudowy obrazu w celu aktualizacji wersji pakietów (np. weszły wersje z poprawkami błędów).
+Nie ma konieczności tworzenia nowego pliku kolejną wersją Dockerfile.
+
+Zakładając, że pracujemy w katalogu zawierającym aktualny Dockerfile:
+> sudo docker build --no-cache -t gitlab.parp.gov.pl:5055/ci/secp:vX .  
+> sudo docker push gitlab.parp.gov.pl:5055/ci/secp:vX  
+> sudo docker tag gitlab.parp.gov.pl:5055/ci/secp:vX gitlab.parp.gov.pl:5055/ci/secp:latest  
+> sudo docker push gitlab.parp.gov.pl:5055/ci/secp:latest  

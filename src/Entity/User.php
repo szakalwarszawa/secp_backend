@@ -163,8 +163,7 @@ class User implements UserInterface
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      * @Assert\Email()
      * @Groups({"get", "post", "put"})
      */
@@ -382,7 +381,7 @@ class User implements UserInterface
      * @param string $lastName
      * @return User
      */
-    public function setLastName($lastName): User
+    public function setLastName(string $lastName): User
     {
         $this->lastName = $lastName;
         return $this;
@@ -400,7 +399,7 @@ class User implements UserInterface
      * @param string $firstName
      * @return User
      */
-    public function setFirstName($firstName): User
+    public function setFirstName(string $firstName): User
     {
         $this->firstName = $firstName;
         return $this;
@@ -441,10 +440,10 @@ class User implements UserInterface
     }
 
     /**
-     * @param string $email
+     * @param null|string $email
      * @return User
      */
-    public function setEmail(string $email): User
+    public function setEmail(?string $email = null): User
     {
         $this->email = $email;
         return $this;
