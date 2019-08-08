@@ -12,6 +12,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use App\Ldap\Constants\ImportResources;
 use InvalidArgumentException;
 use Symfony\Component\Stopwatch\Stopwatch;
+use App\Utils\ConstantsUtil;
 
 /**
  * Class LdapImportCommand
@@ -28,6 +29,10 @@ class LdapImportCommand extends Command
      */
     private $ldapImport;
 
+    /**
+     * @var ConstantsUtil
+     */
+    private $constantsUtil;
 
     /**
      * @param LdapImport $ldapImport
@@ -35,6 +40,7 @@ class LdapImportCommand extends Command
     public function __construct(LdapImport $ldapImport)
     {
         $this->ldapImport = $ldapImport;
+        $this->constantsUtil = new ConstantsUtil(ImportResources::class);
 
         parent::__construct();
     }
@@ -49,8 +55,8 @@ class LdapImportCommand extends Command
             ->addArgument(
                 'resource',
                 InputArgument::OPTIONAL,
-                ImportResources::stringify(),
-                ImportResources::valueToKey(ImportResources::IMPORT_ALL)
+                $this->constantsUtil::stringify(),
+                $this->constantsUtil::valueToKey(ImportResources::IMPORT_ALL)
             )
         ;
     }
@@ -60,7 +66,7 @@ class LdapImportCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $argumentValue = ImportResources::keyToValue($input->getArgument('resource'));
+        $argumentValue = $this->constantsUtil::keyToValue($input->getArgument('resource'));
         if (null === $argumentValue) {
             throw new InvalidArgumentException('Incorrect resource to import.');
         }

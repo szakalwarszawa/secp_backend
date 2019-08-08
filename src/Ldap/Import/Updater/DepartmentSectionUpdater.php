@@ -6,9 +6,13 @@ use App\Ldap\Constants\UserAttributes;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Department;
 use App\Entity\Section;
-use Countable;
+use App\Ldap\Import\Updater\AbstractUpdater;
 use LdapTools\Object\LdapObject;
 use InvalidArgumentException;
+use Traversable;
+use App\Ldap\Import\Updater\Result\Result;
+use App\Ldap\Import\Updater\Result\Types;
+use App\Ldap\Import\Updater\Result\Actions;
 
 /**
  * Class DepartmentSectionUpdater
@@ -16,7 +20,7 @@ use InvalidArgumentException;
 final class DepartmentSectionUpdater extends AbstractUpdater
 {
     /**
-     * @var Countable
+     * @var Traversable
      */
     private $usersList;
 
@@ -31,13 +35,15 @@ final class DepartmentSectionUpdater extends AbstractUpdater
     private $departmentSectionArray = [];
 
     /**
-     * @param Countable $usersList
+     * @param Traversable $usersList
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(Countable $usersList, EntityManagerInterface $entityManager)
+    public function __construct(Traversable $usersList, EntityManagerInterface $entityManager)
     {
         $this->usersList = $usersList;
         $this->entityManager = $entityManager;
+
+        parent::__construct();
     }
 
     /**
@@ -66,7 +72,8 @@ final class DepartmentSectionUpdater extends AbstractUpdater
                 'name' => $departmentName
             ]);
 
-        if (null === $department) {
+        $departmentNotExists = null === $department;
+        if ($departmentNotExists) {
             $department = new Department();
             $department
                 ->setName($departmentName)
@@ -78,6 +85,17 @@ final class DepartmentSectionUpdater extends AbstractUpdater
                 ->persist($department)
             ;
         }
+
+        $this->addResult(new Result(
+            Department::class,
+            Types::SUCCESS,
+            sprintf(
+                'Department %s has been %s.',
+                $department->getName(),
+                $departmentNotExists? 'created' : 'updated'
+            ),
+            $departmentNotExists? Actions::CREATE : Actions::UPDATE
+        ));
 
         return $department;
     }
@@ -98,7 +116,8 @@ final class DepartmentSectionUpdater extends AbstractUpdater
                 'name' => $sectionName
             ]);
 
-        if (null === $section) {
+        $sectionNotExists = null === $section;
+        if ($sectionNotExists) {
             $section = new Section();
             $section
                 ->setName($sectionName)
@@ -109,6 +128,17 @@ final class DepartmentSectionUpdater extends AbstractUpdater
                 ->persist($section)
             ;
         }
+
+        $this->addResult(new Result(
+            Section::class,
+            Types::SUCCESS,
+            sprintf(
+                'Section %s has been %s.',
+                $section->getName(),
+                $sectionNotExists? 'created' : 'updated'
+            ),
+            $sectionNotExists? Actions::CREATE : Actions::UPDATE
+        ));
 
         return $section;
     }
@@ -142,8 +172,6 @@ final class DepartmentSectionUpdater extends AbstractUpdater
         foreach ($this->departmentSectionArray as $departmentName => $departmentData) {
             $department = $this->createDepartmentIfNotExists($departmentName, $departmentData['short_name']);
             $this->assignSectionsToDepartment($department, $departmentData['sections']);
-
-            $this->countSuccess();
         }
 
         $this->entityManager->flush();

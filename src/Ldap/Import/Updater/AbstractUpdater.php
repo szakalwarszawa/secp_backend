@@ -2,6 +2,10 @@
 
 namespace App\Ldap\Import\Updater;
 
+use App\Ldap\Import\Updater\Result\Collector;
+use App\Ldap\Import\Updater\Result\Result;
+use App\Ldap\Import\Updater\Result\Types;
+
 /**
  * Class AbstractUpdater
  */
@@ -16,6 +20,19 @@ abstract class AbstractUpdater
      * @var int
      */
     protected $failedUpdates = 0;
+
+    /**
+     * @var Collector
+     */
+    protected $resultsCollector;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->resultsCollector = new Collector();
+    }
 
     /**
      * Begins operations chain.
@@ -42,6 +59,32 @@ abstract class AbstractUpdater
     protected function countFail(): void
     {
         $this->failedUpdates++;
+    }
+
+    protected function addResult(Result $result)
+    {
+        if (Types::FAIL === $result->getType()) {
+            $this->countFail();
+        }
+
+        if (Types::SUCCESS === $result->getType()) {
+            $this->countSuccess();
+        }
+
+        $this
+            ->resultsCollector
+            ->add($result)
+        ;
+    }
+
+    /**
+     * Returns resultsCollector
+     *
+     * @return Collector
+     */
+    public function getResultsCollector(): Collector
+    {
+        return $this->resultsCollector;
     }
 
     /**

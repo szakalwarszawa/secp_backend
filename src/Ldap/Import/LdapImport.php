@@ -9,6 +9,7 @@ use App\Ldap\Import\Updater\UserUpdater;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use App\Ldap\Constants\ImportResources;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class LdapImport
@@ -52,10 +53,11 @@ class LdapImport
      * Departments and section are extrated from user's object.
      *
      * @param int $importResources
+     * @param bool $detailedReturn
      *
      * @return array
      */
-    public function import(int $importResources = ImportResources::IMPORT_ALL): array
+    public function import(int $importResources = ImportResources::IMPORT_ALL, bool $detailedReturn = false): array
     {
         $usersData = $this
             ->usersFetcher
@@ -69,13 +71,16 @@ class LdapImport
             ], true)) {
             $departmentSectionUpdater = new DepartmentSectionUpdater($usersData, $this->entityManager);
             $departmentSectionUpdater->update();
-            $result = $departmentSectionUpdater->getCountAsString();
             $this
                 ->logger
-                ->log(LogLevel::INFO, 'Department/section import' . $result)
+                ->log(LogLevel::INFO, 'Department/section import' . $departmentSectionUpdater->getCountAsString())
             ;
 
-            $results['Department/section'] = $result;
+            $results['department_section'] = $departmentSectionUpdater
+                ->getResultsCollector()
+                ->forceJoinFailures()
+                ->getCounters()
+            ;
         }
 
         if (in_array($importResources, [
@@ -87,10 +92,14 @@ class LdapImport
             $result = $userUpdater->getCountAsString();
             $this
                 ->logger
-                ->log(LogLevel::INFO, 'Users import' . $result)
+                ->log(LogLevel::INFO, 'Users import' . $userUpdater->getCountAsString())
             ;
 
-            $results['Users'] = $result;
+            $results['users'] = $userUpdater
+                ->getResultsCollector()
+                ->forceJoinFailures()
+                ->getCounters()
+            ;
         }
 
         return $results;

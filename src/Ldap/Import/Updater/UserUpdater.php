@@ -11,6 +11,9 @@ use App\Entity\Department;
 use LdapTools\Object\LdapObject;
 use App\Entity\WorkScheduleProfile;
 use App\Ldap\Import\Updater\AbstractUpdater;
+use App\Ldap\Import\Updater\Result\Result;
+use App\Ldap\Import\Updater\Result\Types;
+use App\Ldap\Import\Updater\Result\Actions;
 
 /**
  * Class UserUpdater
@@ -45,6 +48,8 @@ final class UserUpdater extends AbstractUpdater
     {
         $this->usersList = $usersList;
         $this->entityManager = $entityManager;
+
+        parent::__construct();
     }
 
     /**
@@ -74,7 +79,12 @@ final class UserUpdater extends AbstractUpdater
         $userLastName = $userData->get(UserAttributes::LAST_NAME);
 
         if (!$userFirstName || !$userLastName) {
-            $this->countFail();
+            $this->addResult(new Result(
+                LdapObject::class,
+                Types::FAIL,
+                'LdapObject has no first name or last name',
+                Actions::IGNORE
+            ));
 
             return false;
         }
@@ -87,7 +97,8 @@ final class UserUpdater extends AbstractUpdater
             ])
         ;
 
-        if (null === $user) {
+        $userNotExists = null === $user;
+        if ($userNotExists) {
             $user = new User();
             $user
                 ->setUsername($userData->get(UserAttributes::SAMACCOUNTNAME))
@@ -114,7 +125,12 @@ final class UserUpdater extends AbstractUpdater
         ;
 
         if (null === $department) {
-            $this->countFail();
+            $this->addResult(new Result(
+                Department::class,
+                Types::FAIL,
+                'Department not found in the database.',
+                Actions::IGNORE
+            ));
 
             return false;
         }
@@ -143,7 +159,16 @@ final class UserUpdater extends AbstractUpdater
             $this->entityManager->persist($section);
         }
 
-        $this->countSuccess();
+        $this->addResult(new Result(
+            User::class,
+            Types::SUCCESS,
+            sprintf(
+                'User %s has been %s.',
+                $user->getUsername(),
+                $userNotExists? 'created' : 'updated'
+            ),
+            $userNotExists? Actions::CREATE : Actions::UPDATE
+        ));
 
         return true;
     }
