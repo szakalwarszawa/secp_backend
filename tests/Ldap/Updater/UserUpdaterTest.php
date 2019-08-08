@@ -72,9 +72,9 @@ class UserUpdaterTest extends AbstractWebTestCase
          * Section does not exist in database.
          */
         $ldapObjectFailDueToDepartmentIsNotExists = new LdapObject([
-            'lastname' => 'Norek',
-            'firstname' => 'Tadeusz',
-            'mail' => 'tadeusz_norek@parp.gov.pl',
+            UserAttributes::LAST_NAME => 'Norek',
+            UserAttributes::FIRST_NAME => 'Tadeusz',
+            UserAttributes::MAIL => 'tadeusz_norek@parp.gov.pl',
             'dn' => 'CN=Norek Tadeusz,OU=BRK,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::DEPARTMENT_SHORT => 'BRK',
             UserAttributes::POSITION => 'specjalista',
@@ -92,9 +92,9 @@ class UserUpdaterTest extends AbstractWebTestCase
          * This user has no first name defined.
          */
         $ldapObjectFailHasNoFirstName = new LdapObject([
-            'lastname' => 'Krawczyk',
-            'firstname' => null,
-            'mail' => 'krzysztof_krawczyk@parp.gov.pl',
+            UserAttributes::LAST_NAME => 'Krawczyk',
+            UserAttributes::FIRST_NAME => null,
+            UserAttributes::MAIL => 'krzysztof_krawczyk@parp.gov.pl',
             'dn' => 'CN=Krawczyk Krzysztof,OU=BRK,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::DEPARTMENT_SHORT => 'BP',
             UserAttributes::POSITION => 'specjalista',
@@ -107,11 +107,9 @@ class UserUpdaterTest extends AbstractWebTestCase
             ->add($ldapObjectFailHasNoFirstName)
         ;
 
-        $doctrineRegistry = self::$container->get('doctrine');
-
         foreach ($ldapObjectsCollection as $ldapObject) {
-            $userThatShouldNotExists = $doctrineRegistry
-                ->getManager()
+            $userThatShouldNotExists = $this
+                ->entityManager
                 ->getRepository(User::class)
                 ->findOneBy([
                     'username' => $ldapObject->get(UserAttributes::SAMACCOUNTNAME)
@@ -119,27 +117,27 @@ class UserUpdaterTest extends AbstractWebTestCase
             $this->assertEquals($userThatShouldNotExists, null);
         }
 
-        $userUpdater = new UserUpdater($ldapObjectsCollection, $doctrineRegistry->getManager());
+        $userUpdater = new UserUpdater($ldapObjectsCollection, $this->entityManager);
 
-        $this->assertEquals($userUpdater->getSuccessfulCount(), 0);
-        $this->assertEquals($userUpdater->getFailedCount(), 0);
+        $this->assertEquals(0, $userUpdater->getSuccessfulCount());
+        $this->assertEquals(0, $userUpdater->getFailedCount());
 
         $userUpdater->update();
 
-        $this->assertEquals($userUpdater->getSuccessfulCount(), 2);
+        $this->assertEquals(2, $userUpdater->getSuccessfulCount());
 
         /**
          * 2 is number of failed users.
          * ldapObjectFailHasNoFirstName
          * ldapObjectFailDueToDepartmentIsNotExists
          */
-        $this->assertEquals($userUpdater->getFailedCount(), 2);
+        $this->assertEquals(2, $userUpdater->getFailedCount());
 
         /**
          * This user should not exist in database.
          */
-        $userThatShouldNotExist = $doctrineRegistry
-                ->getManager()
+        $userThatShouldNotExist = $this
+            ->entityManager
                 ->getRepository(User::class)
                 ->findOneBy([
                     'username' => 'tadeusz_norek'
@@ -153,8 +151,8 @@ class UserUpdaterTest extends AbstractWebTestCase
         $ldapObjectsCollection->removeElement($ldapObjectFailHasNoFirstName);
 
         foreach ($ldapObjectsCollection as $ldapObject) {
-            $userThatShouldExists = $doctrineRegistry
-                ->getManager()
+            $userThatShouldExists = $this
+                ->entityManager
                 ->getRepository(User::class)
                 ->findOneBy([
                     'username' => $ldapObject->get(UserAttributes::SAMACCOUNTNAME)
@@ -163,8 +161,8 @@ class UserUpdaterTest extends AbstractWebTestCase
             $this->assertInstanceOf(User::class, $userThatShouldExists);
         }
 
-        $department = $doctrineRegistry
-            ->getManager()
+        $department = $this
+            ->entityManager
             ->getRepository(Department::class)
             ->findOneBy([
                 'name' => $this->fixtures->getReference(DepartmentFixtures::REF_DEPARTMENT_BP)->getName()
@@ -186,8 +184,8 @@ class UserUpdaterTest extends AbstractWebTestCase
          */
         $this->assertTrue($managerMatch);
 
-        $section = $doctrineRegistry
-            ->getManager()
+        $section = $this
+            ->entityManager
             ->getRepository(Section::class)
             ->findOneBy([
                 'name' => $this->fixtures->getReference(SectionFixtures::REF_BI_SECTION)->getName()

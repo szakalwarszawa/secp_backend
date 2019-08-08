@@ -10,32 +10,47 @@ class UserAttributes
     /**
      * @var string
      */
-    const POSITION = 'title';
+    public const FIRST_NAME = 'firstname';
 
     /**
      * @var string
      */
-    const SECTION = 'info';
+    public const LAST_NAME = 'lastname';
 
     /**
      * @var string
      */
-    const DEPARTMENT_SHORT = 'description';
+    public const MAIL = 'mail';
 
     /**
      * @var string
      */
-    const DEPARTMENT = 'department';
+    public const POSITION = 'title';
 
     /**
      * @var string
      */
-    const SAMACCOUNTNAME = 'samaccountname';
+    public const SECTION = 'info';
 
     /**
      * @var string
      */
-    const SUPERVISOR = 'manager';
+    public const DEPARTMENT_SHORT = 'description';
+
+    /**
+     * @var string
+     */
+    public const DEPARTMENT = 'department';
+
+    /**
+     * @var string
+     */
+    public const SAMACCOUNTNAME = 'samaccountname';
+
+    /**
+     * @var string
+     */
+    public const SUPERVISOR = 'manager';
 
     /**
      * Get user attribute keys.
@@ -45,9 +60,9 @@ class UserAttributes
     public static function all(): array
     {
         return [
-            'firstname',
-            'lastname',
-            'mail',
+            self::FIRST_NAME,
+            self::LAST_NAME,
+            self::MAIL,
             self::SAMACCOUNTNAME,
             self::DEPARTMENT,
             self::POSITION,

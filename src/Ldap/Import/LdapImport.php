@@ -66,7 +66,7 @@ class LdapImport
         if (in_array($importResources, [
                 ImportResources::IMPORT_ALL,
                 ImportResources::IMPORT_DEPARTMENT_SECTION,
-            ])) {
+            ], true)) {
             $departmentSectionUpdater = new DepartmentSectionUpdater($usersData, $this->entityManager);
             $departmentSectionUpdater->update();
             $result = $departmentSectionUpdater->getCountAsString();
@@ -81,7 +81,7 @@ class LdapImport
         if (in_array($importResources, [
                 ImportResources::IMPORT_ALL,
                 ImportResources::IMPORT_USERS,
-            ])) {
+            ], true)) {
             $userUpdater = new UserUpdater($usersData, $this->entityManager);
             $userUpdater->update();
             $result = $userUpdater->getCountAsString();

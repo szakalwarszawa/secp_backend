@@ -80,4 +80,4 @@ services:
         autowire: true
         arguments:
             $usersBaseDn: '%env(resolve:LDAP_USERS_BASE_DN)%'
-            $unactiveUsersBaseDn: '%env(resolve:LDAP_UNACTIVE_USERS_BASE_DN)%'
+            $inactiveUsersBaseDn: '%env(resolve:LDAP_INACTIVE_USERS_BASE_DN)%'

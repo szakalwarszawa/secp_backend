@@ -67,31 +67,29 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
             ->add($ldapObject)
         ;
 
-        $doctrineRegistry = self::$container->get('doctrine');
-
         foreach ($ldapObjectsCollection as $ldapObject) {
-            $userThatShouldNotExists = $doctrineRegistry
-                ->getManager()
+            $userThatShouldNotExists = $this
+                ->entityManager
                 ->getRepository(User::class)
                 ->findOneBy([
                     'username' => $ldapObject->get(UserAttributes::SAMACCOUNTNAME)
                 ]);
-            $this->assertEquals($userThatShouldNotExists, null);
+            $this->assertEquals(null, $userThatShouldNotExists);
         }
 
-        $userUpdater = new DepartmentSectionUpdater($ldapObjectsCollection, $doctrineRegistry->getManager());
+        $userUpdater = new DepartmentSectionUpdater($ldapObjectsCollection, $this->entityManager);
 
-        $this->assertEquals($userUpdater->getSuccessfulCount(), 0);
-        $this->assertEquals($userUpdater->getFailedCount(), 0);
+        $this->assertEquals(0, $userUpdater->getSuccessfulCount());
+        $this->assertEquals(0, $userUpdater->getFailedCount());
 
-        $departamentThatShouldNotExist = $doctrineRegistry
-            ->getManager()
+        $departamentThatShouldNotExist = $this
+            ->entityManager
             ->getRepository(Department::class)
             ->findOneBy([
                 'name' => $newDepartment,
             ]);
-        $sectionThatShouldNotExist = $doctrineRegistry
-            ->getManager()
+        $sectionThatShouldNotExist = $this
+            ->entityManager
             ->getRepository(Section::class)
             ->findOneBy([
                 'name' => $newSection,
@@ -102,17 +100,17 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
 
         $userUpdater->update();
 
-        $this->assertEquals($userUpdater->getSuccessfulCount(), 2);
-        $this->assertEquals($userUpdater->getFailedCount(), 0);
+        $this->assertEquals(2, $userUpdater->getSuccessfulCount());
+        $this->assertEquals(0, $userUpdater->getFailedCount());
 
-        $departamentCreatedThatShouldExists = $doctrineRegistry
-            ->getManager()
+        $departamentCreatedThatShouldExists = $this
+            ->entityManager
             ->getRepository(Department::class)
             ->findOneBy([
                 'name' => $newDepartment,
             ]);
-        $sectionCreatedThatShouldExists = $doctrineRegistry
-            ->getManager()
+        $sectionCreatedThatShouldExists = $this
+            ->entityManager
             ->getRepository(Section::class)
             ->findOneBy([
                 'name' => $newSection,
@@ -126,7 +124,7 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
         /**
          * Section must be properly assigned to department.
          */
-        $this->assertEquals($newSectionDepartment, $departamentCreatedThatShouldExists);
+        $this->assertEquals($departamentCreatedThatShouldExists, $newSectionDepartment);
     }
 
 }

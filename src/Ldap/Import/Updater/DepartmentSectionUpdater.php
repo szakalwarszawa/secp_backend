@@ -9,6 +9,7 @@ use App\Entity\Section;
 use Countable;
 use App\Ldap\Import\Updater\AbstractUpdater;
 use LdapTools\Object\LdapObject;
+use InvalidArgumentException;
 
 /**
  * Class DepartmentSectionUpdater
@@ -174,7 +175,7 @@ final class DepartmentSectionUpdater extends AbstractUpdater
                 $departmentSections[$userDepartment]['sections'] = [];
             }
 
-            if (!in_array($userSection, $departmentSections[$userDepartment]['sections']) && $userSection) {
+            if (!in_array($userSection, $departmentSections[$userDepartment]['sections'], true) && $userSection) {
                 $departmentSections[$userDepartment]['sections'][] = $userSection;
             }
         }

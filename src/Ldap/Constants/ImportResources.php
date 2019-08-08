@@ -12,17 +12,17 @@ class ImportResources
     /**
      * @var int
      */
-    const IMPORT_ALL = 1;
+    public const IMPORT_ALL = 1;
 
     /**
      * @var int
      */
-    const IMPORT_DEPARTMENT_SECTION = 2;
+    public const IMPORT_DEPARTMENT_SECTION = 2;
 
     /**
      * @var int
      */
-    const IMPORT_USERS = 3;
+    public const IMPORT_USERS = 3;
 
     /**
      * Get all constants.
@@ -44,7 +44,6 @@ class ImportResources
 
             return $constantsValues;
         }
-
 
         return $constants;
     }

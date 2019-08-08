@@ -20,12 +20,12 @@ final class UserUpdater extends AbstractUpdater
     /**
      * @var string
      */
-    const DEPARTMENT_MANAGER_POSITION = 'dyrektor';
+    public const DEPARTMENT_MANAGER_POSITION = 'dyrektor';
 
     /**
      * @var string
      */
-    const SECTION_MANAGER_POSITION = 'kierownik';
+    public const SECTION_MANAGER_POSITION = 'kierownik';
 
     /**
      * @var Countable
@@ -70,8 +70,8 @@ final class UserUpdater extends AbstractUpdater
      */
     private function createOrUpdateUser(LdapObject $userData): bool
     {
-        $userFirstName = $userData->get('firstname');
-        $userLastName = $userData->get('lastname');
+        $userFirstName = $userData->get(UserAttributes::FIRST_NAME);
+        $userLastName = $userData->get(UserAttributes::LAST_NAME);
 
         if (!$userFirstName || !$userLastName) {
             $this->countFail();
@@ -124,7 +124,7 @@ final class UserUpdater extends AbstractUpdater
         $user
             ->setFirstName($userFirstName)
             ->setLastName($userLastName)
-            ->setEmail($userData->get('email'))
+            ->setEmail($userData->get(UserAttributes::MAIL))
             ->setDepartment($department)
             ->setSection($section)
         ;

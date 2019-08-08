@@ -16,21 +16,21 @@ class UsersFetcher
      *
      * @var string
      */
-    const ACTIVE = 'active';
+    public const ACTIVE = 'active';
 
     /**
-     * Fetch unactive users.
+     * Fetch inactive users.
      *
      * @var string
      */
-    const UNACTIVE = 'unactive';
+    public const INACTIVE = 'inactive';
 
     /**
      * Fetch all users.
      *
      * @var string
      */
-    const ALL = 'all';
+    public const ALL = 'all';
 
     /**
      * @var LdapManager
@@ -50,21 +50,21 @@ class UsersFetcher
     /**
      * @var string
      */
-    private $unactiveUsersBaseDn;
+    private $inactiveUsersBaseDn;
 
     /**
      * @param LdapManager $ldapManager
      * @param string $usersBaseDn
-     * @param string $unactiveUsersBaseDn
+     * @param string $inactiveUsersBaseDn
      */
     public function __construct(
         LdapManager $ldapManager,
         string $usersBaseDn,
-        string $unactiveUsersBaseDn
+        string $inactiveUsersBaseDn
     ) {
         $this->ldapManager = $ldapManager;
         $this->usersBaseDn = $usersBaseDn;
-        $this->unactiveUsersBaseDn = $unactiveUsersBaseDn;
+        $this->inactiveUsersBaseDn = $inactiveUsersBaseDn;
         $this->users = new ArrayCollection();
     }
 
@@ -78,9 +78,9 @@ class UsersFetcher
     public function fetch(string $type = self::ALL): ArrayCollection
     {
         $users = new ArrayCollection();
-        $unactiveUsers = new ArrayCollection();
+        $inactiveUsers = new ArrayCollection();
 
-        if (in_array($type, [self::ALL, self::ACTIVE])) {
+        if (in_array($type, [self::ALL, self::ACTIVE], true)) {
             $users = $this
                 ->ldapManager
                 ->buildLdapQuery()
@@ -92,11 +92,11 @@ class UsersFetcher
             ;
         }
 
-        if (in_array($type, [self::ALL, self::UNACTIVE])) {
-            $unactiveUsers = $this
+        if (in_array($type, [self::ALL, self::INACTIVE], true)) {
+            $inactiveUsers = $this
                 ->ldapManager
                 ->buildLdapQuery()
-                ->setBaseDn($this->unactiveUsersBaseDn)
+                ->setBaseDn($this->inactiveUsersBaseDn)
                 ->select(UserAttributes::all())
                 ->fromUsers()
                 ->getLdapQuery()
@@ -104,7 +104,7 @@ class UsersFetcher
             ;
         }
 
-        $this->users = new ArrayCollection(array_merge($users->toArray(), $unactiveUsers->toArray()));
+        $this->users = new ArrayCollection(array_merge($users->toArray(), $inactiveUsers->toArray()));
 
         return $this->users;
     }
