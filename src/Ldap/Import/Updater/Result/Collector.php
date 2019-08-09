@@ -50,7 +50,7 @@ class Collector extends ArrayCollection
      */
     private function getByType(string $type): Collector
     {
-        $type = ConstantsUtil::constValue($type, Types::class);
+        ConstantsUtil::constCheckValue($type, Types::class);
         $tempCollector = new Collector();
         foreach ($this as $element) {
             if ($element instanceof Result && $type === $element->getType()) {

@@ -53,32 +53,35 @@ class ConstantsUtil
     }
 
     /**
-     * Returns given value if exists in given class constants.
+     * Check if value exists in subject class constants.
      *
-     * @param string $value
+     * @param mixed $value
      * @param null|string $className
      *
      * @throws InvalidArgumentException when subject class does not contain constant with given value
      *
-     * @return null|string
+     * @return mixed
      */
-    public static function constValue(?string $value = null, ?string $subjectClassName = null): ?string
-    {
+    public static function constCheckValue(
+        $value = null,
+        ?string $subjectClassName = null,
+        bool $throwException = true
+    ): bool {
         if (!$value) {
-            return null;
+            return false;
         }
 
         $subjectClassName = self::resolveClassName($subjectClassName);
 
         $reflectionClass = new ReflectionClass($subjectClassName);
         $constants = array_flip($reflectionClass->getConstants());
-        if (!isset($constants[$value])) {
+        if (!isset($constants[$value]) && $throwException) {
             throw new InvalidArgumentException(
                 sprintf('Class %s does not contain a constant of value %s', $subjectClassName, $value)
             );
         }
 
-        return $value;
+        return true;
     }
 
 

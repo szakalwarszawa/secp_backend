@@ -14,7 +14,7 @@ use App\Controller\LdapImportAction;
  * @ApiResource(itemOperations={
  *     "get",
  *     "ldap_import"={
- *          "access_control"="is_granted('ROLE_ADMIN')",
+ *         "access_control"="is_granted('ROLE_ADMIN')",
  *         "method"="GET",
  *         "path"="/ldapimport",
  *         "controller"=LdapImportAction::class,

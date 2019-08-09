@@ -23,7 +23,7 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
     /**
      * @var string
      */
-    const REF_BP_SECION = 'section_bp';
+    const REF_BP_SECTION = 'section_bp';
 
     /**
      * @var Faker
@@ -63,7 +63,7 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
 
         $this->makeSection(
             $manager,
-            self::REF_BP_SECION,
+            self::REF_BP_SECTION,
             'Sekcja Prezesowa',
             true,
             $this->getReference(DepartmentFixtures::REF_DEPARTMENT_BP)

@@ -47,10 +47,13 @@ class Result
      */
     public function __construct(string $className, string $type, ?string $message = null, ?string $action = null)
     {
+        ConstantsUtil::constCheckValue($action, Actions::class);
+        ConstantsUtil::constCheckValue($type, Types::class);
+
         $this->className = $className;
-        $this->type = ConstantsUtil::constValue($type, Types::class);
+        $this->type = $type;
         $this->message = $message;
-        $this->action = ConstantsUtil::constValue($action, Actions::class);
+        $this->action = $action;
     }
 
     /**

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Ldap\Import;
 
@@ -6,10 +8,11 @@ use App\Ldap\Fetch\UsersFetcher;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Ldap\Import\Updater\DepartmentSectionUpdater;
 use App\Ldap\Import\Updater\UserUpdater;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 use App\Ldap\Constants\ImportResources;
-use Symfony\Component\VarDumper\VarDumper;
+use App\Ldap\Constants\ArrayResponseFormats;
+use App\Utils\ConstantsUtil;
+use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Stopwatch\StopwatchEvent;
 
 /**
  * Class LdapImport
@@ -27,23 +30,25 @@ class LdapImport
     private $usersFetcher;
 
     /**
-     * @var LoggerInterface
+     * @var int
      */
-    private $logger;
+    private $responseFormat = ArrayResponseFormats::COUNTER_SUCCESS_DETAILED_FAILED;
+
+    /**
+     * @var null|StopwatchEvent
+     */
+    private $stopwatchResult = null;
 
     /**
      * @param UsersFetcher $usersFetcher
      * @param EntityManagerInterface $entityManager
-     * @param LoggerInterface $logger
      */
     public function __construct(
         UsersFetcher $usersFetcher,
-        EntityManagerInterface $entityManager,
-        LoggerInterface $logger
+        EntityManagerInterface $entityManager
     ) {
         $this->usersFetcher = $usersFetcher;
         $this->entityManager = $entityManager;
-        $this->logger = $logger;
     }
 
     /**
@@ -53,12 +58,14 @@ class LdapImport
      * Departments and section are extrated from user's object.
      *
      * @param int $importResources
-     * @param bool $detailedReturn
      *
      * @return array
      */
-    public function import(int $importResources = ImportResources::IMPORT_ALL, bool $detailedReturn = false): array
+    public function import(int $importResources = ImportResources::IMPORT_ALL): array
     {
+        $stopwatch = new Stopwatch(true);
+        $stopwatch->start('ldapImport');
+
         $usersData = $this
             ->usersFetcher
             ->fetch()
@@ -71,16 +78,9 @@ class LdapImport
             ], true)) {
             $departmentSectionUpdater = new DepartmentSectionUpdater($usersData, $this->entityManager);
             $departmentSectionUpdater->update();
-            $this
-                ->logger
-                ->log(LogLevel::INFO, 'Department/section import' . $departmentSectionUpdater->getCountAsString())
-            ;
 
-            $results['department_section'] = $departmentSectionUpdater
-                ->getResultsCollector()
-                ->forceJoinFailures()
-                ->getCounters()
-            ;
+            $stopwatch->lap('ldapImport');
+            $results['department_section'] = $departmentSectionUpdater->getResultsCollector();
         }
 
         if (in_array($importResources, [
@@ -89,19 +89,37 @@ class LdapImport
             ], true)) {
             $userUpdater = new UserUpdater($usersData, $this->entityManager);
             $userUpdater->update();
-            $result = $userUpdater->getCountAsString();
-            $this
-                ->logger
-                ->log(LogLevel::INFO, 'Users import' . $userUpdater->getCountAsString())
-            ;
 
-            $results['users'] = $userUpdater
-                ->getResultsCollector()
-                ->forceJoinFailures()
-                ->getCounters()
-            ;
+            $results['users'] = $userUpdater->getResultsCollector();
         }
 
-        return $results;
+        $this->stopwatchResult = $stopwatch->stop('ldapImport');
+
+        return ResponseFormatter::format($results, $this->responseFormat);
+    }
+
+    /**
+     * Returns StopwatchEvent instance.
+     *
+     * @return null|StopwatchEvent
+     */
+    public function getStopwatchResult(): ?StopwatchEvent
+    {
+        return $this->stopwatchResult;
+    }
+
+    /**
+     * Set responseFormat
+     *
+     * @param int $responseFormat
+     *
+     * @return LdapImport
+     */
+    public function setResponseFormat(int $responseFormat): LdapImport
+    {
+        ConstantsUtil::constCheckValue($responseFormat, ArrayResponseFormats::class);
+        $this->responseFormat = $responseFormat;
+
+        return $this;
     }
 }

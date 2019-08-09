@@ -128,7 +128,7 @@ final class UserUpdater extends AbstractUpdater
             $this->addResult(new Result(
                 Department::class,
                 Types::FAIL,
-                'Department not found in the database.',
+                sprintf('User`s %s department is null', $userData->get(UserAttributes::SAMACCOUNTNAME)),
                 Actions::IGNORE
             ));
 

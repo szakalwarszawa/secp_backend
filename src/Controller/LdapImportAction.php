@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Entity\UserWorkScheduleDay;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Ldap\Import\LdapImport;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Ldap\Constants\ArrayResponseFormats;
 
 /**
  * Class LdapImportAction
@@ -32,10 +26,15 @@ class LdapImportAction extends AbstractController
     {
         $this->ldapImport = $ldapImport;
     }
-    public function __invoke()
+
+    /**
+     * @return JsonResponse
+     */
+    public function __invoke(): JsonResponse
     {
         $result = $this
             ->ldapImport
+            ->setResponseFormat(ArrayResponseFormats::SORTED_SUCCESS_FAILED)
             ->import()
         ;
 

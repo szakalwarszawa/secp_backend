@@ -11,8 +11,10 @@ use App\Ldap\Import\LdapImport;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use App\Ldap\Constants\ImportResources;
 use InvalidArgumentException;
-use Symfony\Component\Stopwatch\Stopwatch;
 use App\Utils\ConstantsUtil;
+use App\Ldap\Constants\ArrayResponseFormats;
+use Symfony\Component\Console\Helper\Table;
+use App\Ldap\Import\Updater\Result\Types;
 
 /**
  * Class LdapImportCommand
@@ -80,15 +82,44 @@ class LdapImportCommand extends Command
             return;
         }
 
-        $stopwatch = new Stopwatch(true);
-        $stopwatch->start('ldapImport');
         $result = $this
             ->ldapImport
+            ->setResponseFormat(ArrayResponseFormats::COUNTER_SUCCESS_FAILED)
             ->import($argumentValue)
         ;
-        $event = $stopwatch->stop('ldapImport');
 
-        $symfonyStyle->note(sprintf('Process time: %dms', $event->getDuration()));
-        $symfonyStyle->table(array_keys($result), [$result]);
+        $stopwatchEvent = $this->ldapImport->getStopWatchResult();
+        $symfonyStyle->note(
+            sprintf(
+                'Process time: %dms, Memory: %d',
+                $stopwatchEvent->getDuration(),
+                $stopwatchEvent->getMemory()
+            )
+        );
+
+        $this->printResultTable($output, $result);
+    }
+
+    /**
+     * Prints result table.
+     *
+     * @param OutputInterface $output
+     * @param array $result
+     *
+     * @return void
+     */
+    private function printResultTable(OutputInterface $output, array $result): void
+    {
+        $table = new Table($output);
+        $table
+            ->setHeaders(['key', Types::SUCCESS, Types::FAIL]);
+
+        foreach ($result as $key=> $value) {
+            $table
+                ->addRow([$key, $value[Types::SUCCESS], $value[Types::FAIL]])
+            ;
+        }
+
+        $table->render();
     }
 }
