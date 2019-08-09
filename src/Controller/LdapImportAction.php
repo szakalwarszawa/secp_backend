@@ -34,7 +34,7 @@ class LdapImportAction extends AbstractController
     {
         $result = $this
             ->ldapImport
-            ->setResponseFormat(ArrayResponseFormats::SORTED_SUCCESS_FAILED)
+            ->setResponseFormat(ArrayResponseFormats::SORTED_SUCCEED_FAILED)
             ->import()
         ;
 

@@ -23,14 +23,14 @@ class ArrayResponseFormats
      *      }
      *  }
      */
-    public const COUNTER_SUCCESS_FAILED = 1;
+    public const COUNTER_SUCCEED_FAILED = 1;
 
     /**
-     * Mix of COUNTER_SUCCESS_FAILED and COUNTER_SUCCESS_DETAILED_FAILED.
-     * Key "success" will be printed as COUNTER_SUCCESS_FAILED,
-     * Key "fail" will be printed as COUNTER_SUCCESS_DETAILED_FAILED
+     * Mix of COUNTER_SUCCEED_FAILED and COUNTER_SUCCEED_DETAILED_FAILED.
+     * Key "success" will be printed as COUNTER_SUCCEED_FAILED,
+     * Key "fail" will be printed as COUNTER_SUCCEED_DETAILED_FAILED
      */
-    public const COUNTER_SUCCESS_DETAILED_FAILED = 2;
+    public const COUNTER_SUCCEED_DETAILED_FAILED = 2;
 
     /**
      * Array containing details grouped by key (ex. users or department_section)
@@ -55,16 +55,16 @@ class ArrayResponseFormats
      *      }
      * }
      */
-    public const SORTED_SUCCESS_FAILED = 3;
+    public const SORTED_SUCCEED_FAILED = 3;
 
     /**
-     * Like COUNTER_SUCCESS_DETAILED_FAILED (detailed) but only succeed.
+     * Like COUNTER_SUCCEED_DETAILED_FAILED (detailed) but only succeed.
      */
     public const ONLY_SUCCEED = 4;
 
     /**
      *     /**
-     * Like COUNTER_SUCCESS_DETAILED_FAILED (detailed) but only failed.
+     * Like COUNTER_SUCCEED_DETAILED_FAILED (detailed) but only failed.
      */
     public const ONLY_FAILED = 5;
 }

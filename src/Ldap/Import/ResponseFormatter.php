@@ -42,16 +42,16 @@ class ResponseFormatter
             }
 
             switch ($format) {
-                case ArrayResponseFormats::SORTED_SUCCESS_FAILED:
+                case ArrayResponseFormats::SORTED_SUCCEED_FAILED:
                     $formattedResults[$key] = $result
                         ->getSorted();
                     break;
-                case ArrayResponseFormats::COUNTER_SUCCESS_DETAILED_FAILED:
+                case ArrayResponseFormats::COUNTER_SUCCEED_DETAILED_FAILED:
                     $result->forceJoinFailures();
                     $formattedResults[$key] = $result
                         ->getCounters();
                     break;
-                case ArrayResponseFormats::COUNTER_SUCCESS_FAILED:
+                case ArrayResponseFormats::COUNTER_SUCCEED_FAILED:
                     $formattedResults[$key] = $result
                         ->getCounters();
                     break;

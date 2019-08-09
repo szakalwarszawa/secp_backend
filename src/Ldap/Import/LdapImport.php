@@ -36,7 +36,7 @@ class LdapImport
     /**
      * @var int
      */
-    private $responseFormat = ArrayResponseFormats::COUNTER_SUCCESS_DETAILED_FAILED;
+    private $responseFormat = ArrayResponseFormats::COUNTER_SUCCEED_DETAILED_FAILED;
 
     /**
      * @var null|StopwatchEvent

@@ -84,7 +84,7 @@ class LdapImportCommand extends Command
 
         $result = $this
             ->ldapImport
-            ->setResponseFormat(ArrayResponseFormats::COUNTER_SUCCESS_FAILED)
+            ->setResponseFormat(ArrayResponseFormats::COUNTER_SUCCEED_FAILED)
             ->import($argumentValue)
         ;
 
