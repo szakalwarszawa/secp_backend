@@ -34,6 +34,8 @@ class LdapImportListener
      *
      * @param LdapImportedEvent $event;
      *
+     * @throws InvalidArgumentException when object class is not supported
+     *
      * @return void
      */
     public function onLdapImported(LdapImportedEvent $event): void

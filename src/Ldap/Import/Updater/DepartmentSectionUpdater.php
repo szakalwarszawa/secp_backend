@@ -181,6 +181,8 @@ final class DepartmentSectionUpdater extends AbstractUpdater
      * Extract sections and departments from LdapObject instance.
      * Matches sections to department.
      *
+     * @throws InvalidArgumentException when object instance is not supported
+     *
      * @return void
      */
     private function extractDepartmentSection(): void
