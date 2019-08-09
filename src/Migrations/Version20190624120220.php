@@ -38,13 +38,29 @@ final class Version20190624120220 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE "absence_types_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE "presence_types_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql(
-            'CREATE TABLE "absence_types" (id INT NOT NULL, short_name VARCHAR(10) NOT NULL, name VARCHAR(255) NOT NULL, active BOOLEAN NOT NULL, PRIMARY KEY(id))'
+            <<<SQL
+CREATE TABLE "absence_types" (
+    id INT NOT NULL,
+    short_name VARCHAR(10) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    active BOOLEAN NOT NULL,
+    PRIMARY KEY(id)
+)
+SQL
         );
         $this->addSql('CREATE INDEX idx_absence_types_short_name ON "absence_types" (short_name)');
         $this->addSql('CREATE INDEX idx_absence_types_name ON "absence_types" (active, name)');
         $this->addSql('CREATE INDEX idx_absence_types_active ON "absence_types" (active)');
         $this->addSql(
-            'CREATE TABLE "presence_types" (id INT NOT NULL, short_name VARCHAR(10) NOT NULL, name VARCHAR(255) NOT NULL, active BOOLEAN NOT NULL, PRIMARY KEY(id))'
+            <<<SQL
+CREATE TABLE "presence_types" (
+    id INT NOT NULL,
+    short_name VARCHAR(10) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    active BOOLEAN NOT NULL,
+    PRIMARY KEY(id)
+)
+SQL
         );
         $this->addSql('CREATE INDEX idx_presence_types_short_name ON "presence_types" (short_name)');
         $this->addSql('CREATE INDEX idx_presence_types_name ON "presence_types" (active, name)');

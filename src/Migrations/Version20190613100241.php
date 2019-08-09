@@ -37,7 +37,14 @@ final class Version20190613100241 extends AbstractMigration
 
         $this->addSql('CREATE SEQUENCE "work_schedule_profiles_id_seq" INCREMENT BY 1 MINVALUE 1 START 6');
         $this->addSql(
-            'CREATE TABLE "work_schedule_profiles" (id INT NOT NULL, name VARCHAR(255) NOT NULL, notice VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))'
+            <<<'SQL'
+CREATE TABLE "work_schedule_profiles" (
+    id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    notice VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY(id)
+)
+SQL
         );
         $this->addSql('CREATE INDEX idx_work_schedule_profiles_name ON "work_schedule_profiles" (name)');
         $this->addSql('COMMENT ON COLUMN day_definition_logs.log_date IS NULL');
@@ -55,7 +62,12 @@ SQL
 
         $this->addSql('ALTER TABLE users ADD default_work_schedule_profile_id INT NOT NULL DEFAULT 1');
         $this->addSql(
-            'ALTER TABLE users ADD CONSTRAINT FK_1483A5E9691648CC FOREIGN KEY (default_work_schedule_profile_id) REFERENCES "work_schedule_profiles" (id) NOT DEFERRABLE INITIALLY IMMEDIATE'
+            <<<SQL
+ALTER TABLE users
+    ADD CONSTRAINT FK_1483A5E9691648CC
+    FOREIGN KEY (default_work_schedule_profile_id)
+    REFERENCES "work_schedule_profiles" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+SQL
         );
         $this->addSql(
             'CREATE INDEX idx_users_default_work_schedule_profile_id ON users (default_work_schedule_profile_id)'

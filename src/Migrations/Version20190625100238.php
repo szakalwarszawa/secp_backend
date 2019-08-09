@@ -61,7 +61,9 @@ final class Version20190625100238 extends AbstractMigration
             'CREATE INDEX idx_user_timesheet_days_user_timesheet_id ON "user_timesheet_days" (user_timesheet_id)'
         );
         $this->addSql(
-            'CREATE INDEX idx_user_timesheet_days_user_work_schedule_day_id ON "user_timesheet_days" (user_work_schedule_day_id)'
+            <<<SQL
+CREATE INDEX idx_user_timesheet_days_user_work_schedule_day_id ON "user_timesheet_days" (user_work_schedule_day_id)
+SQL
         );
         $this->addSql(
             'CREATE TABLE "user_timesheets" (

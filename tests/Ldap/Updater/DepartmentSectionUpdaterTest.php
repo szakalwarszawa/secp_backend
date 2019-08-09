@@ -2,8 +2,13 @@
 
 namespace App\Tests\Ldap\Updater;
 
+use App\DataFixtures\DepartmentFixtures;
+use App\DataFixtures\SectionFixtures;
 use App\Entity\Department;
+use App\Entity\Section;
 use App\Entity\User;
+use App\Ldap\Constants\UserAttributes;
+use App\Ldap\Import\Updater\DepartmentSectionUpdater;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use LdapTools\Object\LdapObject;
