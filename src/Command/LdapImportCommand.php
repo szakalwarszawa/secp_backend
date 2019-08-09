@@ -114,7 +114,7 @@ class LdapImportCommand extends Command
         $table
             ->setHeaders(['key', Types::SUCCESS, Types::FAIL]);
 
-        foreach ($result as $key=> $value) {
+        foreach ($result as $key => $value) {
             $table
                 ->addRow([$key, $value[Types::SUCCESS], $value[Types::FAIL]])
             ;

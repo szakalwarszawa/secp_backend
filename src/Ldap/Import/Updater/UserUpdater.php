@@ -4,7 +4,6 @@ namespace App\Ldap\Import\Updater;
 
 use LdapTools\Object\LdapObjectCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Countable;
 use App\Entity\User;
 use App\Ldap\Constants\UserAttributes;
 use App\Entity\Department;
@@ -14,6 +13,7 @@ use App\Ldap\Import\Updater\AbstractUpdater;
 use App\Ldap\Import\Updater\Result\Result;
 use App\Ldap\Import\Updater\Result\Types;
 use App\Ldap\Import\Updater\Result\Actions;
+use Traversable;
 
 /**
  * Class UserUpdater
@@ -31,7 +31,7 @@ final class UserUpdater extends AbstractUpdater
     public const SECTION_MANAGER_POSITION = 'kierownik';
 
     /**
-     * @var Countable
+     * @var Traversable
      */
     private $usersList;
 
@@ -44,7 +44,7 @@ final class UserUpdater extends AbstractUpdater
      * @param LdapObjectCollection $usersList
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(Countable $usersList, EntityManagerInterface $entityManager)
+    public function __construct(Traversable $usersList, EntityManagerInterface $entityManager)
     {
         $this->usersList = $usersList;
         $this->entityManager = $entityManager;

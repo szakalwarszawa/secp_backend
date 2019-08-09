@@ -9,6 +9,9 @@ use InvalidArgumentException;
 use App\Ldap\Constants\ArrayResponseFormats;
 use App\Utils\ConstantsUtil;
 
+/**
+ * Class ResponseFormatter
+ */
 class ResponseFormatter
 {
     /**

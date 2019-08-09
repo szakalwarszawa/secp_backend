@@ -13,6 +13,10 @@ use App\Ldap\Constants\ArrayResponseFormats;
 use App\Utils\ConstantsUtil;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
+use App\Entity\LdapImportLog;
+use DateTime;
+use App\Ldap\Event\LdapImportedEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class LdapImport
@@ -40,15 +44,22 @@ class LdapImport
     private $stopwatchResult = null;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param UsersFetcher $usersFetcher
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         UsersFetcher $usersFetcher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->usersFetcher = $usersFetcher;
         $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -94,6 +105,10 @@ class LdapImport
         }
 
         $this->stopwatchResult = $stopwatch->stop('ldapImport');
+        $this
+            ->eventDispatcher
+            ->dispatch(LdapImportedEvent::NAME, new LdapImportedEvent($results))
+        ;
 
         return ResponseFormatter::format($results, $this->responseFormat);
     }

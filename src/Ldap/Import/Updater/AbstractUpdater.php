@@ -32,12 +32,21 @@ abstract class AbstractUpdater
      */
     abstract public function update(): void;
 
-    protected function addResult(Result $result)
+    /**
+     * Short to collection `add` method.
+     *
+     * @param Result $result
+     *
+     * @return bool
+     */
+    protected function addResult(Result $result): bool
     {
         $this
             ->resultsCollector
             ->add($result)
         ;
+
+        return true;
     }
 
     /**
