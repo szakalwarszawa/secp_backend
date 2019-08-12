@@ -13,7 +13,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 use App\Ldap\Event\LdapImportedEvent;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class LdapImport
@@ -100,7 +100,7 @@ class LdapImport
         $this->stopwatchResult = $stopwatch->stop('ldapImport');
         $this
             ->eventDispatcher
-            ->dispatch(LdapImportedEvent::NAME, new LdapImportedEvent($results))
+            ->dispatch(new LdapImportedEvent($results), LdapImportedEvent::NAME)
         ;
 
         return ResponseFormatter::format($results);

@@ -66,7 +66,7 @@ services:
     App\EventListener\LdapImportListener:
         autowire: true
         tags:
-            - { name: kernel.event_listener, event: ldap.imported, lazy: true }
+            - { name: kernel.event_listener, event: ldap.imported }
 
     App\Security\Authentication\Guard\JsonLdapGuardAuthenticator:
         arguments:
