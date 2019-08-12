@@ -16,7 +16,6 @@ use Symfony\Component\Stopwatch\StopwatchEvent;
 use App\Ldap\Event\LdapImportedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-
 /**
  * Class LdapImport
  */

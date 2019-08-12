@@ -52,7 +52,7 @@ class Collector extends ArrayCollection
 
         return array_filter(
             $this->toArray(),
-            function ($element, $key) use ($type) {
+            function ($element) use ($type) {
                 return $element instanceof Result && $type === $element->getType();
             },
             ARRAY_FILTER_USE_BOTH
