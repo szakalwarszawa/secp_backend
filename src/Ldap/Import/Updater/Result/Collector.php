@@ -11,11 +11,6 @@ use App\Utils\ConstantsUtil;
 class Collector extends ArrayCollection
 {
     /**
-     * @var bool
-     */
-    private $joinFailures = false;
-
-    /**
      * Get results marked as success.
      *
      * Alias to getByType(Types::SUCCESS)
@@ -54,8 +49,7 @@ class Collector extends ArrayCollection
             $this->toArray(),
             function ($element) use ($type) {
                 return $element instanceof Result && $type === $element->getType();
-            },
-            ARRAY_FILTER_USE_BOTH
+            }
         );
     }
 
@@ -85,28 +79,9 @@ class Collector extends ArrayCollection
     {
         $sortedObjects = $this->getGroupByType();
 
-        if ($this->joinFailures) {
-            return [
-                Types::SUCCESS => isset($sortedObjects[Types::SUCCESS]) ? count($sortedObjects[Types::SUCCESS]) : 0,
-                Types::FAIL => $sortedObjects[Types::FAIL] ?? 0,
-            ];
-        }
-
         return [
             Types::SUCCESS => isset($sortedObjects[Types::SUCCESS]) ? count($sortedObjects[Types::SUCCESS]) : 0,
             Types::FAIL => isset($sortedObjects[Types::FAIL]) ? count($sortedObjects[Types::FAIL]) : 0,
         ];
-    }
-
-    /**
-     * Force join failures to return regardless of the method.
-     *
-     * @return Collector
-     */
-    public function forceJoinFailures(): Collector
-    {
-        $this->joinFailures = true;
-
-        return $this;
     }
 }

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Ldap\Import;
 
+use App\Entity\FakeLdapImport;
 use App\Ldap\Import\Updater\Result\Collector;
 use InvalidArgumentException;
 use App\Ldap\Constants\ArrayResponseFormats;
 use App\Utils\ConstantsUtil;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class ResponseFormatter
@@ -25,49 +27,38 @@ class ResponseFormatter
     }
 
     /**
+     * Converts Collector`s elements to FakeLdapImport object.
+     *
      * @param array|Collector[]
      * @param int $format
      *
      * @throws InvalidArgumentException when $results element is not a Collector object.
      *
-     * @return array
+     * @return ArrayCollection
      */
-    public static function format(array $results, int $format): array
+    public static function format(array $results): ArrayCollection
     {
-        ConstantsUtil::constCheckValue($format, ArrayResponseFormats::class);
-
-        $formattedResults = [];
+        $resultsCollection = new ArrayCollection();
         foreach ($results as $key => $result) {
             $supportedClass = self::supports();
             if (!$result instanceof $supportedClass) {
                 throw new InvalidArgumentException(sprintf('Instance of %s expected.', $supportedClass));
             }
 
-            switch ($format) {
-                case ArrayResponseFormats::SORTED_SUCCEED_FAILED:
-                    $formattedResults[$key] = $result
-                        ->getGroupByType();
-                    break;
-                case ArrayResponseFormats::COUNTER_SUCCEED_DETAILED_FAILED:
-                    $result->forceJoinFailures();
-                    $formattedResults[$key] = $result
-                        ->getCounters();
-                    break;
-                case ArrayResponseFormats::COUNTER_SUCCEED_FAILED:
-                    $formattedResults[$key] = $result
-                        ->getCounters();
-                    break;
-                case ArrayResponseFormats::ONLY_FAILED:
-                    $formattedResults[$key] = $result
-                        ->getFailed();
-                    break;
-                case ArrayResponseFormats::ONLY_SUCCEED:
-                    $formattedResults[$key] = $result
-                        ->getSucceed();
-                    break;
-            }
+            $failed = $result->getFailed();
+            $succeed = $result->getSucceed();
+            $fakeLdapImport = new FakeLdapImport();
+            $fakeLdapImport
+                ->setResourceName($key)
+                ->setFailedCount(count($failed))
+                ->setSucceedCount(count($succeed))
+                ->setFailedDetails($failed)
+                ->setSucceedDetails($succeed)
+            ;
+
+            $resultsCollection->add($fakeLdapImport);
         }
 
-        return $formattedResults;
+        return $resultsCollection;
     }
 }

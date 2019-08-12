@@ -84,18 +84,5 @@ class CollectorTest extends AbstractWebTestCase
          *     ]
          */
         $this->assertEquals(1, $counters[Types::FAIL]);
-
-        $this->assertClassHasAttribute('joinFailures', Collector::class);
-
-        /**
-         * Key "fail" of $counter now should contain detailed info (Result::class) about failed objects
-         * after ->getCounters() call.
-         * $counters[Types::SUCCESS] must still be integer
-         * $counters[Types::FAIL] must be an array
-         */
-        $collector->forceJoinFailures();
-        $counters = $collector->getCounters();
-        $this->assertInstanceOf(Result::class, current($counters[Types::FAIL]));
-        $this->assertEquals(1, $counters[Types::SUCCESS]);
     }
 }

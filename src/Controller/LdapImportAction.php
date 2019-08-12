@@ -12,7 +12,7 @@ use App\Ldap\Constants\ArrayResponseFormats;
 /**
  * Class LdapImportAction
  */
-class LdapImportAction extends AbstractController
+class LdapImportAction
 {
     /**
      * @var LdapImport
@@ -30,14 +30,13 @@ class LdapImportAction extends AbstractController
     /**
      * @return JsonResponse
      */
-    public function __invoke(): JsonResponse
+    public function __invoke()
     {
         $result = $this
             ->ldapImport
-            ->setResponseFormat(ArrayResponseFormats::SORTED_SUCCEED_FAILED)
             ->import()
         ;
 
-        return $this->json($result);
+        return $result;
     }
 }

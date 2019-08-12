@@ -9,11 +9,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Ldap\Import\Updater\DepartmentSectionUpdater;
 use App\Ldap\Import\Updater\UserUpdater;
 use App\Ldap\Constants\ImportResources;
-use App\Ldap\Constants\ArrayResponseFormats;
-use App\Utils\ConstantsUtil;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 use App\Ldap\Event\LdapImportedEvent;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -30,11 +29,6 @@ class LdapImport
      * @var UsersFetcher
      */
     private $usersFetcher;
-
-    /**
-     * @var int
-     */
-    private $responseFormat = ArrayResponseFormats::COUNTER_SUCCEED_DETAILED_FAILED;
 
     /**
      * @var null|StopwatchEvent
@@ -71,7 +65,7 @@ class LdapImport
      *
      * @return array
      */
-    public function import(int $importResources = ImportResources::IMPORT_ALL): array
+    public function import(int $importResources = ImportResources::IMPORT_ALL): ArrayCollection
     {
         $stopwatch = new Stopwatch(true);
         $stopwatch->start('ldapImport');
@@ -109,7 +103,7 @@ class LdapImport
             ->dispatch(LdapImportedEvent::NAME, new LdapImportedEvent($results))
         ;
 
-        return ResponseFormatter::format($results, $this->responseFormat);
+        return ResponseFormatter::format($results);
     }
 
     /**
@@ -120,20 +114,5 @@ class LdapImport
     public function getStopwatchResult(): ?StopwatchEvent
     {
         return $this->stopwatchResult;
-    }
-
-    /**
-     * Set responseFormat
-     *
-     * @param int $responseFormat
-     *
-     * @return LdapImport
-     */
-    public function setResponseFormat(int $responseFormat): LdapImport
-    {
-        ConstantsUtil::constCheckValue($responseFormat, ArrayResponseFormats::class);
-        $this->responseFormat = $responseFormat;
-
-        return $this;
     }
 }
