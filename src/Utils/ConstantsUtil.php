@@ -57,6 +57,7 @@ class ConstantsUtil
      *
      * @param mixed $value
      * @param null|string $className
+     * @param bool $throwException
      *
      * @throws InvalidArgumentException when subject class does not contain constant with given value
      *
@@ -75,10 +76,14 @@ class ConstantsUtil
 
         $reflectionClass = new ReflectionClass($subjectClassName);
         $constants = array_flip($reflectionClass->getConstants());
-        if (!isset($constants[$value]) && $throwException) {
-            throw new InvalidArgumentException(
-                sprintf('Class %s does not contain a constant of value %s', $subjectClassName, $value)
-            );
+        if (!isset($constants[$value])) {
+            if ($throwException) {
+                throw new InvalidArgumentException(
+                    sprintf('Class %s does not contain a constant of value %s', $subjectClassName, $value)
+                );
+            }
+
+            return false;
         }
 
         return true;
@@ -89,6 +94,7 @@ class ConstantsUtil
      * Returns value of constant by key.
      *
      * @param string $key
+     * @param null|string $subjectClassName
      *
      * @return null|int
      */
@@ -117,7 +123,6 @@ class ConstantsUtil
     /**
      * Returns constants keys as string.
      *
-     * @param null|string $subjectClassName
      * @param null|string $subjectClassName
      *
      * @return string

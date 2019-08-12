@@ -13,10 +13,9 @@ use App\Ldap\Constants\ArrayResponseFormats;
 use App\Utils\ConstantsUtil;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
-use App\Entity\LdapImportLog;
-use DateTime;
 use App\Ldap\Event\LdapImportedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 
 /**
  * Class LdapImport
@@ -51,6 +50,7 @@ class LdapImport
     /**
      * @param UsersFetcher $usersFetcher
      * @param EntityManagerInterface $entityManager
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         UsersFetcher $usersFetcher,
@@ -66,7 +66,7 @@ class LdapImport
      * Import data from AD to database.
      * Actions order is important.
      * Section/department --> Users
-     * Departments and section are extrated from user's object.
+     * Departments and section are extracted from user's object.
      *
      * @param int $importResources
      *

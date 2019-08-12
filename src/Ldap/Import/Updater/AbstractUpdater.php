@@ -58,18 +58,4 @@ abstract class AbstractUpdater
     {
         return $this->resultsCollector;
     }
-
-    /**
-     * Get count as string.
-     *
-     * @return string
-     */
-    public function getCountAsString(): string
-    {
-        return sprintf(
-            'Successful updates: %d, Failed updates: %d',
-            $this->getSuccessfulCount(),
-            $this->getFailedCount()
-        );
-    }
 }

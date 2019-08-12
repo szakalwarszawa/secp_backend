@@ -4,8 +4,6 @@ namespace App\Ldap\Import\Updater\Result;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Utils\ConstantsUtil;
-use Symfony\Component\VarDumper\VarDumper;
-use App\Ldap\Import\Updater\Result\Result;
 
 /**
  * Class Collector
@@ -22,9 +20,9 @@ class Collector extends ArrayCollection
      *
      * Alias to getByType(Types::SUCCESS)
      *
-     * @return Collector
+     * @return array
      */
-    public function getSucceed()
+    public function getSucceed(): array
     {
         return $this->getByType(Types::SUCCESS);
     }
@@ -34,9 +32,9 @@ class Collector extends ArrayCollection
      *
      * Alias to getByType(Types::FAIL)
      *
-     * @return Collector
+     * @return array
      */
-    public function getFailed()
+    public function getFailed(): array
     {
         return $this->getByType(Types::FAIL);
     }
@@ -46,19 +44,19 @@ class Collector extends ArrayCollection
      *
      * @param string $type
      *
-     * @return Collector
+     * @return array
      */
-    private function getByType(string $type): Collector
+    private function getByType(string $type): array
     {
         ConstantsUtil::constCheckValue($type, Types::class);
-        $tempCollector = new Collector();
-        foreach ($this as $element) {
-            if ($element instanceof Result && $type === $element->getType()) {
-                $tempCollector->add($element);
-            }
-        }
 
-        return $tempCollector;
+        return array_filter(
+            $this->toArray(),
+            function ($element, $key) use ($type) {
+                return $element instanceof Result && $type === $element->getType();
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
     }
 
     /**
@@ -66,7 +64,7 @@ class Collector extends ArrayCollection
      *
      * @return array
      */
-    public function getSorted(): array
+    public function getGroupByType(): array
     {
         $tempArray = [];
         foreach ($this as $element) {
@@ -85,12 +83,12 @@ class Collector extends ArrayCollection
      */
     public function getCounters(): array
     {
-        $sortedObjects = $this->getSorted();
+        $sortedObjects = $this->getGroupByType();
 
         if ($this->joinFailures) {
             return [
                 Types::SUCCESS => isset($sortedObjects[Types::SUCCESS]) ? count($sortedObjects[Types::SUCCESS]) : 0,
-                Types::FAIL => isset($sortedObjects[Types::FAIL]) ? $sortedObjects[Types::FAIL] : 0,
+                Types::FAIL => $sortedObjects[Types::FAIL] ?? 0,
             ];
         }
 

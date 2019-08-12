@@ -6,7 +6,6 @@ namespace App\Ldap\Import\Updater\Result;
 
 use App\Ldap\Import\Updater\Result\Types;
 use App\Utils\ConstantsUtil;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class Result
@@ -44,6 +43,7 @@ class Result
      * @param string $className
      * @param string $type
      * @param null|string $message
+     * @param null|string $action
      */
     public function __construct(string $className, string $type, ?string $message = null, ?string $action = null)
     {

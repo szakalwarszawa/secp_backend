@@ -24,7 +24,7 @@ class CollectorTest extends AbstractWebTestCase
         $message1 = sprintf(
             'Department %s has been %s.',
             'Nazwa departamentu 1',
-            $departmentExists? 'updated' : 'created'
+            $departmentExists ? 'updated' : 'created'
         );
         $resultDepartamentThatBeenCreated1 = new Result(
             Department::class,
@@ -41,12 +41,8 @@ class CollectorTest extends AbstractWebTestCase
         );
 
         $collector = new Collector();
-        $collector
-            ->add($resultDepartamentThatBeenCreated1)
-        ;
-        $collector
-            ->add($resultUserThatBeenNotCreated)
-        ;
+        $collector->add($resultDepartamentThatBeenCreated1);
+        $collector->add($resultUserThatBeenNotCreated);
 
         /**
          * There must be only one failed type object.

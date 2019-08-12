@@ -26,7 +26,7 @@ class LdapImportLog
     /**
      * @ORM\Column(type="text")
      */
-    protected $result = [];
+    protected $result;
 
     /**
      * @ORM\Column(type="datetime")
@@ -42,9 +42,9 @@ class LdapImportLog
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getResult(): array
+    public function getResult(): string
     {
         return $this->result;
     }

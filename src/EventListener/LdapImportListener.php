@@ -74,7 +74,7 @@ class LdapImportListener
         ;
         $this
             ->entityManager
-            ->flush();
+            ->flush()
         ;
     }
 

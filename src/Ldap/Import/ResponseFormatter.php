@@ -29,8 +29,10 @@ class ResponseFormatter
      * @param int $format
      *
      * @throws InvalidArgumentException when $results element is not a Collector object.
+     *
+     * @return array
      */
-    public static function format(array $results, int $format)
+    public static function format(array $results, int $format): array
     {
         ConstantsUtil::constCheckValue($format, ArrayResponseFormats::class);
 
@@ -44,7 +46,7 @@ class ResponseFormatter
             switch ($format) {
                 case ArrayResponseFormats::SORTED_SUCCEED_FAILED:
                     $formattedResults[$key] = $result
-                        ->getSorted();
+                        ->getGroupByType();
                     break;
                 case ArrayResponseFormats::COUNTER_SUCCEED_DETAILED_FAILED:
                     $result->forceJoinFailures();
