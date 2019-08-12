@@ -56,5 +56,6 @@ SQL
      */
     public function down(Schema $schema) : void
     {
+$this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
     }
 }
