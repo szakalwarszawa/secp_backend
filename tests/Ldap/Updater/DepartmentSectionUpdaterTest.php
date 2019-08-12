@@ -124,7 +124,8 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
          * Last succeed element must be Result::class
          * Last result message must be "Section `SectionFixtures::REF_BP_SECTION` has been updated."
          */
-        $lastResultSectionCreatedSuccess = $resultsCollector->getSucceed()->last();
+        $succeed = $resultsCollector->getSucceed();
+        $lastResultSectionCreatedSuccess = end($succeed);
         $this->assertInstanceOf(Result::class, $lastResultSectionCreatedSuccess);
         $this->assertEquals(
             sprintf(
