@@ -47,24 +47,26 @@ class CollectorTest extends AbstractWebTestCase
         /**
          * There must be only one failed type object.
          */
-        $this->assertEquals(1, $collector->getFailed()->count());
+        $this->assertEquals(1, count($collector->getFailed()));
 
         /**
          * Result's className of first failed type must be same as defined in $resultUserThatBeenNotCreated.
          */
-        $this->assertEquals(LdapObject::class, $collector->getFailed()->first()->getClassName());
-        $this->assertEquals(Actions::IGNORE, $collector->getFailed()->first()->getAction());
-        $this->assertEquals(Types::FAIL, $collector->getFailed()->first()->getType());
+        $firstFailedElement = current($collector->getFailed());
+        $this->assertEquals(LdapObject::class, $firstFailedElement->getClassName());
+        $this->assertEquals(Actions::IGNORE, $firstFailedElement->getAction());
+        $this->assertEquals(Types::FAIL, $firstFailedElement->getType());
 
         /**
          * There must be only one success type object.
          */
-        $this->assertEquals(1, $collector->getSucceed()->count());
-        $this->assertEquals(Department::class, $collector->getSucceed()->first()->getClassName());
-        $this->assertEquals(Actions::UPDATE, $collector->getSucceed()->first()->getAction());
-        $this->assertEquals(Types::SUCCESS, $collector->getSucceed()->first()->getType());
+        $firstSucceedElement = current($collector->getSucceed());
+        $this->assertEquals(1, count($collector->getSucceed()));
+        $this->assertEquals(Department::class, $firstSucceedElement->getClassName());
+        $this->assertEquals(Actions::UPDATE, $firstSucceedElement->getAction());
+        $this->assertEquals(Types::SUCCESS, $firstSucceedElement->getType());
 
-        $sorted = $collector->getSorted();
+        $sorted = $collector->getGroupByType();
 
         /**
          * $sorted must be an array and have the "success" and "fail" keys.
