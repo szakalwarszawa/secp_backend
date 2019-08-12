@@ -76,99 +76,99 @@ class FakeLdapImport
         return $this->succeedCount;
     }
 
-	/**
-	 * Get failedCount
-	 *
-	 * @return array
-	 */
-	public function getFailedCount(): int
-	{
-		return $this->failedCount;
-	}
+    /**
+     * Get failedCount
+     *
+     * @return array
+     */
+    public function getFailedCount(): int
+    {
+        return $this->failedCount;
+    }
 
-	/**
-	 * Set failedCount
-	 *
-	 * @param array $failedCount
-	 *
-	 * @return FakeLdapImport
-	 */
-	public function setFailedCount(int $failedCount): FakeLdapImport
-	{
-		$this->failedCount = $failedCount;
+    /**
+     * Set failedCount
+     *
+     * @param array $failedCount
+     *
+     * @return FakeLdapImport
+     */
+    public function setFailedCount(int $failedCount): FakeLdapImport
+    {
+        $this->failedCount = $failedCount;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get succeedDetails
-	 *
-	 * @return array
-	 */
-	public function getSucceedDetails(): array
-	{
-		return $this->succeedDetails;
-	}
+    /**
+     * Get succeedDetails
+     *
+     * @return array
+     */
+    public function getSucceedDetails(): array
+    {
+        return $this->succeedDetails;
+    }
 
-	/**
-	 * Set succeedDetails
-	 *
-	 * @param array $succeedDetails
-	 *
-	 * @return FakeLdapImport
-	 */
-	public function setSucceedDetails(array $succeedDetails): FakeLdapImport
-	{
-		$this->succeedDetails = $succeedDetails;
+    /**
+     * Set succeedDetails
+     *
+     * @param array $succeedDetails
+     *
+     * @return FakeLdapImport
+     */
+    public function setSucceedDetails(array $succeedDetails): FakeLdapImport
+    {
+        $this->succeedDetails = $succeedDetails;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get failedDetails
-	 *
-	 * @return array
-	 */
-	public function getFailedDetails(): array
-	{
-		return $this->failedDetails;
-	}
+    /**
+     * Get failedDetails
+     *
+     * @return array
+     */
+    public function getFailedDetails(): array
+    {
+        return $this->failedDetails;
+    }
 
-	/**
-	 * Set failedDetails
-	 *
-	 * @param array $failedDetails
-	 *
-	 * @return FakeLdapImport
-	 */
-	public function setFailedDetails(array $failedDetails): FakeLdapImport
-	{
-		$this->failedDetails = $failedDetails;
+    /**
+     * Set failedDetails
+     *
+     * @param array $failedDetails
+     *
+     * @return FakeLdapImport
+     */
+    public function setFailedDetails(array $failedDetails): FakeLdapImport
+    {
+        $this->failedDetails = $failedDetails;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get resourceName
-	 *
-	 * @return string
-	 */
-	public function getResourceName(): string
-	{
-		return $this->resourceName;
-	}
+    /**
+     * Get resourceName
+     *
+     * @return string
+     */
+    public function getResourceName(): string
+    {
+        return $this->resourceName;
+    }
 
-	/**
-	 * Set resourceName
-	 *
-	 * @param string $resourceName
-	 *
-	 * @return FakeLdapImport
-	 */
-	public function setResourceName(string $resourceName): FakeLdapImport
-	{
-		$this->resourceName = $resourceName;
+    /**
+     * Set resourceName
+     *
+     * @param string $resourceName
+     *
+     * @return FakeLdapImport
+     */
+    public function setResourceName(string $resourceName): FakeLdapImport
+    {
+        $this->resourceName = $resourceName;
 
-		return $this;
-	}
+        return $this;
+    }
 }
