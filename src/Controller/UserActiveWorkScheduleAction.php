@@ -1,14 +1,11 @@
 <?php
 
-
 namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserWorkScheduleDay;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -30,8 +27,8 @@ class UserActiveWorkScheduleAction
 
     /**
      * UserMe constructor.
-     * @param TokenStorageInterface $tokenStorage
      * @param EntityManagerInterface $entityManager
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
     {

@@ -8,6 +8,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\UserCreateTimesheetDayAction;
+use App\Controller\UserOwnTimesheetDayAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -82,6 +83,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                  }
  *              }
  *          },
+ *          "get-users-own-timesheet-days"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *              "method"="GET",
+ *              "path"="/user_timesheet_days/own/{dateFrom}/{dateTo}",
+ *              "requirements"={"dateFrom"="\d{4}-\d{2}-\d{2}", "dateTo"="\d{4}-\d{2}-\d{2}"},
+ *              "controller"=UserOwnTimesheetDayAction::class,
+ *              "normalization_context"={
+ *                  "groups"={
+ *                      "get",
+ *                      "get-user-timesheet-day-with-user_work_schedule_day"
+ *                  }
+ *              }
+ *          }
  *      },
  *      normalizationContext={
  *          "groups"={
