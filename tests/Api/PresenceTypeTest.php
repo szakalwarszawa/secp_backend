@@ -48,6 +48,8 @@ class PresenceTypeTest extends AbstractWebTestCase
         $this->assertEquals($presenceTypeDB->getShortName(), $presenceTypeJSON->shortName);
         $this->assertEquals($presenceTypeDB->getName(), $presenceTypeJSON->name);
         $this->assertEquals($presenceTypeDB->getActive(), $presenceTypeJSON->active);
+        $this->assertEquals($presenceTypeDB->getCreateRestriction(), $presenceTypeJSON->createRestriction);
+        $this->assertEquals($presenceTypeDB->getEditRestriction(), $presenceTypeJSON->editRestriction);
     }
 
     /**

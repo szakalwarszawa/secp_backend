@@ -71,6 +71,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class PresenceType
 {
+    public const EDIT_RESTRICTION_ALL = 0;
+    public const EDIT_RESTRICTION_TODAY = 1;
+    public const EDIT_RESTRICTION_BEFORE_TODAY = 2;
+    public const EDIT_RESTRICTION_AFTER_TODAY = 3;
+    public const EDIT_RESTRICTION_BEFORE_AND_TODAY = 4;
+    public const EDIT_RESTRICTION_AFTER_AND_TODAY = 5;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -96,7 +103,7 @@ class PresenceType
     /**
      * @ORM\Column(
      *     type="boolean",
-     *     nullable=true,
+     *     nullable=false,
      *     options={"default"=false}
      * )
      * @Assert\NotNull()
@@ -107,7 +114,7 @@ class PresenceType
     /**
      * @ORM\Column(
      *     type="boolean",
-     *     nullable=true,
+     *     nullable=false,
      *     options={"default"=true}
      * )
      * @Assert\NotNull()
@@ -121,6 +128,68 @@ class PresenceType
      * @Groups({"get"})
      */
     private $active;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Choice(callback="getEditRestrictions")
+     * @Assert\NotNull()
+     * @ORM\Column(
+     *     type="integer",
+     *     nullable=false,
+     *     options={"default"=0}
+     * )
+     * @Groups({"get", "post", "put"})
+     */
+    private $createRestriction;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Choice(callback="getEditRestrictions")
+     * @Assert\NotNull()
+     * @ORM\Column(
+     *     type="integer",
+     *     nullable=false,
+     *     options={"default"=0}
+     * )
+     * @Groups({"get", "post", "put"})
+     */
+    private $editRestriction;
+
+    /**
+     * @return int|null
+     */
+    public function getEditRestriction(): ?int
+    {
+        return $this->editRestriction;
+    }
+
+    /**
+     * @param int $editRestriction
+     * @return PresenceType
+     */
+    public function setEditRestriction(int $editRestriction): self
+    {
+        $this->editRestriction = $editRestriction;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCreateRestriction(): ?int
+    {
+        return $this->createRestriction;
+    }
+
+    /**
+     * @param int $createRestriction
+     * @return PresenceType
+     */
+    public function setCreateRestriction(int $createRestriction): self
+    {
+        $this->createRestriction = $createRestriction;
+        return $this;
+    }
 
     /**
      * @return bool|null
@@ -221,5 +290,21 @@ class PresenceType
         $this->active = $active;
 
         return $this;
+    }
+
+    /**
+     * Return possible create or edit restrictions, used by createRestriction, editRestriction validator
+     * @return array
+     */
+    public function getEditRestrictions(): array
+    {
+        return [
+            self::EDIT_RESTRICTION_ALL,
+            self::EDIT_RESTRICTION_TODAY,
+            self::EDIT_RESTRICTION_BEFORE_TODAY,
+            self::EDIT_RESTRICTION_AFTER_TODAY,
+            self::EDIT_RESTRICTION_BEFORE_AND_TODAY,
+            self::EDIT_RESTRICTION_AFTER_AND_TODAY,
+        ];
     }
 }
