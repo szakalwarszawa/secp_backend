@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Ldap\Import\LdapImport;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Ldap\Constants\ArrayResponseFormats;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class LdapImportAction
@@ -28,9 +26,9 @@ class LdapImportAction
     }
 
     /**
-     * @return JsonResponse
+     * @return ArrayCollection
      */
-    public function __invoke()
+    public function __invoke(): ArrayCollection
     {
         $result = $this
             ->ldapImport
