@@ -12,6 +12,8 @@ use App\Ldap\Import\Updater\UserUpdater;
 use App\Entity\Section;
 use App\DataFixtures\SectionFixtures;
 use App\DataFixtures\DepartmentFixtures;
+use App\Ldap\Import\Updater\Result\Collector;
+use App\Ldap\Import\Updater\Result\Types;
 
 /**
  * Class UserUpdaterTest
@@ -26,7 +28,7 @@ class UserUpdaterTest extends AbstractWebTestCase
         /**
          * User that will be manager of BI.SRO Section.
          * Department exists in db.
-         * Secion exists in db.
+         * Section exists in db.
          */
         $ldapObjectsCollection = new ArrayCollection();
         $ldapObjectShouldPass = new LdapObject([
@@ -48,7 +50,7 @@ class UserUpdaterTest extends AbstractWebTestCase
         /**
          * User that will be manager of BP Department.
          * Department exists in db.
-         * Secion exists in db.
+         * Section exists in db.
          */
         $ldapObjectShouldPass = new LdapObject([
             'lastname' => 'Mate',
@@ -57,7 +59,7 @@ class UserUpdaterTest extends AbstractWebTestCase
             'dn' => 'CN=Mate Yerba,OU=BP,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::DEPARTMENT_SHORT => 'BP',
             UserAttributes::POSITION => 'dyrektor',
-            UserAttributes::SECTION => $this->fixtures->getReference(SectionFixtures::REF_BP_SECION)->getName(),
+            UserAttributes::SECTION => $this->fixtures->getReference(SectionFixtures::REF_BP_SECTION)->getName(),
             UserAttributes::DEPARTMENT => 'Biuro Prezesa',
             UserAttributes::SUPERVISOR => 'CN=Bolton Ramsay,OU=BP,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::SAMACCOUNTNAME => 'yerba_mate',
@@ -98,7 +100,7 @@ class UserUpdaterTest extends AbstractWebTestCase
             'dn' => 'CN=Krawczyk Krzysztof,OU=BRK,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::DEPARTMENT_SHORT => 'BP',
             UserAttributes::POSITION => 'specjalista',
-            UserAttributes::SECTION => $this->fixtures->getReference(SectionFixtures::REF_BP_SECION)->getName(),
+            UserAttributes::SECTION => $this->fixtures->getReference(SectionFixtures::REF_BP_SECTION)->getName(),
             UserAttributes::DEPARTMENT => 'Biuro Prezesa',
             UserAttributes::SUPERVISOR => 'CN=Guy Random,OU=BP,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::SAMACCOUNTNAME => 'krzysztof_krafczyk',
@@ -118,20 +120,28 @@ class UserUpdaterTest extends AbstractWebTestCase
         }
 
         $userUpdater = new UserUpdater($ldapObjectsCollection, $this->entityManager);
+        $resultsCollector = $userUpdater->getResultsCollector();
 
-        $this->assertEquals(0, $userUpdater->getSuccessfulCount());
-        $this->assertEquals(0, $userUpdater->getFailedCount());
+        $this->assertInstanceOf(Collector::class, $resultsCollector);
+        $counter = $resultsCollector->getCounters();
+        $this->assertArrayHasKey(Types::SUCCESS, $counter);
+        $this->assertArrayHasKey(Types::FAIL, $counter);
+
+        $this->assertEquals(0, $counter[Types::SUCCESS]);
+        $this->assertEquals(0, $counter[Types::FAIL]);
 
         $userUpdater->update();
 
-        $this->assertEquals(2, $userUpdater->getSuccessfulCount());
+        $counter = $resultsCollector->getCounters();
+
+        $this->assertEquals(2, $counter[Types::SUCCESS]);
 
         /**
          * 2 is number of failed users.
          * ldapObjectFailHasNoFirstName
          * ldapObjectFailDueToDepartmentIsNotExists
          */
-        $this->assertEquals(2, $userUpdater->getFailedCount());
+        $this->assertEquals(2, $counter[Types::FAIL]);
 
         /**
          * This user should not exist in database.

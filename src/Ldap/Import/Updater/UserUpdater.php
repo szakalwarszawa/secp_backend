@@ -4,13 +4,16 @@ namespace App\Ldap\Import\Updater;
 
 use LdapTools\Object\LdapObjectCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Countable;
 use App\Entity\User;
 use App\Ldap\Constants\UserAttributes;
 use App\Entity\Department;
 use LdapTools\Object\LdapObject;
 use App\Entity\WorkScheduleProfile;
 use App\Ldap\Import\Updater\AbstractUpdater;
+use App\Ldap\Import\Updater\Result\Result;
+use App\Ldap\Import\Updater\Result\Types;
+use App\Ldap\Import\Updater\Result\Actions;
+use Traversable;
 
 /**
  * Class UserUpdater
@@ -28,7 +31,7 @@ final class UserUpdater extends AbstractUpdater
     public const SECTION_MANAGER_POSITION = 'kierownik';
 
     /**
-     * @var Countable
+     * @var Traversable
      */
     private $usersList;
 
@@ -41,10 +44,12 @@ final class UserUpdater extends AbstractUpdater
      * @param LdapObjectCollection $usersList
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(Countable $usersList, EntityManagerInterface $entityManager)
+    public function __construct(Traversable $usersList, EntityManagerInterface $entityManager)
     {
         $this->usersList = $usersList;
         $this->entityManager = $entityManager;
+
+        parent::__construct();
     }
 
     /**
@@ -74,7 +79,12 @@ final class UserUpdater extends AbstractUpdater
         $userLastName = $userData->get(UserAttributes::LAST_NAME);
 
         if (!$userFirstName || !$userLastName) {
-            $this->countFail();
+            $this->addResult(new Result(
+                LdapObject::class,
+                Types::FAIL,
+                'LdapObject has no first name or last name',
+                Actions::IGNORE
+            ));
 
             return false;
         }
@@ -87,7 +97,8 @@ final class UserUpdater extends AbstractUpdater
             ])
         ;
 
-        if (null === $user) {
+        $userNotExists = null === $user;
+        if ($userNotExists) {
             $user = new User();
             $user
                 ->setUsername($userData->get(UserAttributes::SAMACCOUNTNAME))
@@ -114,7 +125,12 @@ final class UserUpdater extends AbstractUpdater
         ;
 
         if (null === $department) {
-            $this->countFail();
+            $this->addResult(new Result(
+                Department::class,
+                Types::FAIL,
+                sprintf('User`s %s department is null', $userData->get(UserAttributes::SAMACCOUNTNAME)),
+                Actions::IGNORE
+            ));
 
             return false;
         }
@@ -143,7 +159,16 @@ final class UserUpdater extends AbstractUpdater
             $this->entityManager->persist($section);
         }
 
-        $this->countSuccess();
+        $this->addResult(new Result(
+            User::class,
+            Types::SUCCESS,
+            sprintf(
+                'User %s has been %s.',
+                $user->getUsername(),
+                $userNotExists? 'created' : 'updated'
+            ),
+            $userNotExists? Actions::CREATE : Actions::UPDATE
+        ));
 
         return true;
     }
