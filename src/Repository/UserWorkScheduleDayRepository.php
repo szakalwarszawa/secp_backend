@@ -107,6 +107,7 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
             ->setParameter('dateTo', $dayToDate)
             ->andWhere('status.id = :status')
             ->setParameter('status', UserWorkSchedule::STATUS_HR_ACCEPT)
+            ->orderBy('dayDefinition.id')
             ->getQuery();
 
         $result = $query->getResult();
