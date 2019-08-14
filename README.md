@@ -15,7 +15,7 @@
 - ldap
 - json
 - pgsql
-- sqlite - do testów
+- sqlite - do testów w środowisku dev
 - mbstring
 - intl
 - xml
