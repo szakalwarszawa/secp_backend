@@ -15,6 +15,7 @@
 - ldap
 - json
 - pgsql
+- sqlite - do testów
 - mbstring
 - intl
 - xml
@@ -93,3 +94,10 @@ Do wykonania synchronizacji należy wykonać komendę:
 php bin/console app:ldap-import
 ```
 Komenda ta powinna być wykonywana okresowo poprzez system
+
+## Testy jednostkowe
+Do wykonania testów jednostkowych służy komenda:
+```shell script
+php bin/phpunit
+```
+
