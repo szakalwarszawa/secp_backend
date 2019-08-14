@@ -7,7 +7,7 @@
 - [Postgres](https://www.postgresql.org/) w wersji min 9.6.0
 - [Composer](https://getcomposer.org/)
 
-#####Wymagane rozszerzenia PHP:
+###Wymagane rozszerzenia PHP:
 - curl
 - calendar
 - ctype
