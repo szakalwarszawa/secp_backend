@@ -3,17 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\UserWorkScheduleDay;
+use App\Entity\UserTimesheetDay;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Class UserActiveWorkScheduleAction
+ * Class UserOwnTimesheetDayAction
  * @package App\Controller
  */
-class UserActiveWorkScheduleAction
+class UserOwnTimesheetDayAction
 {
     /**
      * @var TokenInterface|null
@@ -30,25 +30,27 @@ class UserActiveWorkScheduleAction
      * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage
+    ) {
         $this->token = $tokenStorage->getToken();
         $this->entityManager = $entityManager;
     }
 
     /**
-     * @param $dateFrom
-     * @param $dateTo
-     * @return UserWorkScheduleDay[]
+     * @param string $dateFrom
+     * @param string $dateTo
+     * @return UserTimesheetDay[]
      */
     public function __invoke($dateFrom, $dateTo): array
     {
         $currentUser = $this->token->getUser();
         /* @var $currentUser User */
 
-        $userWorkSchedules = $this->entityManager->getRepository(UserWorkScheduleDay::class)
+        $userTimesheetDays = $this->entityManager->getRepository(UserTimesheetDay::class)
             ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo);
 
-        return $userWorkSchedules;
+        return $userTimesheetDays;
     }
 }
