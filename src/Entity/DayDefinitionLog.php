@@ -96,6 +96,7 @@ class DayDefinitionLog
 
     /**
      * @param DayDefinition|null $dayDefinition
+     *
      * @return DayDefinitionLog
      */
     public function setDayDefinition(?DayDefinition $dayDefinition): self
@@ -115,6 +116,7 @@ class DayDefinitionLog
 
     /**
      * @param User|null $owner
+     *
      * @return DayDefinitionLog
      */
     public function setOwner(?User $owner): self
@@ -134,6 +136,7 @@ class DayDefinitionLog
 
     /**
      * @param string $logDate
+     *
      * @return DayDefinitionLog
      */
     public function setLogDate(string $logDate): self
@@ -153,6 +156,7 @@ class DayDefinitionLog
 
     /**
      * @param string $notice
+     *
      * @return DayDefinitionLog
      */
     public function setNotice(string $notice): self

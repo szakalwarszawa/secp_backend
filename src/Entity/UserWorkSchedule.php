@@ -63,9 +63,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class UserWorkSchedule
 {
+    /*
+     * @const int
+     */
     public const STATUS_OWNER_EDIT = 0;
+    /*
+     * @const int
+     */
     public const STATUS_OWNER_ACCEPT = 1;
+    /*
+     * @const int
+     */
     public const STATUS_MANAGER_ACCEPT = 2;
+    /*
+     * @const int
+     */
     public const STATUS_HR_ACCEPT = 3;
 
     /**
@@ -145,6 +157,7 @@ class UserWorkSchedule
 
     /**
      * @param \DateTimeInterface $fromDate
+     *
      * @return UserWorkSchedule
      */
     public function setFromDate(\DateTimeInterface $fromDate): UserWorkSchedule
@@ -164,6 +177,7 @@ class UserWorkSchedule
 
     /**
      * @param \DateTimeInterface $toDate
+     *
      * @return UserWorkSchedule
      */
     public function setToDate(\DateTimeInterface $toDate): UserWorkSchedule
@@ -183,6 +197,7 @@ class UserWorkSchedule
 
     /**
      * @param int $status
+     *
      * @return UserWorkSchedule
      */
     public function setStatus(int $status): UserWorkSchedule
@@ -202,6 +217,7 @@ class UserWorkSchedule
 
     /**
      * @param User|null $owner
+     *
      * @return UserWorkSchedule
      */
     public function setOwner(?User $owner): UserWorkSchedule
@@ -221,6 +237,7 @@ class UserWorkSchedule
 
     /**
      * @param WorkScheduleProfile|null $workScheduleProfile
+     *
      * @return UserWorkSchedule
      */
     public function setWorkScheduleProfile(?WorkScheduleProfile $workScheduleProfile): UserWorkSchedule
@@ -232,6 +249,7 @@ class UserWorkSchedule
 
     /**
      * Return possible statuses, used by status validator
+     *
      * @return array
      */
     public function getStatuses(): array
@@ -254,6 +272,7 @@ class UserWorkSchedule
 
     /**
      * @param UserWorkScheduleDay $userWorkScheduleDay
+     *
      * @return UserWorkSchedule
      */
     public function addUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): UserWorkSchedule
@@ -268,6 +287,7 @@ class UserWorkSchedule
 
     /**
      * @param UserWorkScheduleDay $userWorkScheduleDay
+     *
      * @return UserWorkSchedule
      */
     public function removeUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): UserWorkSchedule
