@@ -45,5 +45,6 @@ final class Version20190805095840 extends AbstractMigration
      */
     public function down(Schema $schema) : void
     {
+        $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
     }
 }

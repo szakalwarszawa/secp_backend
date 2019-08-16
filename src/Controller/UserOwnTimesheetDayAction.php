@@ -48,9 +48,9 @@ class UserOwnTimesheetDayAction
         $currentUser = $this->token->getUser();
         /* @var $currentUser User */
 
-        $userTimsheetDays = $this->entityManager->getRepository(UserTimesheetDay::class)
+        $userTimesheetDays = $this->entityManager->getRepository(UserTimesheetDay::class)
             ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo);
 
-        return $userTimsheetDays;
+        return $userTimesheetDays;
     }
 }

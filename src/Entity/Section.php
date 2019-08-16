@@ -147,6 +147,7 @@ class Section
 
     /**
      * @param string $name
+     *
      * @return Section
      */
     public function setName(string $name): self
@@ -166,6 +167,7 @@ class Section
 
     /**
      * @param User $user
+     *
      * @return Section
      */
     public function addUser(User $user): self
@@ -180,6 +182,7 @@ class Section
 
     /**
      * @param User $user
+     *
      * @return Section
      */
     public function removeUser(User $user): self
@@ -205,6 +208,7 @@ class Section
 
     /**
      * @param bool $active
+     *
      * @return Section
      */
     public function setActive(bool $active): self
@@ -224,6 +228,7 @@ class Section
 
     /**
      * @param Department|null $department
+     *
      * @return Section
      */
     public function setDepartment(?Department $department): self
@@ -243,6 +248,7 @@ class Section
 
     /**
      * @param User $manager
+     *
      * @return Section
      */
     public function addManager(User $manager): self
@@ -256,6 +262,7 @@ class Section
 
     /**
      * @param User $manager
+     *
      * @return Section
      */
     public function removeManager(User $manager): self

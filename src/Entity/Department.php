@@ -155,6 +155,7 @@ class Department
 
     /**
      * @param string $name
+     *
      * @return Department
      */
     public function setName(string $name): self
@@ -173,6 +174,7 @@ class Department
 
     /**
      * @param string $shortName
+     *
      * @return Department
      */
     public function setShortName(string $shortName): self
@@ -191,6 +193,7 @@ class Department
 
     /**
      * @param bool $active
+     *
      * @return Department
      */
     public function setActive(bool $active): self
@@ -209,6 +212,7 @@ class Department
 
     /**
      * @param User $user
+     *
      * @return Department
      */
     public function addUser(User $user): self
@@ -223,6 +227,7 @@ class Department
 
     /**
      * @param User $user
+     *
      * @return Department
      */
     public function removeUser(User $user): self
@@ -270,6 +275,7 @@ class Department
 
     /**
      * @param Section $section
+     *
      * @return Department
      */
     public function addSection(Section $section): self
@@ -284,6 +290,7 @@ class Department
 
     /**
      * @param Section $section
+     *
      * @return Department
      */
     public function removeSection(Section $section): self
@@ -309,6 +316,7 @@ class Department
 
     /**
      * @param User $manager
+     *
      * @return Department
      */
     public function addManager(User $manager): self
@@ -322,6 +330,7 @@ class Department
 
     /**
      * @param User $manager
+     *
      * @return Department
      */
     public function removeManager(User $manager): self

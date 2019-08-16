@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Ldap\Import;
 
@@ -6,9 +8,12 @@ use App\Ldap\Fetch\UsersFetcher;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Ldap\Import\Updater\DepartmentSectionUpdater;
 use App\Ldap\Import\Updater\UserUpdater;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 use App\Ldap\Constants\ImportResources;
+use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Stopwatch\StopwatchEvent;
+use App\Ldap\Event\LdapImportedEvent;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class LdapImport
@@ -26,37 +31,45 @@ class LdapImport
     private $usersFetcher;
 
     /**
-     * @var LoggerInterface
+     * @var null|StopwatchEvent
      */
-    private $logger;
+    private $stopwatchResult = null;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * @param UsersFetcher $usersFetcher
      * @param EntityManagerInterface $entityManager
-     * @param LoggerInterface $logger
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         UsersFetcher $usersFetcher,
         EntityManagerInterface $entityManager,
-        LoggerInterface $logger
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->usersFetcher = $usersFetcher;
         $this->entityManager = $entityManager;
-        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * Import data from AD to database.
      * Actions order is important.
      * Section/department --> Users
-     * Departments and section are extrated from user's object.
+     * Departments and section are extracted from user's object.
      *
      * @param int $importResources
      *
      * @return array
      */
-    public function import(int $importResources = ImportResources::IMPORT_ALL): array
+    public function import(int $importResources = ImportResources::IMPORT_ALL): ArrayCollection
     {
+        $stopwatch = new Stopwatch(true);
+        $stopwatch->start('ldapImport');
+
         $usersData = $this
             ->usersFetcher
             ->fetch()
@@ -69,13 +82,9 @@ class LdapImport
             ], true)) {
             $departmentSectionUpdater = new DepartmentSectionUpdater($usersData, $this->entityManager);
             $departmentSectionUpdater->update();
-            $result = $departmentSectionUpdater->getCountAsString();
-            $this
-                ->logger
-                ->log(LogLevel::INFO, 'Department/section import' . $result)
-            ;
 
-            $results['Department/section'] = $result;
+            $stopwatch->lap('ldapImport');
+            $results['department_section'] = $departmentSectionUpdater->getResultsCollector();
         }
 
         if (in_array($importResources, [
@@ -84,15 +93,26 @@ class LdapImport
             ], true)) {
             $userUpdater = new UserUpdater($usersData, $this->entityManager);
             $userUpdater->update();
-            $result = $userUpdater->getCountAsString();
-            $this
-                ->logger
-                ->log(LogLevel::INFO, 'Users import' . $result)
-            ;
 
-            $results['Users'] = $result;
+            $results['users'] = $userUpdater->getResultsCollector();
         }
 
-        return $results;
+        $this->stopwatchResult = $stopwatch->stop('ldapImport');
+        $this
+            ->eventDispatcher
+            ->dispatch(new LdapImportedEvent($results), LdapImportedEvent::NAME)
+        ;
+
+        return ResponseFormatter::format($results);
+    }
+
+    /**
+     * Returns StopwatchEvent instance.
+     *
+     * @return null|StopwatchEvent
+     */
+    public function getStopwatchResult(): ?StopwatchEvent
+    {
+        return $this->stopwatchResult;
     }
 }

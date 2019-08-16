@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190802074750 extends AbstractMigration
+final class Version20190809080518 extends AbstractMigration
 {
     /**
      * @return string
@@ -35,7 +34,19 @@ final class Version20190802074750 extends AbstractMigration
             'Migration can only be executed safely on \'postgresql\'.'
         );
 
-        $this->addSql('ALTER TABLE users ALTER password DROP NOT NULL');
+        $this->addSql('CREATE SCHEMA logs');
+        $this->addSql('CREATE SEQUENCE "logs"."ldap_import_log_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql(
+            <<<SQL
+CREATE TABLE "logs"."ldap_import_log"
+(
+    id INT NOT NULL,
+    result TEXT NOT NULL,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+    PRIMARY KEY(id)
+)
+SQL
+        );
     }
 
     /**

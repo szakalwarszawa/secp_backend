@@ -1,6 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Ldap\Import\Updater;
+
+use App\Ldap\Import\Updater\Result\Collector;
+use App\Ldap\Import\Updater\Result\Result;
 
 /**
  * Class AbstractUpdater
@@ -8,14 +13,17 @@ namespace App\Ldap\Import\Updater;
 abstract class AbstractUpdater
 {
     /**
-     * @var int
+     * @var Collector
      */
-    protected $successfulUpdates = 0;
+    protected $resultsCollector;
 
     /**
-     * @var int
+     * Constructor
      */
-    protected $failedUpdates = 0;
+    public function __construct()
+    {
+        $this->resultsCollector = new Collector();
+    }
 
     /**
      * Begins operations chain.
@@ -25,56 +33,29 @@ abstract class AbstractUpdater
     abstract public function update(): void;
 
     /**
-     * Increment successfulUpdates
+     * Short to collection `add` method.
      *
-     * @return void
+     * @param Result $result
+     *
+     * @return bool
      */
-    protected function countSuccess(): void
+    protected function addResult(Result $result): bool
     {
-        $this->successfulUpdates++;
+        $this
+            ->resultsCollector
+            ->add($result)
+        ;
+
+        return true;
     }
 
     /**
-     * Increment failedUpdates
+     * Returns resultsCollector
      *
-     * @return void
+     * @return Collector
      */
-    protected function countFail(): void
+    public function getResultsCollector(): Collector
     {
-        $this->failedUpdates++;
-    }
-
-    /**
-     * Get successful updates count.
-     *
-     * @return int
-     */
-    public function getSuccessfulCount(): int
-    {
-        return $this->successfulUpdates;
-    }
-
-    /**
-     * Get failed updates count.
-     *
-     * @return int
-     */
-    public function getFailedCount(): int
-    {
-        return $this->failedUpdates;
-    }
-
-    /**
-     * Get count as string.
-     *
-     * @return string
-     */
-    public function getCountAsString(): string
-    {
-        return sprintf(
-            'Successful updates: %d, Failed updates: %d',
-            $this->getSuccessfulCount(),
-            $this->getFailedCount()
-        );
+        return $this->resultsCollector;
     }
 }

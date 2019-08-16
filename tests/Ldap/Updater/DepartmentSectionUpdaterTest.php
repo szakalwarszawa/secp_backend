@@ -12,6 +12,9 @@ use App\Ldap\Import\Updater\DepartmentSectionUpdater;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use LdapTools\Object\LdapObject;
+use App\Ldap\Import\Updater\Result\Types;
+use App\Ldap\Import\Updater\Result\Collector;
+use App\Ldap\Import\Updater\Result\Result;
 
 /**
  * Class DepartmentSectionUpdaterTest
@@ -58,10 +61,8 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
             'dn' => 'CN=Mate Yerba,OU=BP,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::DEPARTMENT_SHORT => 'BP',
             UserAttributes::POSITION => 'dyrektor',
-            UserAttributes::SECTION => $this->fixtures->getReference(SectionFixtures::REF_BP_SECION)->getName(),
-            UserAttributes::DEPARTMENT => $this->fixtures
-                ->getReference(DepartmentFixtures::REF_DEPARTMENT_BP)
-                ->getName(),
+            UserAttributes::SECTION => $this->fixtures->getReference(SectionFixtures::REF_BP_SECTION)->getName(),
+            UserAttributes::DEPARTMENT => $this->fixtures->getReference(DepartmentFixtures::REF_DEPARTMENT_BP)->getName(),
             UserAttributes::SUPERVISOR => 'CN=Bolton Ramsay,OU=BP,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::SAMACCOUNTNAME => 'yerba_mate',
         ], 'user');
@@ -81,8 +82,15 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
 
         $userUpdater = new DepartmentSectionUpdater($ldapObjectsCollection, $this->entityManager);
 
-        $this->assertEquals(0, $userUpdater->getSuccessfulCount());
-        $this->assertEquals(0, $userUpdater->getFailedCount());
+        $resultsCollector = $userUpdater->getResultsCollector();
+
+        $this->assertInstanceOf(Collector::class, $resultsCollector);
+        $counter = $resultsCollector->getCounters();
+        $this->assertArrayHasKey(Types::SUCCESS, $counter);
+        $this->assertArrayHasKey(Types::FAIL, $counter);
+
+        $this->assertEquals(0, $counter[Types::SUCCESS]);
+        $this->assertEquals(0, $counter[Types::FAIL]);
 
         $departamentThatShouldNotExist = $this
             ->entityManager
@@ -101,9 +109,30 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
         $this->assertNull($sectionThatShouldNotExist);
 
         $userUpdater->update();
+        $counter = $resultsCollector->getCounters();
 
-        $this->assertEquals(2, $userUpdater->getSuccessfulCount());
-        $this->assertEquals(0, $userUpdater->getFailedCount());
+        /**
+         * Department 'Nowy department' must be created, must be 'success'
+         * Section 'Nowa sekcja' must be created, must be 'success'
+         * Department 'BiuroPrezesa' must be updated, must be 'success'
+         * Section 'BiuroPrezesa' must be updated, must be 'success'
+         */
+        $this->assertEquals(4, $counter[Types::SUCCESS]);
+        $this->assertEquals(0, $counter[Types::FAIL]);
+
+        /**
+         * Last succeed element must be Result::class
+         * Last result message must be "Section `SectionFixtures::REF_BP_SECTION` has been updated."
+         */
+        $succeed = $resultsCollector->getSucceed();
+        $lastResultSectionCreatedSuccess = end($succeed);
+        $this->assertInstanceOf(Result::class, $lastResultSectionCreatedSuccess);
+        $this->assertEquals(
+            sprintf(
+                'Section %s has been updated.',
+                $this->fixtures->getReference(SectionFixtures::REF_BP_SECTION)->getName()
+            ),  $lastResultSectionCreatedSuccess->getMessage())
+        ;
 
         $departamentCreatedThatShouldExists = $this
             ->entityManager
