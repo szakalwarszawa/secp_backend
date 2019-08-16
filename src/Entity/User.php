@@ -4,8 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\UserMeAction;
 use App\Exception\SectionNotBelongToDepartmentException;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -343,6 +343,7 @@ class User implements UserInterface
 
     /**
      * @param string $title
+     *
      * @return User
      */
     public function setTitle($title): User
@@ -361,6 +362,7 @@ class User implements UserInterface
 
     /**
      * @param string $samAccountName
+     *
      * @return User
      */
     public function setSamAccountName($samAccountName): User
@@ -379,6 +381,7 @@ class User implements UserInterface
 
     /**
      * @param string $lastName
+     *
      * @return User
      */
     public function setLastName(string $lastName): User
@@ -397,6 +400,7 @@ class User implements UserInterface
 
     /**
      * @param string $firstName
+     *
      * @return User
      */
     public function setFirstName(string $firstName): User
@@ -415,6 +419,7 @@ class User implements UserInterface
 
     /**
      * @param string $plainPassword
+     *
      * @return User
      */
     public function setPlainPassword($plainPassword): User
@@ -441,6 +446,7 @@ class User implements UserInterface
 
     /**
      * @param null|string $email
+     *
      * @return User
      */
     public function setEmail(?string $email = null): User
@@ -452,8 +458,9 @@ class User implements UserInterface
     /**
      * A visual identifier that represents this user.
      *
-     * @see UserInterface
      * @return string
+     *
+     * @see UserInterface
      */
     public function getUsername(): string
     {
@@ -462,6 +469,7 @@ class User implements UserInterface
 
     /**
      * @param string $username
+     *
      * @return User
      */
     public function setUsername($username): User
@@ -471,8 +479,9 @@ class User implements UserInterface
     }
 
     /**
-     * @see UserInterface
      * @return array
+     *
+     * @see UserInterface
      */
     public function getRoles(): array
     {
@@ -485,6 +494,7 @@ class User implements UserInterface
 
     /**
      * @param array $roles
+     *
      * @return User
      */
     public function setRoles(array $roles): User
@@ -494,8 +504,9 @@ class User implements UserInterface
     }
 
     /**
-     * @see UserInterface
      * @return string|null
+     *
+     * @see UserInterface
      */
     public function getPassword(): ?string
     {
@@ -504,6 +515,7 @@ class User implements UserInterface
 
     /**
      * @param string|null $password
+     *
      * @return User
      */
     public function setPassword(?string $password = null): User
@@ -521,8 +533,9 @@ class User implements UserInterface
     }
 
     /**
-     * @see UserInterface
      * @return void
+     *
+     * @see UserInterface
      */
     public function eraseCredentials(): void
     {
@@ -540,6 +553,7 @@ class User implements UserInterface
 
     /**
      * @param Department $managedDepartment
+     *
      * @return User
      */
     public function addManagedDepartment(Department $managedDepartment): User
@@ -554,6 +568,7 @@ class User implements UserInterface
 
     /**
      * @param Department $managedDepartment
+     *
      * @return User
      */
     public function removeManagedDepartment(Department $managedDepartment): User
@@ -576,6 +591,7 @@ class User implements UserInterface
 
     /**
      * @param Section $managedSection
+     *
      * @return User
      */
     public function addManagedSection(Section $managedSection): User
@@ -590,6 +606,7 @@ class User implements UserInterface
 
     /**
      * @param Section $managedSection
+     *
      * @return User
      */
     public function removeManagedSection(Section $managedSection): User
@@ -612,6 +629,7 @@ class User implements UserInterface
 
     /**
      * @param string $distinguishedName
+     *
      * @return User
      */
     public function setDistinguishedName($distinguishedName): User
@@ -623,7 +641,9 @@ class User implements UserInterface
     /**
      * @ORM\PrePersist()
      * @ORM\PreFlush()
+     *
      * @return void
+     *
      * @throws SectionNotBelongToDepartmentException
      */
     public function checkSameSectionAsDepartmentValidate(): void
@@ -646,6 +666,7 @@ class User implements UserInterface
 
     /**
      * @param Section|null $section
+     *
      * @return User
      */
     public function setSection(?Section $section): User
@@ -664,6 +685,7 @@ class User implements UserInterface
 
     /**
      * @param Department|null $department
+     *
      * @return User
      */
     public function setDepartment(?Department $department): User
@@ -682,6 +704,7 @@ class User implements UserInterface
 
     /**
      * @param WorkScheduleProfile|null $defaultWorkScheduleProfile
+     *
      * @return User
      */
     public function setDefaultWorkScheduleProfile(?WorkScheduleProfile $defaultWorkScheduleProfile): User
@@ -700,6 +723,7 @@ class User implements UserInterface
 
     /**
      * @param string $dayStartTimeFrom
+     *
      * @return User
      */
     public function setDayStartTimeFrom(string $dayStartTimeFrom): User
@@ -719,6 +743,7 @@ class User implements UserInterface
 
     /**
      * @param string $dayStartTimeTo
+     *
      * @return User
      */
     public function setDayStartTimeTo(string $dayStartTimeTo): User
@@ -738,6 +763,7 @@ class User implements UserInterface
 
     /**
      * @param string $dayEndTimeFrom
+     *
      * @return User
      */
     public function setDayEndTimeFrom(string $dayEndTimeFrom): User
@@ -757,6 +783,7 @@ class User implements UserInterface
 
     /**
      * @param string $dayEndTimeTo
+     *
      * @return User
      */
     public function setDayEndTimeTo(string $dayEndTimeTo): User
@@ -776,6 +803,7 @@ class User implements UserInterface
 
     /**
      * @param $dailyWorkingTime
+     *
      * @return User
      */
     public function setDailyWorkingTime($dailyWorkingTime): User
@@ -795,6 +823,7 @@ class User implements UserInterface
 
     /**
      * @param UserTimesheet $userTimesheet
+     *
      * @return User
      */
     public function addUserTimesheet(UserTimesheet $userTimesheet): User
@@ -809,6 +838,7 @@ class User implements UserInterface
 
     /**
      * @param UserTimesheet $userTimesheet
+     *
      * @return User
      */
     public function removeUserTimesheet(UserTimesheet $userTimesheet): User

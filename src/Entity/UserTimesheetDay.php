@@ -218,6 +218,7 @@ class UserTimesheetDay
 
     /**
      * @param string|null $dayDate
+     *
      * @return UserTimesheetDay
      */
     public function setDayDate(?string $dayDate): UserTimesheetDay
@@ -244,6 +245,7 @@ class UserTimesheetDay
 
     /**
      * @param UserTimesheet|null $userTimesheet
+     *
      * @return UserTimesheetDay
      */
     public function setUserTimesheet(?UserTimesheet $userTimesheet): UserTimesheetDay
@@ -263,6 +265,7 @@ class UserTimesheetDay
 
     /**
      * @param UserWorkScheduleDay $userWorkScheduleDay
+     *
      * @return UserTimesheetDay
      */
     public function setUserWorkScheduleDay(UserWorkScheduleDay $userWorkScheduleDay): UserTimesheetDay
@@ -282,6 +285,7 @@ class UserTimesheetDay
 
     /**
      * @param string|null $dayStartTime
+     *
      * @return UserTimesheetDay
      */
     public function setDayStartTime(?string $dayStartTime): UserTimesheetDay
@@ -301,6 +305,7 @@ class UserTimesheetDay
 
     /**
      * @param string|null $dayEndTime
+     *
      * @return UserTimesheetDay
      */
     public function setDayEndTime(?string $dayEndTime): UserTimesheetDay
@@ -320,6 +325,7 @@ class UserTimesheetDay
 
     /**
      * @param float $workingTime
+     *
      * @return UserTimesheetDay
      */
     public function setWorkingTime($workingTime): UserTimesheetDay
@@ -339,6 +345,7 @@ class UserTimesheetDay
 
     /**
      * @param PresenceType|null $presenceType
+     *
      * @return UserTimesheetDay
      */
     public function setPresenceType(?PresenceType $presenceType): UserTimesheetDay
@@ -358,6 +365,7 @@ class UserTimesheetDay
 
     /**
      * @param AbsenceType|null $absenceType
+     *
      * @return UserTimesheetDay
      */
     public function setAbsenceType(?AbsenceType $absenceType): UserTimesheetDay

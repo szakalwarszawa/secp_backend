@@ -71,11 +71,29 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class PresenceType
 {
+    /*
+     * @const int
+     */
     public const EDIT_RESTRICTION_ALL = 0;
+    /*
+     * @const int
+     */
     public const EDIT_RESTRICTION_TODAY = 1;
+    /*
+     * @const int
+     */
     public const EDIT_RESTRICTION_BEFORE_TODAY = 2;
+    /*
+     * @const int
+     */
     public const EDIT_RESTRICTION_AFTER_TODAY = 3;
+    /*
+     * @const int
+     */
     public const EDIT_RESTRICTION_BEFORE_AND_TODAY = 4;
+    /*
+     * @const int
+     */
     public const EDIT_RESTRICTION_AFTER_AND_TODAY = 5;
 
     /**
@@ -165,6 +183,7 @@ class PresenceType
 
     /**
      * @param int $editRestriction
+     *
      * @return PresenceType
      */
     public function setEditRestriction(int $editRestriction): self
@@ -183,6 +202,7 @@ class PresenceType
 
     /**
      * @param int $createRestriction
+     *
      * @return PresenceType
      */
     public function setCreateRestriction(int $createRestriction): self
@@ -201,6 +221,7 @@ class PresenceType
 
     /**
      * @param bool $isAbsence
+     *
      * @return PresenceType
      */
     public function setIsAbsence(bool $isAbsence): self
@@ -219,6 +240,7 @@ class PresenceType
 
     /**
      * @param bool $isTimed
+     *
      * @return PresenceType
      */
     public function setIsTimed(bool $isTimed): self
@@ -245,6 +267,7 @@ class PresenceType
 
     /**
      * @param string $shortName
+     *
      * @return PresenceType
      */
     public function setShortName(string $shortName): self
@@ -264,6 +287,7 @@ class PresenceType
 
     /**
      * @param string $name
+     *
      * @return PresenceType
      */
     public function setName(string $name): self
@@ -283,6 +307,7 @@ class PresenceType
 
     /**
      * @param bool $active
+     *
      * @return PresenceType
      */
     public function setActive(bool $active): self
@@ -294,6 +319,7 @@ class PresenceType
 
     /**
      * Return possible create or edit restrictions, used by createRestriction, editRestriction validator
+     *
      * @return array
      */
     public function getEditRestrictions(): array

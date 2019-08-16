@@ -99,6 +99,7 @@ class DayDefinition
 
     /**
      * @param string $id
+     *
      * @return DayDefinition
      */
     public function setId(string $id): self
@@ -118,6 +119,7 @@ class DayDefinition
 
     /**
      * @param bool $workingDay
+     *
      * @return DayDefinition
      */
     public function setWorkingDay(bool $workingDay): self
@@ -137,6 +139,7 @@ class DayDefinition
 
     /**
      * @param string|null $notice
+     *
      * @return DayDefinition
      */
     public function setNotice(?string $notice): self
@@ -156,6 +159,7 @@ class DayDefinition
 
     /**
      * @param DayDefinitionLog $dayDefinitionLog
+     *
      * @return DayDefinition
      */
     public function addDayDefinitionLog(DayDefinitionLog $dayDefinitionLog): self
@@ -170,6 +174,7 @@ class DayDefinition
 
     /**
      * @param DayDefinitionLog $dayDefinitionLog
+     *
      * @return DayDefinition
      */
     public function removeDayDefinitionLog(DayDefinitionLog $dayDefinitionLog): self

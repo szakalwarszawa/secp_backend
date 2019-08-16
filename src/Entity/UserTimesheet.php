@@ -62,9 +62,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class UserTimesheet
 {
+    /*
+     * @const int
+     */
     public const STATUS_OWNER_EDIT = 0;
+    /*
+     * @const int
+     */
     public const STATUS_OWNER_ACCEPT = 1;
+    /*
+     * @const int
+     */
     public const STATUS_MANAGER_ACCEPT = 2;
+    /*
+     * @const int
+     */
     public const STATUS_HR_ACCEPT = 3;
 
     /**
@@ -128,6 +140,7 @@ class UserTimesheet
 
     /**
      * @param User|null $owner
+     *
      * @return UserTimesheet
      */
     public function setOwner(?User $owner): UserTimesheet
@@ -147,6 +160,7 @@ class UserTimesheet
 
     /**
      * @param string $period
+     *
      * @return UserTimesheet
      */
     public function setPeriod(string $period): UserTimesheet
@@ -166,6 +180,7 @@ class UserTimesheet
 
     /**
      * @param int $status
+     *
      * @return UserTimesheet
      */
     public function setStatus(int $status): UserTimesheet
@@ -185,6 +200,7 @@ class UserTimesheet
 
     /**
      * @param UserTimesheetDay $userTimesheetDay
+     *
      * @return UserTimesheet
      */
     public function addUserTimesheetDay(UserTimesheetDay $userTimesheetDay): UserTimesheet
@@ -199,6 +215,7 @@ class UserTimesheet
 
     /**
      * @param UserTimesheetDay $userTimesheetDay
+     *
      * @return UserTimesheet
      */
     public function removeUserTimesheetDay(UserTimesheetDay $userTimesheetDay): UserTimesheet
@@ -216,6 +233,7 @@ class UserTimesheet
 
     /**
      * Return possible statuses, used by status validator
+     *
      * @return array
      */
     public function getStatuses(): array

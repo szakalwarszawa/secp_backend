@@ -4,8 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -167,6 +167,7 @@ class WorkScheduleProfile
 
     /**
      * @param string $name
+     *
      * @return WorkScheduleProfile
      */
     public function setName(string $name): WorkScheduleProfile
@@ -185,6 +186,7 @@ class WorkScheduleProfile
 
     /**
      * @param string|null $notice
+     *
      * @return WorkScheduleProfile
      */
     public function setNotice(?string $notice): WorkScheduleProfile
@@ -203,6 +205,7 @@ class WorkScheduleProfile
 
     /**
      * @param string $dayStartTimeFrom
+     *
      * @return WorkScheduleProfile
      */
     public function setDayStartTimeFrom(string $dayStartTimeFrom): WorkScheduleProfile
@@ -222,6 +225,7 @@ class WorkScheduleProfile
 
     /**
      * @param string $dayStartTimeTo
+     *
      * @return WorkScheduleProfile
      */
     public function setDayStartTimeTo(string $dayStartTimeTo): WorkScheduleProfile
@@ -241,6 +245,7 @@ class WorkScheduleProfile
 
     /**
      * @param string $dayEndTimeFrom
+     *
      * @return WorkScheduleProfile
      */
     public function setDayEndTimeFrom(string $dayEndTimeFrom): WorkScheduleProfile
@@ -260,6 +265,7 @@ class WorkScheduleProfile
 
     /**
      * @param string $dayEndTimeTo
+     *
      * @return WorkScheduleProfile
      */
     public function setDayEndTimeTo(string $dayEndTimeTo): WorkScheduleProfile
@@ -279,6 +285,7 @@ class WorkScheduleProfile
 
     /**
      * @param float $dailyWorkingTime
+     *
      * @return WorkScheduleProfile
      */
     public function setDailyWorkingTime(float $dailyWorkingTime): WorkScheduleProfile

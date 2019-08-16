@@ -195,6 +195,7 @@ class UserWorkScheduleDay
 
     /**
      * @param UserWorkSchedule|null $userWorkSchedule
+     *
      * @return UserWorkScheduleDay
      */
     public function setUserWorkSchedule(?UserWorkSchedule $userWorkSchedule): UserWorkScheduleDay
@@ -214,6 +215,7 @@ class UserWorkScheduleDay
 
     /**
      * @param DayDefinition|null $dayDefinition
+     *
      * @return UserWorkScheduleDay
      */
     public function setDayDefinition(?DayDefinition $dayDefinition): UserWorkScheduleDay
@@ -233,6 +235,7 @@ class UserWorkScheduleDay
 
     /**
      * @param bool $workingDay
+     *
      * @return UserWorkScheduleDay
      */
     public function setWorkingDay(bool $workingDay): UserWorkScheduleDay
@@ -252,6 +255,7 @@ class UserWorkScheduleDay
 
     /**
      * @param string|null $dayEndTimeFrom
+     *
      * @return UserWorkScheduleDay
      */
     public function setDayEndTimeFrom(?string $dayEndTimeFrom): UserWorkScheduleDay
@@ -271,6 +275,7 @@ class UserWorkScheduleDay
 
     /**
      * @param string|null $dayEndTimeTo
+     *
      * @return UserWorkScheduleDay
      */
     public function setDayEndTimeTo(?string $dayEndTimeTo): UserWorkScheduleDay
@@ -290,6 +295,7 @@ class UserWorkScheduleDay
 
     /**
      * @param string $dayStartTimeFrom
+     *
      * @return UserWorkScheduleDay
      */
     public function setDayStartTimeFrom(string $dayStartTimeFrom): UserWorkScheduleDay
@@ -309,6 +315,7 @@ class UserWorkScheduleDay
 
     /**
      * @param string $dayStartTimeTo
+     *
      * @return UserWorkScheduleDay
      */
     public function setDayStartTimeTo(string $dayStartTimeTo): UserWorkScheduleDay
@@ -328,6 +335,7 @@ class UserWorkScheduleDay
 
     /**
      * @param float $dailyWorkingTime
+     *
      * @return UserWorkScheduleDay
      */
     public function setDailyWorkingTime(float $dailyWorkingTime): UserWorkScheduleDay
@@ -347,6 +355,7 @@ class UserWorkScheduleDay
 
     /**
      * @param UserTimesheetDay $userTimesheetDay
+     *
      * @return UserWorkScheduleDay
      */
     public function setUserTimesheetDay(UserTimesheetDay $userTimesheetDay): UserWorkScheduleDay
