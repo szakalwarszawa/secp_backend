@@ -27,7 +27,6 @@ Do folderu aplikacji ***app_root/*** należy wgrać kod (np: git clone).
  
 - Dodać foldery:
     - ***app_root/var***
-    - ***app_root/vendor***
 - zainstalować wszystkie niezbędne komponenty:
     ```shell script
     composer install
