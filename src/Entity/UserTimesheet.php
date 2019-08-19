@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Entity\Utils\UserAware;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          @ORM\Index(name="idx_user_timesheets_status", columns={"status"})
  *     }
  * )
+ * @UserAware(userFieldName="owner_id")
  * @ORM\Entity(repositoryClass="App\Repository\UserTimesheetRepository")
  * @ApiResource(
  *      itemOperations={
