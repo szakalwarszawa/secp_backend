@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filter;
 
 use App\Entity\User;

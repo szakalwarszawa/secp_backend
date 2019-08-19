@@ -71,9 +71,9 @@ services:
     App\Filter\Configurator:
         class: App\Filter\Configurator
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@security.token_storage"
-            - "@annotation_reader"
+            - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
+            - '@annotation_reader'
         tags:
             - { name: kernel.event_listener, event: kernel.request }
 
