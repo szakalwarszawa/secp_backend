@@ -45,6 +45,7 @@ Do folderu aplikacji ***app_root/*** należy wgrać kod (np: git clone).
         $ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
         ``` 
     - hasło użyte do podpisania kluczy należy wprowadzić w konfiguracji ***app_root/.env.$APP_ENV.local***
+    - klucz publiczny i prywatny musi być odczytywalny dla PHP
 
 ## Konfiguracja
 
@@ -54,7 +55,7 @@ Konfiguracja jest zapisana w pliku ***app_root/.env.$APP_ENV.local***, znaczenie
 - **DATABASE_URL** - konfiguracja połączenia z bazą 
 http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url
 - **JWT_PASSPHRASE** - hasło podpisujące klucze JWT, użyte również do generowania kluczy
-- **CORS_ALLOW_ORIGIN** - konfiguracja CORS
+- **CORS_ALLOW_ORIGIN** - konfiguracja [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) - wstawić adres systemu np. '^https?://secp-test.parp.gov.pl(:[0-9]+)?$'
 - **LDAP_HOST** - adres serwera LDAP
 - **LDAP_USERS_BASE_DN** - domena AD dla aktywnych użytkowników
 - **LDAP_INACTIVE_USERS_BASE_DN** - domena AD dla nieaktywnych użytkowników
