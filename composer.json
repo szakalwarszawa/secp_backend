@@ -60,8 +60,7 @@
         "symfony/polyfill-iconv": "*",
         "symfony/polyfill-php71": "*",
         "symfony/polyfill-php70": "*",
-        "symfony/polyfill-php56": "*",
-        "ocramius/package-versions": "*"
+        "symfony/polyfill-php56": "*"
     },
     "scripts": {
         "auto-scripts": {
