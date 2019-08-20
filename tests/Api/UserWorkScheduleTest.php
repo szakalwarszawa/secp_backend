@@ -19,8 +19,13 @@ class UserWorkScheduleTest extends AbstractWebTestCase
      */
     public function apiGetUserWorkSchedules(): void
     {
-        $userWorkScheduleDB = $this->entityManager->getRepository(UserWorkSchedule::class)->findAll();
+        $userWorkScheduleDB = $this->entityManager->getRepository(UserWorkSchedule::class)->createQueryBuilder('p')
+            ->andWhere('p.owner = :owner')
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_ADMIN))
+            ->getQuery()
+            ->getResult();
         /* @var $userWorkScheduleDB UserWorkSchedule */
+
         $response = $this->getActionResponse(self::HTTP_GET, '/api/user_work_schedules');
         $userWorkScheduleJSON = json_decode($response->getContent(), false);
 

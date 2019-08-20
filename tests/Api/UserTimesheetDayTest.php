@@ -23,7 +23,12 @@ class UserTimesheetDayTest extends AbstractWebTestCase
      */
     public function apiGetUserTimesheetDayDay(): void
     {
-        $userTimesheetDaysDB = $this->entityManager->getRepository(UserTimesheetDay::class)->findAll();
+        $userTimesheetDaysDB = $this->entityManager->getRepository(UserTimesheetDay::class)->createQueryBuilder('p')
+            ->innerJoin('p.userTimesheet', 'userTimesheet')
+            ->andWhere('userTimesheet.owner = :owner')
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_ADMIN))
+            ->getQuery()
+            ->getResult();
         /* @var $userTimesheetDaysDB UserTimesheetDay[] */
 
         $response = $this->getActionResponse(self::HTTP_GET, '/api/user_timesheet_days');
@@ -94,13 +99,22 @@ JSON;
 
         $response = $this->getActionResponse(
             self::HTTP_GET,
-            '/api/user_timesheet_days/' . $userTimesheetDayJSON->id
+            '/api/user_timesheet_days/' . $userTimesheetDayJSON->id,
+            null,
+            [],
+            200,
+            UserFixtures::REF_USER_USER
         );
         $this->assertJson($response->getContent());
 
-        $userTimesheetDayDB = $this->entityManager->getRepository(UserTimesheetDay::class)->find(
-            $userTimesheetDayJSON->id
-        );
+        $userTimesheetDayDB = $this->entityManager->getRepository(UserTimesheetDay::class)->createQueryBuilder('p')
+            ->innerJoin('p.userTimesheet', 'userTimesheet')
+            ->andWhere('userTimesheet.owner = :owner')
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_USER))
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $userTimesheetDayJSON->id)
+            ->getQuery()
+            ->getOneOrNullResult();
         /* @var $userTimesheetDayDB UserTimesheetDay */
 
         $userTimesheetDayJSON = json_decode($response->getContent(), false);
