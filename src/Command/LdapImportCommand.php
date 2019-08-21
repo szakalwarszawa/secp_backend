@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\FakeLdapImport;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,9 +13,9 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use App\Ldap\Constants\ImportResources;
 use InvalidArgumentException;
 use App\Utils\ConstantsUtil;
-use App\Ldap\Constants\ArrayResponseFormats;
 use Symfony\Component\Console\Helper\Table;
 use App\Ldap\Import\Updater\Result\Types;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class LdapImportCommand
@@ -84,7 +85,6 @@ class LdapImportCommand extends Command
 
         $result = $this
             ->ldapImport
-            ->setResponseFormat(ArrayResponseFormats::COUNTER_SUCCEED_FAILED)
             ->import($argumentValue)
         ;
 
@@ -102,22 +102,35 @@ class LdapImportCommand extends Command
 
     /**
      * Prints result table.
+     *  ex.
+     *  +--------------------+---------+------+
+     *  | resource           | success | fail |
+     *  +--------------------+---------+------+
+     *  | department_section | 172     | 0    |
+     *  | users              | 717     | 6    |
+     *  +--------------------+---------+------+
      *
      * @param OutputInterface $output
-     * @param array $result
+     * @param ArrayCollection $result
      *
      * @return void
      */
-    private function printResultTable(OutputInterface $output, array $result): void
+    private function printResultTable(OutputInterface $output, ArrayCollection $result): void
     {
         $table = new Table($output);
         $table
-            ->setHeaders(['key', Types::SUCCESS, Types::FAIL]);
+            ->setHeaders(['resource', Types::SUCCESS, Types::FAIL]);
 
-        foreach ($result as $key => $value) {
-            $table
-                ->addRow([$key, $value[Types::SUCCESS], $value[Types::FAIL]])
-            ;
+         foreach ($result as $value) {
+            if ($value instanceof FakeLdapImport) {
+                $table
+                    ->addRow([
+                        $value->getResourceName(),
+                        $value->getSucceedCount(),
+                        $value->getFailedCount()
+                    ])
+                ;
+            }
         }
 
         $table->render();
