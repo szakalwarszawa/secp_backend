@@ -14,7 +14,7 @@
     <rule ref="rulesets/design.xml/GotoStatement"/>
     <rule ref="rulesets/naming.xml/ShortVariable">
         <properties>
-            <property name="exceptions" value="id,lp,nr,i,qb,em,ip"/>
+            <property name="exceptions" value="id,lp,nr,i,qb,em,ip,e"/>
         </properties>
     </rule>
     <rule ref="rulesets/naming.xml/ShortMethodName">

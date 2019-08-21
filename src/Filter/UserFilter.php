@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Filter;
 
@@ -33,7 +34,7 @@ class UserFilter extends SQLFilter
 
         $userAware = $this->reader->getClassAnnotation(
             $targetEntity->getReflectionClass(),
-            'App\\Entity\\Utils\\UserAware'
+            UserAware::class
         );
         /* @var $userAware UserAware */
 
@@ -70,6 +71,8 @@ class UserFilter extends SQLFilter
 
     /**
      * @param Reader $reader
+     *
+     * @return void
      */
     public function setAnnotationReader(Reader $reader): void
     {
