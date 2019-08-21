@@ -121,7 +121,7 @@ class LdapImportCommand extends Command
         $table
             ->setHeaders(['resource', Types::SUCCESS, Types::FAIL]);
 
-         foreach ($result as $value) {
+        foreach ($result as $value) {
             if ($value instanceof FakeLdapImport) {
                 $table
                     ->addRow([
