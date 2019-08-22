@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * Class Configurator
- * @package App\Filter
  */
 class Configurator
 {

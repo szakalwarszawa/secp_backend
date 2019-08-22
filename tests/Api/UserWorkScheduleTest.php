@@ -11,6 +11,9 @@ use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
 use Exception;
 
+/**
+ * Class UserWorkScheduleTest
+ */
 class UserWorkScheduleTest extends AbstractWebTestCase
 {
     /**
@@ -19,7 +22,9 @@ class UserWorkScheduleTest extends AbstractWebTestCase
      */
     public function apiGetUserWorkSchedules(): void
     {
-        $userWorkScheduleDB = $this->entityManager->getRepository(UserWorkSchedule::class)->createQueryBuilder('p')
+        $userWorkScheduleDB = $this->entityManager
+            ->getRepository(UserWorkSchedule::class)
+            ->createQueryBuilder('p')
             ->andWhere('p.owner = :owner')
             ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_ADMIN))
             ->getQuery()

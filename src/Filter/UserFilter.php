@@ -11,7 +11,6 @@ use InvalidArgumentException;
 
 /**
  * Class UserFilter
- * @package App\Filter
  */
 class UserFilter extends SQLFilter
 {
