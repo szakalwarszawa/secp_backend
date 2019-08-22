@@ -13,8 +13,12 @@ use App\Entity\UserTimesheetDay;
 use App\Entity\UserWorkScheduleDay;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 
+/**
+ * Class UserTimesheetDayTest
+ */
 class UserTimesheetDayTest extends AbstractWebTestCase
 {
     /**
@@ -23,7 +27,14 @@ class UserTimesheetDayTest extends AbstractWebTestCase
      */
     public function apiGetUserTimesheetDayDay(): void
     {
-        $userTimesheetDaysDB = $this->entityManager->getRepository(UserTimesheetDay::class)->findAll();
+        $userTimesheetDaysDB = $this->entityManager
+            ->getRepository(UserTimesheetDay::class)
+            ->createQueryBuilder('p')
+            ->innerJoin('p.userTimesheet', 'userTimesheet')
+            ->andWhere('userTimesheet.owner = :owner')
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_ADMIN))
+            ->getQuery()
+            ->getResult();
         /* @var $userTimesheetDaysDB UserTimesheetDay[] */
 
         $response = $this->getActionResponse(self::HTTP_GET, '/api/user_timesheet_days');
@@ -37,6 +48,7 @@ class UserTimesheetDayTest extends AbstractWebTestCase
     /**
      * @test
      * @throws NotFoundReferencedUserException
+     * @throws NonUniqueResultException
      */
     public function apiPostUserTimesheetDay(): void
     {
@@ -49,7 +61,8 @@ class UserTimesheetDayTest extends AbstractWebTestCase
         $absenceTypeRef = $this->fixtures->getReference('absence_type_7');
         /* @var $absenceTypeRef AbsenceType */
 
-        $userWorkScheduleDayDB = $this->entityManager->getRepository(UserWorkScheduleDay::class)
+        $userWorkScheduleDayDB = $this->entityManager
+            ->getRepository(UserWorkScheduleDay::class)
             ->findDayForUserWorkSchedule(
                 $this->fixtures->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_USER_HR),
                 '2019-05-20'
@@ -94,13 +107,24 @@ JSON;
 
         $response = $this->getActionResponse(
             self::HTTP_GET,
-            '/api/user_timesheet_days/' . $userTimesheetDayJSON->id
+            '/api/user_timesheet_days/' . $userTimesheetDayJSON->id,
+            null,
+            [],
+            200,
+            UserFixtures::REF_USER_USER
         );
         $this->assertJson($response->getContent());
 
-        $userTimesheetDayDB = $this->entityManager->getRepository(UserTimesheetDay::class)->find(
-            $userTimesheetDayJSON->id
-        );
+        $userTimesheetDayDB = $this->entityManager
+            ->getRepository(UserTimesheetDay::class)
+            ->createQueryBuilder('p')
+            ->innerJoin('p.userTimesheet', 'userTimesheet')
+            ->andWhere('userTimesheet.owner = :owner')
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_USER))
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $userTimesheetDayJSON->id)
+            ->getQuery()
+            ->getOneOrNullResult();
         /* @var $userTimesheetDayDB UserTimesheetDay */
 
         $userTimesheetDayJSON = json_decode($response->getContent(), false);

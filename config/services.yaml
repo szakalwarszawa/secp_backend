@@ -68,6 +68,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: ldap.imported }
 
+    App\Filter\Configurator:
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
     App\Security\Authentication\Guard\JsonLdapGuardAuthenticator:
         arguments:
             - '%security.authentication.hide_user_not_found%'

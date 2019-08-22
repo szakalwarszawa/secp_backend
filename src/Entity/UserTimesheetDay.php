@@ -9,6 +9,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\UserCreateTimesheetDayAction;
 use App\Controller\UserOwnTimesheetDayAction;
+use App\Entity\Utils\UserAware;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -23,6 +24,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserTimesheetDayRepository")
+ * @UserAware(
+ *     troughReferenceTable="user_timesheets",
+ *     troughForeignKey="user_timesheet_id",
+ *     troughReferenceId="id",
+ *     userFieldName="owner_id"
+ * )
  * @ApiResource(
  *      itemOperations={
  *          "get"={
@@ -52,7 +59,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "normalization_context"={
  *                  "groups"={
  *                      "get",
- *                      "get-user-timesheet-day-with-user_work_schedule_day"
+ *                      "get-user-timesheet-day-with-user_work_schedule_day",
+ *                      "get-user-timesheet-day-with-user-timesheet"
  *                  }
  *              }
  *          },
@@ -157,7 +165,7 @@ class UserTimesheetDay
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\UserTimesheet", inversedBy="userTimesheetDays")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get", "post"})
+     * @Groups({"get", "post", "get-user-timesheet-day-with-user-timesheet"})
      */
     private $userTimesheet;
 

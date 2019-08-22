@@ -19,7 +19,11 @@ class UserTimesheetTest extends AbstractWebTestCase
      */
     public function apiGetUserTimesheets(): void
     {
-        $userTimesheetDB = $this->entityManager->getRepository(UserTimesheet::class)->findAll();
+        $userTimesheetDB = $this->entityManager->getRepository(UserTimesheet::class)->createQueryBuilder('p')
+            ->andWhere('p.owner = :owner')
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_ADMIN))
+            ->getQuery()
+            ->getResult();
         /* @var $userTimesheetDB UserTimesheet */
         $response = $this->getActionResponse(self::HTTP_GET, '/api/user_timesheets');
         $userTimesheetJSON = json_decode($response->getContent(), false);
@@ -57,16 +61,21 @@ class UserTimesheetTest extends AbstractWebTestCase
      * @test
      * @dataProvider apiGetUserTimesheetProvider
      * @param string $referenceName
+     * @param string $referenceUserName
      * @throws NotFoundReferencedUserException
      */
-    public function apiGetUserTimesheetWithDays($referenceName): void
+    public function apiGetUserTimesheetWithDays($referenceName, $referenceUserName): void
     {
         $userTimesheetDB = $this->fixtures->getReference($referenceName);
         /* @var $userTimesheetDB UserTimesheet */
 
         $response = $this->getActionResponse(
             self::HTTP_GET,
-            '/api/user_timesheets/' . $userTimesheetDB->getId() . '/user_timesheet_days'
+            '/api/user_timesheets/' . $userTimesheetDB->getId() . '/user_timesheet_days',
+            null,
+            [],
+            200,
+            $referenceUserName
         );
         $this->assertJson($response->getContent());
         $userTimesheetJSON = json_decode($response->getContent(), false);
@@ -83,11 +92,11 @@ class UserTimesheetTest extends AbstractWebTestCase
     public function apiGetUserTimesheetProvider(): array
     {
         $referenceList = [
-            ['user_timesheet_admin_edit'],
-            ['user_timesheet_manager_hr'],
-            ['user_timesheet_manager_edit'],
-            ['user_timesheet_user_hr'],
-            ['user_timesheet_user_edit'],
+            ['user_timesheet_admin_edit', UserFixtures::REF_USER_ADMIN],
+            ['user_timesheet_manager_hr', UserFixtures::REF_USER_MANAGER],
+            ['user_timesheet_manager_edit', UserFixtures::REF_USER_MANAGER],
+            ['user_timesheet_user_hr', UserFixtures::REF_USER_USER],
+            ['user_timesheet_user_edit', UserFixtures::REF_USER_USER],
         ];
 
         return $referenceList;
