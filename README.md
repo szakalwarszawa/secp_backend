@@ -32,9 +32,9 @@ Do folderu aplikacji ***app_root/*** należy wgrać kod (np: git clone).
     composer install
     ```
 - Utworzyć plik:
-    - ***app_root/.env.$APP_ENV.local*** - gdzie ***$APP_ENV*** oznacza środowisko, np. "dev", "prod" 
-    - do tego pliku należy przekopiować konfiguracje z pliku .env
-     dopasowując ją do docelowego środowiska
+    - ***app_root/.env.local***
+    - do tego pliku należy przekopiować konfiguracje z pliku .env dopasowując ją do docelowego środowiska
+    - Jeśli potrzebny jest konfig dla różnych środowisk np. "dev", "prod" utworzyć pliki ***app_root/.env.$APP_ENV.local*** - gdzie ***$APP_ENV*** oznacza środowisko. Sterowanie przez zmienną APP_ENV w pliku ***app_root/.env.local***
 - Przyznać uprawnienia zapisu dla użytkownika www-data do folderu
     - ***app_root/var***
 - Generowanie kluczy JWT:
@@ -44,12 +44,12 @@ Do folderu aplikacji ***app_root/*** należy wgrać kod (np: git clone).
         $ openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
         $ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
         ``` 
-    - hasło użyte do podpisania kluczy należy wprowadzić w konfiguracji ***app_root/.env.$APP_ENV.local***
+    - hasło użyte do podpisania kluczy należy wprowadzić w konfiguracji ***app_root/.env.local***
     - klucz publiczny i prywatny musi być odczytywalny dla PHP
 
 ## Konfiguracja
 
-Konfiguracja jest zapisana w pliku ***app_root/.env.$APP_ENV.local***, znaczenie poszczególnych kluczy:
+Konfiguracja jest zapisana w pliku ***app_root/.env.local***, znaczenie poszczególnych kluczy:
 - **APP_ENV** - ustawienie środowiska w jakim zostanie uruchomione Symfony
 - **APP_SECRET** - ciąg znaków do generowania losowych identyfikatorów używanych do sesji użytkownika, tokenów, itp.
 - **DATABASE_URL** - konfiguracja połączenia z bazą 
