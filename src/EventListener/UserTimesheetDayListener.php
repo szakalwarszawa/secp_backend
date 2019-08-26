@@ -3,7 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\DayDefinition;
-use App\Entity\DayDefinitionLog;
+use App\Entity\UserTimesheetDayLog;
 use App\Entity\User;
 use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetDay;
@@ -33,7 +33,7 @@ class UserTimesheetDayListener
     /**
      * @var UserWorkScheduleDay[]
      */
-    private $userWorkScheduleDays = [];
+    private $userTimesheetDaysLogs = [];
 
     /**
      * DayDefinitionLoggerListener constructor.
@@ -51,21 +51,70 @@ class UserTimesheetDayListener
     public function preUpdate(PreUpdateEventArgs $args): void
     {
         $entity = $args->getObject();
-        if (!$entity instanceof UserWorkSchedule) {
+        if (!$entity instanceof UserTimesheetDay) {
             return;
         }
 
-        if ($args->hasChangedField('status') && $args->getOldValue('status') !== $args->getNewValue('status')) {
-            $this->addUserWorkScheduleLog(
+        if ($args->hasChangedField('presenceType') && $args->getOldValue('presenceType') !== $args->getNewValue('presenceType')) {
+            $this->addUserTimeSheetDayLog(
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono status z:\n%s\nna:\n%s",
-                    $args->getOldValue('status'),
-                    $args->getNewValue('status')
+                    "Zmieniono typ obecnosci z:\n%s\nna:\n%s",
+                    $args->getOldValue('presenceType'),
+                    $args->getNewValue('presenceType')
                 )
             );
         }
+
+        if ($args->hasChangedField('absenceType') && $args->getOldValue('absenceType') !== $args->getNewValue('absenceType')) {
+            $this->addUserTimeSheetDayLog(
+                $args,
+                $entity,
+                sprintf(
+                    "Zmieniono typ nieobecnosci z:\n%s\nna:\n%s",
+                    $args->getOldValue('absenceType'),
+                    $args->getNewValue('absenceType')
+                )
+            );
+        }
+
+        if ($args->hasChangedField('dayStartTime') && $args->getOldValue('dayStartTime') !== $args->getNewValue('dayStartTime')) {
+            $this->addUserTimeSheetDayLog(
+                $args,
+                $entity,
+                sprintf(
+                    "Zmieniono rozpoczecie dnia z:\n%s\nna:\n%s",
+                    $args->getOldValue('dayStartTime'),
+                    $args->getNewValue('dayStartTime')
+                )
+            );
+        }
+
+        if ($args->hasChangedField('dayEndTime') && $args->getOldValue('dayEndTime') !== $args->getNewValue('dayEndTime')) {
+            $this->addUserTimeSheetDayLog(
+                $args,
+                $entity,
+                sprintf(
+                    "Zmieniono zakonczenie dnia z:\n%s\nna:\n%s",
+                    $args->getOldValue('dayEndTime'),
+                    $args->getNewValue('dayEndTime')
+                )
+            );
+        }
+
+        if ($args->hasChangedField('workingTime') && $args->getOldValue('workingTime') !== $args->getNewValue('workingTime')) {
+            $this->addUserTimeSheetDayLog(
+                $args,
+                $entity,
+                sprintf(
+                    "Zmieniono zakonczenie dnia z:\n%s\nna:\n%s",
+                    $args->getOldValue('workingTime'),
+                    $args->getNewValue('workingTime')
+                )
+            );
+        }
+
     }
 
     /**
@@ -74,16 +123,15 @@ class UserTimesheetDayListener
      * @param string $notice
      * @return void
      */
-    private function addUserWorkScheduleLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
+    private function addUserTimeSheetDayLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
     {
-        return; // @Todo Do dodania tabela z logami zmian i dodawanie do niej danych
-        $log = new DayDefinitionLog();
-        $log->setDayDefinition($entity);
+        $log = new UserTimesheetDayLog();
+        $log->setUserTimesheetDay($entity);
         $log->setLogDate(date('Y-m-d H:i:s'));
         $log->setOwner($this->getCurrentUser($args->getEntityManager()));
         $log->setNotice($notice);
 
-        $this->userWorkScheduleDays[] = $log;
+        $this->useuserWorkScheduleDays[] = $log;
     }
 
     /**
@@ -152,8 +200,6 @@ class UserTimesheetDayListener
         );
 
         $userTimesheetDay->setUserTimesheet($userTimesheet);
-
-        // @Todo dodać tabele z logami i dopisywać zmiany
     }
 
     /**
@@ -182,7 +228,7 @@ class UserTimesheetDayListener
         foreach ($dayDefinitions as $dayDefinition) {
             $userWorkScheduleProfile = $userWorkSchedule->getWorkScheduleProfile();
 
-            $this->userWorkScheduleDays[] = $this->addUserScheduleDays(
+            $this->userTimesheetDaysLogs[] = $this->addUserScheduleDays(
                 $args->getEntityManager(),
                 $dayDefinition,
                 $userWorkSchedule,
@@ -227,15 +273,15 @@ class UserTimesheetDayListener
      */
     public function postFlush(PostFlushEventArgs $args): void
     {
-        if (!empty($this->userWorkScheduleDays)) {
+        if (!empty($this->userTimesheetDaysLogs)) {
             $em = $args->getEntityManager();
 
-            foreach ($this->userWorkScheduleDays as $userWorkScheduleDay) {
-                $userWorkScheduleDay->getUserWorkSchedule()->addUserWorkScheduleDay($userWorkScheduleDay);
-                $em->persist($userWorkScheduleDay);
+            foreach ($this->userTimesheetDaysLogs as $log) {
+                $log->getUserTimesheetDay()->addUserTimesheetLog($log);
+                $em->persist($log);
             }
 
-            $this->userWorkScheduleDays = [];
+            $this->userTimesheetDaysLogs = [];
             $em->flush();
         }
     }
