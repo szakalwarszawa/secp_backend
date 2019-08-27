@@ -6,6 +6,7 @@ use App\DataFixtures\AbsenceTypeFixtures;
 use App\DataFixtures\DayDefinitionFixtures;
 use App\DataFixtures\DepartmentFixtures;
 use App\DataFixtures\PresenceTypeFixtures;
+use App\DataFixtures\PropertyBasedRoleFixtures;
 use App\DataFixtures\SectionFixtures;
 use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserTimesheetFixtures;
@@ -32,6 +33,7 @@ class Fixtures extends WebTestCase
                 DayDefinitionFixtures::class,
                 UserWorkScheduleFixtures::class,
                 UserTimesheetFixtures::class,
+                PropertyBasedRoleFixtures::class,
             ]
         )->getReferenceRepository();
     }

@@ -14,6 +14,7 @@ use Symfony\Component\Stopwatch\StopwatchEvent;
 use App\Ldap\Event\LdapImportedEvent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use App\Ldap\Utils\PropertyRoleMatcher;
 
 /**
  * Class LdapImport
@@ -41,18 +42,26 @@ class LdapImport
     private $eventDispatcher;
 
     /**
+     * @var PropertyRoleMatcher
+     */
+    private $propertyRoleMatcher;
+
+    /**
      * @param UsersFetcher $usersFetcher
      * @param EntityManagerInterface $entityManager
      * @param EventDispatcherInterface $eventDispatcher
+     * @param PropertyRoleMatcher $propertyRoleMatcher
      */
     public function __construct(
         UsersFetcher $usersFetcher,
         EntityManagerInterface $entityManager,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        PropertyRoleMatcher $propertyRoleMatcher
     ) {
         $this->usersFetcher = $usersFetcher;
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->propertyRoleMatcher = $propertyRoleMatcher;
     }
 
     /**
@@ -91,7 +100,7 @@ class LdapImport
                 ImportResources::IMPORT_ALL,
                 ImportResources::IMPORT_USERS,
             ], true)) {
-            $userUpdater = new UserUpdater($usersData, $this->entityManager);
+            $userUpdater = new UserUpdater($usersData, $this->entityManager, $this->propertyRoleMatcher);
             $userUpdater->update();
 
             $results['users'] = $userUpdater->getResultsCollector();
