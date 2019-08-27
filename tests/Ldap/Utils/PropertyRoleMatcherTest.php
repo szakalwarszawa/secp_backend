@@ -10,7 +10,6 @@ use App\Tests\AbstractWebTestCase;
 use LdapTools\Object\LdapObject;
 use App\Ldap\Utils\PropertyRoleMatcher;
 
-
 /**
  * Class DepartmentSectionUpdaterTest
  */

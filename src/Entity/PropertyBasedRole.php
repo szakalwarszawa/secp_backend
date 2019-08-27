@@ -187,23 +187,23 @@ class PropertyBasedRole
         return $this;
     }
 
-	/**
-	 * @return null|string
-	 */
-	public function getBasedOn(): ?string
-	{
-		return $this->basedOn;
-	}
+    /**
+     * @return null|string
+     */
+    public function getBasedOn(): ?string
+    {
+        return $this->basedOn;
+    }
 
-	/**
-	 * @param string $basedOn
-	 *
-	 * @return PropertyBasedRole
-	 */
-	public function setBasedOn(string $basedOn): PropertyBasedRole
-	{
-		$this->basedOn = $basedOn;
+    /**
+     * @param string $basedOn
+     *
+     * @return PropertyBasedRole
+     */
+    public function setBasedOn(string $basedOn): PropertyBasedRole
+    {
+        $this->basedOn = $basedOn;
 
-		return $this;
-	}
+        return $this;
+    }
 }

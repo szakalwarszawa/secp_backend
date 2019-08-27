@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 use App\Entity\PropertyBasedRole;
@@ -8,6 +10,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
+/**
+ * Class PropertyBasedRoleFixtures
+ */
 class PropertyBasedRoleFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
@@ -22,8 +27,10 @@ class PropertyBasedRoleFixtures extends Fixture implements DependentFixtureInter
 
     /**
      * @param ObjectManager $manager
+     *
+     * @return void
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $propertyBasedRoles = [
             [
