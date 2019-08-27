@@ -24,11 +24,13 @@ final class Version20190826135609 extends AbstractMigration
      * @param Schema $schema
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql',
-            'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
+            'Migration can only be executed safely on \'postgresql\'.'
+        );
 
         $this->addSql('CREATE SEQUENCE "user_timesheet_day_logs_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE "user_timesheet_day_logs" (id INT NOT NULL, user_timesheet_day_id integer, 
@@ -49,11 +51,13 @@ final class Version20190826135609 extends AbstractMigration
      * @param Schema $schema
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql',
-            'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
+            'Migration can only be executed safely on \'postgresql\'.'
+        );
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('DROP SEQUENCE "user_timesheet_day_logs_id_seq" CASCADE');
         $this->addSql('DROP TABLE "user_timesheet_day_logs"');
