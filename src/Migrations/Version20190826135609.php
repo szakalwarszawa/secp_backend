@@ -23,6 +23,7 @@ final class Version20190826135609 extends AbstractMigration
     /**
      * @param Schema $schema
      * @throws \Doctrine\DBAL\DBALException
+     * @SuppressWarnings("unused")
      */
     public function up(Schema $schema): void
     {
@@ -50,6 +51,7 @@ final class Version20190826135609 extends AbstractMigration
     /**
      * @param Schema $schema
      * @throws \Doctrine\DBAL\DBALException
+     * @SuppressWarnings("unused")
      */
     public function down(Schema $schema): void
     {
