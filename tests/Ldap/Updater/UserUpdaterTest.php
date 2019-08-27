@@ -14,6 +14,7 @@ use App\DataFixtures\SectionFixtures;
 use App\DataFixtures\DepartmentFixtures;
 use App\Ldap\Import\Updater\Result\Collector;
 use App\Ldap\Import\Updater\Result\Types;
+use App\Ldap\Utils\PropertyRoleMatcher;
 
 /**
  * Class UserUpdaterTest
@@ -119,7 +120,8 @@ class UserUpdaterTest extends AbstractWebTestCase
             $this->assertEquals($userThatShouldNotExists, null);
         }
 
-        $userUpdater = new UserUpdater($ldapObjectsCollection, $this->entityManager);
+        $propertyRoleMatcher = new PropertyRoleMatcher($this->entityManager);
+        $userUpdater = new UserUpdater($ldapObjectsCollection, $this->entityManager, $propertyRoleMatcher);
         $resultsCollector = $userUpdater->getResultsCollector();
 
         $this->assertInstanceOf(Collector::class, $resultsCollector);

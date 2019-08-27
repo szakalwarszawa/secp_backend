@@ -13,6 +13,7 @@ use App\Ldap\Import\Updater\AbstractUpdater;
 use App\Ldap\Import\Updater\Result\Result;
 use App\Ldap\Import\Updater\Result\Types;
 use App\Ldap\Import\Updater\Result\Actions;
+use App\Ldap\Utils\PropertyRoleMatcher;
 use Traversable;
 
 /**
@@ -41,13 +42,23 @@ final class UserUpdater extends AbstractUpdater
     private $entityManager;
 
     /**
+     * @var PropertyRoleMatcher
+     */
+    private $propertyRoleMatcher;
+
+    /**
      * @param LdapObjectCollection $usersList
      * @param EntityManagerInterface $entityManager
+     * @param PropertyRoleMatcher $propertyRoleMatcher
      */
-    public function __construct(Traversable $usersList, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        Traversable $usersList,
+        EntityManagerInterface $entityManager,
+        PropertyRoleMatcher $propertyRoleMatcher
+    ) {
         $this->usersList = $usersList;
         $this->entityManager = $entityManager;
+        $this->propertyRoleMatcher = $propertyRoleMatcher;
 
         parent::__construct();
     }
@@ -77,6 +88,7 @@ final class UserUpdater extends AbstractUpdater
     {
         $userFirstName = $userData->get(UserAttributes::FIRST_NAME);
         $userLastName = $userData->get(UserAttributes::LAST_NAME);
+        $userPosition = $userData->get(UserAttributes::POSITION);
 
         if (!$userFirstName || !$userLastName) {
             $this->addResult(new Result(
@@ -124,6 +136,7 @@ final class UserUpdater extends AbstractUpdater
             ])
         ;
 
+
         if (null === $department) {
             $this->addResult(new Result(
                 Department::class,
@@ -147,17 +160,23 @@ final class UserUpdater extends AbstractUpdater
 
         $this->entityManager->persist($user);
 
-        if (self::DEPARTMENT_MANAGER_POSITION === $userData->get(UserAttributes::POSITION)) {
+        if (self::DEPARTMENT_MANAGER_POSITION === $userPosition) {
             $department->addManager($user);
 
             $this->entityManager->persist($department);
         }
 
-        if (self::SECTION_MANAGER_POSITION === $userData->get(UserAttributes::POSITION) && $section) {
+        if (self::SECTION_MANAGER_POSITION === $userPosition && $section) {
             $section->addManager($user);
 
             $this->entityManager->persist($section);
         }
+
+        $this
+            ->propertyRoleMatcher
+            ->setBaseLdapObject($userData)
+            ->addPropertyBasedRoles($user)
+        ;
 
         $this->addResult(new Result(
             User::class,
