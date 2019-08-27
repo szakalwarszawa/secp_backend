@@ -55,7 +55,8 @@ class UserTimesheetDayListener
             return;
         }
 
-        if ($args->hasChangedField('presenceType') && $args->getOldValue('presenceType') !== $args->getNewValue('presenceType')) {
+        if ($args->hasChangedField('presenceType') &&
+            $args->getOldValue('presenceType') !== $args->getNewValue('presenceType')) {
             $this->addUserTimeSheetDayLog(
                 $args,
                 $entity,
@@ -67,7 +68,8 @@ class UserTimesheetDayListener
             );
         }
 
-        if ($args->hasChangedField('absenceType') && $args->getOldValue('absenceType') !== $args->getNewValue('absenceType')) {
+        if ($args->hasChangedField('absenceType') && $args->getOldValue('absenceType') !==
+            $args->getNewValue('absenceType')) {
             $this->addUserTimeSheetDayLog(
                 $args,
                 $entity,
@@ -79,7 +81,8 @@ class UserTimesheetDayListener
             );
         }
 
-        if ($args->hasChangedField('dayStartTime') && $args->getOldValue('dayStartTime') !== $args->getNewValue('dayStartTime')) {
+        if ($args->hasChangedField('dayStartTime') && $args->getOldValue('dayStartTime') !==
+            $args->getNewValue('dayStartTime')) {
             $this->addUserTimeSheetDayLog(
                 $args,
                 $entity,
@@ -91,7 +94,8 @@ class UserTimesheetDayListener
             );
         }
 
-        if ($args->hasChangedField('dayEndTime') && $args->getOldValue('dayEndTime') !== $args->getNewValue('dayEndTime')) {
+        if ($args->hasChangedField('dayEndTime') && $args->getOldValue('dayEndTime') !==
+            $args->getNewValue('dayEndTime')) {
             $this->addUserTimeSheetDayLog(
                 $args,
                 $entity,
@@ -103,7 +107,8 @@ class UserTimesheetDayListener
             );
         }
 
-        if ($args->hasChangedField('workingTime') && $args->getOldValue('workingTime') !== $args->getNewValue('workingTime')) {
+        if ($args->hasChangedField('workingTime') && $args->getOldValue('workingTime') !==
+            $args->getNewValue('workingTime')) {
             $this->addUserTimeSheetDayLog(
                 $args,
                 $entity,
