@@ -6,12 +6,12 @@ use App\Entity\DayDefinition;
 use App\Entity\UserTimesheetDayLog;
 use App\Entity\User;
 use App\Entity\UserTimesheet;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use App\Entity\UserTimesheetDay;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use App\Entity\WorkScheduleProfile;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\OptimisticLockException;
@@ -36,7 +36,7 @@ class UserTimesheetDayListener
     private $userTimesheetDaysLogs = [];
 
     /**
-     * DayDefinitionLoggerListener constructor.
+     * UserTimesheetDayLoggerListener constructor.
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
@@ -123,11 +123,11 @@ class UserTimesheetDayListener
 
     /**
      * @param PreUpdateEventArgs $args
-     * @param UserWorkSchedule $entity
+     * @param UserTimesheetDay $entity
      * @param string $notice
      * @return void
      */
-    private function addUserTimeSheetDayLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
+    private function addUserTimeSheetDayLog(PreUpdateEventArgs $args, UserTimesheetDay $entity, string $notice): void
     {
         $log = new UserTimesheetDayLog();
         $log->setUserTimesheetDay($entity);
@@ -135,7 +135,7 @@ class UserTimesheetDayListener
         $log->setOwner($this->getCurrentUser($args->getEntityManager()));
         $log->setNotice($notice);
 
-        $this->useuserWorkScheduleDays[] = $log;
+        $this->userTimesheetDaysLogs[] = $log;
     }
 
     /**

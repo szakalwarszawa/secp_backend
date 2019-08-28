@@ -424,11 +424,11 @@ class UserTimesheetDay
     }
 
     /**
-     * @param DayDefinitionLog $dayDefinitionLog
+     * @param UserTimesheetLog $UserTimesheetLog
      *
-     * @return DayDefinition
+     * @return UserTimesheetLog
      */
-    public function addUserTimesheetLog(UserTimesheetLog $userTimesheetLog): self
+    public function addUserTimesheetLog(UserTimesheetDayLog $userTimesheetLog): self
     {
         if (!$this->userTimesheetDayLogs->contains($userTimesheetLog)) {
             $this->userTimesheetDayLogs[] = $userTimesheetLog;
@@ -443,10 +443,10 @@ class UserTimesheetDay
      *
      * @return DayDefinition
      */
-    public function removeDayDefinitionLog(UserTimesheetLog $userTimesheetLog): self
+    public function removeUserTimesheetLog(UserTimesheetLog $userTimesheetLog): self
     {
-        if ($this->dayDefinitionLogs->contains($userTimesheetLog)) {
-            $this->dayDefinitionLogs->removeElement($userTimesheetLog);
+        if ($this->userTimesheetDayLogs->contains($userTimesheetLog)) {
+            $this->userTimesheetDayLogs->removeElement($userTimesheetLog);
             // set the owning side to null (unless already changed)
             if ($userTimesheetLog->getUserTimesheetDay() === $this) {
                 $userTimesheetLog->setUserTimesheetDay(null);
