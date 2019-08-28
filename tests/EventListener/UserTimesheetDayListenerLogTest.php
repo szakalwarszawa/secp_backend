@@ -3,6 +3,7 @@
 namespace App\Tests\EventSubscriber;
 
 use App\Entity\UserTimesheetDayLog;
+use App\Entity\UserTimesheetDay;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
 use Exception;
