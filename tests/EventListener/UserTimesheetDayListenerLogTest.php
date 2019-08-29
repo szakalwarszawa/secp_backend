@@ -10,26 +10,41 @@ use Exception;
 
 class UserTimesheetDayListenerLogTest extends AbstractWebTestCase
 {
+    private const SAMPLE_ID = 2;
+    private const SAMPLE_WORKING_TIME = 9.06;
+    private const SAMPLE_START_TIME = 10.30;
+
     /**
      * @test
      * @throws NotFoundReferencedUserException
      * @throws Exception
      */
-    public function apiPutUserTimesheetDay(): void
+    public function firePreUpdateOnUserTimesheetDayTest(): void
     {
-        $usersDB1 = $this->entityManager->getRepository(UserTimesheetDay::class)->findOneBy(array("id" => 2));
-        $t1 = $usersDB1->getWorkingTime();
+        //workingTime
+        $UserTimesheetDay = $this->entityManager->getRepository(UserTimesheetDay::class)->findOneBy(array("id" => self::SAMPLE_ID));
+        $workingTime = $UserTimesheetDay->getWorkingTime();
 
-        $usersDB2 = $this->entityManager->getRepository(UserTimesheetDay::class)->findOneBy(array("id" => 2));
-        $usersDB2->setWorkingTime(9.06);
+        $UserTimesheetDay->setWorkingTime(self::SAMPLE_WORKING_TIME);
         $this->entityManager->flush();
 
-        $usersDB3 = $this->entityManager->getRepository(UserTimesheetDay::class)->findOneBy(array("id" => 2));
-        $t2 = $usersDB3->getWorkingTime();
+        $workingTimeChanged = $UserTimesheetDay->getWorkingTime();
 
-        $usersDB4 = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy([], ['id' => 'desc']);
-        $notice = $usersDB4->getNotice();
-        $this->assertStringContainsString("9.06", $notice);
-        $this->assertNotEquals($t1, $t2);
+        $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy([], ['id' => 'desc']);
+        $notice = $UserTimesheetDayLog->getNotice();
+        $this->assertStringContainsString(self::SAMPLE_WORKING_TIME, $notice);
+        $this->assertNotEquals($workingTime, $workingTimeChanged);
+
+        //dayStartTime
+        $dayStartTime = $UserTimesheetDay->getDayStartTime();
+        $UserTimesheetDay->setDayStartTime(self::SAMPLE_START_TIME);
+        $this->entityManager->flush();
+
+        $dayStartTimeChanged = $UserTimesheetDay->getDayStartTime();
+
+        $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy([], ['id' => 'desc']);
+        $notice = $UserTimesheetDayLog->getNotice();
+        $this->assertStringContainsString(self::SAMPLE_START_TIME, $notice);
+        $this->assertNotEquals($dayStartTime, $dayStartTimeChanged);
     }
 }
