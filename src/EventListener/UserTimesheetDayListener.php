@@ -55,31 +55,31 @@ class UserTimesheetDayListener
             return;
         }
 
-//        if ($args->hasChangedField('presenceType') &&
-//            $args->getOldValue('presenceType') !== $args->getNewValue('presenceType')) {
-//            $this->addUserTimeSheetDayLog(
-//                $args,
-//                $entity,
-//                sprintf(
-//                    "Zmieniono typ obecnosci z:\n%s\nna:\n%s",
-//                    $args->getOldValue('presenceType'),
-//                    $args->getNewValue('presenceType')
-//                )
-//            );
-//        }
-//
-//        if ($args->hasChangedField('absenceType') && $args->getOldValue('absenceType') !==
-//            $args->getNewValue('absenceType')) {
-//            $this->addUserTimeSheetDayLog(
-//                $args,
-//                $entity,
-//                sprintf(
-//                    "Zmieniono typ nieobecnosci z:\n%s\nna:\n%s",
-//                    $args->getOldValue('absenceType'),
-//                    $args->getNewValue('absenceType')
-//                )
-//            );
-//        }
+        if ($args->hasChangedField('presenceType') &&
+            $args->getOldValue('presenceType') !== $args->getNewValue('presenceType')) {
+            $this->addUserTimeSheetDayLog(
+                $args,
+                $entity,
+                sprintf(
+                    "Zmieniono typ obecnosci z:\n%s\nna:\n%s",
+                    $args->getOldValue('presenceType')->getName(),
+                    $args->getNewValue('presenceType')->getName()
+                )
+            );
+        }
+
+        if ($args->hasChangedField('absenceType') && $args->getOldValue('absenceType') !==
+            $args->getNewValue('absenceType')) {
+            $this->addUserTimeSheetDayLog(
+                $args,
+                $entity,
+                sprintf(
+                    "Zmieniono typ nieobecnosci z:\n%s\nna:\n%s",
+                    $args->getOldValue('absenceType'),
+                    $args->getNewValue('absenceType')
+                )
+            );
+        }
 
         if ($args->hasChangedField('dayStartTime') && $args->getOldValue('dayStartTime') !==
             $args->getNewValue('dayStartTime')) {

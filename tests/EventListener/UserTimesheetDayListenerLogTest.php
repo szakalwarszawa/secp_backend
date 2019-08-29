@@ -27,8 +27,9 @@ class UserTimesheetDayListenerLogTest extends AbstractWebTestCase
         $usersDB3 = $this->entityManager->getRepository(UserTimesheetDay::class)->findOneBy(array("id" => 2));
         $t2 = $usersDB3->getWorkingTime();
 
-        $usersDB4 = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findAll();
-        $this->assertNotEquals(0, (string)count($usersDB4));
+        $usersDB4 = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy([], ['id' => 'desc']);
+        $notice = $usersDB4->getNotice();
+        $this->assertStringContainsString("9.06", $notice);
         $this->assertNotEquals($t1, $t2);
     }
 }
