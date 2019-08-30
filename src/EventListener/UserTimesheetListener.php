@@ -56,7 +56,7 @@ class UserTimesheetListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono status z:\n%s\nna:\n%s",
+                    "Zmieniono status z: %s na: %s",
                     $args->getOldValue('status'),
                     $args->getNewValue('status')
                 )
