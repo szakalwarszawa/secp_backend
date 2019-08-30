@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     name="`user_timesheet_logs`",
  *     indexes={
  *          @ORM\Index(name="idx_user_timesheet_log_date", columns={"log_date"}),
- *          @ORM\Index(name="idx_user_timesheet_log_user_timesheet_log_date", columns={"user_timesheet_id", "log_date"}),
+ *          @ORM\Index(name="idx_user_timesheet_log_user_timesheet_log_date", columns={"user_timesheet_id", "log_date"})
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserTimesheetLogRepository")
