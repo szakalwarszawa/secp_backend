@@ -63,6 +63,12 @@ services:
         tags:
             - { name: doctrine.event_listener, event: prePersist, connection: default, lazy: true }
 
+    App\EventListener\UserTimesheetListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
+
     App\EventListener\LdapImportListener:
         autowire: true
         tags:
