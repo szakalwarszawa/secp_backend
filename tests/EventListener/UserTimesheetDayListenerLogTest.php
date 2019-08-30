@@ -35,7 +35,8 @@ class UserTimesheetDayListenerLogTest extends AbstractWebTestCase
         $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy(
             [], ['id' => 'desc']);
         $notice = $UserTimesheetDayLog->getNotice();
-        $this->assertStringContainsString(self::SAMPLE_WORKING_TIME, $notice);
+        $this->assertStringContainsString('Zmieniono czas pracy z: ' . $workingTime .' na: ' .
+            $workingTimeChanged, $notice);
         $this->assertNotEquals($workingTime, $workingTimeChanged);
 
         //dayStartTime
@@ -48,7 +49,8 @@ class UserTimesheetDayListenerLogTest extends AbstractWebTestCase
         $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy(
             [], ['id' => 'desc']);
         $notice = $UserTimesheetDayLog->getNotice();
-        $this->assertStringContainsString(self::SAMPLE_START_TIME, $notice);
+        $this->assertStringContainsString('Zmieniono rozpoczecie dnia z: ' . $dayStartTime .' na: ' .
+            $dayStartTimeChanged, $notice);
         $this->assertNotEquals($dayStartTime, $dayStartTimeChanged);
     }
 }

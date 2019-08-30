@@ -61,7 +61,7 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono typ obecnosci z:\n%s\nna:\n%s",
+                    "Zmieniono typ obecnosci z: %s na: %s",
                     $args->getOldValue('presenceType')->getName(),
                     $args->getNewValue('presenceType')->getName()
                 )
@@ -74,9 +74,9 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono typ nieobecnosci z:\n%s\nna:\n%s",
-                    $args->getOldValue('absenceType'),
-                    $args->getNewValue('absenceType')
+                    "Zmieniono typ nieobecnosci z: %s na: %s",
+                    $args->getOldValue('absenceType')->getName(),
+                    $args->getNewValue('absenceType')->getName()
                 )
             );
         }
@@ -87,7 +87,7 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono rozpoczecie dnia z:\n%s\nna:\n%s",
+                    "Zmieniono rozpoczecie dnia z: %s na: %s",
                     $args->getOldValue('dayStartTime'),
                     $args->getNewValue('dayStartTime')
                 )
@@ -100,7 +100,7 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono zakonczenie dnia z:\n%s\nna:\n%s",
+                    "Zmieniono zakonczenie dnia z: %s na: %s",
                     $args->getOldValue('dayEndTime'),
                     $args->getNewValue('dayEndTime')
                 )
@@ -113,7 +113,7 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono czas pracy z:\n%s\nna:\n%s",
+                    "Zmieniono czas pracy z: %s na: %s",
                     $args->getOldValue('workingTime'),
                     $args->getNewValue('workingTime')
                 )
