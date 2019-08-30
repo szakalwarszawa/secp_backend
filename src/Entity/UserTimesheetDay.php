@@ -424,11 +424,11 @@ class UserTimesheetDay
     }
 
     /**
-     * @param UserTimesheetLog $UserTimesheetLog
+     * @param UserTimesheetLog $userTimesheetLog
      *
-     * @return UserTimesheetLog
+     * @return UserTimesheetDay
      */
-    public function addUserTimesheetLog(UserTimesheetDayLog $userTimesheetLog): self
+    public function addUserTimesheetDayLog(UserTimesheetDayLog $userTimesheetLog): self
     {
         if (!$this->userTimesheetDayLogs->contains($userTimesheetLog)) {
             $this->userTimesheetDayLogs[] = $userTimesheetLog;
@@ -439,11 +439,11 @@ class UserTimesheetDay
     }
 
     /**
-     * @param DayDefinitionLog $dayDefinitionLog
+     * @param UserTimesheetLog $userTimesheetLog
      *
-     * @return DayDefinition
+     * @return UserTimesheetDay
      */
-    public function removeUserTimesheetLog(UserTimesheetLog $userTimesheetLog): self
+    public function removeUserTimesheetDayLog(UserTimesheetLog $userTimesheetLog): self
     {
         if ($this->userTimesheetDayLogs->contains($userTimesheetLog)) {
             $this->userTimesheetDayLogs->removeElement($userTimesheetLog);

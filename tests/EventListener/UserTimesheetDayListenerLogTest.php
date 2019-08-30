@@ -22,7 +22,9 @@ class UserTimesheetDayListenerLogTest extends AbstractWebTestCase
     public function firePreUpdateOnUserTimesheetDayTest(): void
     {
         //workingTime
-        $UserTimesheetDay = $this->entityManager->getRepository(UserTimesheetDay::class)->findOneBy(array("id" => self::SAMPLE_ID));
+        $UserTimesheetDay = $this->entityManager->getRepository(UserTimesheetDay::class)->findOneBy(
+            array("id" => self::SAMPLE_ID)
+        );
         $workingTime = $UserTimesheetDay->getWorkingTime();
 
         $UserTimesheetDay->setWorkingTime(self::SAMPLE_WORKING_TIME);
@@ -30,7 +32,8 @@ class UserTimesheetDayListenerLogTest extends AbstractWebTestCase
 
         $workingTimeChanged = $UserTimesheetDay->getWorkingTime();
 
-        $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy([], ['id' => 'desc']);
+        $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy(
+            [], ['id' => 'desc']);
         $notice = $UserTimesheetDayLog->getNotice();
         $this->assertStringContainsString(self::SAMPLE_WORKING_TIME, $notice);
         $this->assertNotEquals($workingTime, $workingTimeChanged);
@@ -42,7 +45,8 @@ class UserTimesheetDayListenerLogTest extends AbstractWebTestCase
 
         $dayStartTimeChanged = $UserTimesheetDay->getDayStartTime();
 
-        $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy([], ['id' => 'desc']);
+        $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy(
+            [], ['id' => 'desc']);
         $notice = $UserTimesheetDayLog->getNotice();
         $this->assertStringContainsString(self::SAMPLE_START_TIME, $notice);
         $this->assertNotEquals($dayStartTime, $dayStartTimeChanged);

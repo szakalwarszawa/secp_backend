@@ -55,14 +55,6 @@ final class Version20190826135609 extends AbstractMigration
      */
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf(
-            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
-            'Migration can only be executed safely on \'postgresql\'.'
-        );
-        $this->addSql('CREATE SCHEMA public');
-        $this->addSql('DROP SEQUENCE "user_timesheet_day_logs_id_seq" CASCADE');
-        $this->addSql('DROP TABLE "user_timesheet_day_logs"');
-        $this->addSql('ALTER TABLE "user_timesheet_days" DROP notice');
+        $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
     }
 }

@@ -113,7 +113,7 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono zakonczenie dnia z:\n%s\nna:\n%s",
+                    "Zmieniono czas pracy z:\n%s\nna:\n%s",
                     $args->getOldValue('workingTime'),
                     $args->getNewValue('workingTime')
                 )
@@ -281,7 +281,7 @@ class UserTimesheetDayListener
             $em = $args->getEntityManager();
 
             foreach ($this->userTimesheetDaysLogs as $log) {
-                $log->getUserTimesheetDay()->addUserTimesheetLog($log);
+                $log->getUserTimesheetDay()->addUserTimesheetDayLog($log);
                 $em->persist($log);
             }
 

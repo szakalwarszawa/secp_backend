@@ -95,9 +95,8 @@ class UserTimesheetDayLog
     }
 
     /**
-     * @param UserTimesheetDay|null $dayDefinition
-     *
-     * @return DayDefinitionLog
+     * @param UserTimesheetDay|null $userTimesheetDay
+     * @return UserTimesheetDayLog
      */
     public function setUserTimesheetDay(?UserTimesheetDay $userTimesheetDay): self
     {
