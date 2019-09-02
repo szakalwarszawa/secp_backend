@@ -28,7 +28,10 @@ final class Version20190829073452 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
+            'Migration can only be executed safely on \'postgresql\'.'
+        );
 
         $this->addSql('ALTER TABLE presence_types ADD working_day_restriction INT DEFAULT 0 NOT NULL');
     }
