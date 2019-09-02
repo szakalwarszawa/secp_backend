@@ -424,32 +424,32 @@ class UserTimesheetDay
     }
 
     /**
-     * @param UserTimesheetLog $userTimesheetLog
+     * @param UserTimesheetDayLog $userTimesheetDayLog
      *
      * @return UserTimesheetDay
      */
-    public function addUserTimesheetDayLog(UserTimesheetDayLog $userTimesheetLog): self
+    public function addUserTimesheetDayLog(UserTimesheetDayLog $userTimesheetDayLog): self
     {
-        if (!$this->userTimesheetDayLogs->contains($userTimesheetLog)) {
-            $this->userTimesheetDayLogs[] = $userTimesheetLog;
-            $userTimesheetLog->setUserTimesheetDay($this);
+        if (!$this->userTimesheetDayLogs->contains($userTimesheetDayLog)) {
+            $this->userTimesheetDayLogs[] = $userTimesheetDayLog;
+            $userTimesheetDayLog->setUserTimesheetDay($this);
         }
 
         return $this;
     }
 
     /**
-     * @param UserTimesheetLog $userTimesheetLog
+     * @param UserTimesheetDayLog $userTimesheetDayLog
      *
      * @return UserTimesheetDay
      */
-    public function removeUserTimesheetDayLog(UserTimesheetLog $userTimesheetLog): self
+    public function removeUserTimesheetDayLog(UserTimesheetDayLog $userTimesheetDayLog): self
     {
-        if ($this->userTimesheetDayLogs->contains($userTimesheetLog)) {
-            $this->userTimesheetDayLogs->removeElement($userTimesheetLog);
+        if ($this->userTimesheetDayLogs->contains($userTimesheetDayLog)) {
+            $this->userTimesheetDayLogs->removeElement($userTimesheetDayLog);
             // set the owning side to null (unless already changed)
-            if ($userTimesheetLog->getUserTimesheetDay() === $this) {
-                $userTimesheetLog->setUserTimesheetDay(null);
+            if ($userTimesheetDayLog->getUserTimesheetDay() === $this) {
+                $userTimesheetDayLog->setUserTimesheetDay(null);
             }
         }
 
