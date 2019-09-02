@@ -22,7 +22,7 @@ final class Version20190830133802 extends AbstractMigration
 
     /**
      * @param Schema $schema
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      * @SuppressWarnings("unused")
      */
     public function up(Schema $schema) : void
@@ -34,8 +34,10 @@ final class Version20190830133802 extends AbstractMigration
         );
 
         $this->addSql(
-            'ALTER INDEX idx_user_timesheets_user_timesheet_log_date RENAME TO idx_user_timesheet_log_user_' .
-            'timesheet_log_date'
+<<<SQL
+            ALTER INDEX idx_user_timesheets_user_timesheet_log_date
+            RENAME TO idx_user_timesheet_log_user_timesheet_log_date
+SQL
         );
     }
 

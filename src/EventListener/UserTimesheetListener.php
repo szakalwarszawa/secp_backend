@@ -30,7 +30,7 @@ class UserTimesheetListener
     private $userTimesheetLogs = [];
 
     /**
-     * DayDefinitionLoggerListener constructor.
+     * UserTimesheetListener constructor.
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
@@ -56,7 +56,7 @@ class UserTimesheetListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono status z: %s na: %s",
+                    'Zmieniono status z: %s na: %s',
                     $args->getOldValue('status'),
                     $args->getNewValue('status')
                 )

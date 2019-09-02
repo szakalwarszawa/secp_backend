@@ -19,18 +19,21 @@ class UserTimesheetListenerTest extends AbstractWebTestCase
      */
     public function firePreUpdateOnUserTimesheetTest(): void
     {
-        $UserTimesheet = $this->entityManager->getRepository(UserTimesheet::class)->findOneBy(
-            array("id" => self::SAMPLE_ID)
+        $userTimesheet = $this->entityManager
+            ->getRepository(UserTimesheet::class)
+            ->findOneBy(
+            array('id' => self::SAMPLE_ID)
         );
 
-        $status = $UserTimesheet->getStatus();
-        $UserTimesheet->setStatus(self::SAMPLE_STATUS_AFTER);
+        $status = $userTimesheet->getStatus();
+        $userTimesheet->setStatus(self::SAMPLE_STATUS_AFTER);
         $this->entityManager->flush();
 
-        $statusChanged = $UserTimesheet->getStatus();
-        $UserTimesheetLog = $this->entityManager->getRepository(UserTimesheetLog::class)->findOneBy(
-            [], ['id' => 'desc']);
-        $notice = $UserTimesheetLog->getNotice();
+        $statusChanged = $userTimesheet->getStatus();
+        $userTimesheetLog = $this->entityManager
+            ->getRepository(UserTimesheetLog::class)
+            ->findOneBy([], ['id' => 'desc']);
+        $notice = $userTimesheetLog->getNotice();
         $this->assertStringContainsString('Zmieniono status z: ' . self::SAMPLE_STATUS_BEFORE .' na: ' .
             self::SAMPLE_STATUS_AFTER, $notice);
         $this->assertNotEquals($status, $statusChanged);
