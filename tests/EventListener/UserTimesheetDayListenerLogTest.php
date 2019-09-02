@@ -22,34 +22,37 @@ class UserTimesheetDayListenerLogTest extends AbstractWebTestCase
     public function firePreUpdateOnUserTimesheetDayTest(): void
     {
         //workingTime
-        $UserTimesheetDay = $this->entityManager->getRepository(UserTimesheetDay::class)->findOneBy(
-            array("id" => self::SAMPLE_ID)
+        $userTimesheetDay = $this->entityManager
+            ->getRepository(UserTimesheetDay::class)
+            ->findOneBy(array('id' => self::SAMPLE_ID)
         );
-        $workingTime = $UserTimesheetDay->getWorkingTime();
+        $workingTime = $userTimesheetDay->getWorkingTime();
 
-        $UserTimesheetDay->setWorkingTime(self::SAMPLE_WORKING_TIME);
+        $userTimesheetDay->setWorkingTime(self::SAMPLE_WORKING_TIME);
         $this->entityManager->flush();
 
-        $workingTimeChanged = $UserTimesheetDay->getWorkingTime();
+        $workingTimeChanged = $userTimesheetDay->getWorkingTime();
 
-        $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy(
-            [], ['id' => 'desc']);
-        $notice = $UserTimesheetDayLog->getNotice();
+        $userTimesheetDayLog = $this->entityManager
+            ->getRepository(UserTimesheetDayLog::class)
+            ->findOneBy([], ['id' => 'desc']);
+        $notice = $userTimesheetDayLog->getNotice();
         $this->assertStringContainsString('Zmieniono czas pracy z: ' . $workingTime .' na: ' .
             $workingTimeChanged, $notice);
         $this->assertNotEquals($workingTime, $workingTimeChanged);
 
         //dayStartTime
-        $dayStartTime = $UserTimesheetDay->getDayStartTime();
-        $UserTimesheetDay->setDayStartTime(self::SAMPLE_START_TIME);
+        $dayStartTime = $userTimesheetDay->getDayStartTime();
+        $userTimesheetDay->setDayStartTime(self::SAMPLE_START_TIME);
         $this->entityManager->flush();
 
-        $dayStartTimeChanged = $UserTimesheetDay->getDayStartTime();
+        $dayStartTimeChanged = $userTimesheetDay->getDayStartTime();
 
-        $UserTimesheetDayLog = $this->entityManager->getRepository(UserTimesheetDayLog::class)->findOneBy(
-            [], ['id' => 'desc']);
-        $notice = $UserTimesheetDayLog->getNotice();
-        $this->assertStringContainsString('Zmieniono rozpoczecie dnia z: ' . $dayStartTime .' na: ' .
+        $userTimesheetDayLog = $this->entityManager
+            ->getRepository(UserTimesheetDayLog::class)
+            ->findOneBy([], ['id' => 'desc']);
+        $notice = $userTimesheetDayLog->getNotice();
+        $this->assertStringContainsString('Zmieniono rozpoczęcie dnia z: ' . $dayStartTime .' na: ' .
             $dayStartTimeChanged, $notice);
         $this->assertNotEquals($dayStartTime, $dayStartTimeChanged);
     }

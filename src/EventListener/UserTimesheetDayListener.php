@@ -61,7 +61,7 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono typ obecnosci z: %s na: %s",
+                    "Zmieniono typ obecności z: %s na: %s",
                     $args->getOldValue('presenceType')->getName(),
                     $args->getNewValue('presenceType')->getName()
                 )
@@ -74,7 +74,7 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono typ nieobecnosci z: %s na: %s",
+                    "Zmieniono typ nieobecności z: %s na: %s",
                     $args->getOldValue('absenceType')->getName(),
                     $args->getNewValue('absenceType')->getName()
                 )
@@ -87,7 +87,7 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono rozpoczecie dnia z: %s na: %s",
+                    "Zmieniono rozpoczęcie dnia z: %s na: %s",
                     $args->getOldValue('dayStartTime'),
                     $args->getNewValue('dayStartTime')
                 )
@@ -100,7 +100,7 @@ class UserTimesheetDayListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono zakonczenie dnia z: %s na: %s",
+                    "Zmieniono zakończenie dnia z: %s na: %s",
                     $args->getOldValue('dayEndTime'),
                     $args->getNewValue('dayEndTime')
                 )
