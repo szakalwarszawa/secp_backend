@@ -34,7 +34,7 @@ final class Version20190830133802 extends AbstractMigration
         );
 
         $this->addSql(
-<<<SQL
+        <<<SQL
             ALTER INDEX idx_user_timesheets_user_timesheet_log_date
             RENAME TO idx_user_timesheet_log_user_timesheet_log_date
 SQL
