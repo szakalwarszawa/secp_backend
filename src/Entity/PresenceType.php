@@ -97,6 +97,22 @@ class PresenceType
     public const EDIT_RESTRICTION_AFTER_AND_TODAY = 5;
 
     /**
+     * @var int
+     */
+    public const RESTRICTION_WORKING_AND_NON_WORKING_DAY = 0;
+
+    /**
+     * @var int
+     */
+    public const RESTRICTION_WORKING_DAY = 1;
+
+    /**
+     * @var int
+     */
+    public const RESTRICTION_NON_WORKING_DAY = 2;
+
+
+    /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -174,6 +190,19 @@ class PresenceType
     private $editRestriction;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Choice(callback="getWorkingDayRestrictions")
+     * @Assert\NotNull()
+     * @ORM\Column(
+     *     type="integer",
+     *     nullable=false,
+     *     options={"default"=0}
+     * )
+     * @Groups({"get", "post", "put"})
+     */
+    protected $workingDayRestriction;
+
+    /**
      * @return int|null
      */
     public function getEditRestriction(): ?int
@@ -189,6 +218,26 @@ class PresenceType
     public function setEditRestriction(int $editRestriction): self
     {
         $this->editRestriction = $editRestriction;
+        return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getWorkingDayRestriction(): ?int
+    {
+        return $this->workingDayRestriction;
+    }
+
+    /**
+     * @param int $workingDayRestriction
+     *
+     * @return PresenceType
+     */
+    public function setWorkingDayRestriction(int $workingDayRestriction): PresenceType
+    {
+        $this->workingDayRestriction = $workingDayRestriction;
+
         return $this;
     }
 
@@ -315,6 +364,20 @@ class PresenceType
         $this->active = $active;
 
         return $this;
+    }
+
+    /**
+     * Returns working day restrictions.
+     *
+     * @return array
+     */
+    public function getWorkingDayRestrictions(): array
+    {
+        return [
+            self::RESTRICTION_WORKING_AND_NON_WORKING_DAY,
+            self::RESTRICTION_WORKING_DAY,
+            self::RESTRICTION_NON_WORKING_DAY,
+        ];
     }
 
     /**

@@ -15,13 +15,13 @@ class PresenceTypeFixtures extends Fixture
     public const FIXTURES_RECORD_COUNT = 7;
 
     private $presenceTypes = [
-        ['O', 'obecność', false, true, true, 1, 1],
-        ['HO', 'home office', false, true, true, 4, 4],
-        ['S', 'szkolenie', false, false, true, 0, 0],
-        ['D', 'delegację', false, true, true, 0, 0],
-        ['N', 'nieobecność', true, false, true, 0, 0],
-        ['DD', 'dyżur domowy', false, false, true, 0, 0],
-        ['DP', 'dyżur w pracy', false, false, true, 0, 0],
+        ['O', 'obecność', false, true, true, 1, 1, PresenceType::RESTRICTION_WORKING_DAY],
+        ['HO', 'home office', false, true, true, 4, 4, PresenceType::RESTRICTION_WORKING_AND_NON_WORKING_DAY],
+        ['S', 'szkolenie', false, false, true, 0, 0, PresenceType::RESTRICTION_WORKING_DAY],
+        ['D', 'delegację', false, true, true, 0, 0, PresenceType::RESTRICTION_WORKING_AND_NON_WORKING_DAY],
+        ['N', 'nieobecność', true, false, true, 0, 0, PresenceType::RESTRICTION_WORKING_DAY],
+        ['DD', 'dyżur domowy', false, false, true, 0, 0, PresenceType::RESTRICTION_NON_WORKING_DAY],
+        ['DP', 'dyżur w pracy', false, false, true, 0, 0, PresenceType::RESTRICTION_WORKING_DAY],
     ];
 
     /**
@@ -38,7 +38,9 @@ class PresenceTypeFixtures extends Fixture
                 ->setIsTimed($presenceType[3])
                 ->setActive($presenceType[4])
                 ->setCreateRestriction($presenceType[5])
-                ->setEditRestriction($presenceType[6]);
+                ->setEditRestriction($presenceType[6])
+                ->setWorkingDayRestriction($presenceType[7])
+            ;
 
             $manager->persist($newPresenceType);
 
