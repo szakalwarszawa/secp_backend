@@ -33,7 +33,8 @@ class UserTimesheetListenerTest extends AbstractWebTestCase
         $userTimesheetLog = $this->entityManager
             ->getRepository(UserTimesheetLog::class)
             ->findOneBy(
-                [], ['id' => 'desc']
+                [],
+                ['id' => 'desc']
             );
         $notice = $userTimesheetLog->getNotice();
         $this->assertStringContainsString('Zmieniono status z: ' . self::SAMPLE_STATUS_BEFORE .' na: ' .
