@@ -22,8 +22,8 @@ class UserTimesheetListenerTest extends AbstractWebTestCase
         $userTimesheet = $this->entityManager
             ->getRepository(UserTimesheet::class)
             ->findOneBy(
-            array('id' => self::SAMPLE_ID)
-        );
+                array('id' => self::SAMPLE_ID)
+            );
 
         $status = $userTimesheet->getStatus();
         $userTimesheet->setStatus(self::SAMPLE_STATUS_AFTER);
@@ -32,7 +32,9 @@ class UserTimesheetListenerTest extends AbstractWebTestCase
         $statusChanged = $userTimesheet->getStatus();
         $userTimesheetLog = $this->entityManager
             ->getRepository(UserTimesheetLog::class)
-            ->findOneBy([], ['id' => 'desc']);
+            ->findOneBy(
+                [], ['id' => 'desc']
+            );
         $notice = $userTimesheetLog->getNotice();
         $this->assertStringContainsString('Zmieniono status z: ' . self::SAMPLE_STATUS_BEFORE .' na: ' .
             self::SAMPLE_STATUS_AFTER, $notice);
