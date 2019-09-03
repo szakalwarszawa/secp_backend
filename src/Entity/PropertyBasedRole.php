@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     name="`property_based_roles`",
  *     indexes={
  *          @ORM\Index(name="idx_property_based_roles_ldap_value", columns={"ldap_value"}),
- *          @ORM\Index(name="idx_property_based_roles_framework_value", columns={"framework_value"}),
+ *          @ORM\Index(name="idx_property_based_roles_role_id", columns={"role_id"}),
  *          @ORM\Index(name="idx_property_based_roles_overridable", columns={"overridable"}),
  *          @ORM\Index(name="idx_property_based_roles_overridable", columns={"based_on"})
  *     }
@@ -53,7 +53,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      properties={
  *          "basedOn": "exact",
  *          "ldapValue": "exact",
- *          "frameworkValue": "exact"
+ *          "role": "exact"
  *      }
  * )
  *
@@ -87,15 +87,16 @@ class PropertyBasedRole
     protected $ldapValue;
 
     /**
-     * Framework role code, ex. `ROLE_DEPARTMENT_MANAGER`
+     * Framework role
      *
-     * @var string
+     * @var Role
      *
      * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Role")
+     * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
      * @Groups({"get"})
      */
-    protected $frameworkValue;
+    protected $role;
 
     /**
      * If user had this role, he should keep it.
@@ -148,21 +149,21 @@ class PropertyBasedRole
     }
 
     /**
-     * @return null|string
+     * @return null|Role
      */
-    public function getFrameworkValue(): ?string
+    public function getRole(): ?Role
     {
-        return $this->frameworkValue;
+        return $this->role;
     }
 
     /**
-     * @param string $frameworkValue
+     * @param string $role
      *
      * @return PropertyBasedRole
      */
-    public function setFrameworkValue(string $frameworkValue): PropertyBasedRole
+    public function setRole(Role $role): PropertyBasedRole
     {
-        $this->frameworkValue = $frameworkValue;
+        $this->role = $role;
 
         return $this;
     }

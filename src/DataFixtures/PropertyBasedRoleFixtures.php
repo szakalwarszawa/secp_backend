@@ -22,6 +22,7 @@ class PropertyBasedRoleFixtures extends Fixture implements DependentFixtureInter
     {
         return [
             UserFixtures::class,
+            RoleFixtures::class,
         ];
     }
 
@@ -35,31 +36,31 @@ class PropertyBasedRoleFixtures extends Fixture implements DependentFixtureInter
         $propertyBasedRoles = [
             [
                 'ldap_value' => 'kierownik',
-                'framework_value' => 'ROLE_SECTION_MANAGER',
+                'role' => $this->getReference('ROLE_SECTION_MANAGER'),
                 'overridable' => true,
                 'based_on' => UserAttributes::POSITION,
             ],
             [
                 'ldap_value' => 'dyrektor',
-                'framework_value' => 'ROLE_DEPARTMENT_MANAGER',
+                'role' => $this->getReference('ROLE_DEPARTMENT_MANAGER'),
                 'overridable' => true,
                 'based_on' => UserAttributes::POSITION,
             ],
             [
                 'ldap_value' => 'Biuro Zarządzania Kadrami',
-                'framework_value' => 'ROLE_HR',
+                'role' => $this->getReference('ROLE_HR'),
                 'overridable' => true,
                 'based_on' => UserAttributes::DEPARTMENT,
             ],
             [
                 'ldap_value' => $this->getReference('user_1')->getUsername(),
-                'framework_value' => 'ROLE_SUPERVISOR',
+                'role' => $this->getReference('ROLE_SUPERVISOR'),
                 'overridable' => false,
                 'based_on' => UserAttributes::SAMACCOUNTNAME,
             ],
             [
                 'ldap_value' => $this->getReference('user_2')->getUsername(),
-                'framework_value' => 'ROLE_SECRETARY',
+                'role' => $this->getReference('ROLE_SECRETARY'),
                 'overridable' => false,
                 'based_on' => UserAttributes::SAMACCOUNTNAME,
             ],
@@ -70,7 +71,7 @@ class PropertyBasedRoleFixtures extends Fixture implements DependentFixtureInter
             $object = new PropertyBasedRole();
             $object
                 ->setLdapValue($propertyBasedRole['ldap_value'])
-                ->setFrameworkValue($propertyBasedRole['framework_value'])
+                ->setRole($propertyBasedRole['role'])
                 ->setOverridable($propertyBasedRole['overridable'])
                 ->setBasedOn($propertyBasedRole['based_on'])
             ;

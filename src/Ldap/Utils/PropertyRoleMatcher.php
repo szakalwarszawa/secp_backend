@@ -77,7 +77,7 @@ class PropertyRoleMatcher
 
         $propertyBasedRolesAddedCount = 0;
         foreach ($propertyBasedUserRoles as $propertyBasedUserRole) {
-            $userRoles[] = $propertyBasedUserRole->getFrameworkValue();
+            $userRoles[] = $propertyBasedUserRole->getRole();
             $propertyBasedRolesAddedCount++;
         }
 
@@ -123,7 +123,7 @@ class PropertyRoleMatcher
 
         return array_filter(array_map(function ($propertyBasedRole) {
             if (!$propertyBasedRole->isOverridable()) {
-                return $propertyBasedRole->getFrameworkValue();
+                return $propertyBasedRole->getRole();
             }
         }, $propertyBasedRoles));
     }
