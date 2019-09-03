@@ -53,7 +53,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      properties={
  *          "basedOn": "exact",
  *          "ldapValue": "exact",
- *          "role": "exact"
+ *          "role.name": "exact"
  *      }
  * )
  *
