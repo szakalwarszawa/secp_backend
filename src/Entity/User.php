@@ -15,6 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\UserRole;
 
 /**
  * @ORM\Table(
@@ -187,7 +188,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="simple_array", length=255)
-     * @Groups({"get", "post", "put"})
+     * @Groups({"get", "post", "admin-supervisor:input"})
+     * @UserRole
      */
     private $roles = [];
 

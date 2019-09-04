@@ -91,3 +91,8 @@ services:
         arguments:
             $usersBaseDn: '%env(resolve:LDAP_USERS_BASE_DN)%'
             $inactiveUsersBaseDn: '%env(resolve:LDAP_INACTIVE_USERS_BASE_DN)%'
+
+    App\Serializer\UserContextBuilder:
+        decorates: 'api_platform.serializer.context_builder'
+        arguments: [ '@App\Serializer\UserContextBuilder.inner' ]
+        autoconfigure: false
