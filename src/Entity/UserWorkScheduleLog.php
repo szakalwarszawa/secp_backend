@@ -12,7 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     name="`user_work_schedule_logs`",
  *     indexes={
  *          @ORM\Index(name="idx_user_work_schedule_log_date", columns={"log_date"}),
- *          @ORM\Index(name="idx_user_work_schedule_user_work_schedule_log_date", columns={"user_work_schedule_id", "log_date"}),
+ *          @ORM\Index(name="idx_user_work_schedule_user_work_schedule_log_date", columns={"user_work_schedule_id",
+ *          "log_date"}),
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserWorkScheduleLogRepository")

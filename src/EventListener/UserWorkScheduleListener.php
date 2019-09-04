@@ -217,6 +217,5 @@ class UserWorkScheduleListener
             $this->userWorkScheduleDaysLogs = [];
             $em->flush();
         }
-
     }
 }
