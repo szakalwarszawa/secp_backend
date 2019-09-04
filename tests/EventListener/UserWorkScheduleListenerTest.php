@@ -78,8 +78,9 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
             ->findOneBy([], ['id' => 'desc']);
 
         $notice = $userWorkScheduleLog->getNotice();
-        var_dump($notice);
         $this->assertNotNull($userWorkScheduleUpdated);
+        $this->assertStringContainsString('Zmieniono status z: ' . UserWorkSchedule::STATUS_OWNER_ACCEPT .
+            ' na: ' . $userWorkScheduleUpdated->getStatus(), $notice);
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkScheduleUpdated->getWorkScheduleProfile());
         $this->assertEquals(UserWorkSchedule::STATUS_HR_ACCEPT, $userWorkScheduleUpdated->getStatus());
 

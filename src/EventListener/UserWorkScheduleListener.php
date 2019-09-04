@@ -204,7 +204,7 @@ class UserWorkScheduleListener
             }
 
             $this->userWorkScheduleDays = [];
-
+            $em->flush();
         }
 
         if (!empty($this->userWorkScheduleDaysLogs)) {
