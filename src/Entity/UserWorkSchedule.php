@@ -139,6 +139,22 @@ class UserWorkSchedule
      * @ApiSubresource()
      */
     private $userWorkScheduleLogs;
+
+    /**
+     * @return mixed
+     */
+    public function getUserWorkScheduleLogs()
+    {
+        return $this->userWorkScheduleLogs;
+    }
+
+    /**
+     * @param mixed $userWorkScheduleLogs
+     */
+    public function setUserWorkScheduleLogs($userWorkScheduleLogs): void
+    {
+        $this->userWorkScheduleLogs = $userWorkScheduleLogs;
+    }
     /**
      * UserWorkSchedule constructor.
      */
