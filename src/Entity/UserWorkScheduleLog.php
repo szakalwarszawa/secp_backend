@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(
+ *     schema="logs",
  *     name="`user_work_schedule_logs`",
  *     indexes={
  *          @ORM\Index(name="idx_user_work_schedule_log_date", columns={"log_date"}),
@@ -106,7 +107,6 @@ class UserWorkScheduleLog
     {
         return $this->id;
     }
-
 
     /**
      * @return User|null

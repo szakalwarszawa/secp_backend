@@ -62,6 +62,7 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         $this->assertNotNull($userWorkSchedule);
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkSchedule->getWorkScheduleProfile());
 
+        $statusBefore = $userWorkSchedule->getStatus();
         $userWorkSchedule->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
         self::$container->get('doctrine')
             ->getManager()
@@ -79,11 +80,10 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
 
         $notice = $userWorkScheduleLog->getNotice();
         $this->assertNotNull($userWorkScheduleUpdated);
-        $this->assertStringContainsString('Zmieniono status z: ' . UserWorkSchedule::STATUS_OWNER_ACCEPT .
+        $this->assertStringContainsString('Zmieniono status z: ' . $statusBefore .
             ' na: ' . $userWorkScheduleUpdated->getStatus(), $notice);
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkScheduleUpdated->getWorkScheduleProfile());
         $this->assertEquals(UserWorkSchedule::STATUS_HR_ACCEPT, $userWorkScheduleUpdated->getStatus());
-
     }
 
     /**

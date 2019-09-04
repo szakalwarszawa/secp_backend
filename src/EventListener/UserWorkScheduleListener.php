@@ -10,7 +10,6 @@ use App\Entity\UserWorkScheduleLog;
 use App\Entity\WorkScheduleProfile;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\OptimisticLockException;
@@ -34,16 +33,18 @@ class UserWorkScheduleListener
      */
     private $userWorkScheduleDays = [];
 
-    private $userWorkScheduleDaysLogs = [];
-    private $em;
     /**
-     * DayDefinitionLoggerListener constructor.
+     * @var array
+     */
+    private $userWorkScheduleDaysLogs = [];
+
+    /**
+     * UserWorkScheduleListener constructor.
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->token = $tokenStorage->getToken();
-        $this->em = $entityManager;
     }
 
     /**
@@ -57,7 +58,8 @@ class UserWorkScheduleListener
             return;
         }
 
-        if ($args->hasChangedField('status') && $args->getOldValue('status') !== $args->getNewValue('status')) {
+        if ($args->hasChangedField('status') && $args->getOldValue('status')
+            !== $args->getNewValue('status')) {
             $this->addUserWorkScheduleLog(
                 $args,
                 $entity,
@@ -78,7 +80,6 @@ class UserWorkScheduleListener
      */
     private function addUserWorkScheduleLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
     {
-
         $log = new UserWorkScheduleLog();
         $log->setUserWorkSchedule($entity);
         $log->setLogDate(date('Y-m-d H:i:s'));
@@ -86,9 +87,6 @@ class UserWorkScheduleListener
         $log->setNotice($notice);
 
         $this->userWorkScheduleDaysLogs[] = $log;
-
-         //   $this->em->persist($log);
-         //   $this->em->flush();
     }
 
     /**
@@ -120,8 +118,6 @@ class UserWorkScheduleListener
         if (!$userWorkSchedule instanceof UserWorkSchedule) {
             return;
         }
-
-        // @Todo dodać tabele z logami i dopisywać zmiany
     }
 
     /**
