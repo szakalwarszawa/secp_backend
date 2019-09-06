@@ -64,6 +64,33 @@ class UserWorkScheduleListener
                 )
             );
         }
+
+        if ($args->hasChangedField('status') && $args->getNewValue('status')
+            == UserWorkSchedule::STATUS_HR_ACCEPT) {
+
+            $idOwner = $entity->getOwner()->getId();
+            $idScheduleProfile = $entity->getWorkScheduleProfile()->getId();
+
+            $previousWorkScheduleToDelete = $args->getEntityManager()
+                ->getRepository(UserWorkSchedule::class)
+                ->createQueryBuilder('p')
+                ->andWhere('p.owner = :owner')
+                ->andWhere('p.workScheduleProfile = :profile')
+                ->addOrderBy('p.id', 'asc')
+                ->setParameter('owner', $idOwner)
+                ->setParameter('profile', $idScheduleProfile)
+                ->getQuery()
+                ->getResult();
+
+            $toDelete = $previousWorkScheduleToDelete[0];
+            $toDeleteID = $toDelete->getId();
+
+            $deleteQuery = $args->getEntityManager()->createQueryBuilder('p');
+            $deleteQuery->delete('App\Entity\UserWorkScheduleDay', 'p')
+              ->where('p.userWorkSchedule = :id')
+              ->setParameter('id', $toDeleteID);
+            $deleteQuery->getQuery()->execute();
+        }
     }
 
     /**
