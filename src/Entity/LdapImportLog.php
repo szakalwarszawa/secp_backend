@@ -24,7 +24,7 @@ class LdapImportLog
     protected $id;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="byte_object")
      */
     protected $result;
 
