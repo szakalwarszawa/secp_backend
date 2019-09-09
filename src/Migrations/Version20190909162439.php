@@ -29,8 +29,9 @@ final class Version20190909162439 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         $this->abortIf(
-        $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
-        'Migration can only be executed safely on \'postgresql\'.');
+            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
+            'Migration can only be executed safely on \'postgresql\'.'
+        );
         $this->addSql('CREATE SEQUENCE "logs"."user_timesheet_logs_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SCHEMA logs');
         $this->addSql(
@@ -70,8 +71,8 @@ SQL
     public function down(Schema $schema) : void
     {
         $this->abortIf(
-        $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
-        'Migration can only be executed safely on \'postgresql\'.'
+            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
+            'Migration can only be executed safely on \'postgresql\'.'
         );
     }
 }
