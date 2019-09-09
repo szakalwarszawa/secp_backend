@@ -67,7 +67,6 @@ class UserWorkScheduleListener
 
         if ($args->hasChangedField('status') && $args->getNewValue('status')
             == UserWorkSchedule::STATUS_HR_ACCEPT) {
-
             $idOwner = $entity->getOwner()->getId();
             $idScheduleProfile = $entity->getWorkScheduleProfile()->getId();
 
@@ -83,13 +82,19 @@ class UserWorkScheduleListener
                 ->getResult();
 
             $toDelete = $previousWorkScheduleToDelete[0];
-            $toDeleteID = $toDelete->getId();
+            $userWorkSchedule = $toDelete->getId();
+            $toDeleteDays = $toDelete->getUserWorkScheduleDays();
 
-            $deleteQuery = $args->getEntityManager()->createQueryBuilder('p');
-            $deleteQuery->delete('App\Entity\UserWorkScheduleDay', 'p')
-              ->where('p.userWorkSchedule = :id')
-              ->setParameter('id', $toDeleteID);
-            $deleteQuery->getQuery()->execute();
+            foreach($toDeleteDays as $d) {
+                $id = $d->getDayDefinition()->getId();
+                $deleteQuery = $args->getEntityManager()->createQueryBuilder('p');
+                $deleteQuery->delete('App\Entity\UserWorkScheduleDay', 'p')
+                    ->where('p.dayDefinition = :delete')
+                    ->andWhere('p.userWorkSchedule = :uws')
+                    ->setParameter('delete', $id)
+                    ->setParameter('uws', $userWorkSchedule);
+                $deleteQuery->getQuery()->execute();
+            }
         }
     }
 

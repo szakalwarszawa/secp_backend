@@ -5,6 +5,7 @@ namespace App\Tests\EventSubscriber;
 use App\DataFixtures\UserFixtures;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
+use App\Entity\UserWorkScheduleDay;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\OptimisticLockException;
@@ -12,13 +13,31 @@ use Doctrine\ORM\ORMException;
 
 class UserWorkScheduleConfirmTest extends AbstractWebTestCase
 {
+    /**
+     *
+     */
     private const TEST_FROM_DATE = '2020-01-01';
+    /**
+     *
+     */
     private const TEST_TO_DATE = '2020-01-31';
 
     /**
-     * @var int testing record ID
+     * @var int|null
      */
-    private $userWorkScheduleId;
+    private $userWorkScheduleId1;
+    /**
+     * @var int|null
+     */
+    private $userWorkScheduleId2;
+    /**
+     * @var int
+     */
+    private $userWorkScheduleCount1;
+    /**
+     * @var int
+     */
+    private $userWorkScheduleCount2;
 
     /**
      * @test
@@ -26,12 +45,10 @@ class UserWorkScheduleConfirmTest extends AbstractWebTestCase
      */
     public function insertUserWorkSchedule(): void
     {
-        $this->assertIsNumeric($this->userWorkScheduleId);
-
         $userWorkScheduleUpdated = self::$container->get('doctrine')
             ->getManager()
             ->getRepository(UserWorkSchedule::class)
-            ->find($this->userWorkScheduleId);
+            ->find($this->userWorkScheduleId1);
 
         $userWorkScheduleUpdated2 = self::$container->get('doctrine')
             ->getManager()
@@ -53,32 +70,24 @@ class UserWorkScheduleConfirmTest extends AbstractWebTestCase
             ->getManager()
             ->flush();
 
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
+        $userWorkScheduleUpdated1 = self::$container->get('doctrine')
             ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($this->userWorkScheduleId);
+            ->getRepository(UserWorkScheduleDay::class)
+            ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId1));
+
+        $expectedCount1 = count($userWorkScheduleUpdated1);
 
         $userWorkScheduleUpdated2 = self::$container->get('doctrine')
             ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($this->userWorkScheduleId2);
+            ->getRepository(UserWorkScheduleDay::class)
+            ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId2));
 
-        $days = $userWorkScheduleUpdated->getUserWorkScheduleDays();
-        foreach($days as $d) {
-            var_dump($d->getId());
-        }
+        $expectedCount2 = count($userWorkScheduleUpdated2);
 
-        $days2 = $userWorkScheduleUpdated2->getUserWorkScheduleDays();
-
-        foreach($days2 as $d) {
-            var_dump($d->getId());
-        }
-        var_dump(count($days));
-        var_dump(count($days2));
-        var_dump($days2[0]->getUserWorkSchedule()->getId());
-        var_dump($days[0]->getUserWorkSchedule()->getId());
-
-        $this->assertCount(31, $days);
+        $this->assertEquals($expectedCount1, 0);
+        $this->assertEquals($expectedCount2, 31);
+        $this->assertEquals($this->userWorkScheduleCount1, 31);
+        $this->assertEquals($this->userWorkScheduleCount2, 31);
     }
 
     /**
@@ -94,8 +103,8 @@ class UserWorkScheduleConfirmTest extends AbstractWebTestCase
         $workScheduleProfile = $this->getEntityFromReference('work_schedule_profile_1');
         $this->assertInstanceOf(WorkScheduleProfile::class, $workScheduleProfile);
 
-        $userWorkSchedule = new UserWorkSchedule();
-        $userWorkSchedule->setOwner($owner)
+        $userWorkSchedule1 = new UserWorkSchedule();
+        $userWorkSchedule1->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus(0)
             ->setFromDate(new \DateTime(self::TEST_FROM_DATE))
@@ -103,10 +112,7 @@ class UserWorkScheduleConfirmTest extends AbstractWebTestCase
 
         self::$container->get('doctrine')
             ->getManager()
-            ->persist($userWorkSchedule);
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
+            ->persist($userWorkSchedule1);
 
         $userWorkSchedule2 = new UserWorkSchedule();
         $userWorkSchedule2->setOwner($owner)
@@ -123,7 +129,21 @@ class UserWorkScheduleConfirmTest extends AbstractWebTestCase
             ->getManager()
             ->flush();
 
-        $this->userWorkScheduleId = $userWorkSchedule->getId();
+        $this->userWorkScheduleId1 = $userWorkSchedule1->getId();
         $this->userWorkScheduleId2 = $userWorkSchedule2->getId();
+
+        $userWorkScheduleUpdated2 = self::$container->get('doctrine')
+            ->getManager()
+            ->getRepository(UserWorkScheduleDay::class)
+            ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId1));
+
+        $this->userWorkScheduleCount1 = count($userWorkScheduleUpdated2);
+
+        $userWorkScheduleUpdated2 = self::$container->get('doctrine')
+            ->getManager()
+            ->getRepository(UserWorkScheduleDay::class)
+            ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId2));
+
+        $this->userWorkScheduleCount2 = count($userWorkScheduleUpdated2);
     }
 }
