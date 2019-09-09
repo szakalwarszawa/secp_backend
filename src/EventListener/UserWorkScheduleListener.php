@@ -58,13 +58,14 @@ class UserWorkScheduleListener
             return;
         }
 
-        if ($args->hasChangedField('status') && $args->getOldValue('status')
-            !== $args->getNewValue('status')) {
+        if ($args->hasChangedField('status')
+            && $args->getOldValue('status') !== $args->getNewValue('status')
+        ) {
             $this->addUserWorkScheduleLog(
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono status z: %s na: %s",
+                    "Zmieniono status z: %s, na: %s",
                     $args->getOldValue('status'),
                     $args->getNewValue('status')
                 )
