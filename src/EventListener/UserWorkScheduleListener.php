@@ -85,7 +85,7 @@ class UserWorkScheduleListener
             $userWorkSchedule = $toDelete->getId();
             $toDeleteDays = $toDelete->getUserWorkScheduleDays();
 
-            foreach($toDeleteDays as $d) {
+            foreach ($toDeleteDays as $d) {
                 $id = $d->getDayDefinition()->getId();
                 $deleteQuery = $args->getEntityManager()->createQueryBuilder('p');
                 $deleteQuery->delete('App\Entity\UserWorkScheduleDay', 'p')

@@ -11,7 +11,7 @@ use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
-class UserWorkScheduleConfirmTest extends AbstractWebTestCase
+class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 {
     /**
      *
@@ -43,7 +43,7 @@ class UserWorkScheduleConfirmTest extends AbstractWebTestCase
      * @test
      * @throws \Exception
      */
-    public function insertUserWorkSchedule(): void
+    public function deleteDaysFromPreviousWorkScheduleTest(): void
     {
         $userWorkScheduleUpdated = self::$container->get('doctrine')
             ->getManager()
