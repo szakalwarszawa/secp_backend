@@ -43,20 +43,30 @@ class UserWorkScheduleListener
     }
 
     /**
+     * @param $first
+     * @param $second
+     * @return false|int
+     */
+    public function compareScheduleDays($first, $second)
+    {
+        return strtotime($first['id']) - strtotime($second['id']);
+    }
+
+    /**
      * @param PreUpdateEventArgs $args
      * @return void
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {
-        $entity = $args->getObject();
-        if (!$entity instanceof UserWorkSchedule) {
+        $currentSchedule = $args->getObject();
+        if (!$currentSchedule instanceof UserWorkSchedule) {
             return;
         }
 
         if ($args->hasChangedField('status') && $args->getOldValue('status') !== $args->getNewValue('status')) {
             $this->addUserWorkScheduleLog(
                 $args,
-                $entity,
+                $currentSchedule,
                 sprintf(
                     "Zmieniono status z:\n%s\nna:\n%s",
                     $args->getOldValue('status'),
@@ -65,10 +75,9 @@ class UserWorkScheduleListener
             );
         }
 
-        if ($args->hasChangedField('status') && $args->getNewValue('status')
-            == UserWorkSchedule::STATUS_HR_ACCEPT) {
-            $idOwner = $entity->getOwner()->getId();
-            $idScheduleProfile = $entity->getWorkScheduleProfile()->getId();
+        if ($args->hasChangedField('status') && $args->getNewValue('status') == UserWorkSchedule::STATUS_HR_ACCEPT) {
+            $idOwnerCurrent = $currentSchedule->getOwner()->getId();
+            $idScheduleProfileCurrent = $currentSchedule->getWorkScheduleProfile()->getId();
 
             $previousWorkScheduleToDelete = $args->getEntityManager()
                 ->getRepository(UserWorkSchedule::class)
@@ -76,23 +85,33 @@ class UserWorkScheduleListener
                 ->andWhere('p.owner = :owner')
                 ->andWhere('p.workScheduleProfile = :profile')
                 ->addOrderBy('p.id', 'asc')
-                ->setParameter('owner', $idOwner)
-                ->setParameter('profile', $idScheduleProfile)
+                ->setParameter('owner', $idOwnerCurrent)
+                ->setParameter('profile', $idScheduleProfileCurrent)
                 ->getQuery()
                 ->getResult();
 
-            $toDelete = $previousWorkScheduleToDelete[0];
-            $userWorkSchedule = $toDelete->getId();
-            $toDeleteDays = $toDelete->getUserWorkScheduleDays();
+            $previous = $previousWorkScheduleToDelete[0];
+            $userWorkSchedulePrevious = $previous->getId();
 
+            $daysCurrent = $currentSchedule->getUserWorkScheduleDays();
+            foreach ($daysCurrent as $day) {
+                $daysCurrentCompare[]["id"] = $day->getDayDefinition()->getId();
+            }
+
+            $daysPrevious = $previous->getUserWorkScheduleDays();
+            foreach ($daysPrevious as $day) {
+                $daysPreviousCompare[]["id"] = $day->getDayDefinition()->getId();
+            }
+
+            $toDeleteDays = array_udiff($daysCurrentCompare, $daysPreviousCompare, array($this, 'compareScheduleDays'));
+var_dump($toDeleteDays);
             foreach ($toDeleteDays as $d) {
-                $id = $d->getDayDefinition()->getId();
                 $deleteQuery = $args->getEntityManager()->createQueryBuilder('p');
                 $deleteQuery->delete('App\Entity\UserWorkScheduleDay', 'p')
                     ->where('p.dayDefinition = :delete')
-                    ->andWhere('p.userWorkSchedule = :uws')
-                    ->setParameter('delete', $id)
-                    ->setParameter('uws', $userWorkSchedule);
+                    ->andWhere('p.userWorkSchedule = :previous')
+                    ->setParameter('delete', $d['id'])
+                    ->setParameter('previous', $userWorkSchedulePrevious);
                 $deleteQuery->getQuery()->execute();
             }
         }
