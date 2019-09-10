@@ -55,7 +55,7 @@ class Configurator
      */
     public function onKernelRequest(): void
     {
-        if ($user = $this->getUser()) {
+        if ($this->getUser()) {
             $filter = $this->entityManager->getFilters()->enable('user_filter');
             $filter
                 ->setAccessLevel(new AccessLevel($this->getUser(), $this->security))
