@@ -47,9 +47,7 @@ class UserFilter extends SQLFilter
             return '';
         }
 
-        try {
-            $userId = $this->getParameter('id');
-        } catch (InvalidArgumentException $e) {
+        if (!($this->accessLevel)) {
             return '';
         }
 

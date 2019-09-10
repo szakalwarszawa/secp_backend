@@ -58,7 +58,6 @@ class Configurator
         if ($user = $this->getUser()) {
             $filter = $this->entityManager->getFilters()->enable('user_filter');
             $filter
-                ->setParameter('id', $user->getId())
                 ->setAccessLevel(new AccessLevel($this->getUser(), $this->security))
                 ->setAnnotationReader($this->reader)
             ;
