@@ -33,10 +33,10 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
     /**
      * @test
      * @throws \Exception
-     *                 9 10 11 12 13 14 16
-     *  3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
      *
-     * -> 13 14 15 (3 deleted)
+     * 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+     *             9 10 11 12 13 14 15
+     * -> 13 14 15 16 17 18 19 (7 deleted)
      */
     public function deleteDaysFromPreviousWorkScheduleTest(): void
     {
@@ -78,10 +78,10 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId2));
 
         $expectedCount2 = count($userWorkScheduleUpdated2);
-        $this->assertEquals($this->userWorkScheduleCount1, 7);
-        $this->assertEquals($this->userWorkScheduleCount2, 17);
-        $this->assertEquals($expectedCount1, 4);
-        $this->assertEquals($expectedCount2, 17);
+        $this->assertEquals($this->userWorkScheduleCount1, 17);
+        $this->assertEquals($this->userWorkScheduleCount2, 7);
+        $this->assertEquals($expectedCount1, 10);
+        $this->assertEquals($expectedCount2, 7);
     }
 
     /**
@@ -101,8 +101,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $userWorkSchedule1->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus(0)
-            ->setFromDate(new \DateTime('2019-09-09'))
-            ->setToDate(new \DateTime('2019-09-15'));
+            ->setFromDate(new \DateTime('2019-09-03'))
+            ->setToDate(new \DateTime('2019-09-19'));
 
         self::$container->get('doctrine')
             ->getManager()
@@ -112,8 +112,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $userWorkSchedule2->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus(0)
-            ->setFromDate(new \DateTime('2020-09-03'))
-            ->setToDate(new \DateTime('2020-09-19'));
+            ->setFromDate(new \DateTime('2020-09-09'))
+            ->setToDate(new \DateTime('2020-09-15'));
 
         self::$container->get('doctrine')
             ->getManager()
