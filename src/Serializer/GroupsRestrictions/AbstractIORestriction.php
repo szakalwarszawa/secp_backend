@@ -46,7 +46,7 @@ abstract class AbstractIORestriction
      *
      * @return string
      */
-    public function appendSuffix(string $key): string
+    public static function appendSuffix(string $key): string
     {
         return $key . static::SUFFIX;
     }

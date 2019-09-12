@@ -76,13 +76,14 @@ final class UserTimesheetDayNormalizer implements ContextAwareNormalizerInterfac
         $userTimesheetDayOwner = $userTimesheetDay
             ->getUserTimesheet()
             ->getOwner()
+            ->getUsername()
         ;
         $currentUser = $this
             ->tokenStorage
             ->getToken()
             ->getUser()
+            ->getUsername()
         ;
-
         if ($currentUser === $userTimesheetDayOwner) {
             return true;
         }

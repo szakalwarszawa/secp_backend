@@ -29,10 +29,10 @@ final class UserContextBuilder implements SerializerContextBuilderInterface
      */
     public function __construct(
         SerializerContextBuilderInterface $decorated,
-        GroupRestriction $groupRestrictions
+        GroupRestriction $groupRestriction
     ) {
         $this->decorated = $decorated;
-        $this->groupRestriction = $groupRestrictions;
+        $this->groupRestriction = $groupRestriction;
     }
 
     /**

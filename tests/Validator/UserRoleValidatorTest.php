@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Ldap\Updater;
+namespace App\Tests\Validator;
 
 use App\Tests\AbstractWebTestCase;
 use App\Validator\UserRole;

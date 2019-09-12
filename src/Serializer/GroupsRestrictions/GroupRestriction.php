@@ -25,6 +25,11 @@ final class GroupRestriction
     private $registeredRestrictions;
 
     /**
+     * @var string[]
+     */
+    public $initializedRestrictions;
+
+    /**
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(AuthorizationCheckerInterface $authorizationChecker)
@@ -64,6 +69,7 @@ final class GroupRestriction
                         && !in_array($condition['group_name'], $context->groups)
                     ) {
                         $context->groups[] = $condition['group_name'];
+                        $this->initializedRestrictions[] = $restriction;
                     }
                 }
             }

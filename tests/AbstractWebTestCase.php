@@ -3,6 +3,7 @@
 
 namespace App\Tests;
 
+use App\Entity\User;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -11,6 +12,12 @@ use Doctrine\ORM\Tools\ToolsException;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\AuthenticationEvents;
+use Symfony\Component\Security\Core\Event\AuthenticationEvent;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
+use Exception;
 
 abstract class AbstractWebTestCase extends WebTestCase
 {
@@ -47,6 +54,21 @@ abstract class AbstractWebTestCase extends WebTestCase
      * @var ReferenceRepository
      */
     protected $fixtures;
+
+    /**
+     * @var null|TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    /**
+     * @var null|Security
+     */
+    protected $security;
+
+    /**
+     * @var null|Request
+     */
+    protected $lastActionRequest;
 
     /**
      *
@@ -134,6 +156,8 @@ abstract class AbstractWebTestCase extends WebTestCase
             ],
             $payload
         );
+
+        $this->lastActionRequest = $client->getRequest();
 
         $this->assertJsonResponse($client->getResponse(), $expectedStatus);
 
@@ -237,5 +261,44 @@ abstract class AbstractWebTestCase extends WebTestCase
             false,
             sprintf('List not contains object with given value: [%s => %s]', $attributeName, $value)
         );
+    }
+
+    /**
+     * Set $this tokenStorage and Security.
+     *
+     * @param User $user
+     * @param array $roles
+     * @param string $providerKey
+     *
+     * @return void
+     */
+    protected function loginAsUser(User $user, array $roles = [], string $providerKey = 'secure_area'): void
+    {
+        if (!empty($roles)) {
+            $user->setRoles($roles);
+        }
+
+        $security = self::$container->get('security.helper');
+        $this->security = $security;
+
+        try {
+            $authenticationManager = self::$container->get('security.authentication.manager');
+            $token = new PostAuthenticationGuardToken($user, $providerKey, $roles);
+            $authenticatedToken = $authenticationManager->authenticate($token);
+            $tokenStorage = self::$container->get('security.token_storage');
+            $tokenStorage->setToken($authenticatedToken);
+            self::$container
+                ->get('event_dispatcher')
+                ->dispatch(
+                    new AuthenticationEvent($authenticatedToken),
+                    AuthenticationEvents::AUTHENTICATION_SUCCESS
+                );
+
+                $this->tokenStorage = $tokenStorage;
+        } catch (Exception $exception) {
+        }
+
+        $this->assertNotNull($this->security);
+        $this->assertNotNull($this->tokenStorage);
     }
 }
