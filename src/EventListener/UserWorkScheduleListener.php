@@ -75,7 +75,8 @@ class UserWorkScheduleListener
             );
         }
 
-        if ($args->hasChangedField('status') && $args->getNewValue('status') == UserWorkSchedule::STATUS_HR_ACCEPT) {
+        if ($args->hasChangedField('status') && $args->getNewValue('status')
+            === UserWorkSchedule::STATUS_HR_ACCEPT) {
             $idOwnerCurrent = $currentSchedule->getOwner()->getId();
             $idScheduleProfileCurrent = $currentSchedule->getWorkScheduleProfile()->getId();
 
@@ -90,12 +91,18 @@ class UserWorkScheduleListener
                 ->getQuery()
                 ->getResult();
 
+            $daysCurrentCompare = array();
+            $daysPreviousCompare = array();
+
             $previous = $previousWorkScheduleToDelete[0];
             $userWorkSchedulePrevious = $previous->getId();
+            $todayNumeric = date('Y-m-d');
 
             $daysCurrent = $currentSchedule->getUserWorkScheduleDays();
             foreach ($daysCurrent as $day) {
-                $daysCurrentCompare[]["id"] = $day->getDayDefinition()->getId();
+                if ($day->getDayDefinition()->getId() > strtotime($todayNumeric)) {
+                    $daysCurrentCompare[]["id"] = $day->getDayDefinition()->getId();
+                }
             }
 
             $daysPrevious = $previous->getUserWorkScheduleDays();
@@ -103,16 +110,18 @@ class UserWorkScheduleListener
                 $daysPreviousCompare[]["id"] = $day->getDayDefinition()->getId();
             }
 
-            $toDeleteDays = array_udiff($daysCurrentCompare, $daysPreviousCompare, array($this, 'compareScheduleDays'));
-var_dump($toDeleteDays);
-            foreach ($toDeleteDays as $d) {
-                $deleteQuery = $args->getEntityManager()->createQueryBuilder('p');
-                $deleteQuery->delete('App\Entity\UserWorkScheduleDay', 'p')
-                    ->where('p.dayDefinition = :delete')
-                    ->andWhere('p.userWorkSchedule = :previous')
-                    ->setParameter('delete', $d['id'])
-                    ->setParameter('previous', $userWorkSchedulePrevious);
-                $deleteQuery->getQuery()->execute();
+            $toDeleteDays = array_udiff($daysPreviousCompare, $daysCurrentCompare, array($this, 'compareScheduleDays'));
+
+            foreach ($toDeleteDays as $day) {
+                if (strtotime($day['id']) > strtotime($todayNumeric)) {
+                    $deleteQuery = $args->getEntityManager()->createQueryBuilder('p');
+                    $deleteQuery->delete('App\Entity\UserWorkScheduleDay', 'p')
+                        ->where('p.dayDefinition = :delete')
+                        ->andWhere('p.userWorkSchedule = :previous')
+                        ->setParameter('delete', $day['id'])
+                        ->setParameter('previous', $userWorkSchedulePrevious);
+                    $deleteQuery->getQuery()->execute();
+                }
             }
         }
     }

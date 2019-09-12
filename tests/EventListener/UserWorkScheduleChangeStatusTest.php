@@ -14,15 +14,6 @@ use Doctrine\ORM\ORMException;
 class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 {
     /**
-     *
-     */
-    private const TEST_FROM_DATE = '2019-05-01';
-    /**
-     *
-     */
-    private const TEST_TO_DATE = '2019-08-31';
-
-    /**
      * @var int|null
      */
     private $userWorkScheduleId1;
@@ -42,6 +33,10 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
     /**
      * @test
      * @throws \Exception
+     *                 9 10 11 12 13 14 16
+     *  3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+     *
+     * -> 13 14 15 (3 deleted)
      */
     public function deleteDaysFromPreviousWorkScheduleTest(): void
     {
@@ -83,12 +78,10 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId2));
 
         $expectedCount2 = count($userWorkScheduleUpdated2);
-
-      //  $this->assertEquals($expectedCount1, 0);
-    //    $this->assertEquals($expectedCount2, 31);
-
-        var_dump($this->userWorkScheduleCount2);
-        var_dump($this->userWorkScheduleCount1);
+        $this->assertEquals($this->userWorkScheduleCount1, 7);
+        $this->assertEquals($this->userWorkScheduleCount2, 17);
+        $this->assertEquals($expectedCount1, 4);
+        $this->assertEquals($expectedCount2, 17);
     }
 
     /**
@@ -108,8 +101,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $userWorkSchedule1->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus(0)
-            ->setFromDate(new \DateTime(self::TEST_FROM_DATE))
-            ->setToDate(new \DateTime(self::TEST_TO_DATE));
+            ->setFromDate(new \DateTime('2019-09-09'))
+            ->setToDate(new \DateTime('2019-09-15'));
 
         self::$container->get('doctrine')
             ->getManager()
@@ -119,8 +112,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $userWorkSchedule2->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus(0)
-            ->setFromDate(new \DateTime('2020-01-01'))
-            ->setToDate(new \DateTime('2020-01-01'));
+            ->setFromDate(new \DateTime('2020-09-03'))
+            ->setToDate(new \DateTime('2020-09-19'));
 
         self::$container->get('doctrine')
             ->getManager()
