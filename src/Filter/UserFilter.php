@@ -7,7 +7,6 @@ use App\Entity\Utils\UserAware;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\Mapping\ClassMetaData;
 use Doctrine\ORM\Query\Filter\SQLFilter;
-use InvalidArgumentException;
 use App\Filter\Query\AccessLevel;
 
 /**
@@ -47,7 +46,7 @@ class UserFilter extends SQLFilter
             return '';
         }
 
-        if (!($this->accessLevel)) {
+        if (!$this->accessLevel) {
             return '';
         }
 
@@ -73,12 +72,13 @@ class UserFilter extends SQLFilter
      *
      * @return UserFilter
      */
-    public function setAccessLevel(AccessLevel $accessLevel)
+    public function setAccessLevel(AccessLevel $accessLevel): UserFilter
     {
         $this->accessLevel = $accessLevel;
 
         return $this;
     }
+
     /**
      * @param Reader $reader
      *
