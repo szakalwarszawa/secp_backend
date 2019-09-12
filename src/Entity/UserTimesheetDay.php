@@ -207,7 +207,7 @@ class UserTimesheetDay
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AbsenceType")
-     * @Groups({"get", "post", "put"})
+     * @Groups({"hr:output", "current_user_is_owner", "post", "put"})
      */
     private $absenceType;
 
