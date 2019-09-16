@@ -32,7 +32,6 @@ final class Version20190826135609 extends AbstractMigration
             $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
             'Migration can only be executed safely on \'postgresql\'.'
         );
-        $this->addSql('CREATE SCHEMA logs');
         $this->addSql('CREATE SEQUENCE "logs"."user_timesheet_day_logs_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE "logs"."user_timesheet_day_logs" (id INT NOT NULL, user_timesheet_day_id integer, 
         owner_id INT NOT NULL, log_date VARCHAR(10) NOT NULL, notice TEXT NOT NULL, PRIMARY KEY(id))');
