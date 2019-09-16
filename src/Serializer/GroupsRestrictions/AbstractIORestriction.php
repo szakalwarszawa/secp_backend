@@ -6,6 +6,8 @@ namespace App\Serializer\GroupsRestrictions;
 
 /**
  * Abstract class AbstractIORestriction
+ *
+ * @see https://api-platform.com/docs/core/serialization/#changing-the-serialization-context-dynamically
  */
 abstract class AbstractIORestriction
 {

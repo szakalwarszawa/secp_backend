@@ -32,6 +32,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ApiResource(
  *      itemOperations={
+ *          "put-allowed-for-owner-and-role-hr"={
+ *              "method"="PUT",
+ *              "access_control"="object.getUserTimesheet().getOwner() == user or is_granted('ROLE_HR')"
+ *          },
  *          "get"={
  *              "normalization_context"={
  *                  "groups"={
@@ -207,7 +211,7 @@ class UserTimesheetDay
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AbsenceType")
-     * @Groups({"hr:output", "current_user_is_owner", "post", "put"})
+     * @Groups({"hr:output", "current_user_is_owner", "put-allowed-for-owner-and-role-hr", "post"})
      */
     private $absenceType;
 
