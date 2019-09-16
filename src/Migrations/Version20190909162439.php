@@ -33,7 +33,6 @@ final class Version20190909162439 extends AbstractMigration
             'Migration can only be executed safely on \'postgresql\'.'
         );
         $this->addSql('CREATE SEQUENCE "logs"."user_timesheet_logs_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SCHEMA logs');
         $this->addSql(
             <<<SQL
         CREATE TABLE "logs"."user_timesheet_logs" (id INT NOT NULL, user_timesheet_id integer NOT NULL,
