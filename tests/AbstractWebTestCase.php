@@ -25,6 +25,8 @@ abstract class AbstractWebTestCase extends WebTestCase
     public const CONTENT_TYPE_XML = 'application/xml';
 
     public const REF_ADMIN = 'user_admin';
+    public const REF_USER = 'user_user';
+    public const REF_MANAGER = 'user_manager';
 
     /**
      * @var ReferenceRepository
