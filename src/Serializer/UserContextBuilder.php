@@ -6,8 +6,8 @@ namespace App\Serializer;
 
 use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use App\Entity\User;
+use App\Serializer\GroupsRestrictions\GroupRestriction;
+use stdClass;
 
 /**
  * Class UserContextBuilder
@@ -20,19 +20,24 @@ final class UserContextBuilder implements SerializerContextBuilderInterface
     private $decorated;
 
     /**
-     * @var AuthorizationCheckerInterface
+     * @var stdClass
      */
-    private $authorizationChecker;
+    private $context = [];
+
+    /**
+     * @var GroupRestriction
+     */
+    private $groupRestriction;
 
     /**
      * {@inheritdoc}
      */
     public function __construct(
         SerializerContextBuilderInterface $decorated,
-        AuthorizationCheckerInterface $authorizationChecker
+        GroupRestriction $groupRestriction
     ) {
         $this->decorated = $decorated;
-        $this->authorizationChecker = $authorizationChecker;
+        $this->groupRestriction = $groupRestriction;
     }
 
     /**
@@ -40,17 +45,18 @@ final class UserContextBuilder implements SerializerContextBuilderInterface
      */
     public function createFromRequest(Request $request, bool $normalization, ?array $extractedAttributes = null): array
     {
-        $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
-        $resourceClass = $context['resource_class'] ?? null;
 
-        if ($resourceClass === User::class && isset($context['groups'])
-            && ($this->authorizationChecker->isGranted('ROLE_ADMIN')
-                || $this->authorizationChecker->isGranted('ROLE_SUPERVISOR'))
-            && false === $normalization
-            ) {
-            $context['groups'][] = 'admin-supervisor:input';
-        }
+        $this->context = (object) $this
+            ->decorated
+            ->createFromRequest($request, $normalization, $extractedAttributes)
+        ;
 
-        return $context;
+
+        $this
+            ->groupRestriction
+            ->addIOGroupRestrictions($this->context, $normalization)
+        ;
+
+        return (array) $this->context;
     }
 }

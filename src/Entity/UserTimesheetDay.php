@@ -53,7 +53,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                      "put"
  *                  }
  *              }
- *          },
+ *          }
  *      },
  *      collectionOperations={
  *          "get"={
@@ -208,7 +208,7 @@ class UserTimesheetDay
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AbsenceType")
-     * @Groups({"get", "post", "put"})
+     * @Groups({"hr:output", "current_user_is_owner", "put", "post"})
      */
     private $absenceType;
 
