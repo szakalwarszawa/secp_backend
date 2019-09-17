@@ -294,7 +294,7 @@ abstract class AbstractWebTestCase extends WebTestCase
                     AuthenticationEvents::AUTHENTICATION_SUCCESS
                 );
 
-                $this->tokenStorage = $tokenStorage;
+            $this->tokenStorage = $tokenStorage;
         } catch (Exception $exception) {
         }
 

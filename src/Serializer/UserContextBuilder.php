@@ -25,6 +25,11 @@ final class UserContextBuilder implements SerializerContextBuilderInterface
     private $context = [];
 
     /**
+     * @var GroupRestriction
+     */
+    private $groupRestriction;
+
+    /**
      * {@inheritdoc}
      */
     public function __construct(

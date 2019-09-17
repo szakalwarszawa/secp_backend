@@ -33,7 +33,7 @@ class UserContextBuilderTest extends AbstractWebTestCase
 
         $this->assertTrue($this->security->isGranted('ROLE_HR'));
 
-       $response = $this->getActionResponse(
+        $response = $this->getActionResponse(
             self::HTTP_GET,
             '/api/user_timesheet_days',
             null,
@@ -88,7 +88,7 @@ class UserContextBuilderTest extends AbstractWebTestCase
         foreach ($elements as $element) {
             /**
              * At this moment user has ROLE_DEPARTMENT, so able to see users from his
-             * department BUT should not to see thier absence reasons.
+             * department BUT should not to see their absence reasons.
              *
              * Ofc User can see OWN absence reason all the time.
              */
