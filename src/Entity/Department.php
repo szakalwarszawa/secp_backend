@@ -61,7 +61,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      normalizationContext={
  *          "groups"={
  *              "get",
- *              "get-department-with-users",
  *              "get-department-with-sections",
  *              "get-department-with-managers"
  *          }
