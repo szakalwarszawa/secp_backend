@@ -102,6 +102,31 @@ class UserWorkScheduleDay
     private $dayDefinition;
 
     /**
+     * @ORM\Column(
+     *     type="boolean",
+     *     options={"default"=true}
+     * )
+     * @Groups({"get"})
+     */
+    private $visibility;
+
+    /**
+     * @return mixed
+     */
+    public function getVisibility()
+    {
+        return $this->visibility;
+    }
+
+    /**
+     * @param mixed $visibility
+     */
+    public function setVisibility($visibility): void
+    {
+        $this->visibility = $visibility;
+    }
+
+    /**
      * @ORM\Column(type="boolean", nullable=false)
      * @Assert\NotNull()
      * @Groups({"get"})

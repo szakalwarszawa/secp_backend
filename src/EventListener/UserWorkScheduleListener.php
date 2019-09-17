@@ -114,12 +114,15 @@ class UserWorkScheduleListener
 
             foreach ($toDeleteDays as $day) {
                 if (strtotime($day['id']) > strtotime($todayNumeric)) {
+                    $val = false;
                     $deleteQuery = $args->getEntityManager()->createQueryBuilder('p');
-                    $deleteQuery->delete('App\Entity\UserWorkScheduleDay', 'p')
+                    $deleteQuery->update('App\Entity\UserWorkScheduleDay', 'p')
+                        ->set('p.visibility', ':visibility')
                         ->where('p.dayDefinition = :delete')
                         ->andWhere('p.userWorkSchedule = :previous')
                         ->setParameter('delete', $day['id'])
-                        ->setParameter('previous', $userWorkSchedulePrevious);
+                        ->setParameter('previous', $userWorkSchedulePrevious)
+                        ->setParameter('visibility',$val);
                     $deleteQuery->getQuery()->execute();
                 }
             }
@@ -233,7 +236,8 @@ class UserWorkScheduleListener
             ->setDayStartTimeFrom($userWorkScheduleProfile->getDayStartTimeFrom())
             ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
             ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
-            ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo());
+            ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo())
+            ->setVisibility(true);
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $entityManager->persist($userWorkScheduleDay);

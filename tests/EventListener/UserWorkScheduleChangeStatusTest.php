@@ -10,48 +10,119 @@ use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\Validator\Constraints\Date;
 
+/**
+ * Class UserWorkScheduleChangeStatusTest
+ * @package App\Tests\EventSubscriber
+ */
 class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 {
     /**
-     * @var int|null
+     * @test
+     * @throws \Exception
+     *
+     *       15 16 17 18 19 20 21
+     * 13 14 15 16 17 18
+     * -> 18 19 20 21 (4 changed)
      */
-    private $userWorkScheduleId1;
     /**
      * @var int|null
      */
-    private $userWorkScheduleId2;
+    private $previousScheduleId;
+
+    /**
+     * @var int|null
+     */
+    private $currentScheduleId;
+
     /**
      * @var int
      */
-    private $userWorkScheduleCount1;
+    private $previousWorkScheduleCount;
+
     /**
      * @var int
      */
-    private $userWorkScheduleCount2;
+    private $currentWorkScheduleCount;
+
+    /**
+     * @var int
+     */
+    const NO_CHANGES = 0;
+
+    /**
+     * @var int
+     */
+    const CHANGED_DAYS = 2;
+
+    /**
+     * @var int
+     */
+    const CURRENT_SCHEDULE_DAYS = 6;
+
+    /**
+     * @var int
+     */
+    const PREVIOUS_SCHEDULE_DAYS = 6;
+
+    /**
+     * @var Date
+     */
+    const START_FROM = '2019-09-14';
+
+    /**
+     * @var Date
+     */
+    const START_TO = '2019-09-19';
+
+    /**
+     * @var Date
+     */
+    const END_FROM = '2020-09-16';
+
+    /**
+     * @var Date
+     */
+    const END_TO = '2020-09-21';
+
+    /**
+     * @var int
+     */
+    const STATUS_HR_ACCEPT = 3;
 
     /**
      * @test
      * @throws \Exception
      *
-     * 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-     *             9 10 11 12 13 14 15
-     * -> 13 14 15 16 17 18 19 (7 deleted)
+     * 14 15 16 17 18 19
+     *       16 17 18 19 20 21
+     * -> 18 19 (2 changed)
+     *
+     * possibile also scenarios:
+     *
+     *       15 16 17 18 19 20 21
+     * 13 14 15 16 17 18
+     * -> 18 19 20 21 (4 changed)
+     *
+     *      17 18 19 20 21 22
+     * 17 18 19 20 21 22
+     * -> 18 19 20 21 22 (5 changed)
      */
-    public function deleteDaysFromPreviousWorkScheduleTest(): void
+    public function markAsDeletedFromPreviousWorkScheduleTest(): void
     {
         $userWorkScheduleUpdated = self::$container->get('doctrine')
             ->getManager()
             ->getRepository(UserWorkSchedule::class)
-            ->find($this->userWorkScheduleId1);
+            ->find($this->previousScheduleId);
 
-        $userWorkScheduleUpdated2 = self::$container->get('doctrine')
+        $currentUpdated = self::$container->get('doctrine')
             ->getManager()
             ->getRepository(UserWorkSchedule::class)
-            ->find($this->userWorkScheduleId2);
+            ->find($this->currentScheduleId);
 
-        $userWorkScheduleUpdated->setStatus(3);
-        $userWorkScheduleUpdated2->setStatus(3);
+        $userWorkScheduleUpdated->setStatus(UserWorkScheduleChangeStatusTest::STATUS_HR_ACCEPT);
+        $currentUpdated->setStatus(UserWorkScheduleChangeStatusTest::STATUS_HR_ACCEPT);
 
         self::$container->get('doctrine')
             ->getManager()
@@ -59,29 +130,30 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
         self::$container->get('doctrine')
             ->getManager()
-            ->persist($userWorkScheduleUpdated2);
+            ->persist($currentUpdated);
 
         self::$container->get('doctrine')
             ->getManager()
             ->flush();
 
-        $userWorkScheduleUpdated1 = self::$container->get('doctrine')
+        $previousUpdated = self::$container->get('doctrine')
             ->getManager()
             ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId1));
+            ->findBy(array("userWorkSchedule" => $this->previousScheduleId, "visibility" => false));
 
-        $expectedCount1 = count($userWorkScheduleUpdated1);
+        $previousScheduleAffectedDays = count($previousUpdated);
 
-        $userWorkScheduleUpdated2 = self::$container->get('doctrine')
+        $currentUpdated = self::$container->get('doctrine')
             ->getManager()
             ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId2));
+            ->findBy(array("userWorkSchedule" => $this->currentScheduleId, "visibility" => false));
 
-        $expectedCount2 = count($userWorkScheduleUpdated2);
-        $this->assertEquals($this->userWorkScheduleCount1, 17);
-        $this->assertEquals($this->userWorkScheduleCount2, 7);
-        $this->assertEquals($expectedCount1, 10);
-        $this->assertEquals($expectedCount2, 7);
+        $currentScheduleAffectedDays = count($currentUpdated);
+
+        $this->assertEquals($this->previousWorkScheduleCount,UserWorkScheduleChangeStatusTest::CURRENT_SCHEDULE_DAYS);
+        $this->assertEquals($this->currentWorkScheduleCount,UserWorkScheduleChangeStatusTest::PREVIOUS_SCHEDULE_DAYS);
+        $this->assertEquals($previousScheduleAffectedDays,UserWorkScheduleChangeStatusTest::CHANGED_DAYS);
+        $this->assertEquals($currentScheduleAffectedDays,UserWorkScheduleChangeStatusTest::NO_CHANGES);
     }
 
     /**
@@ -97,47 +169,47 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $workScheduleProfile = $this->getEntityFromReference('work_schedule_profile_2');
         $this->assertInstanceOf(WorkScheduleProfile::class, $workScheduleProfile);
 
-        $userWorkSchedule1 = new UserWorkSchedule();
-        $userWorkSchedule1->setOwner($owner)
+        $previousSchedule = new UserWorkSchedule();
+        $previousSchedule->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus(0)
-            ->setFromDate(new \DateTime('2019-09-03'))
-            ->setToDate(new \DateTime('2019-09-19'));
+            ->setFromDate(new \DateTime(UserWorkScheduleChangeStatusTest::START_FROM))
+            ->setToDate(new \DateTime(UserWorkScheduleChangeStatusTest::START_TO));
 
         self::$container->get('doctrine')
             ->getManager()
-            ->persist($userWorkSchedule1);
+            ->persist($previousSchedule);
 
-        $userWorkSchedule2 = new UserWorkSchedule();
-        $userWorkSchedule2->setOwner($owner)
+        $currentSchedule = new UserWorkSchedule();
+        $currentSchedule->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus(0)
-            ->setFromDate(new \DateTime('2020-09-09'))
-            ->setToDate(new \DateTime('2020-09-15'));
+            ->setFromDate(new \DateTime('2020-09-16'))
+            ->setToDate(new \DateTime('2020-09-21'));
 
         self::$container->get('doctrine')
             ->getManager()
-            ->persist($userWorkSchedule2);
+            ->persist($currentSchedule);
 
         self::$container->get('doctrine')
             ->getManager()
             ->flush();
 
-        $this->userWorkScheduleId1 = $userWorkSchedule1->getId();
-        $this->userWorkScheduleId2 = $userWorkSchedule2->getId();
+        $this->previousScheduleId = $previousSchedule->getId();
+        $this->currentScheduleId = $currentSchedule->getId();
 
-        $userWorkScheduleUpdated2 = self::$container->get('doctrine')
+        $userWorkScheduleUpdatedPrevious = self::$container->get('doctrine')
             ->getManager()
             ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId1));
+            ->findBy(array("userWorkSchedule" => $this->previousScheduleId));
 
-        $this->userWorkScheduleCount1 = count($userWorkScheduleUpdated2);
+        $this->previousWorkScheduleCount = count($userWorkScheduleUpdatedPrevious);
 
-        $userWorkScheduleUpdated2 = self::$container->get('doctrine')
+        $userWorkScheduleUpdatedCurrent = self::$container->get('doctrine')
             ->getManager()
             ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $this->userWorkScheduleId2));
+            ->findBy(array("userWorkSchedule" => $this->currentScheduleId));
 
-        $this->userWorkScheduleCount2 = count($userWorkScheduleUpdated2);
+        $this->currentWorkScheduleCount = count($userWorkScheduleUpdatedCurrent);
     }
 }
