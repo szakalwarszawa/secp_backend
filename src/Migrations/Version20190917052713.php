@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190904084628 extends AbstractMigration
+final class Version20190917052713 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -35,10 +35,7 @@ final class Version20190904084628 extends AbstractMigration
             'Migration can only be executed safely on \'postgresql\'.'
         );
 
-        $this->addSql('ALTER TABLE logs.ldap_import_log ALTER result TYPE BYTEA USING (result::BYTEA)');
-        $this->addSql('ALTER TABLE logs.ldap_import_log ALTER result DROP DEFAULT');
-        $this->addSql('ALTER TABLE logs.ldap_import_log ALTER result SET NOT NULL');
-        $this->addSql('COMMENT ON COLUMN logs.ldap_import_log.result IS \'(DC2Type:byte_object)\'');
+        $this->addSql('ALTER TABLE logs.ldap_import_log RENAME COLUMN result TO import_result');
     }
 
     /**

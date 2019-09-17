@@ -26,7 +26,7 @@ class LdapImportLog
     /**
      * @ORM\Column(type="byte_object")
      */
-    protected $result;
+    protected $importResult;
 
     /**
      * @ORM\Column(type="datetime")
@@ -44,19 +44,19 @@ class LdapImportLog
     /**
      * @return string
      */
-    public function getResult(): string
+    public function getImportResult(): string
     {
-        return $this->result;
+        return $this->importResult;
     }
 
     /**
-     * @param string $result
+     * @param string $importResult
      *
      * @return LdapImportLog
      */
-    public function setResult(string $result): LdapImportLog
+    public function setImportResult(string $importResult): LdapImportLog
     {
-        $this->result = $result;
+        $this->importResult = $importResult;
 
         return $this;
     }

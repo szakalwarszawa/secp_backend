@@ -64,7 +64,7 @@ class LdapImportListener
     {
         $ldapImportLog = new LdapImportLog();
         $ldapImportLog
-            ->setResult(serialize($results))
+            ->setImportResult(serialize($results))
             ->setCreatedAt(new DateTime())
         ;
 
