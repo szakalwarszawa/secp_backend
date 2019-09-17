@@ -79,11 +79,6 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
     const END_TO = '2020-09-21';
 
     /**
-     * @var int
-     */
-    const STATUS_HR_ACCEPT = 3;
-
-    /**
      * @test
      * @throws \Exception
      *
@@ -113,8 +108,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             ->getRepository(UserWorkSchedule::class)
             ->find($this->currentScheduleId);
 
-        $userWorkScheduleUpdated->setStatus(UserWorkScheduleChangeStatusTest::STATUS_HR_ACCEPT);
-        $currentUpdated->setStatus(UserWorkScheduleChangeStatusTest::STATUS_HR_ACCEPT);
+        $userWorkScheduleUpdated->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
+        $currentUpdated->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
 
         self::$container->get('doctrine')
             ->getManager()
@@ -164,7 +159,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $previousSchedule = new UserWorkSchedule();
         $previousSchedule->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(0)
+            ->setStatus(UserWorkSchedule::STATUS_OWNER_EDIT)
             ->setFromDate(new \DateTime(UserWorkScheduleChangeStatusTest::START_FROM))
             ->setToDate(new \DateTime(UserWorkScheduleChangeStatusTest::START_TO));
 
@@ -175,9 +170,9 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $currentSchedule = new UserWorkSchedule();
         $currentSchedule->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(0)
-            ->setFromDate(new \DateTime('2020-09-16'))
-            ->setToDate(new \DateTime('2020-09-21'));
+            ->setStatus(UserWorkSchedule::STATUS_OWNER_EDIT)
+            ->setFromDate(new \DateTime(UserWorkScheduleChangeStatusTest::END_FROM))
+            ->setToDate(new \DateTime(UserWorkScheduleChangeStatusTest::END_TO));
 
         self::$container->get('doctrine')
             ->getManager()
