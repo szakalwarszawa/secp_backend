@@ -45,15 +45,15 @@ SQL
         (user_work_schedule_id)
 SQL
         );
-        $this->addSql('CREATE idx_user_work_schedule_log_owner_id ON "logs"."user_work_schedule_logs" (owner_id)');
+        $this->addSql('CREATE INDEX idx_user_work_schedule_log_owner_id ON "logs"."user_work_schedule_logs" (owner_id)');
         $this->addSql(
             <<<SQL
-        CREATE CREATE INDEX idx_user_work_schedule_log_date ON "logs"."user_work_schedule_logs" (log_date)
+        CREATE INDEX idx_user_work_schedule_log_date ON "logs"."user_work_schedule_logs" (log_date)
 SQL
         );
         $this->addSql(
             <<<SQL
-        CREATE CREATE INDEX idx_user_work_schedule_user_work_schedule_log_date ON "logs"."user_work_schedule_logs"
+        CREATE INDEX idx_user_work_schedule_user_work_schedule_log_date ON "logs"."user_work_schedule_logs"
         (user_work_schedule_id, log_date)
 SQL
         );
