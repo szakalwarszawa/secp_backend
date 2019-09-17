@@ -19,14 +19,6 @@ use Symfony\Component\Validator\Constraints\Date;
 class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 {
     /**
-     * @test
-     * @throws \Exception
-     *
-     *       15 16 17 18 19 20 21
-     * 13 14 15 16 17 18
-     * -> 18 19 20 21 (4 changed)
-     */
-    /**
      * @var int|null
      */
     private $previousScheduleId;
@@ -106,7 +98,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      * -> 18 19 20 21 (4 changed)
      *
      *      17 18 19 20 21 22
-     * 17 18 19 20 21 22
+     *      17 18 19 20 21 22
      * -> 18 19 20 21 22 (5 changed)
      */
     public function markAsDeletedFromPreviousWorkScheduleTest(): void

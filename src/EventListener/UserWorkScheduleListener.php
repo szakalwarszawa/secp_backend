@@ -122,7 +122,7 @@ class UserWorkScheduleListener
                         ->andWhere('p.userWorkSchedule = :previous')
                         ->setParameter('delete', $day['id'])
                         ->setParameter('previous', $userWorkSchedulePrevious)
-                        ->setParameter('visibility',$val);
+                        ->setParameter('visibility', $val);
                     $deleteQuery->getQuery()->execute();
                 }
             }
