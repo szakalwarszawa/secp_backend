@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
+use App\Entity\ImportLdapLog;
 use App\Ldap\Event\LdapImportedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Ldap\Import\Updater\Result\Collector;
 use InvalidArgumentException;
-use App\Entity\LdapImportLog;
 use DateTime;
 
 /**
@@ -62,16 +62,25 @@ class LdapImportListener
      */
     private function createLog(array $results): void
     {
-        $ldapImportLog = new LdapImportLog();
-        $ldapImportLog
-            ->setImportResult(serialize($results))
-            ->setCreatedAt(new DateTime())
-        ;
+        foreach ($results as $key => $resourceResult) {
+            $ldapImportLog = new ImportLdapLog();
+            $ldapImportLog
+                ->setResourceName($key)
+                ->setSucceedElements(
+                    json_encode($resourceResult->getSucceed(true))
+                )
+                ->setFailedElements(
+                    json_encode($resourceResult->getFailed(true))
+                )
+                ->setCreatedAt(new DateTime())
+            ;
 
-        $this
-            ->entityManager
-            ->persist($ldapImportLog)
-        ;
+            $this
+                ->entityManager
+                ->persist($ldapImportLog)
+            ;
+        }
+
         $this
             ->entityManager
             ->flush()

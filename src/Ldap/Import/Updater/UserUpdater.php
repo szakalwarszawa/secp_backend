@@ -94,6 +94,7 @@ final class UserUpdater extends AbstractUpdater
             $this->addResult(new Result(
                 LdapObject::class,
                 Types::FAIL,
+                $userData->get(UserAttributes::SAMACCOUNTNAME),
                 'LdapObject has no first name or last name',
                 Actions::IGNORE
             ));
@@ -141,6 +142,7 @@ final class UserUpdater extends AbstractUpdater
             $this->addResult(new Result(
                 Department::class,
                 Types::FAIL,
+                $userData->get(UserAttributes::SAMACCOUNTNAME),
                 sprintf('User`s %s department is null', $userData->get(UserAttributes::SAMACCOUNTNAME)),
                 Actions::IGNORE
             ));
@@ -181,6 +183,7 @@ final class UserUpdater extends AbstractUpdater
         $this->addResult(new Result(
             User::class,
             Types::SUCCESS,
+            $user->getUsername(),
             sprintf(
                 'User %s has been %s.',
                 $user->getUsername(),
