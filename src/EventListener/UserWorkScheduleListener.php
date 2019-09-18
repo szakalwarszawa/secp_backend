@@ -75,8 +75,9 @@ class UserWorkScheduleListener
             );
         }
 
-        if ($args->hasChangedField('status') && $args->getNewValue('status')
-            === UserWorkSchedule::STATUS_HR_ACCEPT) {
+        if ($args->hasChangedField('status')
+            && $args->getNewValue('status') === UserWorkSchedule::STATUS_HR_ACCEPT
+        ) {
             $idOwnerCurrent = $currentSchedule->getOwner()->getId();
             $idScheduleProfileCurrent = $currentSchedule->getWorkScheduleProfile()->getId();
 

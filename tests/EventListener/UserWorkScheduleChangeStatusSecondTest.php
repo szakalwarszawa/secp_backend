@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\Date;
  * Class UserWorkScheduleChangeStatusTest
  * @package App\Tests\EventSubscriber
  */
-class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
+class UserWorkScheduleChangeStatusSecondTest extends AbstractWebTestCase
 {
     /**
      * @var int|null
@@ -35,22 +35,22 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
     /**
      * @var Date
      */
-    const START_FROM = '2019-09-14';
+    const START_FROM = '2019-09-17';
 
     /**
      * @var Date
      */
-    const START_TO = '2019-09-28';
+    const START_TO = '2019-09-22';
 
     /**
      * @var Date
      */
-    const END_FROM = '2020-09-16';
+    const END_FROM = '2020-09-17';
 
     /**
      * @var Date
      */
-    const END_TO = '2020-09-21';
+    const END_TO = '2020-09-22';
 
     /**
      * @test
