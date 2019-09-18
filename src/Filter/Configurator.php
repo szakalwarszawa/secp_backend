@@ -32,6 +32,11 @@ class Configurator
     private $reader;
 
     /**
+     * @var Security
+     */
+    private $security;
+
+    /**
      * Configurator constructor.
      * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
