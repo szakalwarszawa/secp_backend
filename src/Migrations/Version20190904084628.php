@@ -34,7 +34,8 @@ final class Version20190904084628 extends AbstractMigration
             $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
             'Migration can only be executed safely on \'postgresql\'.'
         );
-
+        
+        $this->addSql('TRUNCATE logs.ldap_import_log');
         $this->addSql('ALTER TABLE logs.ldap_import_log ALTER result TYPE BYTEA USING (result::BYTEA)');
         $this->addSql('ALTER TABLE logs.ldap_import_log ALTER result DROP DEFAULT');
         $this->addSql('ALTER TABLE logs.ldap_import_log ALTER result SET NOT NULL');
