@@ -22,6 +22,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *     }
  * )
  * @ApiResource(
+ *      attributes={"access_control"="is_granted('ROLE_ADMIN')"},
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
