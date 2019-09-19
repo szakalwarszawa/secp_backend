@@ -228,14 +228,20 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"put", "post", "get-user-with-department", "Department-get_get-user-with-department"})
+     * @Groups({
+     *  "put",
+     *  "post",
+     *  "get-user-timesheet-day-with-user-timesheet",
+     *  "get-user-with-department",
+     *  "Department-get_get-user-with-department"
+     * })
      */
     private $department;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Section", inversedBy="users")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups({"put", "post", "get-user-with-section"})
+     * @Groups({"put", "post", "get-user-with-section", "get-user-timesheet-day-with-user-timesheet"})
      */
     private $section;
 

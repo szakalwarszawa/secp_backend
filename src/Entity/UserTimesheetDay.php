@@ -127,7 +127,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "absenceType.id": "exact",
  *          "dayStartTime": "exact",
  *          "dayEndTime": "exact",
- *          "workingTime": "exact"
+ *          "workingTime": "exact",
+ *          "userTimesheet.owner.department.id": "exact",
+ *          "userTimesheet.owner.section.id": "exact"
  *      }
  * )
  * @ApiFilter(
