@@ -4,6 +4,7 @@
 namespace App\Tests\Api;
 
 use App\DataFixtures\UserFixtures;
+use App\DataFixtures\UserWorkScheduleFixtures;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
 use App\Entity\WorkScheduleProfile;
@@ -161,7 +162,7 @@ JSON;
      */
     public function apiPutUserWorkSchedule(): void
     {
-        $userWorkScheduleREF = $this->fixtures->getReference(UserFixtures::REF_USER_MANAGER);
+        $userWorkScheduleREF = $this->fixtures->getReference(UserWorkScheduleFixtures::REF_USER_WOaRK_SCHEDULE_MANAGER_HR);
         /* @var $userWorkScheduleREF UserWorkSchedule */
 
         $newStatus = UserWorkSchedule::STATUS_MANAGER_ACCEPT;
