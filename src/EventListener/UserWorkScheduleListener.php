@@ -89,7 +89,7 @@ class UserWorkScheduleListener
                 ->andWhere('p.toDate > :date')
                 ->addOrderBy('p.id', 'asc')
                 ->setParameter('owner', $currentOwnerId)
-                ->setParameter('date',  $todayNumeric)
+                ->setParameter('date', $todayNumeric)
                 ->setParameter('status', UserWorkSchedule::STATUS_HR_ACCEPT)
                 ->getQuery()
                 ->getResult();
@@ -112,9 +112,9 @@ class UserWorkScheduleListener
                 $previousScheduleDays[]["id"] = $day->getDayDefinition()->getId();
             }
 
-            $toDeleteDays = array_udiff($previousScheduleDays, $currentScheduleDays, array($this, 'compareScheduleDays'));
+            $diffDays = array_udiff($previousScheduleDays, $currentScheduleDays, array($this, 'compareScheduleDays'));
 
-            foreach ($toDeleteDays as $day) {
+            foreach ($diffDays as $day) {
                 if (strtotime($day['id']) > strtotime($todayNumeric)) {
                     $update = $args->getEntityManager()->createQueryBuilder('p');
                     $update->update(UserWorkScheduleDay::class, 'p')
