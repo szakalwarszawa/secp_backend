@@ -32,7 +32,10 @@ final class Version20190918105733 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
+            'Migration can only be executed safely on \'postgresql\'.'
+        );
 
         $this->addSql('DROP SEQUENCE logs.ldap_import_log_id_seq CASCADE');
         $this->addSql('DROP TABLE logs.ldap_import_log');

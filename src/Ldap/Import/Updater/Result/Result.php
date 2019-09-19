@@ -54,8 +54,13 @@ class Result
      * @param null|string $message
      * @param null|string $action
      */
-    public function __construct(string $className, string $type, string $target, ?string $message = null, ?string $action = null)
-    {
+    public function __construct(
+        string $className,
+        string $type,
+        string $target,
+        ?string $message = null,
+        ?string $action = null
+    ) {
         ConstantsUtil::constCheckValue($action, Actions::class);
         ConstantsUtil::constCheckValue($type, Types::class);
 
