@@ -72,22 +72,12 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      */
     public function markAsDeletedFromPreviousWorkScheduleTest(): void
     {
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($this->previousScheduleId);
-
         $currentUpdated = self::$container->get('doctrine')
             ->getManager()
             ->getRepository(UserWorkSchedule::class)
             ->find($this->currentScheduleId);
 
-        $userWorkScheduleUpdated->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
         $currentUpdated->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($userWorkScheduleUpdated);
 
         self::$container->get('doctrine')
             ->getManager()
@@ -135,7 +125,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $previousSchedule = new UserWorkSchedule();
         $previousSchedule->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_OWNER_EDIT)
+            ->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT)
             ->setFromDate(new \DateTime(UserWorkScheduleChangeStatusTest::START_FROM))
             ->setToDate(new \DateTime(UserWorkScheduleChangeStatusTest::START_TO));
 

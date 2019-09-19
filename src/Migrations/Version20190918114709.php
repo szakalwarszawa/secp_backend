@@ -29,8 +29,6 @@ final class Version20190918114709 extends AbstractMigration
      */
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf(true, 'Migration can only be executed safely on \'postgresql\'.');
         $this->addSql('ALTER TABLE user_work_schedule_days ADD visibility BOOLEAN DEFAULT TRUE NOT NULL');
     }
 

@@ -111,7 +111,7 @@ class UserWorkScheduleDay
     private $visibility;
 
     /**
-     * @return mixed
+     * @return bool|int
      */
     public function getVisibility()
     {
@@ -119,11 +119,14 @@ class UserWorkScheduleDay
     }
 
     /**
-     * @param mixed $visibility
+     * @param bool $visibility
+     * @return UserWorkScheduleDay
      */
-    public function setVisibility($visibility): void
+    public function setVisibility(bool $visibility): UserWorkScheduleDay
     {
         $this->visibility = $visibility;
+
+        return $this;
     }
 
     /**
