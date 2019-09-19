@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(
+ *     schema="dictionary",
  *     name="`property_based_roles`",
  *     indexes={
  *          @ORM\Index(name="idx_property_based_roles_ldap_value", columns={"ldap_value"}),

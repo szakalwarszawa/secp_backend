@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(
+ *     schema="dictionary",
  *     name="`work_schedule_profiles`",
  *     indexes={
  *          @ORM\Index(name="idx_work_schedule_profiles_name", columns={"name"})
