@@ -25,9 +25,12 @@ class Collector extends ArrayCollection
             return $this->getByType(Types::SUCCESS);
         }
 
-        return array_map(function ($element) {
-            return '[' . $element->getAction() . '] ' . $element->getTarget();
-        }, $this->getByType(Types::SUCCESS));
+        return array_map(
+            function ($element) {
+                return '[' . $element->getAction() . '] ' . $element->getTarget();
+            }, 
+            $this->getByType(Types::SUCCESS)
+        );
     }
 
     /**
@@ -45,9 +48,12 @@ class Collector extends ArrayCollection
             return $this->getByType(Types::FAIL);
         }
 
-        return array_map(function ($element) {
-            return $element->getTarget();
-        }, $this->getByType(Types::FAIL));
+        return array_map(
+            function ($element) {
+                return $element->getTarget();
+            }, 
+            $this->getByType(Types::FAIL)
+        );
     }
 
     /**
