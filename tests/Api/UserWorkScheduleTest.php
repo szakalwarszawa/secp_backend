@@ -162,7 +162,7 @@ JSON;
      */
     public function apiPutUserWorkSchedule(): void
     {
-        $userWorkScheduleREF = $this->fixtures->getReference(UserWorkScheduleFixtures::REF_USER_WOaRK_SCHEDULE_MANAGER_HR);
+        $userWorkScheduleREF = $this->fixtures->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_MANAGER_HR);
         /* @var $userWorkScheduleREF UserWorkSchedule */
 
         $newStatus = UserWorkSchedule::STATUS_MANAGER_ACCEPT;
