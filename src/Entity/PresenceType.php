@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(
+ *     schema="dictionary",
  *     name="`presence_types`",
  *     indexes={
  *          @ORM\Index(name="idx_presence_types_short_name", columns={"short_name"}),
