@@ -29,6 +29,7 @@ class CollectorTest extends AbstractWebTestCase
         $resultDepartamentThatBeenCreated1 = new Result(
             Department::class,
             Types::SUCCESS,
+            '',
             $message1,
             $departmentExists? Actions::UPDATE : Actions::CREATE
         );
@@ -36,6 +37,7 @@ class CollectorTest extends AbstractWebTestCase
         $resultUserThatBeenNotCreated = new Result(
             LdapObject::class,
             Types::FAIL,
+            '',
             sprintf('User`s %s has no first name', 'janusz_tracz'),
             Actions::IGNORE
         );
