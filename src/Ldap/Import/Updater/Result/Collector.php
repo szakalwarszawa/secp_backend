@@ -28,7 +28,7 @@ class Collector extends ArrayCollection
         return array_map(
             function ($element) {
                 return '[' . $element->getAction() . '] ' . $element->getTarget();
-            }, 
+            },
             $this->getByType(Types::SUCCESS)
         );
     }
@@ -51,7 +51,7 @@ class Collector extends ArrayCollection
         return array_map(
             function ($element) {
                 return $element->getTarget();
-            }, 
+            },
             $this->getByType(Types::FAIL)
         );
     }
