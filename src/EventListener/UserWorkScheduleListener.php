@@ -98,35 +98,38 @@ class UserWorkScheduleListener
             $previousScheduleDays = array();
 
             $previous = current($previousWorkSchedule);
-            $previousUserWorkScheduleId = $previous->getId();
 
-            $daysCurrent = $currentSchedule->getUserWorkScheduleDays();
-            foreach ($daysCurrent as $day) {
-                if ($day->getDayDefinition()->getId() > strtotime($todayNumeric)) {
-                    $currentScheduleDays[]["id"] = $day->getDayDefinition()->getId();
+            if ($previous instanceof UserWorkSchedule) {
+                $previousUserWorkScheduleId = $previous->getId();
+
+                $daysCurrent = $currentSchedule->getUserWorkScheduleDays();
+                foreach ($daysCurrent as $day) {
+                    if ($day->getDayDefinition()->getId() > strtotime($todayNumeric)) {
+                        $currentScheduleDays[]["id"] = $day->getDayDefinition()->getId();
+                    }
                 }
-            }
 
-            $daysPrevious = $previous->getUserWorkScheduleDays();
-            foreach ($daysPrevious as $day) {
-                $previousScheduleDays[]["id"] = $day->getDayDefinition()->getId();
-            }
+                $daysPrevious = $previous->getUserWorkScheduleDays();
+                foreach ($daysPrevious as $day) {
+                    $previousScheduleDays[]["id"] = $day->getDayDefinition()->getId();
+                }
 
-            $diffDays = array_udiff($previousScheduleDays, $currentScheduleDays, array($this, 'compareScheduleDays'));
+                $diff = array_udiff($previousScheduleDays, $currentScheduleDays, array($this, 'compareScheduleDays'));
 
-            foreach ($diffDays as $day) {
-                if (strtotime($day['id']) > strtotime($todayNumeric)) {
-                    $update = $args->getEntityManager()->createQueryBuilder('p');
-                    $update->update(UserWorkScheduleDay::class, 'p')
-                        ->set('p.visibility', ':visibility')
-                        ->setParameter('visibility', false)
-                        ->where('p.dayDefinition = :toUpdate')
-                        ->setParameter('toUpdate', $day['id'])
-                        ->andWhere('p.visibility = :previousVisible')
-                        ->setParameter('previousVisible', true)
-                        ->andWhere('p.userWorkSchedule = :previousWorkSchedule')
-                        ->setParameter('previousWorkSchedule', $previousUserWorkScheduleId);
-                    $update->getQuery()->execute();
+                foreach ($diff as $day) {
+                    if (strtotime($day['id']) > strtotime($todayNumeric)) {
+                        $update = $args->getEntityManager()->createQueryBuilder('p');
+                        $update->update(UserWorkScheduleDay::class, 'p')
+                            ->set('p.visibility', ':visibility')
+                            ->setParameter('visibility', false)
+                            ->where('p.dayDefinition = :toUpdate')
+                            ->setParameter('toUpdate', $day['id'])
+                            ->andWhere('p.visibility = :previousVisible')
+                            ->setParameter('previousVisible', true)
+                            ->andWhere('p.userWorkSchedule = :previousWorkSchedule')
+                            ->setParameter('previousWorkSchedule', $previousUserWorkScheduleId);
+                        $update->getQuery()->execute();
+                    }
                 }
             }
         }
