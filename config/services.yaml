@@ -77,7 +77,12 @@ services:
             - { name: kernel.event_listener, event: ldap.imported }
 
     App\Filter\Configurator:
-        autowire: true
+        autowire: false
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $tokenStorage: '@security.token_storage'
+            $security: '@security.helper'
+            $reader: '@annotations.reader'
         tags:
             - { name: kernel.event_listener, event: kernel.request }
 

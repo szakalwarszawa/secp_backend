@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\UserRole;
+use App\Entity\Utils\UserAware;
 
 /**
  * @ORM\Table(
@@ -30,6 +31,9 @@ use App\Validator\UserRole;
  *          @ORM\Index(name="idx_users_section_id", columns={"section_id"}),
  *          @ORM\Index(name="idx_users_default_work_schedule_profile_id", columns={"default_work_schedule_profile_id"})
  *     }
+ * )
+ * @UserAware(
+ *     userFieldName="id"
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()

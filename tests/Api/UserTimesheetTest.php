@@ -189,7 +189,7 @@ JSON;
             $payload,
             [],
             200,
-            UserFixtures::REF_USER_MANAGER
+            UserFixtures::REF_USER_USER
         );
 
         $userJSON = json_decode($response->getContent(), false);
