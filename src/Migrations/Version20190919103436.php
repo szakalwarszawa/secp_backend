@@ -83,7 +83,7 @@ CREATE TABLE "dictionary"."day_definitions" (
     PRIMARY KEY(id)
     )
 SQL
-    );
+        );
         $this->addSql('CREATE INDEX idx_day_definitions_working_day ON "dictionary"."day_definitions" (working_day)');
         $this->addSql(
             'CREATE INDEX idx_day_definitions_date_working_day ON "dictionary"."day_definitions" (id, working_day)'
@@ -99,7 +99,7 @@ CREATE TABLE "logs"."day_definition_logs" (
     PRIMARY KEY(id)
     )
 SQL
-    );
+        );
         $this->addSql('CREATE INDEX IDX_BD1EF8D081F0C051 ON "logs"."day_definition_logs" (day_definition_id)');
         $this->addSql('CREATE INDEX IDX_BD1EF8D07E3C61F9 ON "logs"."day_definition_logs" (owner_id)');
         $this->addSql('CREATE INDEX idx_day_definitions_log_date ON "logs"."day_definition_logs" (log_date)');
@@ -107,7 +107,7 @@ SQL
             <<<SQL
 CREATE INDEX idx_day_definitions_day_definition_log_date ON "logs"."day_definition_logs" (day_definition_id, log_date)
 SQL
-    );
+        );
         $this->addSql(
             <<<SQL
 CREATE TABLE "dictionary"."absence_types" (
@@ -118,7 +118,7 @@ CREATE TABLE "dictionary"."absence_types" (
     PRIMARY KEY(id)
     )
 SQL
-    );
+        );
         $this->addSql('CREATE INDEX idx_absence_types_short_name ON "dictionary"."absence_types" (short_name)');
         $this->addSql('CREATE INDEX idx_absence_types_name ON "dictionary"."absence_types" (active, name)');
         $this->addSql('CREATE INDEX idx_absence_types_active ON "dictionary"."absence_types" (active)');
@@ -137,7 +137,7 @@ CREATE TABLE "dictionary"."presence_types" (
     PRIMARY KEY(id)
     )
 SQL
-    );
+        );
         $this->addSql('CREATE INDEX idx_presence_types_short_name ON "dictionary"."presence_types" (short_name)');
         $this->addSql('CREATE INDEX idx_presence_types_name ON "dictionary"."presence_types" (active, name)');
         $this->addSql('CREATE INDEX idx_presence_types_active ON "dictionary"."presence_types" (active)');
@@ -155,7 +155,7 @@ CREATE TABLE "dictionary"."work_schedule_profiles" (
     PRIMARY KEY(id)
     )
 SQL
-    );
+        );
         $this->addSql('CREATE INDEX idx_work_schedule_profiles_name ON "dictionary"."work_schedule_profiles" (name)');
         $this->addSql(
             <<<SQL
@@ -163,21 +163,21 @@ ALTER TABLE "dictionary"."property_based_roles" ADD CONSTRAINT FK_21720AC6D60322
 FOREIGN KEY (role_id)
 REFERENCES "dictionary"."roles" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
 SQL
-    );
+        );
         $this->addSql(
             <<<SQL
 ALTER TABLE "logs"."day_definition_logs" ADD CONSTRAINT FK_BD1EF8D081F0C051
 FOREIGN KEY (day_definition_id)
 REFERENCES "dictionary"."day_definitions" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
 SQL
-    );
+        );
         $this->addSql(
             <<<SQL
 ALTER TABLE "logs"."day_definition_logs" ADD CONSTRAINT FK_BD1EF8D07E3C61F9
 FOREIGN KEY (owner_id)
 REFERENCES "users" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
 SQL
-    );
+        );
         $this->addSql('DROP TABLE day_definition_logs');
         $this->addSql('DROP TABLE day_definitions');
         $this->addSql('DROP TABLE work_schedule_profiles');
