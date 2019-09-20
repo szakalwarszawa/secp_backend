@@ -67,7 +67,6 @@ class UserTimesheetDayLog
     private $owner;
 
     /**
-     *
      * @var DateTimeInterface
      *
      * @ORM\Column(type="datetime")
@@ -131,19 +130,19 @@ class UserTimesheetDayLog
     }
 
     /**
-     * @return \DateTime
+     * @return DateTimeInterface
      */
-    public function getLogDate(): ?\DateTime
+    public function getLogDate(): DateTimeInterface
     {
         return $this->logDate;
     }
 
     /**
-     * @param \DateTime $logDate
+     * @param DateTimeInterface $logDate
      *
      * @return UserTimesheetDayLog
      */
-    public function setLogDate(\DateTime $logDate): self
+    public function setLogDate(DateTimeInterface $logDate): self
     {
         $this->logDate = $logDate;
 

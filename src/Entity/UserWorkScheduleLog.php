@@ -88,7 +88,6 @@ class UserWorkScheduleLog
     private $owner;
 
     /**
-     *
      * @var DateTimeInterface
      *
      * @ORM\Column(type="datetime")
@@ -132,18 +131,19 @@ class UserWorkScheduleLog
     }
 
     /**
-     * @return \DateTime
+     * @return DateTimeInterface
      */
-    public function getLogDate(): ?\DateTime
+    public function getLogDate(): DateTimeInterface
     {
         return $this->logDate;
     }
 
     /**
-     * @param \DateTime $logDate
+     * @param DateTimeInterface $logDate
+     *
      * @return UserWorkScheduleLog
      */
-    public function setLogDate(\DateTime $logDate): self
+    public function setLogDate(DateTimeInterface $logDate): self
     {
         $this->logDate = $logDate;
 
