@@ -84,7 +84,7 @@ class DayDefinitionLoggerListener
     {
         $log = new DayDefinitionLog();
         $log->setDayDefinition($entity);
-        $log->setLogDate(date('Y-m-d H:i:s'));
+        $log->setLogDate(new \DateTime());
         $log->setOwner($this->getCurrentUser($args->getEntityManager()));
         $log->setNotice($notice);
 
