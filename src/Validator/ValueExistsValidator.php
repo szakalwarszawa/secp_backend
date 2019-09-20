@@ -65,8 +65,8 @@ class ValueExistsValidator extends ConstraintValidator
     }
 
     /**
-     * Validate persisted user roles.
-     * Every role added to user must be in roles dictionary (Role::class).
+     * Validate persisted value.
+     * Value must be present in entity class defined in constraint property.
      *
      * @param mixed $incomingValue
      * @param Constraint $constraint

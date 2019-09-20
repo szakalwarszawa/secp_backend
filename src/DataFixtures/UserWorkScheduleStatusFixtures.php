@@ -7,6 +7,7 @@ namespace App\DataFixtures;
 use App\Entity\UserWorkScheduleStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+
 /**
  * Class UserWorkScheduleStatusFixtures
  */
