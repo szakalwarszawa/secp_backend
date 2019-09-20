@@ -10,12 +10,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Validator\ValueExists;
 
 /**
  * @ORM\Table(
  *     name="`user_work_schedules`",
  *     indexes={
- *          @ORM\Index(name="idx_user_work_schedules_status", columns={"status"}),
+ *          @ORM\Index(name="idx_user_work_schedules_status", columns={"status_id"}),
  *          @ORM\Index(name="idx_user_work_schedules_from_date", columns={"from_date"}),
  *          @ORM\Index(name="idx_user_work_schedules_to_date", columns={"to_date"}),
  *          @ORM\Index(name="idx_user_work_schedules_owner_id", columns={"owner_id"}),
@@ -45,7 +48,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      collectionOperations={
  *          "get"={
  *              "normalization_context"={
- *                  "groups"={"get"}
+ *                  "groups"={
+ *                      "get",
+ *                      "UserWorkSchedule-get-user-with-section-department"
+ *                  }
  *              }
  *          },
  *          "post"={
@@ -61,6 +67,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "groups"={
  *              "get"
  *          }
+ *      }
+ * )
+ *
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "workScheduleProfile.id": "exact",
+ *          "owner.firstName": "exact",
+ *          "owner.lastName": "exact",
+ *          "owner.department.id": "exact",
+ *          "owner.section.id": "exact",
  *      }
  * )
  */
@@ -109,8 +126,8 @@ class UserWorkSchedule
 
     /**
      * @Assert\NotBlank()
-     * @Assert\Choice(callback="getStatuses")
-     * @ORM\Column(type="integer")
+     * @ValueExists(entity="App\Entity\UserWorkScheduleStatus", searchField="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\UserWorkScheduleStatus")
      * @Groups({"get", "post", "put"})
      */
     private $status;
@@ -212,19 +229,19 @@ class UserWorkSchedule
     }
 
     /**
-     * @return int|null
+     * @return UserWorkScheduleStatus|null
      */
-    public function getStatus(): ?int
+    public function getStatus(): ?UserWorkScheduleStatus
     {
         return $this->status;
     }
 
     /**
-     * @param int $status
+     * @param UserWorkScheduleStatus $status
      *
      * @return UserWorkSchedule
      */
-    public function setStatus(int $status): UserWorkSchedule
+    public function setStatus(UserWorkScheduleStatus $status): UserWorkSchedule
     {
         $this->status = $status;
 
