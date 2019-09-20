@@ -14,6 +14,9 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class UserWorkScheduleStatusRepository extends ServiceEntityRepository
 {
+    /**
+     * @var RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, UserWorkScheduleStatus::class);

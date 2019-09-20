@@ -7,8 +7,6 @@ namespace App\DataFixtures;
 use App\Entity\UserWorkScheduleStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\VarDumper\VarDumper;
-
 /**
  * Class UserWorkScheduleStatusFixtures
  */
@@ -42,10 +40,10 @@ class UserWorkScheduleStatusFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $statuses = [
-            self::REF_STATUS_OWNER_EDIT => 'Edycja właściciela',
-            self::REF_STATUS_OWNER_ACCEPT => 'Akceptacja właściciela',
-            self::REF_STATUS_MANAGER_ACCEPT => 'Akceptacja przełożonego',
-            self::REF_STATUS_HR_ACCEPT => 'Akceptacja pracownika kadr',
+            self::REF_STATUS_OWNER_EDIT => 'Edytowana przez pracownika',
+            self::REF_STATUS_OWNER_ACCEPT => 'Zatwierdzona przez pracownika',
+            self::REF_STATUS_MANAGER_ACCEPT => 'Zatwierdzona przez przełożonego',
+            self::REF_STATUS_HR_ACCEPT => 'Zatwierdzona przez HR',
         ];
 
         foreach ($statuses as $key => $value) {
