@@ -168,7 +168,7 @@ class ValueExistsValidator extends ConstraintValidator
      */
     private function getEntityMetadata(string $className, bool $throwException = false): ?ClassMetadata
     {
-        try{
+        try {
             return $this
                 ->entityManager
                 ->getMetadataFactory()
@@ -184,5 +184,4 @@ class ValueExistsValidator extends ConstraintValidator
             );
         }
     }
-
 }

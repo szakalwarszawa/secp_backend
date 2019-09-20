@@ -4,36 +4,40 @@ declare(strict_types=1);
 
 namespace App\Tests\Validator;
 
+use App\Entity\Role;
 use App\Tests\AbstractWebTestCase;
-use App\Validator\UserRole;
-use App\Validator\UserRoleValidator;
+use App\Validator\ValueExists;
+use App\Validator\ValueExistsValidator;
 use Symfony\Component\Validator\Context\ExecutionContext;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilder;
 
 /**
- * Class UserRoleValidatorTest
+ * Class ValueExistsValidatorTest
  */
-class UserRoleValidatorTest extends AbstractWebTestCase
+class ValueExistsValidatorTest extends AbstractWebTestCase
 {
     /**
-     * Test UserRoleValidator class.
+     * Test ValueExistsValidator class.
+     * Test should pass when validates wrong value.
      *
      * @return void
      */
-    public function testUserRoleValidator(): void
+    public function testValueExistsValidator(): void
     {
-        $userRoleConstraint = new UserRole();
+        $valueExistsConstraint = new ValueExists();
+        $valueExistsConstraint->entity = Role::class;
+        $valueExistsConstraint->searchField = 'name';
         $context = $this->getMockExecutionContext();
         $context
             ->expects($this->once())
             ->method('buildViolation')
-            ->with($userRoleConstraint->message)
+            ->with($valueExistsConstraint->message)
             ->willReturn($this->getMockConstraintViolationBuilder())
         ;
 
-        $validator = new UserRoleValidator($this->entityManager);
+        $validator = new ValueExistsValidator($this->entityManager);
         $validator->initialize($context);
-        $validator->validate(['UNKNOWN_ROLE_NAME_CAUSED_VIOLATION'], $userRoleConstraint);
+        $validator->validate(['UNKNOWN_ROLE_NAME_CAUSED_VIOLATION'], $valueExistsConstraint);
     }
 
     /**

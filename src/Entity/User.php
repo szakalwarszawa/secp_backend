@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\UserRole;
+use App\Validator\ValueExists;
 use App\Entity\Utils\UserAware;
 
 /**
@@ -193,7 +193,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="simple_array", length=255)
      * @Groups({"get", "post", "admin-supervisor:input"})
-     * @UserRole
+     * @ValueExists(entity="App\Entity\Role", searchField="name")
      */
     private $roles = [];
 
@@ -233,7 +233,8 @@ class User implements UserInterface
      *  "post",
      *  "get-user-timesheet-day-with-user-timesheet",
      *  "get-user-with-department",
-     *  "Department-get_get-user-with-department"
+     *  "Department-get_get-user-with-department",
+     *  "UserWorkSchedule-get-user-with-section-department"
      * })
      */
     private $department;
@@ -241,7 +242,13 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Section", inversedBy="users")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups({"put", "post", "get-user-with-section", "get-user-timesheet-day-with-user-timesheet"})
+     * @Groups({
+     *  "put",
+     *  "post",
+     *  "get-user-with-section",
+     *  "get-user-timesheet-day-with-user-timesheet",
+     *  "UserWorkSchedule-get-user-with-section-department"
+     * })
      */
     private $section;
 
