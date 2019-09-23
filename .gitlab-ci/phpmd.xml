@@ -7,7 +7,7 @@
     <description>Zestaw zasad do PHPMD</description>
 
     <rule ref="rulesets/cleancode.xml/ElseExpression"/>
-    <rule ref="rulesets/cleancode.xml/StaticAccess"/>
+    <!-- <rule ref="rulesets/cleancode.xml/StaticAccess"/> -->
     <rule ref="rulesets/cleancode.xml/IfStatementAssignment"/>
     <rule ref="rulesets/cleancode.xml/DuplicatedArrayKey"/>
     <rule ref="rulesets/cleancode.xml/MissingImport"/>
@@ -17,7 +17,6 @@
             <property name="reportLevel" value="15"/>
         </properties>
     </rule>
-    
     <rule ref="rulesets/codesize.xml/NPathComplexity"/>
     <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
         <properties>
