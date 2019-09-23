@@ -75,9 +75,9 @@ class UserWorkScheduleListener
                 $args,
                 $currentSchedule,
                 sprintf(
-                    "Zmieniono status z: %s, na: %s",
-                    $args->getOldValue('status'),
-                    $args->getNewValue('status')
+                    'Zmieniono status z: %s, na: %s',
+                    $args->getOldValue('status')->getId(),
+                    $args->getNewValue('status')->getId()
                 )
             );
         }

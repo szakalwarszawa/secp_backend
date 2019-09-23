@@ -3,9 +3,11 @@
 namespace App\Tests\EventSubscriber;
 
 use App\DataFixtures\UserFixtures;
+use App\DataFixtures\UserWorkScheduleStatusFixtures;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleLog;
+use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\OptimisticLockException;
@@ -13,7 +15,6 @@ use Doctrine\ORM\ORMException;
 
 class UserWorkScheduleListenerTest extends AbstractWebTestCase
 {
-    private const TEST_STATUS = UserWorkSchedule::STATUS_OWNER_ACCEPT;
     private const TEST_FROM_DATE = '2020-01-01';
     private const TEST_TO_DATE = '2020-01-31';
 
@@ -30,15 +31,17 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
     {
         $this->assertIsNumeric($this->userWorkScheduleId);
 
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
-            ->getManager()
+        $userWorkScheduleUpdated = $this->entityManager
             ->getRepository(UserWorkSchedule::class)
             ->find($this->userWorkScheduleId);
         /* @var $userWorkScheduleUpdated UserWorkSchedule */
 
         $this->assertNotNull($userWorkScheduleUpdated);
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkScheduleUpdated->getWorkScheduleProfile());
-        $this->assertEquals(self::TEST_STATUS, $userWorkScheduleUpdated->getStatus());
+        $workScheduleStatusRef = $this
+            ->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_ACCEPT)
+        ;
+        $this->assertEquals($workScheduleStatusRef, $userWorkScheduleUpdated->getStatus());
         $this->assertEquals(self::TEST_FROM_DATE, $userWorkScheduleUpdated->getFromDate()->format('Y-m-d'));
         $this->assertEquals(self::TEST_TO_DATE, $userWorkScheduleUpdated->getToDate()->format('Y-m-d'));
 
@@ -53,8 +56,7 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
     {
         $this->assertIsNumeric($this->userWorkScheduleId);
 
-        $userWorkSchedule = self::$container->get('doctrine')
-            ->getManager()
+        $userWorkSchedule = $this->entityManager
             ->getRepository(UserWorkSchedule::class)
             ->find($this->userWorkScheduleId);
         /* @var $userWorkSchedule UserWorkSchedule */
@@ -63,13 +65,14 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkSchedule->getWorkScheduleProfile());
 
         $statusBefore = $userWorkSchedule->getStatus();
-        $userWorkSchedule->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
-        self::$container->get('doctrine')
-            ->getManager()
+        $workScheduleStatusRef = $this
+            ->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT)
+        ;
+        $userWorkSchedule->setStatus($workScheduleStatusRef);
+        $this->entityManager
             ->flush();
 
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
-            ->getManager()
+        $userWorkScheduleUpdated = $this->entityManager
             ->getRepository(UserWorkSchedule::class)
             ->find($this->userWorkScheduleId);
         /* @var $userWorkScheduleUpdated UserWorkSchedule */
@@ -81,11 +84,11 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         $notice = $userWorkScheduleLog->getNotice();
         $this->assertNotNull($userWorkScheduleUpdated);
         $this->assertStringContainsString(
-            sprintf('Zmieniono status z: %s, na: %s', $statusBefore, $userWorkScheduleUpdated->getStatus()),
+            sprintf('Zmieniono status z: %s, na: %s', $statusBefore->getId(), $userWorkScheduleUpdated->getStatus()->getId()),
             $notice
         );
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkScheduleUpdated->getWorkScheduleProfile());
-        $this->assertEquals(UserWorkSchedule::STATUS_HR_ACCEPT, $userWorkScheduleUpdated->getStatus());
+        $this->assertEquals($workScheduleStatusRef->getId(), $userWorkScheduleUpdated->getStatus()->getId());
     }
 
     /**
@@ -102,18 +105,19 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         $this->assertInstanceOf(WorkScheduleProfile::class, $workScheduleProfile);
 
         $userWorkSchedule = new UserWorkSchedule();
+        $workScheduleStatusRef = $this
+            ->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_ACCEPT)
+        ;
+        $this->assertInstanceOf(UserWorkScheduleStatus::class, $workScheduleStatusRef);
+
         $userWorkSchedule->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(self::TEST_STATUS)
+            ->setStatus($workScheduleStatusRef)
             ->setFromDate(new \DateTime(self::TEST_FROM_DATE))
             ->setToDate(new \DateTime(self::TEST_TO_DATE));
 
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($userWorkSchedule);
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
+        $this->entityManager->persist($userWorkSchedule);
+        $this->entityManager->flush();
 
         $this->userWorkScheduleId = $userWorkSchedule->getId();
     }

@@ -2,10 +2,9 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\DayDefinition;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
-use App\Entity\UserWorkScheduleDay;
+use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -31,6 +30,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
         return array(
             UserFixtures::class,
             DayDefinitionFixtures::class,
+            UserWorkScheduleStatusFixtures::class,
             WorkScheduleProfileFixtures::class,
         );
     }
@@ -46,7 +46,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             self::REF_USER_WORK_SCHEDULE_ADMIN_HR,
             $this->getReference(UserFixtures::REF_USER_ADMIN),
             $this->getReference('work_schedule_profile_2'),
-            UserWorkSchedule::STATUS_HR_ACCEPT,
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
             '2019-05-01',
             '2019-08-31'
         );
@@ -56,7 +56,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             self::REF_USER_WORK_SCHEDULE_ADMIN_EDIT,
             $this->getReference(UserFixtures::REF_USER_ADMIN),
             $this->getReference('work_schedule_profile_2'),
-            UserWorkSchedule::STATUS_OWNER_EDIT,
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT),
             '2019-07-01',
             '2019-08-31'
         );
@@ -66,7 +66,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             self::REF_USER_WORK_SCHEDULE_MANAGER_HR,
             $this->getReference(UserFixtures::REF_USER_MANAGER),
             $this->getReference('work_schedule_profile_0'),
-            UserWorkSchedule::STATUS_HR_ACCEPT,
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
             '2019-05-01',
             '2019-08-31'
         );
@@ -76,7 +76,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             self::REF_USER_WORK_SCHEDULE_USER_HR,
             $this->getReference(UserFixtures::REF_USER_USER),
             $this->getReference('work_schedule_profile_0'),
-            UserWorkSchedule::STATUS_HR_ACCEPT,
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
             '2019-05-01',
             '2019-08-31'
         );
@@ -86,7 +86,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
             self::REF_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT,
             $this->getReference(UserFixtures::REF_USER_USER),
             $this->getReference('work_schedule_profile_0'),
-            UserWorkSchedule::STATUS_OWNER_ACCEPT,
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_ACCEPT),
             '2019-07-01',
             '2019-08-31'
         );
@@ -99,7 +99,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
      * @param string $referenceName
      * @param User $owner
      * @param WorkScheduleProfile $workScheduleProfile
-     * @param int $status
+     * @param UserWorkScheduleStatus $status
      * @param string $fromDate
      * @param string $toDate
      * @return void
@@ -110,7 +110,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
         string $referenceName,
         User $owner,
         WorkScheduleProfile $workScheduleProfile,
-        int $status,
+        UserWorkScheduleStatus $status,
         string $fromDate,
         string $toDate
     ): void {
@@ -130,7 +130,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
      * @param string $referenceName
      * @param User $owner
      * @param WorkScheduleProfile $workScheduleProfile
-     * @param int $status
+     * @param UserWorkScheduleStatus $status
      * @param string $fromDate
      * @param string $toDate
      * @return UserWorkSchedule
@@ -141,7 +141,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
         string $referenceName,
         User $owner,
         WorkScheduleProfile $workScheduleProfile,
-        int $status,
+        UserWorkScheduleStatus $status,
         string $fromDate,
         string $toDate
     ): UserWorkSchedule {
