@@ -8,6 +8,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -84,7 +85,7 @@ class DayDefinitionLoggerListener
     {
         $log = new DayDefinitionLog();
         $log->setDayDefinition($entity);
-        $log->setLogDate(new \DateTime());
+        $log->setLogDate(new DateTime());
         $log->setOwner($this->getCurrentUser($args->getEntityManager()));
         $log->setNotice($notice);
 

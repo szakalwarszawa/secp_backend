@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\UserTimesheet;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use App\Entity\UserTimesheetDay;
+use DateTime;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use App\Entity\WorkScheduleProfile;
@@ -131,7 +132,7 @@ class UserTimesheetDayListener
     {
         $log = new UserTimesheetDayLog();
         $log->setUserTimesheetDay($entity);
-        $log->setLogDate(new \DateTime());
+        $log->setLogDate(new DateTime());
         $log->setOwner($this->getCurrentUser($args->getEntityManager()));
         $log->setNotice($notice);
 
