@@ -2,11 +2,11 @@
 
 namespace App\EventListener;
 
-use App\Entity\DayDefinition;
-use App\Entity\DayDefinitionLog;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
+use App\Entity\DayDefinition;
+use App\Entity\UserWorkScheduleLog;
 use App\Entity\WorkScheduleProfile;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -34,7 +34,12 @@ class UserWorkScheduleListener
     private $userWorkScheduleDays = [];
 
     /**
-     * DayDefinitionLoggerListener constructor.
+     * @var array
+     */
+    private $userWorkScheduleDaysLogs = [];
+
+    /**
+     * UserWorkScheduleListener constructor.
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
@@ -63,12 +68,14 @@ class UserWorkScheduleListener
             return;
         }
 
-        if ($args->hasChangedField('status') && $args->getOldValue('status') !== $args->getNewValue('status')) {
+        if ($args->hasChangedField('status')
+            && $args->getOldValue('status') !== $args->getNewValue('status')
+        ) {
             $this->addUserWorkScheduleLog(
                 $args,
                 $currentSchedule,
                 sprintf(
-                    "Zmieniono status z:\n%s\nna:\n%s",
+                    "Zmieniono status z: %s, na: %s",
                     $args->getOldValue('status'),
                     $args->getNewValue('status')
                 )
@@ -143,14 +150,13 @@ class UserWorkScheduleListener
      */
     private function addUserWorkScheduleLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
     {
-        return; // @Todo Do dodania tabela z logami zmian i dodawanie do niej danych
-        $log = new DayDefinitionLog();
-        $log->setDayDefinition($entity);
+        $log = new UserWorkScheduleLog();
+        $log->setUserWorkSchedule($entity);
         $log->setLogDate(date('Y-m-d H:i:s'));
         $log->setOwner($this->getCurrentUser($args->getEntityManager()));
         $log->setNotice($notice);
 
-        $this->userWorkScheduleDays[] = $log;
+        $this->userWorkScheduleDaysLogs[] = $log;
     }
 
     /**
@@ -182,8 +188,6 @@ class UserWorkScheduleListener
         if (!$userWorkSchedule instanceof UserWorkSchedule) {
             return;
         }
-
-        // @Todo dodać tabele z logami i dopisywać zmiany
     }
 
     /**
@@ -267,6 +271,17 @@ class UserWorkScheduleListener
             }
 
             $this->userWorkScheduleDays = [];
+            $em->flush();
+        }
+
+        if (!empty($this->userWorkScheduleDaysLogs)) {
+            $em = $args->getEntityManager();
+
+            foreach ($this->userWorkScheduleDaysLogs as $log) {
+                $em->persist($log);
+            }
+
+            $this->userWorkScheduleDaysLogs = [];
             $em->flush();
         }
     }

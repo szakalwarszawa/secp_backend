@@ -5,6 +5,7 @@ namespace App\Tests\EventSubscriber;
 use App\DataFixtures\UserFixtures;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
+use App\Entity\UserWorkScheduleLog;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\OptimisticLockException;
@@ -61,7 +62,8 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         $this->assertNotNull($userWorkSchedule);
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkSchedule->getWorkScheduleProfile());
 
-        $userWorkSchedule->setStatus(UserWorkSchedule::STATUS_OWNER_ACCEPT);
+        $statusBefore = $userWorkSchedule->getStatus();
+        $userWorkSchedule->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
         self::$container->get('doctrine')
             ->getManager()
             ->flush();
@@ -72,9 +74,18 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
             ->find($this->userWorkScheduleId);
         /* @var $userWorkScheduleUpdated UserWorkSchedule */
 
+        $userWorkScheduleLog = $this->entityManager
+            ->getRepository(UserWorkScheduleLog::class)
+            ->findOneBy([], ['id' => 'desc']);
+
+        $notice = $userWorkScheduleLog->getNotice();
         $this->assertNotNull($userWorkScheduleUpdated);
+        $this->assertStringContainsString(
+            sprintf('Zmieniono status z: %s, na: %s', $statusBefore, $userWorkScheduleUpdated->getStatus()),
+            $notice
+        );
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkScheduleUpdated->getWorkScheduleProfile());
-        $this->assertEquals(UserWorkSchedule::STATUS_OWNER_ACCEPT, $userWorkScheduleUpdated->getStatus());
+        $this->assertEquals(UserWorkSchedule::STATUS_HR_ACCEPT, $userWorkScheduleUpdated->getStatus());
     }
 
     /**

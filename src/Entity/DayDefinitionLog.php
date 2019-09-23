@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(
+ *     schema="logs",
  *     name="`day_definition_logs`",
  *     indexes={
  *          @ORM\Index(name="idx_day_definitions_log_date", columns={"log_date"}),

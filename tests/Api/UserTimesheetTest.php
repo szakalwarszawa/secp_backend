@@ -21,11 +21,18 @@ class UserTimesheetTest extends AbstractWebTestCase
     {
         $userTimesheetDB = $this->entityManager->getRepository(UserTimesheet::class)->createQueryBuilder('p')
             ->andWhere('p.owner = :owner')
-            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_ADMIN))
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_MANAGER))
             ->getQuery()
             ->getResult();
         /* @var $userTimesheetDB UserTimesheet */
-        $response = $this->getActionResponse(self::HTTP_GET, '/api/user_timesheets');
+        $response = $this->getActionResponse(
+            self::HTTP_GET,
+            '/api/user_timesheets',
+            null,
+            [],
+            200,
+            self::REF_MANAGER
+        );
         $userTimesheetJSON = json_decode($response->getContent(), false);
 
         $this->assertNotNull($userTimesheetJSON);
@@ -182,7 +189,7 @@ JSON;
             $payload,
             [],
             200,
-            UserFixtures::REF_USER_MANAGER
+            UserFixtures::REF_USER_USER
         );
 
         $userJSON = json_decode($response->getContent(), false);

@@ -4,6 +4,7 @@
 namespace App\Tests\Api;
 
 use App\DataFixtures\UserFixtures;
+use App\DataFixtures\UserWorkScheduleFixtures;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
 use App\Entity\WorkScheduleProfile;
@@ -26,12 +27,19 @@ class UserWorkScheduleTest extends AbstractWebTestCase
             ->getRepository(UserWorkSchedule::class)
             ->createQueryBuilder('p')
             ->andWhere('p.owner = :owner')
-            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_ADMIN))
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_MANAGER))
             ->getQuery()
             ->getResult();
         /* @var $userWorkScheduleDB UserWorkSchedule */
 
-        $response = $this->getActionResponse(self::HTTP_GET, '/api/user_work_schedules');
+        $response = $this->getActionResponse(
+            self::HTTP_GET,
+            '/api/user_work_schedules',
+            null,
+            [],
+            200,
+            self::REF_MANAGER
+        );
         $userWorkScheduleJSON = json_decode($response->getContent(), false);
 
         $this->assertNotNull($userWorkScheduleJSON);
@@ -154,7 +162,7 @@ JSON;
      */
     public function apiPutUserWorkSchedule(): void
     {
-        $userWorkScheduleREF = $this->fixtures->getReference(UserFixtures::REF_USER_MANAGER);
+        $userWorkScheduleREF = $this->fixtures->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_MANAGER_HR);
         /* @var $userWorkScheduleREF UserWorkSchedule */
 
         $newStatus = UserWorkSchedule::STATUS_MANAGER_ACCEPT;

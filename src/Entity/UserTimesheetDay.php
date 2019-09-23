@@ -10,6 +10,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\UserCreateTimesheetDayAction;
 use App\Controller\UserOwnTimesheetDayAction;
 use App\Entity\Utils\UserAware;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -52,7 +53,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                      "put"
  *                  }
  *              }
- *          },
+ *          }
  *      },
  *      collectionOperations={
  *          "get"={
@@ -126,7 +127,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "absenceType.id": "exact",
  *          "dayStartTime": "exact",
  *          "dayEndTime": "exact",
- *          "workingTime": "exact"
+ *          "workingTime": "exact",
+ *          "userTimesheet.owner.department.id": "exact",
+ *          "userTimesheet.owner.section.id": "exact"
  *      }
  * )
  * @ApiFilter(
@@ -207,7 +210,7 @@ class UserTimesheetDay
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AbsenceType")
-     * @Groups({"get", "post", "put"})
+     * @Groups({"hr:output", "current_user_is_owner", "put", "post"})
      */
     private $absenceType;
 
@@ -215,6 +218,45 @@ class UserTimesheetDay
      * @var string
      */
     private $dayDate;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get","put"})
+     */
+    private $notice;
+
+    /**
+     * @return string|null
+     */
+    public function getNotice(): ?string
+    {
+        return $this->notice;
+    }
+
+    /**
+     * @param string|null $notice
+     *
+     * @return userTimesheetDay
+     */
+    public function setNotice(?string $notice): self
+    {
+        $this->notice = $notice;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserTimesheetDayLog", mappedBy="userTimesheetDay")
+     */
+    private $userTimesheetDayLogs;
+
+    /**
+     * UserTimesheetDay constructor.
+     */
+    public function __construct()
+    {
+        $this->userTimesheetDayLogs = new ArrayCollection();
+    }
 
     /**
      * @return string|null
@@ -379,6 +421,39 @@ class UserTimesheetDay
     public function setAbsenceType(?AbsenceType $absenceType): UserTimesheetDay
     {
         $this->absenceType = $absenceType;
+
+        return $this;
+    }
+
+    /**
+     * @param UserTimesheetDayLog $userTimesheetDayLog
+     *
+     * @return UserTimesheetDay
+     */
+    public function addUserTimesheetDayLog(UserTimesheetDayLog $userTimesheetDayLog): self
+    {
+        if (!$this->userTimesheetDayLogs->contains($userTimesheetDayLog)) {
+            $this->userTimesheetDayLogs[] = $userTimesheetDayLog;
+            $userTimesheetDayLog->setUserTimesheetDay($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param UserTimesheetDayLog $userTimesheetDayLog
+     *
+     * @return UserTimesheetDay
+     */
+    public function removeUserTimesheetDayLog(UserTimesheetDayLog $userTimesheetDayLog): self
+    {
+        if ($this->userTimesheetDayLogs->contains($userTimesheetDayLog)) {
+            $this->userTimesheetDayLogs->removeElement($userTimesheetDayLog);
+            // set the owning side to null (unless already changed)
+            if ($userTimesheetDayLog->getUserTimesheetDay() === $this) {
+                $userTimesheetDayLog->setUserTimesheetDay(null);
+            }
+        }
 
         return $this;
     }

@@ -88,6 +88,7 @@ final class DepartmentSectionUpdater extends AbstractUpdater
         $this->addResult(new Result(
             Department::class,
             Types::SUCCESS,
+            $department->getName(),
             sprintf(
                 'Department %s has been %s.',
                 $department->getName(),
@@ -131,6 +132,7 @@ final class DepartmentSectionUpdater extends AbstractUpdater
         $this->addResult(new Result(
             Section::class,
             Types::SUCCESS,
+            $section->getName(),
             sprintf(
                 'Section %s has been %s.',
                 $section->getName(),

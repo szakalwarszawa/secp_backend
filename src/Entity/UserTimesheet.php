@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Entity\Utils\UserAware;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,7 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "get"={
  *              "normalization_context"={
  *                  "groups"={
- *                      "get"
+ *                      "get",
+ *                      "UserTimesheet-get-owner-with-department-and-section"
  *                  }
  *              }
  *          },
@@ -43,7 +47,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      collectionOperations={
  *          "get"={
  *              "normalization_context"={
- *                  "groups"={"get"}
+ *                  "groups"={
+ *                      "get",
+ *                      "UserTimesheet-get-owner-with-department-and-section"
+ *                  }
  *              }
  *          },
  *          "post"={
@@ -57,9 +64,38 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      },
  *      normalizationContext={
  *          "groups"={
- *              "get"
+ *              "get",
+ *              "UserTimesheet-get-owner-with-department-and-section"
  *          }
  *      }
+ * )
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "id": "exact",
+ *          "period": "start",
+ *          "status": "exact",
+ *          "owner.username": "iexact",
+ *          "owner.email": "iexact",
+ *          "owner.firstName": "istart",
+ *          "owner.lastName": "istart",
+ *          "owner.department.id": "exact",
+ *          "owner.section.id": "exact"
+ *      }
+ * )
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={
+ *         "id",
+ *         "period",
+ *         "status",
+ *         "owner.email",
+ *         "owner.firstName",
+ *         "owner.lastName",
+ *         "owner.department.name",
+ *         "owner.section.name"
+ *     },
+ *     arguments={"orderParameterName"="_order"}
  * )
  */
 class UserTimesheet

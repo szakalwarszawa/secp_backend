@@ -15,11 +15,22 @@ class Collector extends ArrayCollection
      *
      * Alias to getByType(Types::SUCCESS)
      *
+     * @param bool $simpleArray
+     *
      * @return array
      */
-    public function getSucceed(): array
+    public function getSucceed(bool $simpleArray = false): array
     {
-        return $this->getByType(Types::SUCCESS);
+        if (!$simpleArray) {
+            return $this->getByType(Types::SUCCESS);
+        }
+
+        return array_map(
+            function ($element) {
+                return '[' . $element->getAction() . '] ' . $element->getTarget();
+            },
+            $this->getByType(Types::SUCCESS)
+        );
     }
 
     /**
@@ -27,11 +38,22 @@ class Collector extends ArrayCollection
      *
      * Alias to getByType(Types::FAIL)
      *
+     * @param bool $simpleArray
+     *
      * @return array
      */
-    public function getFailed(): array
+    public function getFailed(bool $simpleArray = false): array
     {
-        return $this->getByType(Types::FAIL);
+        if (!$simpleArray) {
+            return $this->getByType(Types::FAIL);
+        }
+
+        return array_map(
+            function ($element) {
+                return $element->getTarget();
+            },
+            $this->getByType(Types::FAIL)
+        );
     }
 
     /**

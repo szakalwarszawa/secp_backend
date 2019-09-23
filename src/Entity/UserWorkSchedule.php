@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Entity\Utils\UserAware;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -133,6 +134,27 @@ class UserWorkSchedule
      */
     private $userWorkScheduleDays;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserWorkScheduleLog", mappedBy="userWorkSchedule")
+     * @ApiSubresource()
+     */
+    private $userWorkScheduleLogs;
+
+    /**
+     * @return mixed
+     */
+    public function getUserWorkScheduleLogs()
+    {
+        return $this->userWorkScheduleLogs;
+    }
+
+    /**
+     * @param mixed $userWorkScheduleLogs
+     */
+    public function setUserWorkScheduleLogs($userWorkScheduleLogs): void
+    {
+        $this->userWorkScheduleLogs = $userWorkScheduleLogs;
+    }
     /**
      * UserWorkSchedule constructor.
      */

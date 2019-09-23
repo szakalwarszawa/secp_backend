@@ -27,6 +27,13 @@ class Result
     private $type;
 
     /**
+     * What has been updated/crated.
+     *
+     * @var string
+     */
+    private $target;
+
+    /**
      * Optional human-readable result message.
      *
      * @var string
@@ -35,6 +42,7 @@ class Result
 
     /**
      * Action inherited from Ldap\Constants\Actions
+     *
      * @var string
      */
     private $action;
@@ -42,16 +50,23 @@ class Result
     /**
      * @param string $className
      * @param string $type
+     * @param string $target
      * @param null|string $message
      * @param null|string $action
      */
-    public function __construct(string $className, string $type, ?string $message = null, ?string $action = null)
-    {
+    public function __construct(
+        string $className,
+        string $type,
+        string $target,
+        ?string $message = null,
+        ?string $action = null
+    ) {
         ConstantsUtil::constCheckValue($action, Actions::class);
         ConstantsUtil::constCheckValue($type, Types::class);
 
         $this->className = $className;
         $this->type = $type;
+        $this->target = $target;
         $this->message = $message;
         $this->action = $action;
     }
@@ -74,6 +89,16 @@ class Result
     public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * Get target
+     *
+     * @return string
+     */
+    public function getTarget(): string
+    {
+        return $this->target;
     }
 
     /**
