@@ -234,7 +234,8 @@ class User implements UserInterface
      *  "get-user-timesheet-day-with-user-timesheet",
      *  "get-user-with-department",
      *  "Department-get_get-user-with-department",
-     *  "UserWorkSchedule-get-user-with-section-department"
+     *  "UserWorkSchedule-get-user-with-section-department",
+     *  "UserTimesheet-get-owner-with-department-and-section"
      * })
      */
     private $department;
@@ -247,7 +248,8 @@ class User implements UserInterface
      *  "post",
      *  "get-user-with-section",
      *  "get-user-timesheet-day-with-user-timesheet",
-     *  "UserWorkSchedule-get-user-with-section-department"
+     *  "UserWorkSchedule-get-user-with-section-department",
+     *  "UserTimesheet-get-owner-with-department-and-section"
      * })
      */
     private $section;
