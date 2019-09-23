@@ -65,7 +65,7 @@ class UserWorkScheduleListener
                 $args,
                 $entity,
                 sprintf(
-                    "Zmieniono status z: %s, na: %s",
+                    'Zmieniono status z: %s, na: %s',
                     $args->getOldValue('status')->getId(),
                     $args->getNewValue('status')->getId()
                 )

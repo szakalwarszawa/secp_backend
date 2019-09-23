@@ -32,7 +32,7 @@ class ValueExistsValidator extends ConstraintValidator
     private $entityManager;
 
     /**
-     * Suppported data types of this validator.
+     * Supported data types of this validator.
      *
      * @var array
      */

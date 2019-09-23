@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use App\Validator\ValueExists;
 
 /**
@@ -74,10 +75,19 @@ use App\Validator\ValueExists;
  *      SearchFilter::class,
  *      properties={
  *          "workScheduleProfile.id": "exact",
- *          "owner.firstName": "exact",
- *          "owner.lastName": "exact",
+ *          "owner.firstName": "istart",
+ *          "owner.lastName": "istart",
  *          "owner.department.id": "exact",
  *          "owner.section.id": "exact",
+ *          "status.id": "exact"
+ *      }
+ * )
+ *
+ * @ApiFilter(
+ *      DateFilter::class,
+ *      properties={
+ *          "fromDate",
+ *          "toDate"
  *      }
  * )
  */

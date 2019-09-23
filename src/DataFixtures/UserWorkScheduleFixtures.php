@@ -2,10 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\DayDefinition;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
-use App\Entity\UserWorkScheduleDay;
 use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -101,7 +99,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
      * @param string $referenceName
      * @param User $owner
      * @param WorkScheduleProfile $workScheduleProfile
-     * @param int $status
+     * @param UserWorkScheduleStatus $status
      * @param string $fromDate
      * @param string $toDate
      * @return void
@@ -132,7 +130,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
      * @param string $referenceName
      * @param User $owner
      * @param WorkScheduleProfile $workScheduleProfile
-     * @param int $status
+     * @param UserWorkScheduleStatus $status
      * @param string $fromDate
      * @param string $toDate
      * @return UserWorkSchedule
