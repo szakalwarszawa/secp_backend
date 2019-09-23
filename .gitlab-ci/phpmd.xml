@@ -19,7 +19,12 @@
     </rule>
     
     <rule ref="rulesets/codesize.xml/NPathComplexity"/>
-    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/>
+    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
+        <properties>
+            <property name="minimum" value="200"/>
+            <property name="ignore-whitespace" value="true"/>
+        </properties>
+    </rule>
     <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
     <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
     <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
