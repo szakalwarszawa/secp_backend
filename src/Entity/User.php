@@ -233,7 +233,8 @@ class User implements UserInterface
      *  "post",
      *  "get-user-timesheet-day-with-user-timesheet",
      *  "get-user-with-department",
-     *  "Department-get_get-user-with-department"
+     *  "Department-get_get-user-with-department",
+     *  "UserTimesheet-get-owner-with-department-and-section"
      * })
      */
     private $department;
@@ -241,7 +242,13 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Section", inversedBy="users")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups({"put", "post", "get-user-with-section", "get-user-timesheet-day-with-user-timesheet"})
+     * @Groups({
+     *     "put",
+     *     "post",
+     *     "get-user-with-section",
+     *     "get-user-timesheet-day-with-user-timesheet",
+     *     "UserTimesheet-get-owner-with-department-and-section"
+     * })
      */
     private $section;
 
