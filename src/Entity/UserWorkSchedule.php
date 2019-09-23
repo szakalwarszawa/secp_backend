@@ -299,21 +299,6 @@ class UserWorkSchedule
     }
 
     /**
-     * Return possible statuses, used by status validator
-     *
-     * @return array
-     */
-    public function getStatuses(): array
-    {
-        return [
-            self::STATUS_OWNER_EDIT,
-            self::STATUS_OWNER_ACCEPT,
-            self::STATUS_MANAGER_ACCEPT,
-            self::STATUS_HR_ACCEPT,
-        ];
-    }
-
-    /**
      * @return Collection|UserWorkScheduleDay[]
      */
     public function getUserWorkScheduleDays(): Collection
