@@ -7,6 +7,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\UserMeAction;
+use App\Controller\ApplicationInfoAction;
 use App\Exception\SectionNotBelongToDepartmentException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -60,6 +61,12 @@ use App\Validator\UserRole;
  *          }
  *      },
  *      collectionOperations={
+ *           "retrive-information"={
+ *               "access_control"= "is_granted('IS_AUTHENTICATED_FULLY')",
+ *               "method"= "GET",
+ *               "path"= "/application/info",
+ *               "controller" = ApplicationInfoAction::class
+ *          },
  *          "get-users-me"={
  *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="GET",
