@@ -7,7 +7,6 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-
 /**
  * Class Version20190923085150
  * @package DoctrineMigrations
