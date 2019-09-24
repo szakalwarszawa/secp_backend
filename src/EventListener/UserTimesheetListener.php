@@ -12,7 +12,6 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
 /**
  * Class UserTimesheetLoggerListener
  * @package App\EventListener
@@ -57,8 +56,8 @@ class UserTimesheetListener
                 $entity,
                 sprintf(
                     'Zmieniono status z: %s na: %s',
-                    $args->getOldValue('status'),
-                    $args->getNewValue('status')
+                    $args->getOldValue('status')->getId(),
+                    $args->getNewValue('status')->getId()
                 )
             );
         }

@@ -93,23 +93,6 @@ use App\Validator\ValueExists;
  */
 class UserWorkSchedule
 {
-    /*
-     * @const int
-     */
-    public const STATUS_OWNER_EDIT = 0;
-    /*
-     * @const int
-     */
-    public const STATUS_OWNER_ACCEPT = 1;
-    /*
-     * @const int
-     */
-    public const STATUS_MANAGER_ACCEPT = 2;
-    /*
-     * @const int
-     */
-    public const STATUS_HR_ACCEPT = 3;
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
