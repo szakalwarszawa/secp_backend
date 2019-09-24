@@ -74,7 +74,7 @@ class UserUpdaterTest extends AbstractWebTestCase
          * Department does not exist in database. - Fail reason
          * Section does not exist in database.
          */
-        $ldapObjectFailDueToDepartmentIsNotExists = new LdapObject([
+        $ldapFailToDepartmentNotExists = new LdapObject([
             UserAttributes::LAST_NAME => 'Norek',
             UserAttributes::FIRST_NAME => 'Tadeusz',
             UserAttributes::MAIL => 'tadeusz_norek@parp.gov.pl',
@@ -87,7 +87,7 @@ class UserUpdaterTest extends AbstractWebTestCase
             UserAttributes::SAMACCOUNTNAME => 'tadeusz_norek',
         ], 'user');
         $ldapObjectsCollection
-            ->add($ldapObjectFailDueToDepartmentIsNotExists)
+            ->add($ldapFailToDepartmentNotExists)
         ;
 
         /**
@@ -141,7 +141,7 @@ class UserUpdaterTest extends AbstractWebTestCase
         /**
          * 2 is number of failed users.
          * ldapObjectFailHasNoFirstName
-         * ldapObjectFailDueToDepartmentIsNotExists
+         * ldapFailToDepartmentNotExists
          */
         $this->assertEquals(2, $counter[Types::FAIL]);
 
@@ -159,7 +159,7 @@ class UserUpdaterTest extends AbstractWebTestCase
         /**
          * Unset failed elements.
          */
-        $ldapObjectsCollection->removeElement($ldapObjectFailDueToDepartmentIsNotExists);
+        $ldapObjectsCollection->removeElement($ldapFailToDepartmentNotExists);
         $ldapObjectsCollection->removeElement($ldapObjectFailHasNoFirstName);
 
         foreach ($ldapObjectsCollection as $ldapObject) {

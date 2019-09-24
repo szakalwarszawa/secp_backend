@@ -237,12 +237,12 @@ abstract class AbstractWebTestCase extends WebTestCase
             $objectMethods = get_class_methods(get_class($item));
 
             if (array_key_exists($attributeName, $objectVars)) {
-                if ($item->$attributeName == $value) {
+                if ($item->$attributeName === $value) {
                     $this->assertTrue(true);
                     return;
                 }
             } elseif (in_array($attributeName, $objectMethods, true)) {
-                if ($item->$attributeName() == $value) {
+                if ($item->$attributeName() === $value) {
                     $this->assertTrue(true);
                     return;
                 }

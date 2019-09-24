@@ -16,22 +16,22 @@ class UserWorkScheduleStatusFixtures extends Fixture
     /**
      * @var string
      */
-    public const REF_STATUS_OWNER_EDIT = 'WORK-SCHEDULE-REF-STATUS-OWNER-EDIT';
+    public const REF_STATUS_OWNER_EDIT = 'WORK-SCHEDULE-STATUS-OWNER-EDIT';
 
     /**
      * @var string
      */
-    public const REF_STATUS_OWNER_ACCEPT = 'WORK-SCHEDULE-REF-STATUS-OWNER-ACCEPT';
+    public const REF_STATUS_OWNER_ACCEPT = 'WORK-SCHEDULE-STATUS-OWNER-ACCEPT';
 
     /**
      * @var string
      */
-    public const REF_STATUS_MANAGER_ACCEPT = 'WORK-SCHEDULE-REF-STATUS-MANAGER-ACCEPT';
+    public const REF_STATUS_MANAGER_ACCEPT = 'WORK-SCHEDULE-STATUS-MANAGER-ACCEPT';
 
     /**
      * @var string
      */
-    public const REF_STATUS_HR_ACCEPT = 'WORK-SCHEDULE-REF-STATUS-HR-ACCEPT';
+    public const REF_STATUS_HR_ACCEPT = 'WORK-SCHEDULE-STATUS-HR-ACCEPT';
 
 
     /**
