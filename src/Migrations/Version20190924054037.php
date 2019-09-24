@@ -103,8 +103,6 @@ SQL
         REFERENCES "dictionary"."day_definitions" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
 SQL
         );
-
-
     }
 
     /**
