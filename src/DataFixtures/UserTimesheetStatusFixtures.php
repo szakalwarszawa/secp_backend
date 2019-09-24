@@ -48,15 +48,15 @@ class UserTimesheetStatusFixtures extends Fixture
         ];
 
         foreach ($statuses as $key => $value) {
-            $userWorkScheduleStatus = new UserTimesheetStatus();
-            $userWorkScheduleStatus
+            $userTimesheetStatus = new UserTimesheetStatus();
+            $userTimesheetStatus
                 ->setId($key)
                 ->setName($value)
             ;
 
-            $manager->persist($userWorkScheduleStatus);
+            $manager->persist($userTimesheetStatus);
 
-            $this->setReference($key, $userWorkScheduleStatus);
+            $this->setReference($key, $userTimesheetStatus);
         }
 
         $manager->flush();
