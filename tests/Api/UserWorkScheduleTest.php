@@ -9,6 +9,7 @@ use App\DataFixtures\UserWorkScheduleStatusFixtures;
 use App\Entity\UserWorkSchedule;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
+use DateTime;
 use Exception;
 
 /**
@@ -37,7 +38,7 @@ class UserWorkScheduleTest extends AbstractWebTestCase
             null,
             [],
             200,
-            self::REF_MANAGER
+            UserFixtures::REF_USER_MANAGER
         );
         $userWorkScheduleJSON = json_decode($response->getContent(), false);
 
@@ -64,8 +65,8 @@ class UserWorkScheduleTest extends AbstractWebTestCase
 
         $this->assertNotNull($userWorkScheduleJSON);
         $this->assertEquals($userWorkScheduleDB->getId(), $userWorkScheduleJSON->id);
-        $this->assertEquals($userWorkScheduleDB->getFromDate(), new \DateTime($userWorkScheduleJSON->fromDate));
-        $this->assertEquals($userWorkScheduleDB->getToDate(), new \DateTime($userWorkScheduleJSON->toDate));
+        $this->assertEquals($userWorkScheduleDB->getFromDate(), new DateTime($userWorkScheduleJSON->fromDate));
+        $this->assertEquals($userWorkScheduleDB->getToDate(), new DateTime($userWorkScheduleJSON->toDate));
         $this->assertEquals($userWorkScheduleDB->getStatus()->getId(), $userWorkScheduleJSON->status->id);
     }
 
@@ -114,16 +115,15 @@ JSON;
             '/api/user_work_schedules',
             $payload,
             [],
-            201,
-            self::REF_ADMIN
+            201
         );
 
         $userWorkScheduleJSON = json_decode($response->getContent(), false);
 
         $this->assertNotNull($userWorkScheduleJSON);
         $this->assertIsNumeric($userWorkScheduleJSON->id);
-        $this->assertEquals(new \DateTime('2019-08-01'), new \DateTime($userWorkScheduleJSON->fromDate));
-        $this->assertEquals(new \DateTime('2019-08-31'), new \DateTime($userWorkScheduleJSON->toDate));
+        $this->assertEquals(new DateTime('2019-08-01'), new DateTime($userWorkScheduleJSON->fromDate));
+        $this->assertEquals(new DateTime('2019-08-31'), new DateTime($userWorkScheduleJSON->toDate));
         $this->assertEquals($workScheduleStatusRef->getId(), $userWorkScheduleJSON->status->id);
         $this->assertEquals($userRef->getId(), $userWorkScheduleJSON->owner->id);
         $this->assertEquals($workScheduleProfileRef->getId(), $userWorkScheduleJSON->workScheduleProfile->id);
@@ -142,8 +142,8 @@ JSON;
 
         $this->assertNotNull($userWorkScheduleJSON);
         $this->assertEquals($userWorkScheduleDB->getId(), $userWorkScheduleJSON->id);
-        $this->assertEquals($userWorkScheduleDB->getFromDate(), new \DateTime($userWorkScheduleJSON->fromDate));
-        $this->assertEquals($userWorkScheduleDB->getToDate(), new \DateTime($userWorkScheduleJSON->toDate));
+        $this->assertEquals($userWorkScheduleDB->getFromDate(), new DateTime($userWorkScheduleJSON->fromDate));
+        $this->assertEquals($userWorkScheduleDB->getToDate(), new DateTime($userWorkScheduleJSON->toDate));
         $this->assertEquals($userWorkScheduleDB->getStatus()->getId(), $userWorkScheduleJSON->status->id);
         $this->assertEquals(
             $userWorkScheduleDB->getWorkScheduleProfile()->getId(),

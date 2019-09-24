@@ -4,6 +4,7 @@
 namespace App\Tests\Api;
 
 use App\DataFixtures\AbsenceTypeFixtures;
+use App\DataFixtures\UserFixtures;
 use App\Entity\AbsenceType;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
@@ -85,8 +86,7 @@ JSON;
             '/api/absence_types',
             $payload,
             [],
-            405,
-            self::REF_ADMIN
+            405
         );
     }
 
@@ -114,8 +114,7 @@ JSON;
             '/api/absence_types/' . $absenceTypeREF->getId(),
             $payload,
             [],
-            405,
-            self::REF_ADMIN
+            405
         );
     }
 }

@@ -83,8 +83,7 @@ JSON;
             '/api/departments',
             $payload,
             [],
-            201,
-            self::REF_ADMIN
+            201
         );
 
         $departmentJSON = json_decode($response->getContent(), false);
@@ -134,8 +133,7 @@ JSON;
             '/api/departments/' . $departmentREF->getId(),
             $payload,
             [],
-            200,
-            self::REF_ADMIN
+            200
         );
         $departmentJSON = json_decode($response->getContent(), false);
 
@@ -170,8 +168,7 @@ JSON;
             '/api/sections',
             $payload,
             [],
-            201,
-            self::REF_ADMIN
+            201
         );
 
         $this->assertJson($response->getContent());
@@ -206,8 +203,7 @@ JSON;
             '/api/departments/' . $departmentREF->getId(),
             $payload,
             [],
-            200,
-            self::REF_ADMIN
+            200
         );
 
         $departmentJSON = json_decode($response->getContent(), false);
@@ -231,8 +227,7 @@ JSON;
             '/api/departments/' . $departmentJSON->id,
             $payload,
             [],
-            200,
-            self::REF_ADMIN
+            200
         );
 
         $departmentJSON = json_decode($response->getContent(), false);
@@ -272,8 +267,7 @@ JSON;
             '/api/departments/' . $departmentREF->getId(),
             $payload,
             [],
-            200,
-            self::REF_ADMIN
+            200
         );
         $departmentJSON = json_decode($response->getContent(), false);
 
@@ -329,8 +323,7 @@ JSON;
             '/api/departments/' . $departmentREF->getId(),
             $payload,
             [],
-            200,
-            self::REF_ADMIN
+            200
         );
 
         $this->assertJson($response->getContent());

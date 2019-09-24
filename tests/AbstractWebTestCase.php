@@ -3,6 +3,7 @@
 
 namespace App\Tests;
 
+use App\DataFixtures\UserFixtures;
 use App\Entity\User;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManager;
@@ -30,10 +31,6 @@ abstract class AbstractWebTestCase extends WebTestCase
     public const CONTENT_TYPE_JSON = 'application/json';
     public const CONTENT_TYPE_LD_JSON = 'application/ld+json';
     public const CONTENT_TYPE_XML = 'application/xml';
-
-    public const REF_ADMIN = 'user_admin';
-    public const REF_USER = 'user_user';
-    public const REF_MANAGER = 'user_manager';
 
     /**
      * @var ReferenceRepository
@@ -140,7 +137,7 @@ abstract class AbstractWebTestCase extends WebTestCase
         $payload = null,
         $parameters = [],
         $expectedStatus = 200,
-        $userReference = self::REF_ADMIN,
+        $userReference = UserFixtures::REF_USER_ADMIN,
         $contentTypeAccept = self::CONTENT_TYPE_LD_JSON
     ): ?Response {
         $client = $this->makeAuthenticatedClient($userReference);
