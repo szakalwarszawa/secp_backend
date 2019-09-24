@@ -1,0 +1,57 @@
+FROM alpine:3.9
+RUN apk update
+RUN apk add --no-cache git wget curl util-linux gnupg gawk grep build-base tidyhtml yarn
+RUN apk add --no-cache php7 \
+                       php7-curl \
+                       php7-openssl \
+                       php7-ldap \
+                       php7-phar \
+                       php7-zlib \
+                       php7-zip \
+                       php7-json \
+                       php7-iconv \
+                       php7-mbstring \
+                       php7-intl \
+                       php7-ctype \
+                       php7-xml \
+                       php7-simplexml \
+                       php7-xmlwriter \
+                       php7-xmlreader \
+                       php7-tokenizer \
+                       php7-dom \
+                       php7-pdo \
+                       php7-gd \
+                       php7-soap \
+                       php7-redis \
+                       php7-fileinfo\
+                       php7-calendar \
+                       php7-dev \
+                       php7-sqlite3
+RUN ln -sf /usr/bin/php7 /usr/bin/php
+RUN echo 'date.timezone = "Europe/Warsaw"' > /etc/php7/conf.d/timezone.ini
+RUN php --version
+RUN mkdir -p /tmp/xdebug
+RUN cd /tmp/xdebug && curl -O https://xdebug.org/files/xdebug-2.7.2.tgz && tar -xzf xdebug-2.7.2.tgz
+RUN cd /tmp/xdebug/xdebug-2.7.2 && phpize7 && ./configure --enable-xdebug && make && make install
+RUN echo 'zend_extension="/usr/lib/php7/modules/xdebug.so"' > /etc/php7/php.ini
+RUN rm -rf /tmp/xdebug
+RUN curl -sS https://getcomposer.org/installer | php
+RUN cp composer.phar /usr/bin/composer.phar
+RUN php composer.phar --version
+RUN php -d memory_limit=512M composer.phar global require "hirak/prestissimo" --prefer-dist --no-suggest --no-progress --no-interaction --no-scripts
+RUN php -d memory_limit=2G composer.phar global require \
+        "phpunit/phpunit" \
+        "jakub-onderka/php-parallel-lint" \
+        "jakub-onderka/php-console-highlighter" \
+        "squizlabs/php_codesniffer" \
+        "phploc/phploc" \
+        "sebastian/phpcpd" \
+        "friendsoftwig/twigcs" \
+        "phpmd/phpmd" \
+        "hexmedia/yaml-linter" \
+        "escapestudios/symfony2-coding-standard" \
+        "dancryer/php-docblock-checker" \
+    --prefer-dist --no-suggest --no-progress --no-interaction --no-scripts
+RUN curl -OL http://get.sensiolabs.org/sami.phar
+RUN cp sami.phar /usr/bin/sami.phar
+CMD ["/bin/sh"]

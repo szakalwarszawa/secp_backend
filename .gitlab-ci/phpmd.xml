@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="secp-ruleset"
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <description>Zestaw zasad do PHPMD</description>
+    <rule ref="rulesets/controversial.xml/CamelCaseClassName"/>
+    <rule ref="rulesets/controversial.xml/CamelCasePropertyName"/>
+    <rule ref="rulesets/controversial.xml/CamelCaseMethodName"/>
+    <rule ref="rulesets/controversial.xml/CamelCaseParameterName"/>
+    <rule ref="rulesets/controversial.xml/CamelCaseVariableName"/>
+    <rule ref="rulesets/design.xml/ExitExpression"/>
+    <rule ref="rulesets/design.xml/GotoStatement"/>
+    <rule ref="rulesets/naming.xml/ShortVariable">
+        <properties>
+            <property name="exceptions" value="id,lp,nr,i,qb,em,ip,e"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/naming.xml/ShortMethodName">
+        <properties>
+            <property name="exceptions" value="up" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField">
+    </rule>
+    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable">
+        <properties>
+            <property name="allow-unused-foreach-variables" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod">
+    </rule>
+    <rule ref="rulesets/unusedcode.xml/UnusedFormalParameter">
+    </rule>
+</ruleset>

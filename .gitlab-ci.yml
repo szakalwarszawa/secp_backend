@@ -1,0 +1,116 @@
+image: "gitlab.parp.gov.pl:5055/ci/secp:latest"
+
+stages:
+    - build
+    - tests
+    - security
+    - standards
+    - stats
+    - doc
+    - postbuild
+  
+build:
+    stage: build
+    allow_failure: false
+    script:
+        - /usr/bin/composer.phar global show -i > .gitlab-ci/composer.dump
+        - php -d memory_limit=5G /usr/bin/composer.phar install --prefer-dist --no-suggest --no-progress --no-interaction --no-scripts
+    artifacts:
+        expire_in: 1 day
+        untracked: true
+
+phpunit:
+    stage: tests
+    allow_failure: false
+    dependencies: 
+        - build
+    script:
+        - php -d memory_limit=1G /root/.composer/vendor/bin/phpunit --testdox --config="./.gitlab-ci/phpunit.xml" ./tests
+
+parallellint:
+    stage: tests
+    allow_failure: false
+    script:
+        - /root/.composer/vendor/bin/parallel-lint --colors --blame --exclude vendor .
+
+yamllint:
+    stage: tests
+    allow_failure: false
+    script:
+        - /root/.composer/vendor/bin/yaml-lint --format txt src/
+        - /root/.composer/vendor/bin/yaml-lint --format txt config/
+
+psr2:
+    stage: standards
+    allow_failure: false
+    script:
+        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard=PSR2 --extensions=php src/
+
+linelength:
+    stage: standards
+    allow_failure: false
+    script:
+        - /root/.composer/vendor/bin/phpcs --config-set encoding utf-8
+        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard="./.gitlab-ci/phpcs_line_length.xml" --extensions=php src/
+
+twigcs:
+    stage: standards
+    allow_failure: false
+    script:
+        - /root/.composer/vendor/bin/twigcs lint src/
+        - /root/.composer/vendor/bin/twigcs lint templates/
+
+phpmd:
+    stage: standards
+    allow_failure: false
+    script:
+        - php -d memory_limit=1G /root/.composer/vendor/bin/phpmd src/ text ".gitlab-ci/phpmd.xml"
+
+phpdoc:
+    stage: standards
+    allow_failure: false
+    script:
+        - /root/.composer/vendor/bin/phpdoccheck --directory="src/"
+
+phpcpd:
+    stage: stats
+    allow_failure: true
+    script:
+        - php -d memory_limit=1G /root/.composer/vendor/bin/phpcpd --min-lines=10 --min-tokens=100 --verbose --exclude="tests/" src/
+
+phploc:
+    stage: stats
+    allow_failure: false
+    script:
+        - /root/.composer/vendor/bin/phploc src/
+
+sami:
+    stage: doc
+    allow_failure: false
+    script:
+        - mkdir -p doc/api
+        - php -d memory_limit=1G /usr/bin/sami.phar update "./.gitlab-ci/sami.conf" -v
+    artifacts:
+        untracked: false
+        expire_in: 1 day
+        paths:
+            - .gitlab-ci/phpdoc
+
+automerge:
+    stage: postbuild
+    allow_failure: false
+    script:
+        - echo "machine gitlab.parp.gov.pl login ci_automerge password $pass" > ~/.netrc
+        - chmod 600  ~/.netrc
+        - git config --global user.name "Merging Bot"
+        - git config --global user.email "linuxadmin@parp.gov.pl"
+        - mkdir automerge && cd automerge
+        - git clone -b master https://gitlab.parp.gov.pl/parp/secp
+        - cd lsi
+        - git checkout development
+        - git merge --no-ff -m "Auto merge by gitlabci job" master
+        - git push origin development
+    only:
+      refs:
+        - master
+    when: on_success

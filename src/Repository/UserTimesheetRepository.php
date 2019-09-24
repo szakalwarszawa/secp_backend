@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\UserTimesheet;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+
+/**
+ * @method UserTimesheet|null find($id, $lockMode = null, $lockVersion = null)
+ * @method UserTimesheet|null findOneBy(array $criteria, array $orderBy = null)
+ * @method UserTimesheet[]    findAll()
+ * @method UserTimesheet[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class UserTimesheetRepository extends ServiceEntityRepository
+{
+    /**
+     * UserTimesheetRepository constructor.
+     * @param RegistryInterface $registry
+     */
+    public function __construct(RegistryInterface $registry)
+    {
+        parent::__construct($registry, UserTimesheet::class);
+    }
+}
