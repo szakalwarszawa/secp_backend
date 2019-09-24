@@ -83,10 +83,11 @@ class UserWorkScheduleListener
     private function addUserWorkScheduleLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
     {
         $log = new UserWorkScheduleLog();
-        $log->setUserWorkSchedule($entity);
-        $log->setLogDate(new DateTime());
-        $log->setOwner($this->getCurrentUser($args->getEntityManager()));
-        $log->setNotice($notice);
+        $log->setUserWorkSchedule($entity)
+            ->setLogDate(new DateTime())
+            ->setOwner($this->getCurrentUser($args->getEntityManager()))
+            ->setNotice($notice)
+        ;
 
         $this->userWorkScheduleDaysLogs[] = $log;
     }

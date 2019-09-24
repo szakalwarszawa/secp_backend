@@ -84,10 +84,11 @@ class DayDefinitionLoggerListener
     private function addDayDefinitionLog(PreUpdateEventArgs $args, DayDefinition $entity, string $notice): void
     {
         $log = new DayDefinitionLog();
-        $log->setDayDefinition($entity);
-        $log->setLogDate(new DateTime());
-        $log->setOwner($this->getCurrentUser($args->getEntityManager()));
-        $log->setNotice($notice);
+        $log->setDayDefinition($entity)
+            ->setLogDate(new DateTime())
+            ->setOwner($this->getCurrentUser($args->getEntityManager()))
+            ->setNotice($notice)
+        ;
 
         $this->dayDefinitionLogs[] = $log;
     }

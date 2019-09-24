@@ -131,10 +131,11 @@ class UserTimesheetDayListener
     private function addUserTimeSheetDayLog(PreUpdateEventArgs $args, UserTimesheetDay $entity, string $notice): void
     {
         $log = new UserTimesheetDayLog();
-        $log->setUserTimesheetDay($entity);
-        $log->setLogDate(new DateTime());
-        $log->setOwner($this->getCurrentUser($args->getEntityManager()));
-        $log->setNotice($notice);
+        $log->setUserTimesheetDay($entity)
+            ->setLogDate(new DateTime())
+            ->setOwner($this->getCurrentUser($args->getEntityManager()))
+            ->setNotice($notice)
+        ;
 
         $this->userTimesheetDaysLogs[] = $log;
     }
