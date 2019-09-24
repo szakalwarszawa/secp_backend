@@ -88,7 +88,7 @@ class UserWorkScheduleListener
             $currentOwnerId = $currentSchedule->getOwner()->getId();
             $todayNumeric = date('Y-m-d');
 
-            $previousWorkSchedule = $args->getEntityManager()
+            $previousWorkSchedules = $args->getEntityManager()
                 ->getRepository(UserWorkSchedule::class)
                 ->createQueryBuilder('p')
                 ->andWhere('p.owner = :owner')
@@ -101,29 +101,32 @@ class UserWorkScheduleListener
                 ->getQuery()
                 ->getResult();
 
-            $currentScheduleDays = array();
-            $previousScheduleDays = array();
+             $currentScheduleDays = array();
+             $previousScheduleDays = array();
 
-            $previous = current($previousWorkSchedule);
+            $daysCurrent = $currentSchedule->getUserWorkScheduleDays();
 
-            if ($previous instanceof UserWorkSchedule) {
-                $previousUserWorkScheduleId = $previous->getId();
-
-                $daysCurrent = $currentSchedule->getUserWorkScheduleDays();
-                foreach ($daysCurrent as $day) {
-                    if ($day->getDayDefinition()->getId() > strtotime($todayNumeric)) {
-                        $currentScheduleDays[]["id"] = $day->getDayDefinition()->getId();
-                    }
+            foreach ($daysCurrent as $day) {
+                if ($day->getDayDefinition()->getId() > strtotime($todayNumeric)) {
+                    $currentScheduleDays[]["id"] = $day->getDayDefinition()->getId();
                 }
+            }
 
+            foreach ($previousWorkSchedules as $previous) {
+                $previousUserWorkScheduleId = $previous->getId();
                 $daysPrevious = $previous->getUserWorkScheduleDays();
+
                 foreach ($daysPrevious as $day) {
                     $previousScheduleDays[]["id"] = $day->getDayDefinition()->getId();
                 }
 
-                $diff = array_udiff($previousScheduleDays, $currentScheduleDays, array($this, 'compareScheduleDays'));
+                $dayDifference = array_udiff(
+                    $previousScheduleDays,
+                    $currentScheduleDays,
+                    array($this, 'compareScheduleDays')
+                );
 
-                foreach ($diff as $day) {
+                foreach ($dayDifference as $day) {
                     if (strtotime($day['id']) > strtotime($todayNumeric)) {
                         $update = $args->getEntityManager()->createQueryBuilder('p');
                         $update->update(UserWorkScheduleDay::class, 'p')
