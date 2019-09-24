@@ -7,6 +7,7 @@ use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use App\Entity\DayDefinition;
 use App\Entity\UserWorkScheduleLog;
+use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -83,8 +84,61 @@ class UserWorkScheduleListener
         }
 
         if ($args->hasChangedField('status')
-            && $args->getNewValue('status') === UserWorkSchedule::STATUS_HR_ACCEPT
+            && $args->getNewValue('status')->getId() === UserWorkScheduleStatus::STATUS_HR_ACCEPT
         ) {
+            $args->getEntityManager()
+                ->createQueryBuilder()
+                ->update(UserWorkScheduleDay::class, 'p')
+                ->set('p.visibility', ':setVisibility')
+                ->setParameter('setVisibility', false)
+                ->where('p.dayDefinition <= :todayDate')
+                ->setParameter('todayDate', date('Y-m-d'))
+                ->andWhere('p.userWorkSchedule = :userWorkSchedule')
+                ->setParameter('userWorkSchedule', $currentSchedule)
+                ->andWhere('p.visibility = :previousVisible')
+                ->setParameter('previousVisible', true)
+                ->getQuery()
+                ->execute();
+
+            $args->getEntityManager()
+                ->createQueryBuilder()
+                ->update(UserWorkScheduleDay::class, 'p')
+                ->set('p.visibility', ':setVisibility')
+                ->setParameter('setVisibility', true)
+                ->where('p.dayDefinition >= :tomorrowDate')
+                ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
+                ->andWhere('p.userWorkSchedule = :userWorkSchedule')
+                ->setParameter('userWorkSchedule', $currentSchedule)
+                ->getQuery()
+                ->execute();
+
+            $args->getEntityManager()
+                ->createQueryBuilder()
+                ->update(UserWorkScheduleDay::class, 'p')
+                ->set('p.visibility', ':setVisibility')
+                ->setParameter('setVisibility', false)
+                ->andWhere('p.dayDefinition >= :tomorrowDate')
+                ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
+                ->andWhere('p.userWorkSchedule != :userWorkSchedule')
+                ->setParameter('userWorkSchedule', $currentSchedule)
+                ->andWhere('p.dayDefinition BETWEEN :fromDate AND :toDate')
+                ->setParameter('fromDate', $currentSchedule->getFromDate()->format('Y-m-d'))
+                ->setParameter('toDate', $currentSchedule->getToDate()->format('Y-m-d'))
+                ->andWhere('p.visibility = :previousVisible')
+                ->setParameter('previousVisible', true)
+                ->getQuery()
+                ->execute();
+
+//            var_dump($currentSchedule->getFromDate()->format('Y-m-d'));
+//            var_dump($currentSchedule->getToDate()->format('Y-m-d'));
+//
+//            foreach ($aa as $item) {
+//                $bb[] = $item['id'];
+//            }
+//
+//            var_dump($bb);
+            return;
+
             $currentOwnerId = $currentSchedule->getOwner()->getId();
             $todayNumeric = date('Y-m-d');
 
@@ -97,7 +151,7 @@ class UserWorkScheduleListener
                 ->addOrderBy('p.id', 'asc')
                 ->setParameter('owner', $currentOwnerId)
                 ->setParameter('date', $todayNumeric)
-                ->setParameter('status', UserWorkSchedule::STATUS_HR_ACCEPT)
+                ->setParameter('status', $args->getNewValue('status'))
                 ->getQuery()
                 ->getResult();
 
@@ -250,7 +304,7 @@ class UserWorkScheduleListener
             ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
             ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
             ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo())
-            ->setVisibility(true);
+            ->setVisibility($userWorkSchedule->getStatus()->getId() === UserWorkScheduleStatus::STATUS_HR_ACCEPT);
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $entityManager->persist($userWorkScheduleDay);
