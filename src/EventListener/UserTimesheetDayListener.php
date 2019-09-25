@@ -5,6 +5,7 @@ namespace App\EventListener;
 use App\Entity\User;
 use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetDay;
+use App\Entity\UserTimesheetDayLog;
 use DateTime;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
@@ -14,6 +15,7 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use RuntimeException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -46,6 +48,7 @@ class UserTimesheetDayListener
     /**
      * @param PreUpdateEventArgs $args
      * @return void
+     * @throws Exception
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {
@@ -83,6 +86,13 @@ class UserTimesheetDayListener
         );
     }
 
+    /**
+     * @param PreUpdateEventArgs $args
+     * @param string $fieldName
+     * @param string $noticeTemplate
+     * @param string|null $methodName
+     * @throws Exception
+     */
     private function checkChanges(
         PreUpdateEventArgs $args,
         string $fieldName,
@@ -115,6 +125,7 @@ class UserTimesheetDayListener
      * @param UserTimesheetDay $entity
      * @param string $notice
      * @return void
+     * @throws Exception
      */
     private function addUserTimeSheetDayLog(PreUpdateEventArgs $args, UserTimesheetDay $entity, string $notice): void
     {
@@ -146,7 +157,6 @@ class UserTimesheetDayListener
      * @param LifecycleEventArgs $args
      * @return void
      * @throws RuntimeException
-     * @throws ORMException
      */
     public function prePersist(LifecycleEventArgs $args): void
     {
