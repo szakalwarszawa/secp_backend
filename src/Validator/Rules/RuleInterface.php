@@ -21,11 +21,11 @@ interface RuleInterface
     public function getRules(): ?string;
 
     /**
-	 * Set rules
-	 *
-	 * @param string $rules - json array
-	 *
-	 * @return StatusRuleInterface
-	 */
-	public function setRules(string $rules);
+     * Set rules
+     *
+     * @param string $rules - json array
+     *
+     * @return StatusRuleInterface
+     */
+    public function setRules(string $rules);
 }

@@ -117,27 +117,27 @@ class UserWorkScheduleStatus implements RuleInterface
         return $this;
     }
 
-	/**
-	 * Get rules
-	 *
-	 * @return null|string
-	 */
-	public function getRules(): ?string
-	{
-		return $this->rules;
-	}
+    /**
+     * Get rules
+     *
+     * @return null|string
+     */
+    public function getRules(): ?string
+    {
+        return $this->rules;
+    }
 
-	/**
-	 * Set rules
-	 *
-	 * @param string $rules
-	 *
-	 * @return UserWorkScheduleStatus
-	 */
-	public function setRules(string $rules): UserWorkScheduleStatus
-	{
-		$this->rules = $rules;
+    /**
+     * Set rules
+     *
+     * @param string $rules
+     *
+     * @return UserWorkScheduleStatus
+     */
+    public function setRules(string $rules): UserWorkScheduleStatus
+    {
+        $this->rules = $rules;
 
-		return $this;
-	}
+        return $this;
+    }
 }
