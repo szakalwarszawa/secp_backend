@@ -18,153 +18,297 @@ use Exception;
  */
 class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 {
+    /**
+     * @return array
+     */
     public function changeWorkScheduleStatusProvider(): array
     {
-        return [
-            [['2019-09-14', '2019-09-29'], ['2019-09-14', '2019-09-29'], []],
-            [['2019-09-01', '2019-09-20'], ['2019-09-21', '2019-09-30'], []],
-            [['2019-09-01', '2019-09-20'], ['2019-09-01', '2019-09-20'], []],
+        $one = [
+            [
+                [
+                    '2019-09-14',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    '2019-09-16',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    '2019-09-13',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                ]
+            ],
         ];
+
+        $two = [
+            [
+                [
+                    '2019-09-13',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    '2019-09-16',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    '2019-09-14',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                ]
+            ],
+        ];
+
+        $three = [
+            [
+                [
+                    '2019-09-12',
+                    date('Y-m-d', strtotime('now +2 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    '2019-09-12',
+                    date('Y-m-d', strtotime('now +2 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    '2019-09-12',
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                ]
+            ],
+        ];
+
+        $four = [
+            [
+                [
+                    date('Y-m-d', strtotime('now +2 days')),
+                    date('Y-m-d', strtotime('now +2 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    date('Y-m-d', strtotime('now +2 days')),
+                    date('Y-m-d', strtotime('now +2 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    date('Y-m-d', strtotime('now +2 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                ]
+            ],
+        ];
+
+        $five = [
+            [
+                [
+                    date('Y-m-d', strtotime('now -2 days')),
+                    date('Y-m-d', strtotime('now -5 days')),
+                    UserFixtures::REF_USER_ADMIN,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    date('Y-m-d', strtotime('now -2 days')),
+                    date('Y-m-d', strtotime('now -5 days')),
+                    UserFixtures::REF_USER_MANAGER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    date('Y-m-d', strtotime('now -2 days')),
+                    date('Y-m-d', strtotime('now -5 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                ]
+            ],
+        ];
+
+        $six = [
+            [
+                [
+                    '2019-09-14',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    '2019-09-16',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_ADMIN,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null
+                ]
+            ],
+            [
+                [
+                    '2019-09-13',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_MANAGER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                ]
+            ],
+        ];
+
+        return array_merge($one, $two, $three, $four, $five, $six);
     }
 
     /**
      * @test
+     * @param array $currentCase
      * @dataProvider changeWorkScheduleStatusProvider
      * @throws Exception
      */
-    public function changeWorkScheduleStatus($scheduleBase, $scheduleNew, $scheduleNew2): void
+    public function changeWorkScheduleStatus(array $currentCase): void
     {
-        $userWorkScheduleToClean = [];
-
-        $scheduleConfirmed = $this->makeUserWorkSchedule(
-            $scheduleBase[0],
-            $scheduleBase[1],
-            $this->getEntityFromReference(UserFixtures::REF_USER_USER),
-            $this->getEntityFromReference('work_schedule_profile_2'),
-            $this->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT)
+        $schedule = $this->makeUserWorkSchedule(
+            $currentCase[0],
+            $currentCase[1],
+            $this->getEntityFromReference($currentCase[2]),
+            $this->getEntityFromReference($currentCase[3]),
+            $this->getEntityFromReference($currentCase[4])
         );
 
-        $scheduleConfirmedDb = self::$container->get('doctrine')
+        $scheduleDb = self::$container->get('doctrine')
             ->getManager()
             ->getRepository(UserWorkSchedule::class)
-            ->find($scheduleConfirmed->getId());
-        /* @var $scheduleConfirmedDb UserWorkSchedule */
-        $userWorkScheduleToClean[] = $scheduleConfirmedDb;
+            ->find($schedule->getId());
+        /* @var $scheduleDb UserWorkSchedule */
+        $userWorkScheduleToClean[] = $scheduleDb;
 
-        $scheduleNew = $this->makeUserWorkSchedule(
-            $scheduleNew[0],
-            $scheduleNew[1],
-            $this->getEntityFromReference(UserFixtures::REF_USER_USER),
-            $this->getEntityFromReference('work_schedule_profile_2'),
-            $this->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT)
-        );
-
-        $scheduleNewDb = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($scheduleNew->getId());
-        /* @var $scheduleNewDb UserWorkSchedule */
-        $userWorkScheduleToClean[] = $scheduleNewDb;
-
-        foreach ($scheduleConfirmedDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-            $this->assertTrue($userWorkScheduleDay->getVisibility());
-        }
-
-        foreach ($scheduleNewDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-            $this->assertFalse($userWorkScheduleDay->getVisibility());
-        }
-
-        $scheduleNewDb->setStatus($this->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT));
-
-        $this->saveToDb($scheduleNewDb);
-
-        foreach ($scheduleConfirmedDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-            self::$container->get('doctrine')
-                ->getManager()
-                ->refresh($userWorkScheduleDay);
-
-            if (strtotime($userWorkScheduleDay->getDayDefinition()->getId()) <= time()) {
-                $this->assertTrue(
-                    $userWorkScheduleDay->getVisibility(),
-                    sprintf(
-                        '%s - %s - %s',
-                        $userWorkScheduleDay->getId(),
-                        $userWorkScheduleDay->getDayDefinition()->getId(),
-                        $userWorkScheduleDay->getVisibility()
-                    )
-                );
-            } else {
-                $this->assertFalse(
-                    $userWorkScheduleDay->getVisibility(),
-                    sprintf(
-                        '%s - %s - %s',
-                        $userWorkScheduleDay->getId(),
-                        $userWorkScheduleDay->getDayDefinition()->getId(),
-                        $userWorkScheduleDay->getVisibility()
-                    )
-                );
-            }
-        }
-
-        foreach ($scheduleNewDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-            self::$container->get('doctrine')
-                ->getManager()
-                ->refresh($userWorkScheduleDay);
-
-            if (strtotime($userWorkScheduleDay->getDayDefinition()->getId()) <= time()) {
-                $this->assertFalse($userWorkScheduleDay->getVisibility());
-            } else {
+        if ($currentCase[5] == null) {
+            foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
                 $this->assertTrue($userWorkScheduleDay->getVisibility());
             }
+        } else {
+            foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
+                $this->assertFalse($userWorkScheduleDay->getVisibility());
+            }
         }
 
+        if ($currentCase[5] != null) {
+            $schedule->setStatus($this->getEntityFromReference($currentCase[5]));
+            $this->saveToDb($schedule);
+        }
+
+        foreach ($scheduleDb as $exist) {
+            foreach ($exist->getUserWorkScheduleDays() as $userWorkScheduleDay) {
+
+                self::$container->get('doctrine')
+                    ->getManager()
+                    ->refresh($userWorkScheduleDay);
+
+                if (strtotime($userWorkScheduleDay->getDayDefinition()->getId()) <= time()) {
+                    $this->assertTrue(
+                        $userWorkScheduleDay->getVisibility(),
+                        sprintf(
+                            '%s - %s - %s',
+                            $userWorkScheduleDay->getId(),
+                            $userWorkScheduleDay->getDayDefinition()->getId(),
+                            $userWorkScheduleDay->getVisibility()
+                        )
+                    );
+                } else {
+                    $this->assertFalse(
+                        $userWorkScheduleDay->getVisibility(),
+                        sprintf(
+                            '%s - %s - %s',
+                            $userWorkScheduleDay->getId(),
+                            $userWorkScheduleDay->getDayDefinition()->getId(),
+                            $userWorkScheduleDay->getVisibility()
+                        )
+                    );
+                }
+            }
+        }
+
+        if ($currentCase[5] != null) {
+            foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
+                self::$container->get('doctrine')
+                    ->getManager()
+                    ->refresh($userWorkScheduleDay);
+
+                if (strtotime($userWorkScheduleDay->getDayDefinition()->getId()) < time()) {
+                    $this->assertFalse($userWorkScheduleDay->getVisibility());
+                }
+
+                if (strtotime($userWorkScheduleDay->getDayDefinition()->getId()) > time()) {
+                    $this->assertTrue($userWorkScheduleDay->getVisibility());
+                }
+            }
+        }
         $this->cleanUserWorkSchedule($userWorkScheduleToClean);
-
-        return;
-
-
-        $previousUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array('userWorkSchedule' => $previousScheduleId, "visibility" => false));
-
-        $previousScheduleAffectedDays = count($previousUpdated);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array('userWorkSchedule' => $currentScheduleId, 'visibility' => false));
-
-        $currentScheduleAffectedDays = count($currentUpdated);
-
-        $today = strtotime(date('Y-m-d'));
-        $previousWorkScheduleEnd = strtotime($startTo);
-
-        $daysBetween = ceil(abs($previousWorkScheduleEnd - $today) / 86400);
-        $this->assertEquals($previousScheduleAffectedDays, $daysBetween);
-        $this->assertEquals($currentScheduleAffectedDays, 0);
-
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($previousScheduleId);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($userWorkScheduleUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
     }
 
     /**
@@ -233,551 +377,5 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 ->getManager()
                 ->flush();
         }
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     *
-     * 14 15 16 |17| 18 19
-     *       16 |17| 18 19 20 21
-     *
-     */
-    public function previousStartEarlienThanCurrentSchedule()
-    {
-        $startFrom = '2019-09-14';
-        $startTo = '2019-09-29';
-        $endFrom = '2020-09-16';
-        $endTo = '2020-09-21';
-
-        $owner = $this->getEntityFromReference(UserFixtures::REF_USER_USER);
-        $this->assertInstanceOf(User::class, $owner);
-
-        $workScheduleProfile = $this->getEntityFromReference('work_schedule_profile_2');
-        $this->assertInstanceOf(WorkScheduleProfile::class, $workScheduleProfile);
-
-        $previousSchedule = new UserWorkSchedule();
-        $previousSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT)
-            ->setFromDate(new \DateTime($startFrom))
-            ->setToDate(new \DateTime($startTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($previousSchedule);
-
-        $currentSchedule = new UserWorkSchedule();
-        $currentSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_OWNER_EDIT)
-            ->setFromDate(new \DateTime($endFrom))
-            ->setToDate(new \DateTime($endTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentSchedule);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousScheduleId = $previousSchedule->getId();
-        $currentScheduleId = $currentSchedule->getId();
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        $currentUpdated->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array('userWorkSchedule' => $previousScheduleId, "visibility" => false));
-
-        $previousScheduleAffectedDays = count($previousUpdated);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array('userWorkSchedule' => $currentScheduleId, 'visibility' => false));
-
-        $currentScheduleAffectedDays = count($currentUpdated);
-
-        $today = strtotime(date('Y-m-d'));
-        $previousWorkScheduleEnd = strtotime($startTo);
-
-        $daysBetween = ceil(abs($previousWorkScheduleEnd - $today) / 86400);
-        $this->assertEquals($previousScheduleAffectedDays, $daysBetween);
-        $this->assertEquals($currentScheduleAffectedDays, 0);
-
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($previousScheduleId);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($userWorkScheduleUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     *
-     *      |17| 18 19 20 21 22
-     *      |17| 18 19 20 21 22
-     *
-     */
-    public function previousAndCurrentSchedulesStartsToday()
-    {
-        $startFrom = '2019-09-16';
-        $startTo = '2019-09-28';
-        $endFrom = '2020-09-16';
-        $endTo = '2020-09-28';
-
-        $owner = $this->getEntityFromReference(UserFixtures::REF_USER_USER);
-        $this->assertInstanceOf(User::class, $owner);
-
-        $workScheduleProfile = $this->getEntityFromReference('work_schedule_profile_2');
-        $this->assertInstanceOf(WorkScheduleProfile::class, $workScheduleProfile);
-
-        $previousSchedule = new UserWorkSchedule();
-        $previousSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT)
-            ->setFromDate(new \DateTime($startFrom))
-            ->setToDate(new \DateTime($startTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($previousSchedule);
-
-        $currentSchedule = new UserWorkSchedule();
-        $currentSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_OWNER_EDIT)
-            ->setFromDate(new \DateTime($endFrom))
-            ->setToDate(new \DateTime($endTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentSchedule);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousScheduleId = $previousSchedule->getId();
-        $currentScheduleId = $currentSchedule->getId();
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        $currentUpdated->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $previousScheduleId, "visibility" => false));
-
-        $previousScheduleAffectedDays = count($previousUpdated);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $currentScheduleId, "visibility" => false));
-
-        $currentScheduleAffectedDays = count($currentUpdated);
-
-        $today = strtotime(date('Y-m-d'));
-        $previousWorkscheduleEnd = strtotime($startTo);
-
-        $daysBetween = ceil(abs($previousWorkscheduleEnd - $today) / 86400);
-        $this->assertEquals($previousScheduleAffectedDays, $daysBetween);
-        $this->assertEquals($currentScheduleAffectedDays, 0);
-
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($previousScheduleId);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($userWorkScheduleUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     *
-     *       15 16 17 18 19 20 21
-     * 09 10 11 12 13 14 15 16 17 18
-     *
-     */
-    public function currentScheduleStartsEarlierThanPreviousScheudule()
-    {
-        $startFrom = '2019-09-15';
-        $startTo = '2019-09-28';
-        $endFrom = '2020-09-09';
-        $endTo = '2020-09-19';
-
-        $owner = $this->getEntityFromReference(UserFixtures::REF_USER_USER);
-        $this->assertInstanceOf(User::class, $owner);
-
-        $workScheduleProfile = $this->getEntityFromReference('work_schedule_profile_2');
-        $this->assertInstanceOf(WorkScheduleProfile::class, $workScheduleProfile);
-
-        $previousSchedule = new UserWorkSchedule();
-        $previousSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT)
-            ->setFromDate(new \DateTime($startFrom))
-            ->setToDate(new \DateTime($startTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($previousSchedule);
-
-        $currentSchedule = new UserWorkSchedule();
-        $currentSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_OWNER_EDIT)
-            ->setFromDate(new \DateTime($endFrom))
-            ->setToDate(new \DateTime($endTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentSchedule);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousScheduleId = $previousSchedule->getId();
-        $currentScheduleId = $currentSchedule->getId();
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        $currentUpdated->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $previousScheduleId, "visibility" => false));
-
-        $previousScheduleAffectedDays = count($previousUpdated);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $currentScheduleId, "visibility" => false));
-
-        $currentScheduleAffectedDays = count($currentUpdated);
-
-        $today = strtotime(date('Y-m-d'));
-        $previousWorkscheduleEnd = strtotime($startTo);
-
-        $daysBetween = ceil(abs($previousWorkscheduleEnd - $today) / 86400);
-        $this->assertEquals($previousScheduleAffectedDays, $daysBetween);
-        $this->assertEquals($currentScheduleAffectedDays, 0);
-
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($previousScheduleId);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($userWorkScheduleUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     *
-     *       15 16 |17| 18 19 20 21
-     *                        20 21 22 23 24 25 26
-     *
-     */
-    public function currentScheduleFarAwayInTheFutureFromToday()
-    {
-        $startFrom = '2019-09-14';
-        $startTo = '2019-09-29';
-        $endFrom = '2020-09-25';
-        $endTo = '2020-09-31';
-
-        $owner = $this->getEntityFromReference(UserFixtures::REF_USER_USER);
-        $this->assertInstanceOf(User::class, $owner);
-
-        $workScheduleProfile = $this->getEntityFromReference('work_schedule_profile_2');
-        $this->assertInstanceOf(WorkScheduleProfile::class, $workScheduleProfile);
-
-        $previousSchedule = new UserWorkSchedule();
-        $previousSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT)
-            ->setFromDate(new \DateTime($startFrom))
-            ->setToDate(new \DateTime($startTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($previousSchedule);
-
-        $currentSchedule = new UserWorkSchedule();
-        $currentSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_OWNER_EDIT)
-            ->setFromDate(new \DateTime($endFrom))
-            ->setToDate(new \DateTime($endTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentSchedule);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousScheduleId = $previousSchedule->getId();
-        $currentScheduleId = $currentSchedule->getId();
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        $currentUpdated->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $previousScheduleId, "visibility" => false));
-
-        $previousScheduleAffectedDays = count($previousUpdated);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $currentScheduleId, "visibility" => false));
-
-        $currentScheduleAffectedDays = count($currentUpdated);
-
-        $today = strtotime(date('Y-m-d'));
-        $previousWorkscheduleEnd = strtotime($startTo);
-
-        $daysBetween = ceil(abs($previousWorkscheduleEnd - $today) / 86400);
-        $this->assertEquals($previousScheduleAffectedDays, $daysBetween);
-        $this->assertEquals($currentScheduleAffectedDays, 0);
-
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($previousScheduleId);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($userWorkScheduleUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     *
-     * 01 02 03 04 05 06 07 08 09 10 11 .............|17|
-     *                                   13 14 15 16 |17| 18 19 20 21 22 23
-     *
-     */
-    public function previousScheduleEndsInThePastFarAwayFromToday()
-    {
-        $startFrom = '2019-09-01';
-        $startTo = '2019-09-17';
-        $endFrom = '2020-09-16';
-        $endTo = '2020-09-31';
-
-        $owner = $this->getEntityFromReference(UserFixtures::REF_USER_USER);
-        $this->assertInstanceOf(User::class, $owner);
-
-        $workScheduleProfile = $this->getEntityFromReference('work_schedule_profile_2');
-        $this->assertInstanceOf(WorkScheduleProfile::class, $workScheduleProfile);
-
-        $previousSchedule = new UserWorkSchedule();
-        $previousSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT)
-            ->setFromDate(new \DateTime($startFrom))
-            ->setToDate(new \DateTime($startTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($previousSchedule);
-
-        $currentSchedule = new UserWorkSchedule();
-        $currentSchedule->setOwner($owner)
-            ->setWorkScheduleProfile($workScheduleProfile)
-            ->setStatus(UserWorkSchedule::STATUS_OWNER_EDIT)
-            ->setFromDate(new \DateTime($endFrom))
-            ->setToDate(new \DateTime($endTo));
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentSchedule);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousScheduleId = $previousSchedule->getId();
-        $currentScheduleId = $currentSchedule->getId();
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        $currentUpdated->setStatus(UserWorkSchedule::STATUS_HR_ACCEPT);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
-
-        $previousUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $previousScheduleId, "visibility" => false));
-
-        $previousScheduleAffectedDays = count($previousUpdated);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findBy(array("userWorkSchedule" => $currentScheduleId, "visibility" => false));
-
-        $currentScheduleAffectedDays = count($currentUpdated);
-
-        $today = strtotime(date('Y-m-d'));
-        $previousWorkscheduleEnd = strtotime($startTo);
-
-        $daysBetween = ceil(abs($previousWorkscheduleEnd - $today) / 86400);
-        $this->assertEquals($previousScheduleAffectedDays, 0);
-        $this->assertEquals($currentScheduleAffectedDays, 0);
-
-        $userWorkScheduleUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($previousScheduleId);
-
-        $currentUpdated = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($currentScheduleId);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($currentUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->remove($userWorkScheduleUpdated);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
     }
 }
