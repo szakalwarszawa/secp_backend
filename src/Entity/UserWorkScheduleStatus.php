@@ -69,6 +69,14 @@ class UserWorkScheduleStatus
     protected $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"get"})
+     */
+    protected $rules;
+
+    /**
      * @return null|string
      */
     public function getId(): ?string
@@ -107,4 +115,28 @@ class UserWorkScheduleStatus
 
         return $this;
     }
+
+	/**
+	 * Get rules
+	 *
+	 * @return null|string
+	 */
+	public function getRules(): ?string
+	{
+		return $this->rules;
+	}
+
+	/**
+	 * Set rules
+	 *
+	 * @param string $rules
+	 *
+	 * @return UserWorkScheduleStatus
+	 */
+	public function setRules(string $rules): UserWorkScheduleStatus
+	{
+		$this->rules = $rules;
+
+		return $this;
+	}
 }
