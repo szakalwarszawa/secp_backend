@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -66,7 +67,9 @@ class DayDefinitionLog
     private $owner;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=false)
+     * @var DateTimeInterface
+     *
+     * @ORM\Column(type="datetime")
      * @Assert\NotBlank()
      * @Groups({"get"})
      */
@@ -128,19 +131,19 @@ class DayDefinitionLog
     }
 
     /**
-     * @return string|null
+     * @return DateTimeInterface
      */
-    public function getLogDate(): ?string
+    public function getLogDate(): DateTimeInterface
     {
         return $this->logDate;
     }
 
     /**
-     * @param string $logDate
+     * @param DateTimeInterface $logDate
      *
      * @return DayDefinitionLog
      */
-    public function setLogDate(string $logDate): self
+    public function setLogDate(DateTimeInterface $logDate): self
     {
         $this->logDate = $logDate;
 

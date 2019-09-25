@@ -6,6 +6,7 @@ use App\Entity\UserTimesheetLog;
 use App\Entity\User;
 use App\Entity\UserTimesheet;
 use Doctrine\ORM\EntityManager;
+use DateTime;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\OptimisticLockException;
@@ -72,10 +73,11 @@ class UserTimesheetListener
     private function addUserTimesheetLog(PreUpdateEventArgs $args, UserTimesheet $entity, string $notice): void
     {
         $log = new UserTimesheetLog();
-        $log->setUserTimesheet($entity);
-        $log->setLogDate(date('Y-m-d H:i:s'));
-        $log->setOwner($this->getCurrentUser($args->getEntityManager()));
-        $log->setNotice($notice);
+        $log->setUserTimesheet($entity)
+            ->setLogDate(new DateTime())
+            ->setOwner($this->getCurrentUser($args->getEntityManager()))
+            ->setNotice($notice)
+        ;
 
         $this->userTimesheetLogs[] = $log;
     }

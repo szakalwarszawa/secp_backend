@@ -5,7 +5,8 @@ namespace App\EventListener;
 use App\Entity\User;
 use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetDay;
-use App\Entity\UserTimesheetDayLog;
+use DateTime;
+use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManager;
@@ -118,10 +119,11 @@ class UserTimesheetDayListener
     private function addUserTimeSheetDayLog(PreUpdateEventArgs $args, UserTimesheetDay $entity, string $notice): void
     {
         $log = new UserTimesheetDayLog();
-        $log->setUserTimesheetDay($entity);
-        $log->setLogDate(date('Y-m-d H:i:s'));
-        $log->setOwner($this->getCurrentUser($args->getEntityManager()));
-        $log->setNotice($notice);
+        $log->setUserTimesheetDay($entity)
+            ->setLogDate(new DateTime())
+            ->setOwner($this->getCurrentUser($args->getEntityManager()))
+            ->setNotice($notice)
+        ;
 
         $this->userTimesheetDaysLogs[] = $log;
     }
