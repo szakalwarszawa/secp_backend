@@ -1,4 +1,9 @@
 api_platform:
+    formats:
+        jsonld:
+            mime_types: ['application/ld+json']
+        csv:
+            mime_types: ['text/csv']
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     swagger:
@@ -12,8 +17,6 @@ api_platform:
         force_eager: false
     collection:
         pagination:
-            enabled: true
+            client_enabled: true
             client_items_per_page: true
-#            items_per_page_parameter_name: itemsPerPage
             maximum_items_per_page: 50
-#            page_parameter_name: page
