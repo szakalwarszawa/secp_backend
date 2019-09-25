@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Validator\Rules\RuleInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -49,7 +50,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserWorkScheduleStatusRepository")
  */
-class UserWorkScheduleStatus
+class UserWorkScheduleStatus implements RuleInterface
 {
     /**
      * @var string

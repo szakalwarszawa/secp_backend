@@ -8,6 +8,7 @@ api_platform:
                 type: header
     exception_to_status:
         App\Exception\SectionNotBelongToDepartmentException: 400
+        App\Exception\IncorrectStatusChangeException: 400
     eager_loading:
         force_eager: false
     collection:
