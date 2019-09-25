@@ -19,6 +19,6 @@ api_platform:
         force_eager: false
     collection:
         pagination:
-            client_enabled: true
+            client_enabled: '%env(bool:CLIENT_CAN_ENABLE_DISALBE_PAGINATION)%'
             client_items_per_page: true
             maximum_items_per_page: 50
