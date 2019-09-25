@@ -13,6 +13,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\OptimisticLockException;
+use DateTime;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -82,10 +83,11 @@ class UserWorkScheduleListener
     private function addUserWorkScheduleLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
     {
         $log = new UserWorkScheduleLog();
-        $log->setUserWorkSchedule($entity);
-        $log->setLogDate(date('Y-m-d H:i:s'));
-        $log->setOwner($this->getCurrentUser($args->getEntityManager()));
-        $log->setNotice($notice);
+        $log->setUserWorkSchedule($entity)
+            ->setLogDate(new DateTime())
+            ->setOwner($this->getCurrentUser($args->getEntityManager()))
+            ->setNotice($notice)
+        ;
 
         $this->userWorkScheduleDaysLogs[] = $log;
     }
