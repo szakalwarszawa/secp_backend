@@ -31,8 +31,20 @@ class StatusChangeDecision
         $this->authorizationChecker = $authorizationChecker;
     }
 
+    /**
+     * Check if the user can change current status.
+     *
+     * @param RuleInterface $oldStatus
+     * @param RuleInterface $newStatus
+     *
+     * @return bool
+     */
     public function decide(RuleInterface $oldStatus, RuleInterface $newStatus): bool
     {
+        if (empty($oldStatus->getRules())) {
+            return true;
+        }
+
         $rules = json_decode($oldStatus->getRules());
         foreach ($rules as $key => $rule) {
             if ($this->authorizationChecker->isGranted($key)) {
