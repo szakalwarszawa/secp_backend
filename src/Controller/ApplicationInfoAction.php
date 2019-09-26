@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use josegonzalez;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Dotenv\Dotenv;
 
 /**
  * Class ApplicationInfoAction
@@ -18,6 +18,12 @@ class ApplicationInfoAction extends AbstractController
      * application version from .env file
      */
     const VERSION = 'GIT_TAG';
+
+    /**
+     * application version from .env file
+     */
+    const COMMIT = 'GIT_HASH';
+
     /**
      * @var TokenInterface|null
      */
@@ -37,9 +43,17 @@ class ApplicationInfoAction extends AbstractController
      */
     public function __invoke(): JsonResponse
     {
-        $environment = (new josegonzalez\Dotenv\Loader(getcwd().'/.env'))
-            ->parse()
-            ->toArray();
-        return $this->json(array('GIT_TAG' => $environment[ApplicationInfoAction::VERSION]));
+        $dotEnv = new Dotenv();
+        $dotEnv->load(getcwd().'/.env');
+
+        $tag = $_ENV[ApplicationInfoAction::VERSION];
+        $hash = $_ENV[ApplicationInfoAction::COMMIT];
+
+        return $this->json(
+            array(
+                'GIT_TAG' => $tag,
+                'GIT_HASH' => $hash
+            )
+        );
     }
 }

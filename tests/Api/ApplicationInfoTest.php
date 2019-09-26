@@ -4,6 +4,7 @@ namespace App\Tests\Api;
 
 use App\Tests\AbstractWebTestCase;
 use Exception;
+use App\Controller\ApplicationInfoAction;
 
 /**
  * Class ApplicationInfoTest
@@ -26,6 +27,8 @@ class ApplicationInfoTest extends AbstractWebTestCase
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertIsFloat((float)$response->getContent());
+        $data = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey(ApplicationInfoAction::VERSION, $data);
+        $this->assertArrayHasKey(ApplicationInfoAction::COMMIT, $data);
     }
 }
