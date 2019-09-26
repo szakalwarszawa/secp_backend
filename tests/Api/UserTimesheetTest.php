@@ -5,6 +5,7 @@ namespace App\Tests\Api;
 
 use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserTimesheetFixtures;
+use App\DataFixtures\UserTimesheetStatusFixtures;
 use App\Entity\User;
 use App\Entity\UserTimesheet;
 use App\Tests\AbstractWebTestCase;
@@ -61,7 +62,7 @@ class UserTimesheetTest extends AbstractWebTestCase
         $this->assertEquals($userTimesheetDB->getId(), $userTimesheetJSON->id);
         $this->assertEquals($userTimesheetDB->getPeriod(), $userTimesheetJSON->period);
         $this->assertEquals($userTimesheetDB->getOwner()->getId(), $userTimesheetJSON->owner->id);
-        $this->assertEquals($userTimesheetDB->getStatus(), $userTimesheetJSON->status);
+        $this->assertEquals($userTimesheetDB->getStatus()->getId(), $userTimesheetJSON->status->id);
     }
 
     /**
@@ -118,11 +119,13 @@ class UserTimesheetTest extends AbstractWebTestCase
         $userRef = $this->fixtures->getReference(UserFixtures::REF_USER_USER);
         /* @var $userRef User */
 
+        $timesheetStatusRef = $this->fixtures->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_EDIT);
+
         $payload = <<<JSON
 {
     "owner": "/api/users/{$userRef->getId()}",
     "period": "2019-08",
-    "status": 0
+    "status": "/api/user_timesheet_statuses/{$timesheetStatusRef->getId()}"
 }
 JSON;
 
@@ -140,7 +143,7 @@ JSON;
         $this->assertIsNumeric($userTimesheetJSON->id);
         $this->assertEquals($userRef->getId(), $userTimesheetJSON->owner->id);
         $this->assertEquals('2019-08', $userTimesheetJSON->period);
-        $this->assertEquals(0, $userTimesheetJSON->status);
+        $this->assertEquals($timesheetStatusRef->getId(), $userTimesheetJSON->status->id);
 
         $response = $this->getActionResponse(
             self::HTTP_GET,
@@ -161,7 +164,7 @@ JSON;
             $userTimesheetJSON->owner->id
         );
         $this->assertEquals($userTimesheetDB->getPeriod(), $userTimesheetJSON->period);
-        $this->assertEquals($userTimesheetDB->getStatus(), $userTimesheetJSON->status);
+        $this->assertEquals($userTimesheetDB->getStatus()->getId(), $userTimesheetJSON->status->id);
     }
 
     /**
@@ -174,11 +177,11 @@ JSON;
         $userTimesheetREF = $this->fixtures->getReference(UserTimesheetFixtures::REF_USER_TIMESHEET_USER_EDIT);
         /* @var $userTimesheetREF UserTimesheet */
 
-        $newStatus = UserTimesheet::STATUS_OWNER_ACCEPT;
+        $timesheetStatusRef = $this->fixtures->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_ACCEPT);
 
         $payload = <<<JSON
 {
-    "status": {$newStatus}
+    "status": "/api/user_timesheet_statuses/{$timesheetStatusRef->getId()}"
 }
 JSON;
 
@@ -195,7 +198,7 @@ JSON;
 
         $this->assertNotNull($userJSON);
         $this->assertIsNumeric($userJSON->id);
-        $this->assertEquals($newStatus, $userJSON->status);
+        $this->assertEquals($timesheetStatusRef->getId(), $userJSON->status->id);
 
         $userTimesheetDB = $this->entityManager->getRepository(UserTimesheet::class)->find(
             $userTimesheetREF->getId()
@@ -206,6 +209,6 @@ JSON;
 
         $this->assertNotNull($userJSON);
         $this->assertEquals($userTimesheetDB->getId(), $userJSON->id);
-        $this->assertEquals($userTimesheetDB->getStatus(), $userJSON->status);
+        $this->assertEquals($userTimesheetDB->getStatus()->getId(), $userJSON->status->id);
     }
 }

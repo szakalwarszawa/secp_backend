@@ -106,7 +106,7 @@ automerge:
         - git config --global user.email "linuxadmin@parp.gov.pl"
         - mkdir automerge && cd automerge
         - git clone -b master https://gitlab.parp.gov.pl/parp/secp
-        - cd lsi
+        - cd secp
         - git checkout development
         - git merge --no-ff -m "Auto merge by gitlabci job" master
         - git push origin development
