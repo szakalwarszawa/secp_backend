@@ -63,6 +63,7 @@ class Configurator
         if ($this->getUser()) {
             $filter = $this->entityManager->getFilters()->enable('user_filter');
             $filter
+                ->setParameter('cache', bin2hex(openssl_random_pseudo_bytes(20)))
                 ->setAccessLevel(new AccessLevel($this->getUser(), $this->security))
                 ->setAnnotationReader($this->reader)
             ;
