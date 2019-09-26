@@ -43,12 +43,6 @@ SQL
         );
         $this->addSql(
             <<< SQL
-        ALTER TABLE "logs"."user_timesheet_logs" ALTER COLUMN log_date type timestamp without time zone USING
-        log_date::timestamp without time zone;
-SQL
-        );
-        $this->addSql(
-            <<< SQL
         ALTER TABLE "logs"."user_work_schedule_logs" ALTER COLUMN log_date type timestamp without time zone USING
         log_date::timestamp without time zone;
 SQL
