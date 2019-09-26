@@ -51,8 +51,8 @@ class StatusChangeDecision
         foreach ($rules as $key => $rule) {
             if ($this->authorizationChecker->isGranted($key)
                 && in_array($newStatus->getId(), $rule, true)
-        ) {
-                    return true;
+            ) {
+                return true;
             }
         }
 
