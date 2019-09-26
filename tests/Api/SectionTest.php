@@ -240,7 +240,6 @@ JSON;
 
     /**
      * @test
-     * @expectedException
      * @throws Exception
      */
     public function apiPutSectionWithUsersFromOtherDepartment(): void
