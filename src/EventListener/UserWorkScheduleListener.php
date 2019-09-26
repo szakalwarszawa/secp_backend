@@ -72,18 +72,18 @@ class UserWorkScheduleListener
             return;
         }
 
-        $this->statusChangeDecision->setThrowException(true);
-        $this
-            ->statusChangeDecision
-            ->decide(
-                $args->getOldValue('status'),
-                $args->getNewValue('status')
-            )
-        ;
-
         if ($args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')
         ) {
+            $this->statusChangeDecision->setThrowException(true);
+            $this
+                ->statusChangeDecision
+                ->decide(
+                    $args->getOldValue('status'),
+                    $args->getNewValue('status')
+                )
+            ;
+
             $this->addUserWorkScheduleLog(
                 $args,
                 $entity,

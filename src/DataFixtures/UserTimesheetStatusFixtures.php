@@ -41,17 +41,62 @@ class UserTimesheetStatusFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $statuses = [
-            self::REF_STATUS_OWNER_EDIT => 'Edytowana przez pracownika',
-            self::REF_STATUS_OWNER_ACCEPT => 'Zatwierdzona przez pracownika',
-            self::REF_STATUS_MANAGER_ACCEPT => 'Zatwierdzona przez przełożonego',
-            self::REF_STATUS_HR_ACCEPT => 'Zatwierdzona przez HR',
+            self::REF_STATUS_OWNER_EDIT => [
+                'title' => 'Edytowana przez pracownika',
+                'rules' => [
+                    'ROLE_USER' => [
+                        self::REF_STATUS_OWNER_ACCEPT,
+                    ],
+                    'ROLE_HR' => [
+                        self::REF_STATUS_OWNER_ACCEPT,
+                        self::REF_STATUS_MANAGER_ACCEPT,
+                        self::REF_STATUS_HR_ACCEPT,
+                    ],
+                ]
+            ],
+            self::REF_STATUS_OWNER_ACCEPT => [
+                'title' => 'Zatwierdzona przez pracownika',
+                'rules' => [
+                    'ROLE_DEPARTMENT_MANAGER' => [
+                        self::REF_STATUS_OWNER_EDIT,
+                        self::REF_STATUS_MANAGER_ACCEPT,
+                    ],
+                    'ROLE_HR' => [
+                        self::REF_STATUS_OWNER_EDIT,
+                        self::REF_STATUS_MANAGER_ACCEPT,
+                        self::REF_STATUS_HR_ACCEPT
+                    ],
+                ]
+            ],
+            self::REF_STATUS_MANAGER_ACCEPT => [
+                'title' => 'Zatwierdzona przez przełożonego',
+                'rules' => [
+                    'ROLE_HR' => [
+                        self::REF_STATUS_OWNER_EDIT,
+                        self::REF_STATUS_OWNER_ACCEPT,
+                        self::REF_STATUS_MANAGER_ACCEPT,
+                        self::REF_STATUS_HR_ACCEPT,
+                    ],
+                ],
+            ],
+            self::REF_STATUS_HR_ACCEPT => [
+                'title' => 'Zatwierdzona przez HR',
+                'rules' => [
+                    'ROLE_HR' => [
+                        self::REF_STATUS_OWNER_EDIT,
+                        self::REF_STATUS_OWNER_ACCEPT,
+                        self::REF_STATUS_MANAGER_ACCEPT,
+                    ],
+                ],
+            ]
         ];
 
         foreach ($statuses as $key => $value) {
             $userTimesheetStatus = new UserTimesheetStatus();
             $userTimesheetStatus
                 ->setId($key)
-                ->setName($value)
+                ->setName($value['title'])
+                ->setRules(json_encode($value['rules']))
             ;
 
             $manager->persist($userTimesheetStatus);

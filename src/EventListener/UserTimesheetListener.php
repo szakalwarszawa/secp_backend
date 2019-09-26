@@ -5,6 +5,7 @@ namespace App\EventListener;
 use App\Entity\UserTimesheetLog;
 use App\Entity\User;
 use App\Entity\UserTimesheet;
+use App\Validator\Rules\StatusChangeDecision;
 use Doctrine\ORM\EntityManager;
 use DateTime;
 use Doctrine\ORM\Event\PostFlushEventArgs;
@@ -31,12 +32,20 @@ class UserTimesheetListener
     private $userTimesheetLogs = [];
 
     /**
-     * UserTimesheetListener constructor.
-     * @param TokenStorageInterface $tokenStorage
+     * @var StatusChangeDecision
      */
-    public function __construct(TokenStorageInterface $tokenStorage)
+    private $statusChangeDecision;
+
+    /**
+     * UserTimesheetListener constructor.
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param StatusChangedDecision $statusChangeDecision
+     */
+    public function __construct(TokenStorageInterface $tokenStorage, StatusChangeDecision $statusChangeDecision)
     {
         $this->token = $tokenStorage->getToken();
+        $this->statusChangeDecision = $statusChangeDecision;
     }
 
     /**
@@ -50,9 +59,19 @@ class UserTimesheetListener
             return;
         }
 
+        $this->statusChangeDecision->setThrowException(true);
+
         if ($args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')
         ) {
+            $this
+                ->statusChangeDecision
+                ->decide(
+                    $args->getOldValue('status'),
+                    $args->getNewValue('status')
+                )
+            ;
+
             $this->addUserTimesheetLog(
                 $args,
                 $entity,
