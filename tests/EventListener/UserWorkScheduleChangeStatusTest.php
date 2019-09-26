@@ -247,7 +247,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         /* @var $scheduleDb UserWorkSchedule */
         $userWorkScheduleToClean[] = $scheduleDb;
 
-        if ($currentCase[5] == null) {
+        if ($currentCase[5] == null) { //nie zmienil sie status sa poprzednie
             foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
                 $this->assertTrue($userWorkScheduleDay->getVisibility());
             }
@@ -262,43 +262,11 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             $this->saveToDb($schedule);
         }
 
-        foreach ($scheduleDb as $exist) {
-            foreach ($exist->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-
-                self::$container->get('doctrine')
-                    ->getManager()
-                    ->refresh($userWorkScheduleDay);
-
-                if (strtotime($userWorkScheduleDay->getDayDefinition()->getId()) <= time()) {
-                    $this->assertTrue(
-                        $userWorkScheduleDay->getVisibility(),
-                        sprintf(
-                            '%s - %s - %s',
-                            $userWorkScheduleDay->getId(),
-                            $userWorkScheduleDay->getDayDefinition()->getId(),
-                            $userWorkScheduleDay->getVisibility()
-                        )
-                    );
-                } else {
-                    $this->assertFalse(
-                        $userWorkScheduleDay->getVisibility(),
-                        sprintf(
-                            '%s - %s - %s',
-                            $userWorkScheduleDay->getId(),
-                            $userWorkScheduleDay->getDayDefinition()->getId(),
-                            $userWorkScheduleDay->getVisibility()
-                        )
-                    );
-                }
-            }
-        }
-
-        if ($currentCase[5] != null) {
+        if ($currentCase[5] != null) { //zmienil sie status ostatni -> warunki ostatniego
             foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
                 self::$container->get('doctrine')
                     ->getManager()
                     ->refresh($userWorkScheduleDay);
-
                 if (strtotime($userWorkScheduleDay->getDayDefinition()->getId()) < time()) {
                     $this->assertFalse($userWorkScheduleDay->getVisibility());
                 }
