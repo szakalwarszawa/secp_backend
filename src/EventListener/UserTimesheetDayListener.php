@@ -6,9 +6,9 @@ use App\Entity\User;
 use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetDay;
 use App\Entity\UserTimesheetDayLog;
-use DateTime;
-use App\Entity\UserWorkSchedule;
+use App\Entity\UserTimesheetStatus;
 use App\Entity\UserWorkScheduleDay;
+use DateTime;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\PostFlushEventArgs;
@@ -60,29 +60,34 @@ class UserTimesheetDayListener
         $this->checkChanges(
             $args,
             'presenceType',
-            'Zmieniono typ obecności z: %s na: %s',
+            'Zmieniono typ obecności z: %s, na: %s',
             'getName'
         );
         $this->checkChanges(
             $args,
             'absenceType',
-            'Zmieniono typ nieobecności z: %s na: %s',
+            'Zmieniono typ nieobecności z: %s, na: %s',
             'getName'
         );
         $this->checkChanges(
             $args,
+            'notice',
+            'Zmieniono opis z: %s, na: %s'
+        );
+        $this->checkChanges(
+            $args,
             'dayStartTime',
-            'Zmieniono rozpoczęcie dnia z: %s na: %s'
+            'Zmieniono rozpoczęcie dnia z: %s, na: %s'
         );
         $this->checkChanges(
             $args,
             'dayEndTime',
-            'Zmieniono zakończenie dnia z: %s na: %s'
+            'Zmieniono zakończenie dnia z: %s, na: %s'
         );
         $this->checkChanges(
             $args,
             'workingTime',
-            'Zmieniono czas pracy z: %s na: %s'
+            'Zmieniono czas pracy z: %s, na: %s'
         );
     }
 
@@ -100,21 +105,21 @@ class UserTimesheetDayListener
         ?string $methodName = null
     ): void {
         if ($args->hasChangedField($fieldName) && $args->getOldValue($fieldName) !== $args->getNewValue($fieldName)) {
-            $oldValue = $methodName === null
-                ? $args->getOldValue($fieldName)
-                : $args->getOldValue($fieldName)->$methodName();
+            $oldValue = $methodName !== null && $args->getOldValue($fieldName) !== null
+                ? $args->getOldValue($fieldName)->$methodName()
+                : $args->getOldValue($fieldName);
 
-            $newValue = $methodName === null
-                ? $args->getNewValue($fieldName)
-                : $args->getNewValue($fieldName)->$methodName();
+            $newValue = $methodName !== null && $args->getNewValue($fieldName) !== null
+                ? $args->getNewValue($fieldName)->$methodName()
+                : $args->getNewValue($fieldName);
 
             $this->addUserTimeSheetDayLog(
                 $args,
                 $args->getObject(),
                 sprintf(
                     $noticeTemplate,
-                    $oldValue,
-                    $newValue
+                    $oldValue ?? 'brak',
+                    $newValue ?? 'brak'
                 )
             );
         }
@@ -156,11 +161,12 @@ class UserTimesheetDayListener
     /**
      * @param LifecycleEventArgs $args
      * @return void
-     * @throws RuntimeException
+     * @throws ORMException
      */
     public function prePersist(LifecycleEventArgs $args): void
     {
         $entityManager = $args->getEntityManager();
+        /* @var EntityManager $entityManager */
 
         $userTimesheetDay = $args->getObject();
         /* @var $userTimesheetDay UserTimesheetDay */
@@ -171,7 +177,8 @@ class UserTimesheetDayListener
             return;
         }
 
-        $userWorkScheduleDay = $entityManager->getRepository(UserWorkScheduleDay::class)
+        $userWorkScheduleDay = $entityManager
+            ->getRepository(UserWorkScheduleDay::class)
             ->findWorkDay($this->getCurrentUser($entityManager), $userTimesheetDay->getDayDate());
         /* @var $userWorkScheduleDay UserWorkScheduleDay */
 
@@ -187,17 +194,22 @@ class UserTimesheetDayListener
 
         $period = date('Y-m', strtotime($userWorkScheduleDay->getDayDefinition()->getId()));
 
+        $userTimesheetStatusEdit = $entityManager
+            ->getRepository(UserTimesheetStatus::class)
+            ->find('TIMESHEET-STATUS-OWNER-EDIT');
+
         $userTimesheet = new UserTimesheet();
         $userTimesheet
-            ->setStatus(UserTimesheet::STATUS_OWNER_EDIT)
+            ->setStatus($userTimesheetStatusEdit)
             ->setPeriod($period)
             ->setOwner($this->getCurrentUser($entityManager));
 
         $entityManager->persist($userTimesheet);
-        $entityManager->getUnitOfWork()->computeChangeSet(
-            $entityManager->getClassMetadata(UserTimesheet::class),
-            $userTimesheet
-        );
+        $entityManager->getUnitOfWork()
+            ->computeChangeSet(
+                $entityManager->getClassMetadata(UserTimesheet::class),
+                $userTimesheet
+            );
 
         $userTimesheetDay->setUserTimesheet($userTimesheet);
     }
