@@ -58,8 +58,8 @@ class UserTimesheetListener
                 $entity,
                 sprintf(
                     'Zmieniono status z: %s na: %s',
-                    $args->getOldValue('status'),
-                    $args->getNewValue('status')
+                    $args->getOldValue('status')->getId(),
+                    $args->getNewValue('status')->getId()
                 )
             );
         }
