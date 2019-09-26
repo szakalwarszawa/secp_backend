@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Entity\User;
@@ -8,6 +10,7 @@ use App\Entity\UserWorkScheduleDay;
 use App\Entity\DayDefinition;
 use App\Entity\UserWorkScheduleLog;
 use App\Entity\WorkScheduleProfile;
+use App\Validator\Rules\StatusChangeDecision;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
@@ -40,12 +43,22 @@ class UserWorkScheduleListener
     private $userWorkScheduleDaysLogs = [];
 
     /**
-     * UserWorkScheduleListener constructor.
-     * @param TokenStorageInterface $tokenStorage
+     * @var StatusChangeDecision
      */
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
+    private $statusChangeDecision;
+
+    /**
+     * UserWorkScheduleListener constructor.
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param StatusChangedDecision $statusChangeDecision
+     */
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        StatusChangeDecision $statusChangeDecision
+    ) {
         $this->token = $tokenStorage->getToken();
+        $this->statusChangeDecision = $statusChangeDecision;
     }
 
     /**
@@ -58,6 +71,15 @@ class UserWorkScheduleListener
         if (!$entity instanceof UserWorkSchedule) {
             return;
         }
+
+        $this->statusChangeDecision->setThrowException(true);
+        $this
+            ->statusChangeDecision
+            ->decide(
+                $args->getOldValue('status'),
+                $args->getNewValue('status')
+            )
+        ;
 
         if ($args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')

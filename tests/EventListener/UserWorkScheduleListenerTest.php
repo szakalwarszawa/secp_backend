@@ -56,6 +56,7 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
     {
         $this->assertIsNumeric($this->userWorkScheduleId);
 
+
         $userWorkSchedule = $this->entityManager
             ->getRepository(UserWorkSchedule::class)
             ->find($this->userWorkScheduleId);
@@ -99,6 +100,7 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         parent::setUp();
 
         $owner = $this->getEntityFromReference(UserFixtures::REF_USER_USER);
+        $this->loginAsUser($owner, ['ROLE_HR']);
         $this->assertInstanceOf(User::class, $owner);
 
         $workScheduleProfile = $this->getEntityFromReference('work_schedule_profile_1');
