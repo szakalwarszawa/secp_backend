@@ -48,7 +48,9 @@ class UserWorkScheduleListener
 
     /**
      * UserWorkScheduleListener constructor.
+     *
      * @param TokenStorageInterface $tokenStorage
+     * @param StatusChangedDecision $statusChangeDecision
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,

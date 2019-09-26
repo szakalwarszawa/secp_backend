@@ -37,6 +37,8 @@ class StatusChangeDecision
      * @param RuleInterface $oldStatus
      * @param RuleInterface $newStatus
      *
+     * @throws IncorrectStatusChangeException
+     *
      * @return bool
      */
     public function decide(RuleInterface $oldStatus, RuleInterface $newStatus): bool
@@ -47,10 +49,9 @@ class StatusChangeDecision
 
         $rules = json_decode($oldStatus->getRules());
         foreach ($rules as $key => $rule) {
-            if ($this->authorizationChecker->isGranted($key)) {
-                if (in_array($newStatus->getId(), $rule, true)) {
+            if ($this->authorizationChecker->isGranted($key)
+                && in_array($newStatus->getId(), $rule, true)) {
                     return true;
-                }
             }
         }
 

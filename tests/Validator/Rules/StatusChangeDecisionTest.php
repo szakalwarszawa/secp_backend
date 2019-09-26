@@ -8,6 +8,7 @@ use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserWorkScheduleFixtures;
 use App\DataFixtures\UserWorkScheduleStatusFixtures;
 use App\Entity\UserWorkSchedule;
+use App\Exception\IncorrectStatusChangeException;
 use App\Tests\AbstractWebTestCase;
 use App\Validator\Rules\StatusChangeDecision;
 
@@ -36,14 +37,17 @@ class StatusChangeDecisionTest extends AbstractWebTestCase
         $this->assertInstanceOf(UserWorkSchedule::class, $workSchedule);
 
         $statusChangeDecision = new StatusChangeDecision($authorizationChecker);
-        $statusChangeDecision->setThrowException(false);
+        $statusChangeDecision->setThrowException(true);
 
         $workScheduleStatusRef = $this
             ->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT)
         ;
         /**
          * Check if i can change status directly to 'WORK-SCHEDULE-STATUS-HR-ACCEPT'
+         * Current user should not be allowed
          */
+        $this->expectException(IncorrectStatusChangeException::class);
+        $this->expectExceptionMessage('Brak uprawnień do ustawienia wybranego statusu.');
         $decision = $statusChangeDecision->decide($workSchedule->getStatus(), $workScheduleStatusRef);
         $this->assertFalse($decision);
 

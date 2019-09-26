@@ -6,6 +6,7 @@
     "require": {
         "php": "^7.2",
         "ext-calendar": "*",
+        "ext-json": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.2",
