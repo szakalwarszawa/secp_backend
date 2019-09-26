@@ -58,13 +58,13 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('p')
             ->innerJoin('p.userWorkSchedule', 'userWorkSchedule')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
-            ->leftJoin('userWorkSchedule.status', 'status')
+            ->innerJoin('userWorkSchedule.status', 'status')
             ->andWhere('userWorkSchedule.owner = :owner')
             ->setParameter('owner', $owner)
             ->andWhere('dayDefinition.id = :dayDate')
             ->setParameter('dayDate', $dayDate)
             ->andWhere('status.id = :status')
-            ->setParameter('status', 'WORK-SCHEDULE-REF-STATUS-HR-ACCEPT')
+            ->setParameter('status', UserWorkSchedule::STATUS_HR_ACCEPT)
             ->setMaxResults(1)
             ->getQuery();
 
@@ -84,7 +84,7 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('p')
             ->innerJoin('p.userWorkSchedule', 'userWorkSchedule')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
-            ->leftJoin('userWorkSchedule.status', 'status')
+            ->innerJoin('userWorkSchedule.status', 'status')
             ->andWhere('userWorkSchedule.owner = :owner')
             ->setParameter('owner', $owner)
             ->andWhere('dayDefinition.id >= :dateFrom')
@@ -92,7 +92,7 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
             ->andWhere('dayDefinition.id <= :dateTo')
             ->setParameter('dateTo', $dayToDate)
             ->andWhere('status.id = :status')
-            ->setParameter('status', 'WORK-SCHEDULE-REF-STATUS-HR-ACCEPT')
+            ->setParameter('status', UserWorkSchedule::STATUS_HR_ACCEPT)
             ->getQuery();
 
         $result = $query->getResult();

@@ -16,22 +16,22 @@ class UserTimesheetStatusFixtures extends Fixture
     /**
      * @var string
      */
-    public const REF_STATUS_OWNER_EDIT = 'TIMESHEET-REF-STATUS-OWNER-EDIT';
+    public const REF_STATUS_OWNER_EDIT = 'TIMESHEET-STATUS-OWNER-EDIT';
 
     /**
      * @var string
      */
-    public const REF_STATUS_OWNER_ACCEPT = 'TIMESHEET-REF-STATUS-OWNER-ACCEPT';
+    public const REF_STATUS_OWNER_ACCEPT = 'TIMESHEET-STATUS-OWNER-ACCEPT';
 
     /**
      * @var string
      */
-    public const REF_STATUS_MANAGER_ACCEPT = 'TIMESHEET-REF-STATUS-MANAGER-ACCEPT';
+    public const REF_STATUS_MANAGER_ACCEPT = 'TIMESHEET-STATUS-MANAGER-ACCEPT';
 
     /**
      * @var string
      */
-    public const REF_STATUS_HR_ACCEPT = 'TIMESHEET-REF-STATUS-HR-ACCEPT';
+    public const REF_STATUS_HR_ACCEPT = 'TIMESHEET-STATUS-HR-ACCEPT';
 
 
     /**
