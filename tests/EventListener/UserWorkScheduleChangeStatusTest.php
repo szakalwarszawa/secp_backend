@@ -287,6 +287,46 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             ]
         ];
 
+        //one user does not affect other user
+        //23 24 25 26 |27| 28
+        //23 24 25 26 |27| 28
+        $testCases[] = [
+            [
+                [
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_1',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    [
+                        date('Y-m-d', strtotime('now -4 days')) => true,
+                        date('Y-m-d', strtotime('now -3 days')) => true,
+                        date('Y-m-d', strtotime('now -2 days')) => true,
+                        date('Y-m-d', strtotime('now -1 days')) => true,
+                        date('Y-m-d', strtotime('now +0 days')) => true,
+                        date('Y-m-d', strtotime('now +1 days')) => false,
+                    ]
+                ],
+                [
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_ADMIN,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    [
+                        date('Y-m-d', strtotime('now -4 days')) => false,
+                        date('Y-m-d', strtotime('now -3 days')) => false,
+                        date('Y-m-d', strtotime('now -2 days')) => false,
+                        date('Y-m-d', strtotime('now -1 days')) => false,
+                        date('Y-m-d', strtotime('now +0 days')) => false,
+                        date('Y-m-d', strtotime('now +1 days')) => true,
+                    ]
+                ]
+            ]
+        ];
+
         return $testCases;
     }
 
