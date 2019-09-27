@@ -23,264 +23,268 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
     public function changeWorkScheduleStatusProvider(): array
     {
         $testCases = [];
-
-
+        //23 24 25 26 |27| 28
+//              25 26 |27| 28 29 30 01 02 03
         $testCases[] = [
             [
                 [
-                    '2019-09-14',
-                    date('Y-m-d', strtotime('now +4 days')),
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -4 days')) => true,
+                        date('Y-m-d', strtotime('now -5 days')) => true,
+                        date('Y-m-d', strtotime('now -6 days')) => true,
+                        date('Y-m-d', strtotime('now -7 days')) => true,
+                        date('Y-m-d', strtotime('now -8 days')) => true,
+                        date('Y-m-d', strtotime('now -9 days')) => false,
                     ]
                 ],
                 [
-                    '2019-09-14',
-                    date('Y-m-d', strtotime('now +4 days')),
-                    UserFixtures::REF_USER_USER,
-                    'work_schedule_profile_2',
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
-                    [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
-                    ]
-                ],
-                [
-                    '2019-09-16',
-                    date('Y-m-d', strtotime('now +4 days')),
-                    UserFixtures::REF_USER_USER,
-                    'work_schedule_profile_2',
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
-                    [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
-                    ]
-                ],
-                [
-                    '2019-09-13',
-                    date('Y-m-d', strtotime('now +4 days')),
+                    date('Y-m-d', strtotime('now -2 days')),
+                    date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -2 days')) => false,
+                        date('Y-m-d', strtotime('now -1 days')) => false,
+                        date('Y-m-d', strtotime('now +0 days')) => false,
+                        date('Y-m-d', strtotime('now +1 days')) => true,
+                        date('Y-m-d', strtotime('now +2 days')) => true,
+                        date('Y-m-d', strtotime('now +3 days')) => true,
+                        date('Y-m-d', strtotime('now +4 days')) => true,
+                        date('Y-m-d', strtotime('now +5 days')) => true,
+                        date('Y-m-d', strtotime('now +6 days')) => true,
                     ]
-                ]
+                ],
             ]
         ];
-
+      //25 26 |27| 28 29 30 01 02 03
+//23 24 25 26 |27| 28
         $testCases[] = [
             [
                 [
-                    '2019-09-13',
-                    date('Y-m-d', strtotime('now +4 days')),
+                    date('Y-m-d', strtotime('now -2 days')),
+                    date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -2 days')) => true,
+                        date('Y-m-d', strtotime('now -1 days')) => true,
+                        date('Y-m-d', strtotime('now +0 days')) => true,
+                        date('Y-m-d', strtotime('now +1 days')) => false,
+                        date('Y-m-d', strtotime('now +2 days')) => true,
+                        date('Y-m-d', strtotime('now +3 days')) => true,
+                        date('Y-m-d', strtotime('now +4 days')) => true,
+                        date('Y-m-d', strtotime('now +5 days')) => true,
+                        date('Y-m-d', strtotime('now +6 days')) => true,
                     ]
                 ],
                 [
-                    '2019-09-16',
-                    date('Y-m-d', strtotime('now +4 days')),
-                    UserFixtures::REF_USER_USER,
-                    'work_schedule_profile_2',
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
-                    [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
-                    ]
-                ],
-                [
-                    '2019-09-14',
-                    date('Y-m-d', strtotime('now +4 days')),
-                    UserFixtures::REF_USER_USER,
-                    'work_schedule_profile_2',
-                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
-                    ]
-                ]
-            ],
-        ];
-
-        $testCases[] = [
-            [
-                [
-                    '2019-09-12',
-                    date('Y-m-d', strtotime('now +2 days')),
-                    UserFixtures::REF_USER_USER,
-                    'work_schedule_profile_2',
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
-                    [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
-                    ]
-                ],
-                [
-                    '2019-09-12',
-                    date('Y-m-d', strtotime('now +2 days')),
-                    UserFixtures::REF_USER_USER,
-                    'work_schedule_profile_2',
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
-                    [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
-                    ]
-                ],
-                [
-                    '2019-09-12',
+                    date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -4 days')) => false,
+                        date('Y-m-d', strtotime('now -3 days')) => false,
+                        date('Y-m-d', strtotime('now -2 days')) => false,
+                        date('Y-m-d', strtotime('now -1 days')) => false,
+                        date('Y-m-d', strtotime('now +0 days')) => false,
+                        date('Y-m-d', strtotime('now +1 days')) => true,
                     ]
-                ]
+                ],
             ],
         ];
 
+        //23 24 25 26 |27| 28
+        //23 24 25 26 |27| 28
         $testCases[] = [
             [
                 [
-                    date('Y-m-d', strtotime('now +2 days')),
-                    date('Y-m-d', strtotime('now +2 days')),
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -4 days')) => true,
+                        date('Y-m-d', strtotime('now -3 days')) => true,
+                        date('Y-m-d', strtotime('now -2 days')) => true,
+                        date('Y-m-d', strtotime('now -1 days')) => true,
+                        date('Y-m-d', strtotime('now +0 days')) => true,
+                        date('Y-m-d', strtotime('now +1 days')) => false,
                     ]
                 ],
                 [
-                    date('Y-m-d', strtotime('now +2 days')),
-                    date('Y-m-d', strtotime('now +2 days')),
-                    UserFixtures::REF_USER_USER,
-                    'work_schedule_profile_2',
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
-                    [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
-                    ]
-                ],
-                [
-                    date('Y-m-d', strtotime('now +2 days')),
+                    date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -4 days')) => false,
+                        date('Y-m-d', strtotime('now -3 days')) => false,
+                        date('Y-m-d', strtotime('now -2 days')) => false,
+                        date('Y-m-d', strtotime('now -1 days')) => false,
+                        date('Y-m-d', strtotime('now +0 days')) => false,
+                        date('Y-m-d', strtotime('now +1 days')) => true,
                     ]
-                ]
-            ]
+                ],
+            ],
         ];
 
+        // 25 26 |27| 28 29 30 01 02 03
+ //23 24 25 26  |27| 28
+        //                    01  02 03
         $testCases[] = [
             [
                 [
                     date('Y-m-d', strtotime('now -2 days')),
-                    date('Y-m-d', strtotime('now -5 days')),
-                    UserFixtures::REF_USER_ADMIN,
+                    date('Y-m-d', strtotime('now +6 days')),
+                    UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -2 days')) => true,
+                        date('Y-m-d', strtotime('now -1 days')) => true,
+                        date('Y-m-d', strtotime('now +0 days')) => true,
+                        date('Y-m-d', strtotime('now +1 days')) => true,
+                        date('Y-m-d', strtotime('now +2 days')) => true,
+                        date('Y-m-d', strtotime('now +3 days')) => true,
+                        date('Y-m-d', strtotime('now +4 days')) => true,
+                        date('Y-m-d', strtotime('now +5 days')) => true,
+                        date('Y-m-d', strtotime('now +6 days')) => true,
                     ]
                 ],
+            ],
+            [
                 [
-                    date('Y-m-d', strtotime('now -2 days')),
-                    date('Y-m-d', strtotime('now -5 days')),
-                    UserFixtures::REF_USER_MANAGER,
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -4 days')) => false,
+                        date('Y-m-d', strtotime('now -3 days')) => false,
+                        date('Y-m-d', strtotime('now -2 days')) => false,
+                        date('Y-m-d', strtotime('now -1 days')) => false,
+                        date('Y-m-d', strtotime('now +0 days')) => false,
+                        date('Y-m-d', strtotime('now +1 days')) => true,
                     ]
                 ],
+            ],
+            [
                 [
-                    date('Y-m-d', strtotime('now -2 days')),
-                    date('Y-m-d', strtotime('now -5 days')),
+                    date('Y-m-d', strtotime('now +4 days')),
+                    date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now +4 days')) => true,
+                        date('Y-m-d', strtotime('now +5 days')) => true,
+                        date('Y-m-d', strtotime('now +6 days')) => true,
                     ]
                 ]
             ]
         ];
+//                      29 30 01 02 03
+//23 24 25      |27|
+        $testCases[] = [
+            [
+                [
+                    date('Y-m-d', strtotime('now +2 days')),
+                    date('Y-m-d', strtotime('now +6 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    [
+                        date('Y-m-d', strtotime('now +2 days')) => true,
+                        date('Y-m-d', strtotime('now +3 days')) => true,
+                        date('Y-m-d', strtotime('now +4 days')) => true,
+                        date('Y-m-d', strtotime('now +5 days')) => true,
+                        date('Y-m-d', strtotime('now +6 days')) => true,
+                    ]
+                ],
+                [
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now -2 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    [
+                        date('Y-m-d', strtotime('now -2 days')) => false,
+                        date('Y-m-d', strtotime('now -3 days')) => false,
+                        date('Y-m-d', strtotime('now -4 days')) => false,
+                    ]
+                ],
+            ]
+        ];
 
+        //23 24 25 26 |27|
+                            //28 29 30
+              //25 26
         $testCases [] = [
             [
                 [
-                    '2019-09-14',
-                    date('Y-m-d', strtotime('now +4 days')),
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +0 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -4 days')) => true,
+                        date('Y-m-d', strtotime('now -3 days')) => true,
+                        date('Y-m-d', strtotime('now -2 days')) => true,
+                        date('Y-m-d', strtotime('now -1 days')) => true,
+                        date('Y-m-d', strtotime('now -0 days')) => true,
                     ]
                 ],
                 [
-                    '2019-09-16',
-                    date('Y-m-d', strtotime('now +4 days')),
-                    UserFixtures::REF_USER_ADMIN,
+                    date('Y-m-d', strtotime('now +0 days')),
+                    date('Y-m-d', strtotime('now +3 days')),
+                    UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now +1 days')) => true,
+                        date('Y-m-d', strtotime('now +2 days')) => true,
+                        date('Y-m-d', strtotime('now +3 days')) => true,
                     ]
                 ],
                 [
-                    '2019-09-13',
-                    date('Y-m-d', strtotime('now +4 days')),
-                    UserFixtures::REF_USER_MANAGER,
+                    date('Y-m-d', strtotime('now -2 days')),
+                    date('Y-m-d', strtotime('now -1 days')),
+                    UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     [
-                        '2019-09-14' => true,
-                        '2019-09-15' => true,
+                        date('Y-m-d', strtotime('now -2 days')) => false,
+                        date('Y-m-d', strtotime('now -1 days')) => false,
                     ]
                 ]
-            ],
+            ]
         ];
 
         return $testCases;

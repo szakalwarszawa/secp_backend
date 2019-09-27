@@ -76,20 +76,6 @@ class UserWorkScheduleListener
         if ($args->hasChangedField('status')
             && $args->getNewValue('status')->getId() === UserWorkScheduleStatus::STATUS_HR_ACCEPT
         ) {
-//            $args->getEntityManager()
-//                ->createQueryBuilder()
-//                ->update(UserWorkScheduleDay::class, 'p')
-//                ->set('p.visibility', ':setVisibility')
-//                ->setParameter('setVisibility', false)
-//                ->where('p.dayDefinition <= :todayDate')
-//                ->setParameter('todayDate', date('Y-m-d'))
-//                ->andWhere('p.userWorkSchedule = :userWorkSchedule')
-//                ->setParameter('userWorkSchedule', $currentSchedule)
-//                ->andWhere('p.visibility = :previousVisible')
-//                ->setParameter('previousVisible', true)
-//                ->getQuery()
-//                ->execute();
-//
             $args->getEntityManager()
                 ->createQueryBuilder()
                 ->update(UserWorkScheduleDay::class, 'p')
