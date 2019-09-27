@@ -162,11 +162,16 @@ JSON;
      */
     public function apiPutUserWorkSchedule(): void
     {
+        $user = $this->getEntityFromReference(UserFixtures::REF_USER_USER);
+        /**
+         * Login as ROLE_ADMIN
+         */
+        $this->loginAsUser($user, ['ROLE_ADMIN']);
+
         $userWorkScheduleREF = $this
             ->fixtures
             ->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_MANAGER_HR)
         ;
-        /* @var $userWorkScheduleREF UserWorkSchedule */
 
         $workScheduleStatusRef = $this
             ->fixtures
@@ -186,7 +191,7 @@ JSON;
             $payload,
             [],
             200,
-            UserFixtures::REF_USER_MANAGER
+            UserFixtures::REF_USER_ADMIN
         );
 
         $userJSON = json_decode($response->getContent(), false);
