@@ -87,8 +87,7 @@ JSON;
             '/api/presence_types',
             $payload,
             [],
-            405,
-            self::REF_ADMIN
+            405
         );
     }
 
@@ -116,8 +115,7 @@ JSON;
             '/api/presence_types/' . $presenceTypeREF->getId(),
             $payload,
             [],
-            405,
-            self::REF_ADMIN
+            405
         );
     }
 }

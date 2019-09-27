@@ -89,11 +89,7 @@ class UserTimesheetListener
     private function getCurrentUser(EntityManager $entityManager): ?User
     {
         /* @var User $user */
-        if (null === $this->token) {
-            $userName = 'admin';
-        } else {
-            $userName = $this->token->getUser()->getUsername();
-        }
+        $userName = null === $this->token ? 'admin' : $this->token->getUser()->getUsername();
 
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);
 

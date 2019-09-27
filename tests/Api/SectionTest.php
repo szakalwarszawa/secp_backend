@@ -85,8 +85,7 @@ JSON;
             '/api/sections',
             $payload,
             [],
-            201,
-            self::REF_ADMIN
+            201
         );
 
         $sectionJSON = json_decode($response->getContent(), false);
@@ -131,10 +130,7 @@ JSON;
         $response = $this->getActionResponse(
             'PUT',
             '/api/sections/' . $sectionREF->getId(),
-            $payload,
-            [],
-            200,
-            self::REF_ADMIN
+            $payload
         );
         $sectionJSON = json_decode($response->getContent(), false);
 
@@ -170,10 +166,7 @@ JSON;
         $response = $this->getActionResponse(
             'PUT',
             '/api/sections/' . $sectionREF->getId(),
-            $payload,
-            [],
-            200,
-            self::REF_ADMIN
+            $payload
         );
         $sectionJSON = json_decode($response->getContent(), false);
 
@@ -227,10 +220,7 @@ JSON;
         $response = $this->getActionResponse(
             self::HTTP_PUT,
             '/api/sections/' . $sectionREF->getId(),
-            $payload,
-            [],
-            200,
-            self::REF_ADMIN
+            $payload
         );
 
         $this->assertJson($response->getContent());
@@ -250,7 +240,6 @@ JSON;
 
     /**
      * @test
-     * @expectedException
      * @throws Exception
      */
     public function apiPutSectionWithUsersFromOtherDepartment(): void
@@ -289,8 +278,7 @@ JSON;
             '/api/sections/' . $sectionREF->getId(),
             $payload,
             [],
-            400,
-            self::REF_ADMIN
+            400
         );
 
         $this->assertJson($response->getContent());

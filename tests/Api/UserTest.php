@@ -110,8 +110,7 @@ JSON;
             '/api/users',
             $payload,
             [],
-            201,
-            self::REF_ADMIN
+            201
         );
 
         $userJSON = json_decode($response->getContent(), false);
@@ -186,10 +185,7 @@ JSON;
         $response = $this->getActionResponse(
             self::HTTP_PUT,
             '/api/users/' . $userREF->getId(),
-            $payload,
-            [],
-            200,
-            self::REF_ADMIN
+            $payload
         );
 
         $userJSON = json_decode($response->getContent(), false);
@@ -264,10 +260,7 @@ JSON;
         $response = $this->getActionResponse(
             self::HTTP_PUT,
             '/api/users/' . $userREF->getId(),
-            $payload,
-            [],
-            200,
-            self::REF_ADMIN
+            $payload
         );
 
         $userJSON = json_decode($response->getContent(), false);

@@ -3,6 +3,7 @@
 
 namespace App\Tests\Api;
 
+use App\DataFixtures\UserFixtures;
 use App\Entity\DayDefinition;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
@@ -88,8 +89,7 @@ JSON;
             '/api/day_definitions',
             $payload,
             [],
-            405,
-            self::REF_ADMIN
+            405
         );
     }
 

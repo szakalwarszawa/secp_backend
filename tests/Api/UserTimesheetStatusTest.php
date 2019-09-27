@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
+use App\DataFixtures\UserFixtures;
 use App\Entity\UserTimesheetStatus;
 use App\Tests\AbstractWebTestCase;
 
@@ -28,7 +29,7 @@ class UserTimesheetStatusTest extends AbstractWebTestCase
             null,
             [],
             200,
-            self::REF_MANAGER
+            UserFixtures::REF_USER_MANAGER
         );
 
         $userTimesheetStatusesJSON = json_decode($response->getContent(), false);

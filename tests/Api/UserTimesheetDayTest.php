@@ -43,7 +43,7 @@ class UserTimesheetDayTest extends AbstractWebTestCase
             null,
             [],
             200,
-            self::REF_USER
+            UserFixtures::REF_USER_USER
         );
         $this->assertJson($response->getContent());
         $userTimesheetDaysJSON = json_decode($response->getContent(), false);

@@ -32,7 +32,7 @@ class UserTimesheetTest extends AbstractWebTestCase
             null,
             [],
             200,
-            self::REF_MANAGER
+            UserFixtures::REF_USER_MANAGER
         );
         $userTimesheetJSON = json_decode($response->getContent(), false);
 
@@ -134,8 +134,7 @@ JSON;
             '/api/user_timesheets',
             $payload,
             [],
-            201,
-            self::REF_ADMIN
+            201
         );
 
         $userTimesheetJSON = json_decode($response->getContent(), false);
