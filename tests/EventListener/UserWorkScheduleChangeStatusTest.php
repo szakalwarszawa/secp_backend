@@ -6,7 +6,6 @@ use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserWorkScheduleStatusFixtures;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
-use App\Entity\UserWorkScheduleDay;
 use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
@@ -23,7 +22,10 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      */
     public function changeWorkScheduleStatusProvider(): array
     {
-        $one = [
+        $testCases = [];
+
+
+        $testCases[] = [
             [
                 [
                     '2019-09-14',
@@ -31,32 +33,52 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
+                [
+                    '2019-09-14',
+                    date('Y-m-d', strtotime('now +4 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     '2019-09-16',
                     date('Y-m-d', strtotime('now +4 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     '2019-09-13',
                     date('Y-m-d', strtotime('now +4 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
                 ]
-            ],
+            ]
         ];
 
-        $two = [
+        $testCases[] = [
             [
                 [
                     '2019-09-13',
@@ -64,32 +86,40 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     '2019-09-16',
                     date('Y-m-d', strtotime('now +4 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     '2019-09-14',
                     date('Y-m-d', strtotime('now +4 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
                 ]
             ],
         ];
 
-        $three = [
+        $testCases[] = [
             [
                 [
                     '2019-09-12',
@@ -97,32 +127,40 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     '2019-09-12',
                     date('Y-m-d', strtotime('now +2 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     '2019-09-12',
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
                 ]
             ],
         ];
 
-        $four = [
+        $testCases[] = [
             [
                 [
                     date('Y-m-d', strtotime('now +2 days')),
@@ -130,32 +168,40 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     date('Y-m-d', strtotime('now +2 days')),
                     date('Y-m-d', strtotime('now +2 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     date('Y-m-d', strtotime('now +2 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
                 ]
-            ],
+            ]
         ];
 
-        $five = [
+        $testCases[] = [
             [
                 [
                     date('Y-m-d', strtotime('now -2 days')),
@@ -163,32 +209,40 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_ADMIN,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now -5 days')),
                     UserFixtures::REF_USER_MANAGER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now -5 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
                 ]
-            ],
+            ]
         ];
 
-        $six = [
+        $testCases [] = [
             [
                 [
                     '2019-09-14',
@@ -196,32 +250,40 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     '2019-09-16',
                     date('Y-m-d', strtotime('now +4 days')),
                     UserFixtures::REF_USER_ADMIN,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null
-                ]
-            ],
-            [
+                    null,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
+                ],
                 [
                     '2019-09-13',
                     date('Y-m-d', strtotime('now +4 days')),
                     UserFixtures::REF_USER_MANAGER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    [
+                        '2019-09-14' => true,
+                        '2019-09-15' => true,
+                    ]
                 ]
             ],
         ];
 
-        return array_merge($one, $two, $three, $four, $five, $six);
+        return $testCases;
     }
 
     /**
@@ -232,13 +294,95 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      */
     public function changeWorkScheduleStatus(array $currentCase): void
     {
-        $schedule = $this->makeUserWorkSchedule(
-            $currentCase[0],
-            $currentCase[1],
-            $this->getEntityFromReference($currentCase[2]),
-            $this->getEntityFromReference($currentCase[3]),
-            $this->getEntityFromReference($currentCase[4])
-        );
+        $userWorScheduleInTesting = [];
+        // faza I - zakładanie dziewiczych harmonogramów
+        foreach ($currentCase as $userScheduleCase) {
+            [
+                $startFrom,
+                $startTo,
+                $ownerReferenceName,
+                $workScheduleProfileRefName,
+                $statusOriginRefName,
+                $statusFinalRefName,
+                $expectedVisibilities
+            ] = $userScheduleCase;
+
+            $schedule = $this->makeUserWorkSchedule(
+                $startFrom,
+                $startTo,
+                $this->getEntityFromReference($ownerReferenceName),
+                $this->getEntityFromReference($workScheduleProfileRefName),
+                $this->getEntityFromReference($statusOriginRefName)
+            );
+            $userWorScheduleInTesting[$schedule->getId()] = [
+                'schedule' => $schedule,
+                'statusOriginRefName' => $statusOriginRefName,
+                'statusFinalRefName' => $statusFinalRefName,
+                'expectedVisibilities' => $expectedVisibilities,
+            ];
+        }
+
+        // faza II - sprawdzanie czy dni harmonogramów maja poprawnie ustawioną flagę "visibility"
+        foreach ($userWorScheduleInTesting as $userScheduleCase) {
+            $scheduleDb = self::$container->get('doctrine')
+                ->getManager()
+                ->getRepository(UserWorkSchedule::class)
+                ->find($userScheduleCase['schedule']->getId());
+            /* @var $scheduleDb UserWorkSchedule */
+
+            if ($userScheduleCase['statusOriginRefName'] === UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT) {
+                foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
+                    $this->assertTrue($userWorkScheduleDay->getVisibility());
+                }
+            } else {
+                foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
+                    $this->assertFalse($userWorkScheduleDay->getVisibility());
+                }
+            }
+        }
+
+        // faza III - zmiany statusu harmonogramów
+        foreach ($userWorScheduleInTesting as $userScheduleCase) {
+            $scheduleDb = self::$container->get('doctrine')
+                ->getManager()
+                ->getRepository(UserWorkSchedule::class)
+                ->find($userScheduleCase['schedule']->getId());
+            /* @var $scheduleDb UserWorkSchedule */
+
+            if ($userScheduleCase['statusFinalRefName'] !== null) {
+                $scheduleDb->setStatus($this->getEntityFromReference($statusFinalRefName));
+                $this->saveToDb($scheduleDb);
+            }
+        }
+
+        // faza IV - badanie dni po zmianie statusów
+        foreach ($userWorScheduleInTesting as $userScheduleCase) {
+            $scheduleDb = self::$container->get('doctrine')
+                ->getManager()
+                ->getRepository(UserWorkSchedule::class)
+                ->find($userScheduleCase['schedule']->getId());
+            /* @var $scheduleDb UserWorkSchedule */
+
+            foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
+                self::$container->get('doctrine')
+                    ->getManager()
+                    ->refresh($userWorkScheduleDay);
+
+                $scheduleDay = $userWorkScheduleDay->getDayDefinition()->getId();
+
+                if (isset($userScheduleCase['expectedVisibilities'][$scheduleDay])) {
+                    $this->assertEquals(
+                        $userScheduleCase['expectedVisibilities'][$scheduleDay],
+                        $userWorkScheduleDay->getVisibility(),
+                        'problem for: ' . $scheduleDay
+                    );
+                }
+            }
+        }
+
+        // faza V - czyszczenie po sobie tabel
+        $this->cleanUserWorkSchedule($userWorScheduleInTesting);
+        return;
 
         $scheduleDb = self::$container->get('doctrine')
             ->getManager()
@@ -276,7 +420,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 }
             }
         }
-        $this->cleanUserWorkSchedule($userWorkScheduleToClean);
+        $this->cleanUserWorkSchedule($userWorScheduleInTesting);
     }
 
     /**
@@ -308,6 +452,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
         $this->saveToDb($userWorkSchedule);
 
+        $this->assertInstanceOf(UserWorkSchedule::class, $userWorkSchedule);
+
         return $userWorkSchedule;
     }
 
@@ -331,7 +477,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
     private function cleanUserWorkSchedule(array $userWorkSchedules): void
     {
         foreach ($userWorkSchedules as $userWorkSchedule) {
-            foreach ($userWorkSchedule->getUserWorkScheduleDays() as $userWorkScheduleDay) {
+            foreach ($userWorkSchedule['schedule']->getUserWorkScheduleDays() as $userWorkScheduleDay) {
                 self::$container->get('doctrine')
                     ->getManager()
                     ->remove($userWorkScheduleDay);
@@ -339,7 +485,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
             self::$container->get('doctrine')
                 ->getManager()
-                ->remove($userWorkSchedule);
+                ->remove($userWorkSchedule['schedule']);
 
             self::$container->get('doctrine')
                 ->getManager()

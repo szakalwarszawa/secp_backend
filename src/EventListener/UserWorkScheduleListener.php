@@ -49,16 +49,6 @@ class UserWorkScheduleListener
     }
 
     /**
-     * @param int $first
-     * @param int $second
-     * @return false|int
-     */
-    public function compareScheduleDays(array $first, array $second)
-    {
-        return strtotime($first['id']) - strtotime($second['id']);
-    }
-
-    /**
      * @param PreUpdateEventArgs $args
      * @return void
      */
@@ -86,32 +76,20 @@ class UserWorkScheduleListener
         if ($args->hasChangedField('status')
             && $args->getNewValue('status')->getId() === UserWorkScheduleStatus::STATUS_HR_ACCEPT
         ) {
-            $args->getEntityManager()
-                ->createQueryBuilder()
-                ->update(UserWorkScheduleDay::class, 'p')
-                ->set('p.visibility', ':setVisibility')
-                ->setParameter('setVisibility', false)
-                ->where('p.dayDefinition <= :todayDate')
-                ->setParameter('todayDate', date('Y-m-d'))
-                ->andWhere('p.userWorkSchedule = :userWorkSchedule')
-                ->setParameter('userWorkSchedule', $currentSchedule)
-                ->andWhere('p.visibility = :previousVisible')
-                ->setParameter('previousVisible', true)
-                ->getQuery()
-                ->execute();
-
-            $args->getEntityManager()
-                ->createQueryBuilder()
-                ->update(UserWorkScheduleDay::class, 'p')
-                ->set('p.visibility', ':setVisibility')
-                ->setParameter('setVisibility', true)
-                ->where('p.dayDefinition >= :tomorrowDate')
-                ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
-                ->andWhere('p.userWorkSchedule = :userWorkSchedule')
-                ->setParameter('userWorkSchedule', $currentSchedule)
-                ->getQuery()
-                ->execute();
-
+//            $args->getEntityManager()
+//                ->createQueryBuilder()
+//                ->update(UserWorkScheduleDay::class, 'p')
+//                ->set('p.visibility', ':setVisibility')
+//                ->setParameter('setVisibility', false)
+//                ->where('p.dayDefinition <= :todayDate')
+//                ->setParameter('todayDate', date('Y-m-d'))
+//                ->andWhere('p.userWorkSchedule = :userWorkSchedule')
+//                ->setParameter('userWorkSchedule', $currentSchedule)
+//                ->andWhere('p.visibility = :previousVisible')
+//                ->setParameter('previousVisible', true)
+//                ->getQuery()
+//                ->execute();
+//
             $args->getEntityManager()
                 ->createQueryBuilder()
                 ->update(UserWorkScheduleDay::class, 'p')
@@ -129,73 +107,17 @@ class UserWorkScheduleListener
                 ->getQuery()
                 ->execute();
 
-//            var_dump($currentSchedule->getFromDate()->format('Y-m-d'));
-//            var_dump($currentSchedule->getToDate()->format('Y-m-d'));
-//
-//            foreach ($aa as $item) {
-//                $bb[] = $item['id'];
-//            }
-//
-//            var_dump($bb);
-            return;
-
-            $currentOwnerId = $currentSchedule->getOwner()->getId();
-            $todayNumeric = date('Y-m-d');
-
-            $previousWorkSchedules = $args->getEntityManager()
-                ->getRepository(UserWorkSchedule::class)
-                ->createQueryBuilder('p')
-                ->andWhere('p.owner = :owner')
-                ->andWhere('p.status = :status')
-                ->andWhere('p.toDate > :date')
-                ->addOrderBy('p.id', 'asc')
-                ->setParameter('owner', $currentOwnerId)
-                ->setParameter('date', $todayNumeric)
-                ->setParameter('status', $args->getNewValue('status'))
+            $args->getEntityManager()
+                ->createQueryBuilder()
+                ->update(UserWorkScheduleDay::class, 'p')
+                ->set('p.visibility', ':setVisibility')
+                ->setParameter('setVisibility', true)
+                ->where('p.dayDefinition >= :tomorrowDate')
+                ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
+                ->andWhere('p.userWorkSchedule = :userWorkSchedule')
+                ->setParameter('userWorkSchedule', $currentSchedule)
                 ->getQuery()
-                ->getResult();
-
-             $currentScheduleDays = array();
-             $previousScheduleDays = array();
-
-            $daysCurrent = $currentSchedule->getUserWorkScheduleDays();
-
-            foreach ($daysCurrent as $day) {
-                if ($day->getDayDefinition()->getId() > strtotime($todayNumeric)) {
-                    $currentScheduleDays[]["id"] = $day->getDayDefinition()->getId();
-                }
-            }
-
-            foreach ($previousWorkSchedules as $previous) {
-                $previousUserWorkScheduleId = $previous->getId();
-                $daysPrevious = $previous->getUserWorkScheduleDays();
-
-                foreach ($daysPrevious as $day) {
-                    $previousScheduleDays[]["id"] = $day->getDayDefinition()->getId();
-                }
-
-                $dayDifference = array_udiff(
-                    $previousScheduleDays,
-                    $currentScheduleDays,
-                    array($this, 'compareScheduleDays')
-                );
-
-                foreach ($dayDifference as $day) {
-                    if (strtotime($day['id']) > strtotime($todayNumeric)) {
-                        $update = $args->getEntityManager()->createQueryBuilder('p');
-                        $update->update(UserWorkScheduleDay::class, 'p')
-                            ->set('p.visibility', ':visibility')
-                            ->setParameter('visibility', false)
-                            ->where('p.dayDefinition = :toUpdate')
-                            ->setParameter('toUpdate', $day['id'])
-                            ->andWhere('p.visibility = :previousVisible')
-                            ->setParameter('previousVisible', true)
-                            ->andWhere('p.userWorkSchedule = :previousWorkSchedule')
-                            ->setParameter('previousWorkSchedule', $previousUserWorkScheduleId);
-                        $update->getQuery()->execute();
-                    }
-                }
-            }
+                ->execute();
         }
     }
 
