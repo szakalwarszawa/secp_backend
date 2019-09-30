@@ -7,6 +7,9 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use App\Entity\Types\LogEntityInterface;
 
 /**
  * @ORM\Table(
@@ -19,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserTimesheetDayLogRepository")
  * @ApiResource(
+ *      attributes={"access_control"="is_granted('ROLE_HR')"},
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
@@ -41,8 +45,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          }
  *      }
  * )
+ *
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "userTimesheetDay.id": "exact",
+ *      }
+ * )
  */
-class UserTimesheetDayLog
+class UserTimesheetDayLog implements LogEntityInterface
 {
     /**
      * @ORM\Id()

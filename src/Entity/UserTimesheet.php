@@ -134,7 +134,7 @@ class UserTimesheet
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserTimesheetDay", mappedBy="userTimesheet")
-     * @ApiSubresource()
+     * @ApiSubresource(maxDepth=1)
      */
     private $userTimesheetDays;
 
