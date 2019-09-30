@@ -19,8 +19,6 @@ interface LogEntityInterface
 
     /**
      * @param null|User $owner
-     *
-     * @return LogEntityInterface
      */
     public function setOwner(?User $owner);
 
@@ -31,8 +29,6 @@ interface LogEntityInterface
 
     /**
      * @param DateTimeInterface $logDate
-     *
-     * @return LogEntityInterface
      */
     public function setLogDate(DateTimeInterface $logDate);
 
@@ -43,8 +39,6 @@ interface LogEntityInterface
 
     /**
      * @param string $notice
-     *
-     * @return LogEntityInterface
      */
     public function setNotice(string $notice);
 }
