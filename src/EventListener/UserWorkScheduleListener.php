@@ -20,6 +20,7 @@ use DateTime;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use App\Exception\IncorrectStatusChangeException;
 
 /**
  * Class UserWorkScheduleListener
@@ -51,7 +52,7 @@ class UserWorkScheduleListener
      * UserWorkScheduleListener constructor.
      *
      * @param TokenStorageInterface $tokenStorage
-     * @param StatusChangedDecision $statusChangeDecision
+     * @param StatusChangeDecision $statusChangeDecision
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -63,6 +64,9 @@ class UserWorkScheduleListener
 
     /**
      * @param PreUpdateEventArgs $args
+     *
+     * @throws IncorrectStatusChangeException by StatusChangeDecision::class
+     *
      * @return void
      */
     public function preUpdate(PreUpdateEventArgs $args): void
@@ -72,18 +76,18 @@ class UserWorkScheduleListener
             return;
         }
 
-        $this->statusChangeDecision->setThrowException(true);
-        $this
-            ->statusChangeDecision
-            ->decide(
-                $args->getOldValue('status'),
-                $args->getNewValue('status')
-            )
-        ;
-
         if ($args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')
         ) {
+            $this
+                ->statusChangeDecision
+                ->setThrowException(true)
+                ->decide(
+                    $args->getOldValue('status'),
+                    $args->getNewValue('status')
+                )
+            ;
+
             $this->addUserWorkScheduleLog(
                 $args,
                 $entity,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Validator\Rules\RuleInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -49,7 +50,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ORM\Entity()
  */
-class UserTimesheetStatus
+class UserTimesheetStatus implements RuleInterface
 {
     /**
      * @var string
@@ -67,6 +68,14 @@ class UserTimesheetStatus
      * @Groups({"get"})
      */
     protected $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"get"})
+     */
+    protected $rules;
 
     /**
      * @return null|string
@@ -104,6 +113,30 @@ class UserTimesheetStatus
     public function setName(string $name): UserTimesheetStatus
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get rules
+     *
+     * @return null|string
+     */
+    public function getRules(): ?string
+    {
+        return $this->rules;
+    }
+
+    /**
+     * Set rules
+     *
+     * @param string $rules
+     *
+     * @return UserTimesheetStatus
+     */
+    public function setRules(string $rules): UserTimesheetStatus
+    {
+        $this->rules = $rules;
 
         return $this;
     }

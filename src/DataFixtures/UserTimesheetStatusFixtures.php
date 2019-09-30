@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Data\Statuses;
 use App\Entity\UserTimesheetStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class UserTimesheetStatusFixtures
+ *
  */
 class UserTimesheetStatusFixtures extends Fixture
 {
@@ -40,18 +42,14 @@ class UserTimesheetStatusFixtures extends Fixture
      */
     public function load(ObjectManager $manager)
     {
-        $statuses = [
-            self::REF_STATUS_OWNER_EDIT => 'Edytowana przez pracownika',
-            self::REF_STATUS_OWNER_ACCEPT => 'Zatwierdzona przez pracownika',
-            self::REF_STATUS_MANAGER_ACCEPT => 'Zatwierdzona przez przełożonego',
-            self::REF_STATUS_HR_ACCEPT => 'Zatwierdzona przez HR',
-        ];
+        $statuses = Statuses::getAllByClass($this);
 
         foreach ($statuses as $key => $value) {
             $userTimesheetStatus = new UserTimesheetStatus();
             $userTimesheetStatus
                 ->setId($key)
-                ->setName($value)
+                ->setName($value['title'])
+                ->setRules(json_encode($value['rules']))
             ;
 
             $manager->persist($userTimesheetStatus);

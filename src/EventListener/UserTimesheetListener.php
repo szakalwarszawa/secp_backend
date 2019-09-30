@@ -5,6 +5,7 @@ namespace App\EventListener;
 use App\Entity\UserTimesheetLog;
 use App\Entity\User;
 use App\Entity\UserTimesheet;
+use App\Validator\Rules\StatusChangeDecision;
 use Doctrine\ORM\EntityManager;
 use DateTime;
 use Doctrine\ORM\Event\PostFlushEventArgs;
@@ -13,6 +14,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use App\Exception\IncorrectStatusChangeException;
 
 /**
  * Class UserTimesheetLoggerListener
@@ -31,16 +33,27 @@ class UserTimesheetListener
     private $userTimesheetLogs = [];
 
     /**
-     * UserTimesheetListener constructor.
-     * @param TokenStorageInterface $tokenStorage
+     * @var StatusChangeDecision
      */
-    public function __construct(TokenStorageInterface $tokenStorage)
+    private $statusChangeDecision;
+
+    /**
+     * UserTimesheetListener constructor.
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param StatusChangeDecision $statusChangeDecision
+     */
+    public function __construct(TokenStorageInterface $tokenStorage, StatusChangeDecision $statusChangeDecision)
     {
         $this->token = $tokenStorage->getToken();
+        $this->statusChangeDecision = $statusChangeDecision;
     }
 
     /**
      * @param PreUpdateEventArgs $args
+     *
+     * @throws IncorrectStatusChangeException by StatusChangeDecision::class
+     *
      * @return void
      */
     public function preUpdate(PreUpdateEventArgs $args): void
@@ -53,6 +66,15 @@ class UserTimesheetListener
         if ($args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')
         ) {
+            $this
+                ->statusChangeDecision
+                ->setThrowException(true)
+                ->decide(
+                    $args->getOldValue('status'),
+                    $args->getNewValue('status')
+                )
+            ;
+
             $this->addUserTimesheetLog(
                 $args,
                 $entity,
