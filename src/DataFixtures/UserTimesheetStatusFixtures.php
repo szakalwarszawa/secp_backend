@@ -8,7 +8,6 @@ use App\DataFixtures\Data\Statuses;
 use App\Entity\UserTimesheetStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use ReflectionClass;
 
 /**
  * Class UserTimesheetStatusFixtures
