@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ORM\Table(
@@ -33,6 +34,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     userFieldName="owner_id"
  * )
  * @ApiResource(
+ *      subresourceOperations={
+ *          "user_timesheet_day_logs_get_subresource"= {
+ *              "path"="/user_timesheet_days/{id}/logs"
+ *          }
+ *      },
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
@@ -248,6 +254,7 @@ class UserTimesheetDay
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserTimesheetDayLog", mappedBy="userTimesheetDay")
+     * @ApiSubresource()
      */
     private $userTimesheetDayLogs;
 
