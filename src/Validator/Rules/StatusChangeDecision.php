@@ -67,10 +67,12 @@ class StatusChangeDecision
      *
      * @param bool $throwException
      *
-     * @return void
+     * @return StatusChangeDecision
      */
-    public function setThrowException(bool $throwException): void
+    public function setThrowException(bool $throwException): StatusChangeDecision
     {
         $this->throwException = $throwException;
+
+        return $this;
     }
 }

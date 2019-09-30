@@ -14,6 +14,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use App\Exception\IncorrectStatusChangeException;
 
 /**
  * Class UserTimesheetLoggerListener
@@ -40,7 +41,7 @@ class UserTimesheetListener
      * UserTimesheetListener constructor.
      *
      * @param TokenStorageInterface $tokenStorage
-     * @param StatusChangedDecision $statusChangeDecision
+     * @param StatusChangeDecision $statusChangeDecision
      */
     public function __construct(TokenStorageInterface $tokenStorage, StatusChangeDecision $statusChangeDecision)
     {
@@ -50,6 +51,9 @@ class UserTimesheetListener
 
     /**
      * @param PreUpdateEventArgs $args
+     *
+     * @throws IncorrectStatusChangeException by StatusChangeDecision::class
+     *
      * @return void
      */
     public function preUpdate(PreUpdateEventArgs $args): void
@@ -59,13 +63,12 @@ class UserTimesheetListener
             return;
         }
 
-        $this->statusChangeDecision->setThrowException(true);
-
         if ($args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')
         ) {
             $this
                 ->statusChangeDecision
+                ->setThrowException(true)
                 ->decide(
                     $args->getOldValue('status'),
                     $args->getNewValue('status')
