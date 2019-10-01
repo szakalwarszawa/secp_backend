@@ -14,15 +14,63 @@ use Exception;
 
 
 class TestCase {
+    /**
+     * @var
+     */
     private $start;
+    /**
+     * @var
+     */
     private $end;
+    /**
+     * @var
+     */
     private $user;
+    /**
+     * @var
+     */
     private $workSchedule;
+    /**
+     * @var
+     */
     private $baseStatus;
+    /**
+     * @var
+     */
     private $endStatus;
+    /**
+     * @var array
+     */
     private $days;
 
-    public function __construct($start, $end, $user, $workSchedule, $baseStatus, $endStatus, array $days)
+    private $preformattedDays;
+
+    /**
+     * @return mixed
+     */
+    public function getPreformattedDays()
+    {
+        return $this->preformattedDays;
+    }
+
+    /**
+     * @param mixed $preformattedDays
+     */
+    public function setPreformattedDays($preformattedDays): void
+    {
+        $this->preformattedDays = $preformattedDays;
+    }
+    /**
+     * TestCase constructor.
+     * @param $start
+     * @param $end
+     * @param $user
+     * @param $workSchedule
+     * @param $baseStatus
+     * @param $endStatus
+     * @param array $days
+     */
+    public function __construct(string $start, string $end, $user, $workSchedule, $baseStatus, $endStatus, array $days)
     {
         $this->start = $start;
         $this->end = $end;
@@ -157,15 +205,15 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      */
     public function changeWorkScheduleStatusProvider(): array
     {
-        $testCases = [];
         //23 24 25 26 |27| 28
 //              25 26 |27| 28 29 30 01 02 03
         $testCases[] = [
             [
-                    $object1 = new TestCase(
+                   new TestCase(
                          date('Y-m-d', strtotime('now -4 days')),
                          date('Y-m-d', strtotime('now +1 days')),
-                        UserFixtures::REF_USER_USER,   'work_schedule_profile_2',
+                        UserFixtures::REF_USER_USER,
+                         'work_schedule_profile_2',
                         UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                         null,
                          array(
@@ -177,7 +225,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                             '+1 days' => false
                          )
                     ),
-                    $object2  = new TestCase(
+                    new TestCase(
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
@@ -194,273 +242,270 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                             '+4 days' => true,
                             '+5 days' => true,
                             '+6 days' => true,
-                       //     '-90 days' => false,
                         )
                     )
             ]
         ];
-//      //25 26 |27| 28 29 30 01 02 03
-////23 24 25 26 |27| 28
-//        $testCases[] = [
-//            [
-//                [
-//                    date('Y-m-d', strtotime('now -2 days')),
-//                    date('Y-m-d', strtotime('now +6 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    null,
-//                    [
-//                        date('Y-m-d', strtotime('now -2 days')) => true,
-//                        date('Y-m-d', strtotime('now -1 days')) => true,
-//                        date('Y-m-d', strtotime('now +0 days')) => true,
-//                        date('Y-m-d', strtotime('now +1 days')) => false,
-//                        date('Y-m-d', strtotime('now +2 days')) => true,
-//                        date('Y-m-d', strtotime('now +3 days')) => true,
-//                        date('Y-m-d', strtotime('now +4 days')) => true,
-//                        date('Y-m-d', strtotime('now +5 days')) => true,
-//                        date('Y-m-d', strtotime('now +6 days')) => true,
-//                    ]
-//                ],
-//                [
-//                    date('Y-m-d', strtotime('now -4 days')),
-//                    date('Y-m-d', strtotime('now +1 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    [
-//                        date('Y-m-d', strtotime('now -4 days')) => false,
-//                        date('Y-m-d', strtotime('now -3 days')) => false,
-//                        date('Y-m-d', strtotime('now -2 days')) => false,
-//                        date('Y-m-d', strtotime('now -1 days')) => false,
-//                        date('Y-m-d', strtotime('now +0 days')) => false,
-//                        date('Y-m-d', strtotime('now +1 days')) => true,
-//                    ]
-//                ],
-//            ],
-//        ];
+      //25 26 |27| 28 29 30 01 02 03
+//23 24 25 26 |27| 28
+        $testCases[] = [
+            [
+                new TestCase(
+                    date('Y-m-d', strtotime('now -2 days')),
+                    date('Y-m-d', strtotime('now +6 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    array(
+                        '-2 days' => true,
+                        '-1 days' => true,
+                        '+0 days' => true,
+                        '+1 days' => false,
+                        '+2 days' => true,
+                        '+3 days' => true,
+                        '+4 days' => true,
+                        '+5 days' => true,
+                        '+6 days' => true,
+                    )
+                ),
+                new TestCase(
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    array(
+                        '-4 days' => false,
+                        '-3 days' => false,
+                        '-2 days' => false,
+                        '-1 days' => false,
+                        '+0 days' => false,
+                        '+1 days' => true,
+                    )
+                )
+            ]
+        ];
 //
 //        //23 24 25 26 |27| 28
 //        //23 24 25 26 |27| 28
-//        $testCases[] = [
-//            [
-//                [
-//                    date('Y-m-d', strtotime('now -4 days')),
-//                    date('Y-m-d', strtotime('now +1 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    null,
-//                    [
-//                        date('Y-m-d', strtotime('now -4 days')) => true,
-//                        date('Y-m-d', strtotime('now -3 days')) => true,
-//                        date('Y-m-d', strtotime('now -2 days')) => true,
-//                        date('Y-m-d', strtotime('now -1 days')) => true,
-//                        date('Y-m-d', strtotime('now +0 days')) => true,
-//                        date('Y-m-d', strtotime('now +1 days')) => false,
-//                    ]
-//                ],
-//                [
-//                    date('Y-m-d', strtotime('now -4 days')),
-//                    date('Y-m-d', strtotime('now +1 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    [
-//                        date('Y-m-d', strtotime('now -4 days')) => false,
-//                        date('Y-m-d', strtotime('now -3 days')) => false,
-//                        date('Y-m-d', strtotime('now -2 days')) => false,
-//                        date('Y-m-d', strtotime('now -1 days')) => false,
-//                        date('Y-m-d', strtotime('now +0 days')) => false,
-//                        date('Y-m-d', strtotime('now +1 days')) => true,
-//                    ]
-//                ],
-//            ],
-//        ];
-//
-//        // 25 26 |27| 28 29 30 01 02 03
-// //23 24 25 26  |27| 28
-//        //                    01  02 03
-//        $testCases[] = [
-//            [
-//                [
-//                    date('Y-m-d', strtotime('now -2 days')),
-//                    date('Y-m-d', strtotime('now +6 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    null,
-//                    [
-//                        date('Y-m-d', strtotime('now -2 days')) => true,
-//                        date('Y-m-d', strtotime('now -1 days')) => true,
-//                        date('Y-m-d', strtotime('now +0 days')) => true,
-//                        date('Y-m-d', strtotime('now +1 days')) => true,
-//                        date('Y-m-d', strtotime('now +2 days')) => true,
-//                        date('Y-m-d', strtotime('now +3 days')) => true,
-//                        date('Y-m-d', strtotime('now +4 days')) => true,
-//                        date('Y-m-d', strtotime('now +5 days')) => true,
-//                        date('Y-m-d', strtotime('now +6 days')) => true,
-//                    ]
-//                ],
-//            ],
-//            [
-//                [
-//                    date('Y-m-d', strtotime('now -4 days')),
-//                    date('Y-m-d', strtotime('now +1 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    null,
-//                    [
-//                        date('Y-m-d', strtotime('now -4 days')) => false,
-//                        date('Y-m-d', strtotime('now -3 days')) => false,
-//                        date('Y-m-d', strtotime('now -2 days')) => false,
-//                        date('Y-m-d', strtotime('now -1 days')) => false,
-//                        date('Y-m-d', strtotime('now +0 days')) => false,
-//                        date('Y-m-d', strtotime('now +1 days')) => true,
-//                    ]
-//                ],
-//            ],
-//            [
-//                [
-//                    date('Y-m-d', strtotime('now +4 days')),
-//                    date('Y-m-d', strtotime('now +6 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    [
-//                        date('Y-m-d', strtotime('now +4 days')) => true,
-//                        date('Y-m-d', strtotime('now +5 days')) => true,
-//                        date('Y-m-d', strtotime('now +6 days')) => true,
-//                    ]
-//                ]
-//            ]
-//        ];
+        $testCases[] = [
+            [
+                 new TestCase(
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                     array(
+                        '-4 days' => true,
+                        '-3 days' => true,
+                        '-2 days' => true,
+                        '-1 days' => true,
+                        '+0 days' => true,
+                        '+1 days' => false,
+                     )
+                ),
+                new TestCase(
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    array(
+                        '-4 days' => false,
+                        '-3 days' => false,
+                        '-2 days' => false,
+                        '-1 days' => false,
+                        '+0 days' => false,
+                        '+1 days' => true,
+                    )
+                )
+            ]
+        ];
+
+//         25 26 |27| 28 29 30 01 02 03
+ //23 24 25 26  |27| 28
+   //                         01  02 03
+        $testCases[] = [
+            [
+                new TestCase(
+                    date('Y-m-d', strtotime('now -2 days')),
+                    date('Y-m-d', strtotime('now +6 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    array(
+                        '-2 days' => true,
+                        '-1 days' => true,
+                        '+0 days' => true,
+                        '+1 days' => true,
+                        '+2 days' => true,
+                        '+3 days' => true,
+                        '+4 days' => false,
+                        '+5 days' => false,
+                        '+6 days' => false,
+                    )
+                ),
+
+                new TestCase(
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    array(
+                        '-4 days' => false,
+                        '-3 days' => false,
+                       '-2 days' => false,
+                       '-1 days' => false,
+                        '+0 days' => false,
+                        '+1 days' => true,
+                    )
+                ),
+
+                new TestCase(
+                    date('Y-m-d', strtotime('now +4 days')),
+                    date('Y-m-d', strtotime('now +6 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    array(
+                        '+4 days' => true,
+                        '+5 days' => true,
+                        '+6 days' => true,
+                    )
+                )
+            ]
+        ];
 ////                      29 30 01 02 03
 ////23 24 25      |27|
-//        $testCases[] = [
-//            [
-//                [
-//                    date('Y-m-d', strtotime('now +2 days')),
-//                    date('Y-m-d', strtotime('now +6 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    null,
-//                    [
-//                        date('Y-m-d', strtotime('now +2 days')) => true,
-//                        date('Y-m-d', strtotime('now +3 days')) => true,
-//                        date('Y-m-d', strtotime('now +4 days')) => true,
-//                        date('Y-m-d', strtotime('now +5 days')) => true,
-//                        date('Y-m-d', strtotime('now +6 days')) => true,
-//                    ]
-//                ],
-//                [
-//                    date('Y-m-d', strtotime('now -4 days')),
-//                    date('Y-m-d', strtotime('now -2 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    [
-//                        date('Y-m-d', strtotime('now -2 days')) => false,
-//                        date('Y-m-d', strtotime('now -3 days')) => false,
-//                        date('Y-m-d', strtotime('now -4 days')) => false,
-//                    ]
-//                ],
-//            ]
-//        ];
+        $testCases[] = [
+            [
+                new TestCase(
+                    date('Y-m-d', strtotime('now +2 days')),
+                    date('Y-m-d', strtotime('now +6 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    array(
+                        '+2 days' => true,
+                        '+3 days' => true,
+                        '+4 days' => true,
+                        '+5 days' => true,
+                        '+6 days' => true,
+                    )
+                ),
+                new TestCase(
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now -2 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    array(
+                        '-2 days' => false,
+                        '-3 days' => false,
+                        '-4 days' => false,
+                    )
+                ),
+            ]
+        ];
 //
 //        //23 24 25 26 |27|
 //                            //28 29 30
 //              //25 26
-//        $testCases [] = [
-//            [
-//                [
-//                    date('Y-m-d', strtotime('now -4 days')),
-//                    date('Y-m-d', strtotime('now +0 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    null,
-//                    [
-//                        date('Y-m-d', strtotime('now -4 days')) => true,
-//                        date('Y-m-d', strtotime('now -3 days')) => true,
-//                        date('Y-m-d', strtotime('now -2 days')) => true,
-//                        date('Y-m-d', strtotime('now -1 days')) => true,
-//                        date('Y-m-d', strtotime('now -0 days')) => true,
-//                    ]
-//                ],
-//                [
-//                    date('Y-m-d', strtotime('now +0 days')),
-//                    date('Y-m-d', strtotime('now +3 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    null,
-//                    [
-//                        date('Y-m-d', strtotime('now +1 days')) => true,
-//                        date('Y-m-d', strtotime('now +2 days')) => true,
-//                        date('Y-m-d', strtotime('now +3 days')) => true,
-//                    ]
-//                ],
-//                [
-//                    date('Y-m-d', strtotime('now -2 days')),
-//                    date('Y-m-d', strtotime('now -1 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    [
-//                        date('Y-m-d', strtotime('now -2 days')) => false,
-//                        date('Y-m-d', strtotime('now -1 days')) => false,
-//                    ]
-//                ]
-//            ]
-//        ];
-//
-//        //one user does not affect other user
-//        //23 24 25 26 |27| 28
-//        //23 24 25 26 |27| 28
-//        $testCases[] = [
-//            [
-//                [
-//                    date('Y-m-d', strtotime('now -4 days')),
-//                    date('Y-m-d', strtotime('now +1 days')),
-//                    UserFixtures::REF_USER_USER,
-//                    'work_schedule_profile_1',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    null,
-//                    [
-//                        date('Y-m-d', strtotime('now -4 days')) => true,
-//                        date('Y-m-d', strtotime('now -3 days')) => true,
-//                        date('Y-m-d', strtotime('now -2 days')) => true,
-//                        date('Y-m-d', strtotime('now -1 days')) => true,
-//                        date('Y-m-d', strtotime('now +0 days')) => true,
-//                        date('Y-m-d', strtotime('now +1 days')) => false,
-//                    ]
-//                ],
-//                [
-//                    date('Y-m-d', strtotime('now -4 days')),
-//                    date('Y-m-d', strtotime('now +1 days')),
-//                    UserFixtures::REF_USER_ADMIN,
-//                    'work_schedule_profile_2',
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
-//                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-//                    [
-//                        date('Y-m-d', strtotime('now -4 days')) => false,
-//                        date('Y-m-d', strtotime('now -3 days')) => false,
-//                        date('Y-m-d', strtotime('now -2 days')) => false,
-//                        date('Y-m-d', strtotime('now -1 days')) => false,
-//                        date('Y-m-d', strtotime('now +0 days')) => false,
-//                        date('Y-m-d', strtotime('now +1 days')) => true,
-//                    ]
-//                ]
-//            ]
-//        ];
+        $testCases [] = [
+            [
+                new TestCase(
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +0 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    array(
+                        '-4 days' => true,
+                        '-3 days' => true,
+                        '-2 days' => true,
+                        '-1 days' => true,
+                        '-0 days' => true,
+                    )
+                ),
+                new TestCase(
+                    date('Y-m-d', strtotime('now +0 days')),
+                    date('Y-m-d', strtotime('now +3 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    array(
+                        '+1 days' => true,
+                        '+2 days' => true,
+                        '+3 days' => true,
+                    )
+                ),
+                new TestCase(
+                    date('Y-m-d', strtotime('now -2 days')),
+                    date('Y-m-d', strtotime('now -1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    array(
+                        '-2 days' => false,
+                        '-1 days' => false,
+                    )
+                )
+            ]
+        ];
+
+        //one user does not affect other user
+        //23 24 25 26 |27| 28
+        //23 24 25 26 |27| 28
+        $testCases[] = [
+            [
+                new TestCase(
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_1',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    array(
+                        '-4 days' => true,
+                        '-3 days' => true,
+                        '-2 days' => true,
+                        '-1 days' => true,
+                        '+0 days' => true,
+                        '+1 days' => false,
+                    )
+                ),
+                new TestCase(
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_ADMIN,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    array(
+                        '-4 days' => false,
+                        '-3 days' => false,
+                        '-2 days' => false,
+                        '-1 days' => false,
+                        '+0 days' => false,
+                        '+1 days' => true,
+                    )
+                )
+            ]
+        ];
 
         return $testCases;
     }
@@ -474,51 +519,37 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
     public function changeWorkScheduleStatus(array $currentCase): void
     {
         $userWorScheduleInTesting = [];
-        // faza I - zakładanie dziewiczych harmonogramów
+        // faza I - zakładanie dziewiczych harmonogramów oraz budowa odpowiednich dat ze stringow
 
         foreach ($currentCase as $currentCasee) {
-            $daysToChange = $currentCasee->getDays();
-
-            $x = array();
-            foreach ($daysToChange as $day => $value) {
-                $string = 'now ' . $day;
-                $key = date('Y-m-d', strtotime($string));
+            $daysToFormat = $currentCasee->getDays();
+            $currentCasee->setPreformattedDays($daysToFormat);
+            $builtDates = array();
+            foreach ($daysToFormat as $day => $value) {
+                $dateString = 'now ' . $day;
+                $key = date('Y-m-d', strtotime($dateString));
                 $val = $value;
-                $x[$key] = $val;
+                $builtDates[$key] = $val;
             }
-            $currentCasee->setDays($x);
+            $currentCasee->setDays($builtDates);
         }
 
         foreach ($currentCase as $userScheduleCase) {
-            var_dump($userScheduleCase->getDays());
+            $schedule = $this->makeUserWorkSchedule(
+                $userScheduleCase->getStart(),
+                $userScheduleCase->getEnd(),
+                $this->getEntityFromReference($userScheduleCase->getUser()),
+                $this->getEntityFromReference($userScheduleCase->getWorkSchedule()),
+                $this->getEntityFromReference($userScheduleCase->getBaseStatus())
+            );
+            $userWorScheduleInTesting[$schedule->getId()] = [
+                'schedule' => $schedule,
+                'statusOriginRefName' => $userScheduleCase->getBaseStatus(),
+                'statusFinalRefName' => $userScheduleCase->getEndStatus(),
+                'expectedVisibilities' => $userScheduleCase->getDays(),
+                'preFormatted' => $userScheduleCase->getPreformattedDays()
+            ];
         }
-
-        exit;
-//            [
-//                $userScheduleCasee->getStart(),
-//                $userScheduleCasee->getEnd(),
-//                $userScheduleCasee->getStart(),
-////                $userScheduleCasee->getWorkSchedule(),
-////                $userScheduleCasee->getBaseStatus(),
-////                $userScheduleCasee->getEndStatus(),
-////                $userScheduleCasee->getDays(),
-////            ] = $userScheduleCasee;
-////var_dump($userScheduleCase);
-//
-//            $schedule = $this->makeUserWorkSchedule(
-//                $startFrom,
-//                $startTo,
-//                $this->getEntityFromReference($ownerReferenceName),
-//                $this->getEntityFromReference($workScheduleProfileRefName),
-//                $this->getEntityFromReference($statusOriginRefName)
-//            );
-//            $userWorScheduleInTesting[$schedule->getId()] = [
-//                'schedule' => $schedule,
-//                'statusOriginRefName' => $statusOriginRefName,
-//                'statusFinalRefName' => $statusFinalRefName,
-//                'expectedVisibilities' => $expectedVisibilities,
-//            ];
-//        }
 
         // faza II - sprawdzanie czy dni harmonogramów maja poprawnie ustawioną flagę "visibility"
         foreach ($userWorScheduleInTesting as $userScheduleCase) {
@@ -548,7 +579,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             /* @var $scheduleDb UserWorkSchedule */
 
             if ($userScheduleCase['statusFinalRefName'] !== null) {
-                $scheduleDb->setStatus($this->getEntityFromReference($statusFinalRefName));
+                $scheduleDb->setStatus($this->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT));
                 $this->saveToDb($scheduleDb);
             }
         }
@@ -562,25 +593,26 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 ->find($userScheduleCase['schedule']->getId());
             /* @var $scheduleDb UserWorkSchedule */
 
-            $days = $scheduleDb->getUserWorkScheduleDays();
-            //var_dump($days); exit;
+            $badCaseCounter = 0;
+
             foreach ($userScheduleCase['expectedVisibilities'] as $scheduleDayId => $expectedVisibility) {
 
-
-              //  var_dump($scheduleDayId);
                 $scheduleDb1 = self::$container->get('doctrine')
                     ->getManager()
                     ->getRepository(UserWorkScheduleDay::class)
                     ->findBy(array('dayDefinition' =>  $scheduleDayId, 'userWorkSchedule' => $userScheduleCase['schedule']));
 
+                $keys = array_keys($userScheduleCase['preFormatted']);
+
                 $this->assertCount(1, $scheduleDb1,
                     sprintf(
-                        "schedule: %s\nday: %s",
+                        "schedule: %s\nday: %s\ncase: %s",
                         $userScheduleCase['schedule']->getId(),
-                        $scheduleDayId
+                        $scheduleDayId,
+                        $keys[$badCaseCounter]
                     )
                 );
-var_dump($scheduleDayId);
+
                 self::$container->get('doctrine')
                     ->getManager()
                     ->refresh($scheduleDb1[0]);
@@ -589,79 +621,19 @@ var_dump($scheduleDayId);
                     $expectedVisibility,
                     $scheduleDb1[0]->getVisibility(),
                     sprintf(
-                        "schedule: %s\nday: %s",
+                        "schedule: %s\nday: %s\ncase: %s",
                         $userScheduleCase['schedule']->getId(),
-                        $scheduleDayId
+                        $scheduleDayId,
+                        $keys[$badCaseCounter]
                     )
                 );
+                $badCaseCounter++;
             }
-
-
-//            foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-//                self::$container->get('doctrine')
-//                    ->getManager()
-//                    ->refresh($userWorkScheduleDay);
-//
-//                $scheduleDay = $userWorkScheduleDay->getDayDefinition()->getId();
-//
-//
-//echo $scheduleDay;
-//
-//
-//
-//
-//
-//                if (isset($userScheduleCase['expectedVisibilities'][$scheduleDay])) {
-//                    $this->assertEquals(
-//                        $userScheduleCase['expectedVisibilities'][$scheduleDay],
-//                        $userWorkScheduleDay->getVisibility(),
-//                        'problem for: ' . $scheduleDay
-//                    );
-//                }
-//            }
         }
 
         // faza V - czyszczenie po sobie tabel
         $this->cleanUserWorkSchedule($userWorScheduleInTesting);
         return;
-
-        $scheduleDb = self::$container->get('doctrine')
-            ->getManager()
-            ->getRepository(UserWorkSchedule::class)
-            ->find($schedule->getId());
-        /* @var $scheduleDb UserWorkSchedule */
-        $userWorkScheduleToClean[] = $scheduleDb;
-
-        if ($currentCase[5] == null) { //nie zmienil sie status sa poprzednie
-            foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                $this->assertTrue($userWorkScheduleDay->getVisibility());
-            }
-        } else {
-            foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                $this->assertFalse($userWorkScheduleDay->getVisibility());
-            }
-        }
-
-        if ($currentCase[5] != null) {
-            $schedule->setStatus($this->getEntityFromReference($currentCase[5]));
-            $this->saveToDb($schedule);
-        }
-
-        if ($currentCase[5] != null) { //zmienil sie status ostatni -> warunki ostatniego
-            foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                self::$container->get('doctrine')
-                    ->getManager()
-                    ->refresh($userWorkScheduleDay);
-                if (strtotime($userWorkScheduleDay->getDayDefinition()->getId()) < time()) {
-                    $this->assertFalse($userWorkScheduleDay->getVisibility());
-                }
-
-                if (strtotime($userWorkScheduleDay->getDayDefinition()->getId()) > time()) {
-                    $this->assertTrue($userWorkScheduleDay->getVisibility());
-                }
-            }
-        }
-        $this->cleanUserWorkSchedule($userWorScheduleInTesting);
     }
 
     /**
