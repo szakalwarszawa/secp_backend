@@ -14,6 +14,28 @@ use Exception;
 
 
 class TestCase {
+
+    /**
+     * @var
+     */
+    private $name;
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
     /**
      * @var
      */
@@ -70,8 +92,9 @@ class TestCase {
      * @param $endStatus
      * @param array $days
      */
-    public function __construct(string $start, string $end, $user, $workSchedule, $baseStatus, $endStatus, array $days)
+    public function __construct(string $name, string $start, string $end, $user, $workSchedule, $baseStatus, $endStatus, array $days)
     {
+        $this->name = $name;
         $this->start = $start;
         $this->end = $end;
         $this->user = $user;
@@ -210,6 +233,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $testCases[] = [
             [
                    new TestCase(
+                         'first is starting earlier, first schedule',
                          date('Y-m-d', strtotime('now -4 days')),
                          date('Y-m-d', strtotime('now +1 days')),
                         UserFixtures::REF_USER_USER,
@@ -226,6 +250,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                          )
                     ),
                     new TestCase(
+                        'first is starting earlier, second schedule',
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
@@ -251,6 +276,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $testCases[] = [
             [
                 new TestCase(
+                    'second is starting earlier, first schedule',
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
@@ -270,6 +296,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     )
                 ),
                 new TestCase(
+                    'second is starting earlier, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
@@ -293,6 +320,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $testCases[] = [
             [
                  new TestCase(
+                     'both are equal, first schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
@@ -309,6 +337,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                      )
                 ),
                 new TestCase(
+                    'both are equal, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
@@ -333,6 +362,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $testCases[] = [
             [
                 new TestCase(
+                    'third only future, first schedule',
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
@@ -340,10 +370,10 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
                     array(
-                        '-2 days' => true,
-                        '-1 days' => true,
-                        '+0 days' => true,
-                        '+1 days' => true,
+                        '-2 days' => false,
+                        '-1 days' => false,
+                        '+0 days' => false,
+                        '+1 days' => false,
                         '+2 days' => true,
                         '+3 days' => true,
                         '+4 days' => false,
@@ -353,12 +383,13 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 ),
 
                 new TestCase(
+                    'third only future, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
                     array(
                         '-4 days' => false,
                         '-3 days' => false,
@@ -370,6 +401,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 ),
 
                 new TestCase(
+                    'third only future, third schedule',
                     date('Y-m-d', strtotime('now +4 days')),
                     date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
@@ -389,6 +421,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $testCases[] = [
             [
                 new TestCase(
+                    'gaps on both sides, first schedule',
                     date('Y-m-d', strtotime('now +2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
@@ -404,6 +437,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     )
                 ),
                 new TestCase(
+                    'gaps on both sides, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now -2 days')),
                     UserFixtures::REF_USER_USER,
@@ -425,6 +459,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $testCases [] = [
             [
                 new TestCase(
+                    'three at once, first schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +0 days')),
                     UserFixtures::REF_USER_USER,
@@ -440,6 +475,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     )
                 ),
                 new TestCase(
+                    'three at once, second schedule',
                     date('Y-m-d', strtotime('now +0 days')),
                     date('Y-m-d', strtotime('now +3 days')),
                     UserFixtures::REF_USER_USER,
@@ -453,6 +489,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     )
                 ),
                 new TestCase(
+                    'three at once, third schedule',
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now -1 days')),
                     UserFixtures::REF_USER_USER,
@@ -473,6 +510,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $testCases[] = [
             [
                 new TestCase(
+                    'one does not affect each others, first schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
@@ -489,6 +527,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     )
                 ),
                 new TestCase(
+                    'one does not affect each others, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_ADMIN,
@@ -547,7 +586,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 'statusOriginRefName' => $userScheduleCase->getBaseStatus(),
                 'statusFinalRefName' => $userScheduleCase->getEndStatus(),
                 'expectedVisibilities' => $userScheduleCase->getDays(),
-                'preFormatted' => $userScheduleCase->getPreformattedDays()
+                'preFormatted' => $userScheduleCase->getPreformattedDays(),
+                'name' => $userScheduleCase->getName()
             ];
         }
 
@@ -621,10 +661,11 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     $expectedVisibility,
                     $scheduleDb1[0]->getVisibility(),
                     sprintf(
-                        "schedule: %s\nday: %s\ncase: %s",
+                        "schedule: %s\nday: %s\ncase: %s \nlabel: %s",
                         $userScheduleCase['schedule']->getId(),
                         $scheduleDayId,
-                        $keys[$badCaseCounter]
+                        $keys[$badCaseCounter],
+                        $userScheduleCase['name']
                     )
                 );
                 $badCaseCounter++;
