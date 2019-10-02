@@ -351,13 +351,16 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      * @dataProvider changeWorkScheduleStatusProvider
      * @throws Exception
      */
-    public function changeWorkScheduleStatus(array $currentCase): void
+    public function changeWorkScheduleStatus(array $currentCases): void
     {
+        $user = $this->getEntityFromReference(UserFixtures::REF_USER_ADMIN);
+        $this->loginAsUser($user, ['ROLE_ADMIN']);
+
         $userWorScheduleInTesting = [];
         // faza I - zakładanie dziewiczych harmonogramów oraz budowa odpowiednich dat ze stringow
-        foreach ($currentCase as $currentCasee) {
-            $daysToFormat = $currentCasee->getDays();
-            $currentCasee->setPreformattedDays($daysToFormat);
+        foreach ($currentCases as $currentCase) {
+            $daysToFormat = $currentCase->getDays();
+            $currentCase->setPreformattedDays($daysToFormat);
             $builtDates = array();
             foreach ($daysToFormat as $day => $value) {
                 $dateString = 'now ' . $day;
@@ -365,10 +368,10 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 $val = $value;
                 $builtDates[$key] = $val;
             }
-            $currentCasee->setDays($builtDates);
+            $currentCase->setDays($builtDates);
         }
 
-        foreach ($currentCase as $userScheduleCase) {
+        foreach ($currentCases as $userScheduleCase) {
             $schedule = $this->makeUserWorkSchedule(
                 $userScheduleCase->getStart(),
                 $userScheduleCase->getEnd(),
@@ -380,13 +383,13 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 'schedule' => $schedule,
                 'statusOriginRefName' => $userScheduleCase->getBaseStatus(),
                 'statusFinalRefName' => $userScheduleCase->getEndStatus(),
-                'expectedVisibilities' => $userScheduleCase->getDays(),
+                'expectedDeleted' => $userScheduleCase->getDays(),
                 'preFormatted' => $userScheduleCase->getPreformattedDays(),
                 'name' => $userScheduleCase->getName()
             ];
         }
 
-        // faza II - sprawdzanie czy dni harmonogramów maja poprawnie ustawioną flagę "visibility"
+        // faza II - sprawdzanie czy dni harmonogramów maja poprawnie ustawioną flagę "deleted"
         foreach ($userWorScheduleInTesting as $userScheduleCase) {
             $scheduleDb = self::$container->get('doctrine')
                 ->getManager()
@@ -396,11 +399,11 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
             if ($userScheduleCase['statusOriginRefName'] === UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT) {
                 foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                    $this->assertTrue($userWorkScheduleDay->getVisibility());
+                    $this->assertTrue($userWorkScheduleDay->getDeleted());
                 }
             } else {
                 foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                    $this->assertFalse($userWorkScheduleDay->getVisibility());
+                    $this->assertFalse($userWorkScheduleDay->getDeleted());
                 }
             }
         }
@@ -430,7 +433,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
             $badCaseCounter = 0;
 
-            foreach ($userScheduleCase['expectedVisibilities'] as $scheduleDayId => $expectedVisibility) {
+            foreach ($userScheduleCase['expectedDeleted'] as $scheduleDayId => $expectedDeleted) {
                 $scheduleDb1 = self::$container->get('doctrine')
                     ->getManager()
                     ->getRepository(UserWorkScheduleDay::class)
@@ -457,8 +460,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     ->refresh($scheduleDb1[0]);
 
                 $this->assertEquals(
-                    $expectedVisibility,
-                    $scheduleDb1[0]->getVisibility(),
+                    $expectedDeleted,
+                    $scheduleDb1[0]->getDeleted(),
                     sprintf(
                         "schedule: %s\nday: %s\ncase: %s \nlabel: %s",
                         $userScheduleCase['schedule']->getId(),

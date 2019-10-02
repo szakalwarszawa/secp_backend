@@ -108,23 +108,23 @@ class UserWorkScheduleDay
      * )
      * @Groups({"get"})
      */
-    private $visibility;
+    private $deleted;
 
     /**
      * @return bool|int
      */
-    public function getVisibility()
+    public function getDeleted()
     {
-        return $this->visibility;
+        return $this->deleted;
     }
 
     /**
-     * @param bool $visibility
+     * @param bool $deleted
      * @return UserWorkScheduleDay
      */
-    public function setVisibility(bool $visibility): UserWorkScheduleDay
+    public function setDeleted(bool $deleted): UserWorkScheduleDay
     {
-        $this->visibility = $visibility;
+        $this->deleted = $deleted;
 
         return $this;
     }

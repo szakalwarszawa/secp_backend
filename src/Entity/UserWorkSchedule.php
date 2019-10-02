@@ -94,11 +94,6 @@ use App\Validator\ValueExists;
 class UserWorkSchedule
 {
     /**
-     * @var string
-     */
-    public const STATUS_HR_ACCEPT = 'WORK-SCHEDULE-STATUS-HR-ACCEPT';
-
-    /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
+use App\DataFixtures\UserWorkScheduleStatusFixtures;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
@@ -101,13 +102,13 @@ class UserWorkScheduleListener
         }
 
         if ($args->hasChangedField('status')
-            && $args->getNewValue('status')->getId() === UserWorkScheduleStatus::STATUS_HR_ACCEPT
+            && $args->getNewValue('status')->getId() === UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT
         ) {
             $args->getEntityManager()
                 ->createQueryBuilder()
                 ->update(UserWorkScheduleDay::class, 'p')
-                ->set('p.visibility', ':setVisibility')
-                ->setParameter('setVisibility', false)
+                ->set('p.deleted', ':setDeleted')
+                ->setParameter('setDeleted', false)
                 ->andWhere('p.dayDefinition >= :tomorrowDate')
                 ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
                 ->andWhere('p.userWorkSchedule != :userWorkSchedule')
@@ -115,16 +116,16 @@ class UserWorkScheduleListener
                 ->andWhere('p.dayDefinition BETWEEN :fromDate AND :toDate')
                 ->setParameter('fromDate', $currentSchedule->getFromDate()->format('Y-m-d'))
                 ->setParameter('toDate', $currentSchedule->getToDate()->format('Y-m-d'))
-                ->andWhere('p.visibility = :previousVisible')
-                ->setParameter('previousVisible', true)
+                ->andWhere('p.deleted = :previousDeleted')
+                ->setParameter('previousDeleted', true)
                 ->getQuery()
                 ->execute();
 
             $args->getEntityManager()
                 ->createQueryBuilder()
                 ->update(UserWorkScheduleDay::class, 'p')
-                ->set('p.visibility', ':setVisibility')
-                ->setParameter('setVisibility', true)
+                ->set('p.deleted', ':setDeleted')
+                ->setParameter('setDeleted', true)
                 ->where('p.dayDefinition >= :tomorrowDate')
                 ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
                 ->andWhere('p.userWorkSchedule = :userWorkSchedule')
@@ -236,7 +237,7 @@ class UserWorkScheduleListener
             ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
             ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
             ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo())
-            ->setVisibility($userWorkSchedule->getStatus()->getId() === UserWorkScheduleStatus::STATUS_HR_ACCEPT);
+            ->setDeleted($userWorkSchedule->getStatus()->getId() === UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT);
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $entityManager->persist($userWorkScheduleDay);

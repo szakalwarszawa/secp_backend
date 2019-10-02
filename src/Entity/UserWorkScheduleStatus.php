@@ -53,13 +53,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class UserWorkScheduleStatus implements RuleInterface
 {
     /**
-     * Status ID for HR Accept
-     *
-     * @var string
-     */
-    public const STATUS_HR_ACCEPT = 'WORK-SCHEDULE-REF-STATUS-HR-ACCEPT';
-
-    /**
      * @var string
      *
      * @ORM\Id()
