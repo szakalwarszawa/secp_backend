@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Entity\Types\LogEntityInterface;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -42,7 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      }
  * )
  */
-class UserTimesheetLog
+class UserTimesheetLog implements LogEntityInterface
 {
     /**
      * @ORM\Id()
@@ -101,9 +102,10 @@ class UserTimesheetLog
 
     /**
      * @param UserTimesheet|null $userTimesheet
+     *
      * @return UserTimesheetLog
      */
-    public function setUserTimesheet(?UserTimesheet $userTimesheet): self
+    public function setUserTimesheet(?UserTimesheet $userTimesheet): UserTimesheetLog
     {
         $this->userTimesheet = $userTimesheet;
 
@@ -120,9 +122,10 @@ class UserTimesheetLog
 
     /**
      * @param User|null $owner
+     *
      * @return UserTimesheetLog
      */
-    public function setOwner(?User $owner): self
+    public function setOwner(?User $owner): UserTimesheetLog
     {
         $this->owner = $owner;
 
@@ -139,9 +142,10 @@ class UserTimesheetLog
 
     /**
      * @param DateTimeInterface $logDate
+     *
      * @return UserTimesheetLog
      */
-    public function setLogDate(DateTimeInterface $logDate): self
+    public function setLogDate(DateTimeInterface $logDate): UserTimesheetLog
     {
         $this->logDate = $logDate;
 
@@ -158,9 +162,10 @@ class UserTimesheetLog
 
     /**
      * @param string $notice
+     *
      * @return UserTimesheetLog
      */
-    public function setNotice(string $notice): self
+    public function setNotice(string $notice): UserTimesheetLog
     {
         $this->notice = $notice;
 

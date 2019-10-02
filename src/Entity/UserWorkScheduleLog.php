@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Entity\Types\LogEntityInterface;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -43,7 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      }
  * )
  */
-class UserWorkScheduleLog
+class UserWorkScheduleLog implements LogEntityInterface
 {
     /**
      * @ORM\Id()
@@ -59,26 +60,6 @@ class UserWorkScheduleLog
      * @Groups({"get"})
      */
     private $userWorkSchedule;
-
-    /**
-     * @return UserWorkSchedule
-     */
-    public function getUserWorkSchedule(): UserWorkSchedule
-    {
-        return $this->userWorkSchedule;
-    }
-
-    /**
-     * @param UserWorkSchedule $userWorkSchedule
-     *
-     * @return UserWorkScheduleLog
-     */
-    public function setUserWorkSchedule(UserWorkSchedule $userWorkSchedule): UserWorkScheduleLog
-    {
-        $this->userWorkSchedule = $userWorkSchedule;
-
-        return $this;
-    }
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -121,11 +102,32 @@ class UserWorkScheduleLog
 
     /**
      * @param User|null $owner
+     *
      * @return UserWorkScheduleLog
      */
-    public function setOwner(?User $owner): self
+    public function setOwner(?User $owner): UserWorkScheduleLog
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return UserWorkSchedule
+     */
+    public function getUserWorkSchedule(): UserWorkSchedule
+    {
+        return $this->userWorkSchedule;
+    }
+
+    /**
+     * @param UserWorkSchedule $userWorkSchedule
+     *
+     * @return UserWorkScheduleLog
+     */
+    public function setUserWorkSchedule(UserWorkSchedule $userWorkSchedule): UserWorkScheduleLog
+    {
+        $this->userWorkSchedule = $userWorkSchedule;
 
         return $this;
     }
@@ -143,7 +145,7 @@ class UserWorkScheduleLog
      *
      * @return UserWorkScheduleLog
      */
-    public function setLogDate(DateTimeInterface $logDate): self
+    public function setLogDate(DateTimeInterface $logDate): UserWorkScheduleLog
     {
         $this->logDate = $logDate;
 
@@ -160,9 +162,10 @@ class UserWorkScheduleLog
 
     /**
      * @param string $notice
+     *
      * @return UserWorkScheduleLog
      */
-    public function setNotice(string $notice): self
+    public function setNotice(string $notice): UserWorkScheduleLog
     {
         $this->notice = $notice;
 
