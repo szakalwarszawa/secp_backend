@@ -237,7 +237,7 @@ class UserWorkScheduleListener
             ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
             ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
             ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo())
-            ->setDeleted($userWorkSchedule->getStatus()->getId() === UserWorkSchedule::REF_STATUS_HR_ACCEPT);
+            ->setDeleted($userWorkSchedule->getStatus()->getId() === UserWorkSchedule::STATUS_HR_ACCEPT);
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $entityManager->persist($userWorkScheduleDay);
