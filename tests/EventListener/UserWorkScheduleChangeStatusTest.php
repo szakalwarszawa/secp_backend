@@ -370,9 +370,9 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
                     array(
-                        '-2 days' => false,
-                        '-1 days' => false,
-                        '+0 days' => false,
+                        '-2 days' => true,
+                        '-1 days' => true,
+                        '+0 days' => true,
                         '+1 days' => false,
                         '+2 days' => true,
                         '+3 days' => true,
@@ -393,8 +393,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     array(
                         '-4 days' => false,
                         '-3 days' => false,
-                       '-2 days' => false,
-                       '-1 days' => false,
+                        '-2 days' => false,
+                        '-1 days' => false,
                         '+0 days' => false,
                         '+1 days' => true,
                     )
