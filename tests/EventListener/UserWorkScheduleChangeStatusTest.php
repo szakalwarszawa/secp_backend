@@ -11,221 +11,7 @@ use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use Exception;
-
-
-class TestCase
-{
-
-    /**
-     * @var
-     */
-    private $name;
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param mixed $name
-     */
-    public function setName($name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @var
-     */
-    private $start;
-    /**
-     * @var
-     */
-    private $end;
-    /**
-     * @var
-     */
-    private $user;
-    /**
-     * @var
-     */
-    private $workSchedule;
-    /**
-     * @var
-     */
-    private $baseStatus;
-    /**
-     * @var
-     */
-    private $endStatus;
-    /**
-     * @var array
-     */
-    private $days;
-
-    private $preformattedDays;
-
-    /**
-     * @return mixed
-     */
-    public function getPreformattedDays()
-    {
-        return $this->preformattedDays;
-    }
-
-    /**
-     * @param mixed $preformattedDays
-     */
-    public function setPreformattedDays($preformattedDays): void
-    {
-        $this->preformattedDays = $preformattedDays;
-    }
-
-    /**
-     * TestCase constructor.
-     * @param $start
-     * @param $end
-     * @param $user
-     * @param $workSchedule
-     * @param $baseStatus
-     * @param $endStatus
-     * @param array $days
-     */
-    public function __construct(
-        string $name,
-        string $start,
-        string $end,
-        $user,
-        $workSchedule,
-        $baseStatus,
-        $endStatus,
-        array $days
-    ) {
-        $this->name = $name;
-        $this->start = $start;
-        $this->end = $end;
-        $this->user = $user;
-        $this->workSchedule = $workSchedule;
-        $this->baseStatus = $baseStatus;
-        $this->endStatus = $endStatus;
-        $this->days = $days;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStart()
-    {
-        return $this->start;
-    }
-
-    /**
-     * @param mixed $start
-     */
-    public function setStart($start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEnd()
-    {
-        return $this->end;
-    }
-
-    /**
-     * @param mixed $end
-     */
-    public function setEnd($end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param mixed $user
-     */
-    public function setUser($user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getWorkSchedule()
-    {
-        return $this->workSchedule;
-    }
-
-    /**
-     * @param mixed $workSchedule
-     */
-    public function setWorkSchedule($workSchedule): void
-    {
-        $this->workSchedule = $workSchedule;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBaseStatus()
-    {
-        return $this->baseStatus;
-    }
-
-    /**
-     * @param mixed $baseStatus
-     */
-    public function setBaseStatus($baseStatus): void
-    {
-        $this->baseStatus = $baseStatus;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEndStatus()
-    {
-        return $this->endStatus;
-    }
-
-    /**
-     * @param mixed $endStatus
-     */
-    public function setEndStatus($endStatus): void
-    {
-        $this->endStatus = $endStatus;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDays(): array
-    {
-        return $this->days;
-    }
-
-    /**
-     * @param array $days
-     */
-    public function setDays(array $days): void
-    {
-        $this->days = $days;
-    }
-}
+use App\Tests\Api\UserWorkScheduleChangeStatusTestCase;
 
 /**
  * Class UserWorkScheduleChangeStatusTest
@@ -242,7 +28,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 //              25 26 |27| 28 29 30 01 02 03
         $testCases[] = [
             [
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'first is starting earlier, first schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
@@ -259,7 +45,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '+1 days' => false
                     )
                 ),
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'first is starting earlier, second schedule',
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
@@ -285,7 +71,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 //23 24 25 26 |27| 28
         $testCases[] = [
             [
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'second is starting earlier, first schedule',
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
@@ -305,7 +91,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '+6 days' => true,
                     )
                 ),
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'second is starting earlier, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
@@ -329,7 +115,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 //        //23 24 25 26 |27| 28
         $testCases[] = [
             [
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'both are equal, first schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
@@ -346,7 +132,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '+1 days' => false,
                     )
                 ),
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'both are equal, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
@@ -371,7 +157,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         //                         01  02 03
         $testCases[] = [
             [
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'third only future, first schedule',
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
@@ -392,7 +178,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     )
                 ),
 
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'third only future, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
@@ -410,7 +196,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     )
                 ),
 
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'third only future, third schedule',
                     date('Y-m-d', strtotime('now +4 days')),
                     date('Y-m-d', strtotime('now +6 days')),
@@ -430,7 +216,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 ////23 24 25      |27|
         $testCases[] = [
             [
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'gaps on both sides, first schedule',
                     date('Y-m-d', strtotime('now +2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
@@ -446,7 +232,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '+6 days' => true,
                     )
                 ),
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'gaps on both sides, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now -2 days')),
@@ -468,7 +254,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 //              //25 26
         $testCases [] = [
             [
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'three at once, first schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +0 days')),
@@ -484,7 +270,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '-0 days' => true,
                     )
                 ),
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'three at once, second schedule',
                     date('Y-m-d', strtotime('now +0 days')),
                     date('Y-m-d', strtotime('now +3 days')),
@@ -498,7 +284,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '+3 days' => true,
                     )
                 ),
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'three at once, third schedule',
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now -1 days')),
@@ -519,7 +305,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         //23 24 25 26 |27| 28
         $testCases[] = [
             [
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'one does not affect each others, first schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
@@ -536,7 +322,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '+1 days' => false,
                     )
                 ),
-                new TestCase(
+                new UserWorkScheduleChangeStatusTestCase(
                     'one does not affect each others, second schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
@@ -569,7 +355,6 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
     {
         $userWorScheduleInTesting = [];
         // faza I - zakładanie dziewiczych harmonogramów oraz budowa odpowiednich dat ze stringow
-
         foreach ($currentCase as $currentCasee) {
             $daysToFormat = $currentCasee->getDays();
             $currentCasee->setPreformattedDays($daysToFormat);
@@ -685,6 +470,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 $badCaseCounter++;
             }
         }
+
+        // faza V - czyszczenie harmonogramów
         $this->cleanUserWorkSchedule($userWorScheduleInTesting);
         return;
     }
@@ -738,7 +525,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
     }
 
     /**
-     * @param UserWorkSchedule[] $userWorkSchedules
+     * @param array $userWorkSchedules
      */
     private function cleanUserWorkSchedule(array $userWorkSchedules): void
     {
