@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Dotenv\Dotenv;
+use App\Utils\VersionsUtil;
 
 /**
  * Class ApplicationInfoAction
@@ -14,16 +14,6 @@ use Symfony\Component\Dotenv\Dotenv;
  */
 class ApplicationInfoAction extends AbstractController
 {
-    /**
-     * application version from .env file
-     */
-    const VERSION = 'GIT_TAG';
-
-    /**
-     * application version from .env file
-     */
-    const COMMIT = 'GIT_HASH';
-
     /**
      * @var TokenInterface|null
      */
@@ -39,21 +29,12 @@ class ApplicationInfoAction extends AbstractController
     }
 
     /**
+     * @param VersionsUtil $versionsUtil
      * @return JsonResponse
      */
-    public function __invoke(): JsonResponse
+    public function __invoke(VersionsUtil $versionsUtil): JsonResponse
     {
-        $dotEnv = new Dotenv();
-        $dotEnv->load(getcwd().'/.env');
-
-        $tag = $_ENV[ApplicationInfoAction::VERSION];
-        $hash = $_ENV[ApplicationInfoAction::COMMIT];
-
-        return $this->json(
-            array(
-                'GIT_TAG' => $tag,
-                'GIT_HASH' => $hash
-            )
-        );
+        $versions = $versionsUtil->getAll();
+        return $this->json($versions);
     }
 }
