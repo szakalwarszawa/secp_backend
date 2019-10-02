@@ -11,6 +11,7 @@ use App\DataFixtures\RoleFixtures;
 use App\DataFixtures\SectionFixtures;
 use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserTimesheetFixtures;
+use App\DataFixtures\UserTimesheetStatusFixtures;
 use App\DataFixtures\UserWorkScheduleFixtures;
 use App\DataFixtures\UserWorkScheduleStatusFixtures;
 use App\DataFixtures\WorkScheduleProfileFixtures;
@@ -28,6 +29,7 @@ class Fixtures extends WebTestCase
             [
                 WorkScheduleProfileFixtures::class,
                 UserWorkScheduleStatusFixtures::class,
+                UserTimesheetStatusFixtures::class,
                 PresenceTypeFixtures::class,
                 AbsenceTypeFixtures::class,
                 DepartmentFixtures::class,

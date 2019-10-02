@@ -9,12 +9,12 @@ use App\Entity\Section;
 use App\Entity\User;
 use App\Ldap\Constants\UserAttributes;
 use App\Ldap\Import\Updater\DepartmentSectionUpdater;
+use App\Ldap\Import\Updater\Result\Collector;
+use App\Ldap\Import\Updater\Result\Result;
+use App\Ldap\Import\Updater\Result\Types;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use LdapTools\Object\LdapObject;
-use App\Ldap\Import\Updater\Result\Types;
-use App\Ldap\Import\Updater\Result\Collector;
-use App\Ldap\Import\Updater\Result\Result;
 
 /**
  * Class DepartmentSectionUpdaterTest
@@ -61,8 +61,10 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
             'dn' => 'CN=Mate Yerba,OU=BP,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::DEPARTMENT_SHORT => 'BP',
             UserAttributes::POSITION => 'dyrektor',
-            UserAttributes::SECTION => $this->fixtures->getReference(SectionFixtures::REF_BP_SECTION)->getName(),
-            UserAttributes::DEPARTMENT => $this->fixtures->getReference(DepartmentFixtures::REF_DEPARTMENT_BP)->getName(),
+            UserAttributes::SECTION => $this->fixtures
+                ->getReference(SectionFixtures::REF_BP_SECTION)->getName(),
+            UserAttributes::DEPARTMENT => $this->fixtures
+                ->getReference(DepartmentFixtures::REF_DEPARTMENT_BP)->getName(),
             UserAttributes::SUPERVISOR => 'CN=Bolton Ramsay,OU=BP,OU=Zespoly_2016,OU=PARP Pracownicy,DC=test,DC=local',
             UserAttributes::SAMACCOUNTNAME => 'yerba_mate',
         ], 'user');
@@ -125,16 +127,17 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
          * Last result message must be "Section `SectionFixtures::REF_BP_SECTION` has been updated."
          */
         $succeed = $resultsCollector->getSucceed();
-        $lastResultSectionCreatedSuccess = end($succeed);
-        $this->assertInstanceOf(Result::class, $lastResultSectionCreatedSuccess);
+        $lastSectionCreatedSuccess = end($succeed);
+        $this->assertInstanceOf(Result::class, $lastSectionCreatedSuccess);
         $this->assertEquals(
             sprintf(
                 'Section %s has been updated.',
                 $this->fixtures->getReference(SectionFixtures::REF_BP_SECTION)->getName()
-            ),  $lastResultSectionCreatedSuccess->getMessage())
-        ;
+            ),
+            $lastSectionCreatedSuccess->getMessage()
+        );
 
-        $departamentCreatedThatShouldExists = $this
+        $departamentThatShouldExists = $this
             ->entityManager
             ->getRepository(Department::class)
             ->findOneBy([
@@ -147,7 +150,7 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
                 'name' => $newSection,
             ]);
 
-        $this->assertInstanceOf(Department::class, $departamentCreatedThatShouldExists);
+        $this->assertInstanceOf(Department::class, $departamentThatShouldExists);
         $this->assertInstanceOf(Section::class, $sectionCreatedThatShouldExists);
 
         $newSectionDepartment = $sectionCreatedThatShouldExists->getDepartment();
@@ -155,7 +158,6 @@ class DepartmentSectionUpdaterTest extends AbstractWebTestCase
         /**
          * Section must be properly assigned to department.
          */
-        $this->assertEquals($departamentCreatedThatShouldExists, $newSectionDepartment);
+        $this->assertEquals($departamentThatShouldExists, $newSectionDepartment);
     }
-
 }

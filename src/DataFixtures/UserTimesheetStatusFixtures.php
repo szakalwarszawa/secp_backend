@@ -5,34 +5,35 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\DataFixtures\Data\Statuses;
-use App\Entity\UserWorkScheduleStatus;
+use App\Entity\UserTimesheetStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Class UserWorkScheduleStatusFixtures
+ * Class UserTimesheetStatusFixtures
+ *
  */
-class UserWorkScheduleStatusFixtures extends Fixture
+class UserTimesheetStatusFixtures extends Fixture
 {
     /**
      * @var string
      */
-    public const REF_STATUS_OWNER_EDIT = 'WORK-SCHEDULE-STATUS-OWNER-EDIT';
+    public const REF_STATUS_OWNER_EDIT = 'TIMESHEET-STATUS-OWNER-EDIT';
 
     /**
      * @var string
      */
-    public const REF_STATUS_OWNER_ACCEPT = 'WORK-SCHEDULE-STATUS-OWNER-ACCEPT';
+    public const REF_STATUS_OWNER_ACCEPT = 'TIMESHEET-STATUS-OWNER-ACCEPT';
 
     /**
      * @var string
      */
-    public const REF_STATUS_MANAGER_ACCEPT = 'WORK-SCHEDULE-STATUS-MANAGER-ACCEPT';
+    public const REF_STATUS_MANAGER_ACCEPT = 'TIMESHEET-STATUS-MANAGER-ACCEPT';
 
     /**
      * @var string
      */
-    public const REF_STATUS_HR_ACCEPT = 'WORK-SCHEDULE-STATUS-HR-ACCEPT';
+    public const REF_STATUS_HR_ACCEPT = 'TIMESHEET-STATUS-HR-ACCEPT';
 
 
     /**
@@ -44,16 +45,16 @@ class UserWorkScheduleStatusFixtures extends Fixture
         $statuses = Statuses::getAllByClass($this);
 
         foreach ($statuses as $key => $value) {
-            $userWorkScheduleStatus = new UserWorkScheduleStatus();
-            $userWorkScheduleStatus
+            $userTimesheetStatus = new UserTimesheetStatus();
+            $userTimesheetStatus
                 ->setId($key)
                 ->setName($value['title'])
                 ->setRules(json_encode($value['rules']))
             ;
 
-            $manager->persist($userWorkScheduleStatus);
+            $manager->persist($userTimesheetStatus);
 
-            $this->setReference($key, $userWorkScheduleStatus);
+            $this->setReference($key, $userTimesheetStatus);
         }
 
         $manager->flush();

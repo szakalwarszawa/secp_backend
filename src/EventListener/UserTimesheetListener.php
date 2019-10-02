@@ -5,13 +5,16 @@ namespace App\EventListener;
 use App\Entity\UserTimesheetLog;
 use App\Entity\User;
 use App\Entity\UserTimesheet;
+use App\Validator\Rules\StatusChangeDecision;
 use Doctrine\ORM\EntityManager;
+use DateTime;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use App\Exception\IncorrectStatusChangeException;
 
 /**
  * Class UserTimesheetLoggerListener
@@ -30,16 +33,27 @@ class UserTimesheetListener
     private $userTimesheetLogs = [];
 
     /**
-     * UserTimesheetListener constructor.
-     * @param TokenStorageInterface $tokenStorage
+     * @var StatusChangeDecision
      */
-    public function __construct(TokenStorageInterface $tokenStorage)
+    private $statusChangeDecision;
+
+    /**
+     * UserTimesheetListener constructor.
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param StatusChangeDecision $statusChangeDecision
+     */
+    public function __construct(TokenStorageInterface $tokenStorage, StatusChangeDecision $statusChangeDecision)
     {
         $this->token = $tokenStorage->getToken();
+        $this->statusChangeDecision = $statusChangeDecision;
     }
 
     /**
      * @param PreUpdateEventArgs $args
+     *
+     * @throws IncorrectStatusChangeException by StatusChangeDecision::class
+     *
      * @return void
      */
     public function preUpdate(PreUpdateEventArgs $args): void
@@ -52,13 +66,22 @@ class UserTimesheetListener
         if ($args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')
         ) {
+            $this
+                ->statusChangeDecision
+                ->setThrowException(true)
+                ->decide(
+                    $args->getOldValue('status'),
+                    $args->getNewValue('status')
+                )
+            ;
+
             $this->addUserTimesheetLog(
                 $args,
                 $entity,
                 sprintf(
                     'Zmieniono status z: %s na: %s',
-                    $args->getOldValue('status'),
-                    $args->getNewValue('status')
+                    $args->getOldValue('status')->getId(),
+                    $args->getNewValue('status')->getId()
                 )
             );
         }
@@ -72,10 +95,11 @@ class UserTimesheetListener
     private function addUserTimesheetLog(PreUpdateEventArgs $args, UserTimesheet $entity, string $notice): void
     {
         $log = new UserTimesheetLog();
-        $log->setUserTimesheet($entity);
-        $log->setLogDate(date('Y-m-d H:i:s'));
-        $log->setOwner($this->getCurrentUser($args->getEntityManager()));
-        $log->setNotice($notice);
+        $log->setUserTimesheet($entity)
+            ->setLogDate(new DateTime())
+            ->setOwner($this->getCurrentUser($args->getEntityManager()))
+            ->setNotice($notice)
+        ;
 
         $this->userTimesheetLogs[] = $log;
     }
@@ -87,11 +111,7 @@ class UserTimesheetListener
     private function getCurrentUser(EntityManager $entityManager): ?User
     {
         /* @var User $user */
-        if (null === $this->token) {
-            $userName = 'admin';
-        } else {
-            $userName = $this->token->getUser()->getUsername();
-        }
+        $userName = null === $this->token ? 'admin' : $this->token->getUser()->getUsername();
 
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);
 

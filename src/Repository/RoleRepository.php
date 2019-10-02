@@ -23,24 +23,4 @@ class RoleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Role::class);
     }
-
-    /**
-     * Finds all roles and returns only thier names as array.
-     *
-     * @return Role[]
-     */
-    public function findAllAsSimpleArray(): array
-    {
-        $queryBuilder = $this->createQueryBuilder('r')
-            ->select('r.name')
-            ->getQuery();
-
-        $result = $queryBuilder
-            ->getArrayResult()
-        ;
-
-        return array_map(function ($element) {
-            return $element['name'];
-        }, $result);
-    }
 }

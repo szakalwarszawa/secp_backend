@@ -19,6 +19,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class LdapImportCommand
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class LdapImportCommand extends Command
 {

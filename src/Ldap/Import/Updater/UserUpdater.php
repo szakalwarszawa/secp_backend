@@ -80,6 +80,8 @@ final class UserUpdater extends AbstractUpdater
      * Additionally, it sets up section and department managers.
      * If user has no first, last name or department defined it will be skipped.
      *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      * @param LdapObject $userData
      *
      * @return bool

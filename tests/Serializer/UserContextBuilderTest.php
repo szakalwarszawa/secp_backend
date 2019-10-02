@@ -39,7 +39,7 @@ class UserContextBuilderTest extends AbstractWebTestCase
             null,
             [],
             200,
-            self::REF_MANAGER
+            UserFixtures::REF_USER_MANAGER
         );
 
         $this->assertNotNull($this->lastActionRequest);
@@ -80,7 +80,7 @@ class UserContextBuilderTest extends AbstractWebTestCase
             null,
             [],
             200,
-            self::REF_MANAGER
+            UserFixtures::REF_USER_MANAGER
         );
 
         $userTimesheetDaysJSON = json_decode($response->getContent(), false);

@@ -138,6 +138,10 @@ use App\Entity\Utils\UserAware;
  *     },
  *     arguments={"orderParameterName"="_order"}
  * )
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class User implements UserInterface
 {
