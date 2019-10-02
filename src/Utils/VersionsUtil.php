@@ -2,8 +2,6 @@
 
 namespace App\Utils;
 
-use Symfony\Component\Dotenv\Dotenv;
-
 /**
  * Service VersionsUtil
  * @package App\Utils
@@ -89,9 +87,6 @@ class VersionsUtil
      */
     public function getAll()
     {
-        $dotEnv = new Dotenv();
-        $dotEnv->load(getcwd() . '/.env');
-
         $versions = array(
             'git_commit' => $this->getCommit(),
             'git_tag' => $this->getTag(),
