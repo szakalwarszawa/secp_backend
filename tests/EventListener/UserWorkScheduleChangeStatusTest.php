@@ -672,8 +672,6 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             }
         }
 
-        // faza V - czyszczenie po sobie tabel
-        $this->cleanUserWorkSchedule($userWorScheduleInTesting);
         return;
     }
 
@@ -723,27 +721,5 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         self::$container->get('doctrine')
             ->getManager()
             ->flush();
-    }
-
-    /**
-     * @param UserWorkSchedule[] $userWorkSchedules
-     */
-    private function cleanUserWorkSchedule(array $userWorkSchedules): void
-    {
-        foreach ($userWorkSchedules as $userWorkSchedule) {
-            foreach ($userWorkSchedule['schedule']->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                self::$container->get('doctrine')
-                    ->getManager()
-                    ->remove($userWorkScheduleDay);
-            }
-
-            self::$container->get('doctrine')
-                ->getManager()
-                ->remove($userWorkSchedule['schedule']);
-
-            self::$container->get('doctrine')
-                ->getManager()
-                ->flush();
-        }
     }
 }
