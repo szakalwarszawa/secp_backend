@@ -3,9 +3,11 @@
 namespace App\DataFixtures;
 
 use App\Entity\DayDefinition;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Exception;
 
 /**
  * Class DayDefinitionFixtures
@@ -25,7 +27,7 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
 
     /**
      * @param ObjectManager $manager
-     * @throws \Exception
+     * @throws Exception
      */
     public function load(ObjectManager $manager)
     {
@@ -33,7 +35,7 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
             $this->createDayDefinitionForDay(
                 $manager,
                 "day_definition_$i",
-                new \DateTime("2019-05-01 +$i days")
+                new DateTime("2019-05-01 +$i days")
             );
         }
 
@@ -43,13 +45,13 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
     /**
      * @param ObjectManager $manager
      * @param string $referenceName
-     * @param \DateTime $day
+     * @param DateTime $day
      * @return DayDefinition
      */
     private function createDayDefinitionForDay(
         ObjectManager $manager,
         string $referenceName,
-        \DateTime $day
+        DateTime $day
     ): DayDefinition {
         $dayDefinition = new DayDefinition();
         $dayDefinition->setId($day->format('Y-m-d'));
@@ -64,10 +66,10 @@ class DayDefinitionFixtures extends Fixture implements DependentFixtureInterface
     }
 
     /**
-     * @param \DateTime $day
+     * @param DateTime $day
      * @return string|null
      */
-    private function getWorkingDay(\DateTime $day): ?string
+    private function getWorkingDay(DateTime $day): ?string
     {
         $bankHoliday = ['01-01', '05-01', '05-03', '08-15', '11-01', '11-11', '12-25', '12-26'];
 

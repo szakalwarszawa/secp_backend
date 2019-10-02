@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\ValueExists;
 
 /**
  * @ORM\Table(
@@ -20,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     indexes={
  *          @ORM\Index(name="idx_user_timesheets_owner_id", columns={"owner_id"}),
  *          @ORM\Index(name="idx_user_timesheets_short_name", columns={"period"}),
- *          @ORM\Index(name="idx_user_timesheets_status", columns={"status"})
+ *          @ORM\Index(name="idx_user_timesheets_status", columns={"status_id"})
  *     }
  * )
  * @UserAware(userFieldName="owner_id")
@@ -74,7 +75,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      properties={
  *          "id": "exact",
  *          "period": "start",
- *          "status": "exact",
+ *          "status.id": "exact",
  *          "owner.username": "iexact",
  *          "owner.email": "iexact",
  *          "owner.firstName": "istart",
@@ -88,7 +89,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     properties={
  *         "id",
  *         "period",
- *         "status",
+ *         "status.id",
  *         "owner.email",
  *         "owner.firstName",
  *         "owner.lastName",
@@ -100,23 +101,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class UserTimesheet
 {
-    /*
-     * @const int
-     */
-    public const STATUS_OWNER_EDIT = 0;
-    /*
-     * @const int
-     */
-    public const STATUS_OWNER_ACCEPT = 1;
-    /*
-     * @const int
-     */
-    public const STATUS_MANAGER_ACCEPT = 2;
-    /*
-     * @const int
-     */
-    public const STATUS_HR_ACCEPT = 3;
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -139,16 +123,18 @@ class UserTimesheet
     private $period;
 
     /**
+     * @var UserTimesheetStatus
+     *
      * @Assert\NotBlank()
-     * @Assert\Choice(callback="getStatuses")
-     * @ORM\Column(type="integer")
+     * @ValueExists(entity="App\Entity\UserTimesheetStatus", searchField="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\UserTimesheetStatus")
      * @Groups({"get", "post", "put"})
      */
     private $status;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserTimesheetDay", mappedBy="userTimesheet")
-     * @ApiSubresource()
+     * @ApiSubresource(maxDepth=1)
      */
     private $userTimesheetDays;
 
@@ -209,19 +195,19 @@ class UserTimesheet
     }
 
     /**
-     * @return int|null
+     * @return UserTimesheetStatus|null
      */
-    public function getStatus(): ?int
+    public function getStatus(): ?UserTimesheetStatus
     {
         return $this->status;
     }
 
     /**
-     * @param int $status
+     * @param UserTimesheetStatus $status
      *
      * @return UserTimesheet
      */
-    public function setStatus(int $status): UserTimesheet
+    public function setStatus(UserTimesheetStatus $status): UserTimesheet
     {
         $this->status = $status;
 
@@ -267,20 +253,5 @@ class UserTimesheet
         }
 
         return $this;
-    }
-
-    /**
-     * Return possible statuses, used by status validator
-     *
-     * @return array
-     */
-    public function getStatuses(): array
-    {
-        return [
-            self::STATUS_OWNER_EDIT,
-            self::STATUS_OWNER_ACCEPT,
-            self::STATUS_MANAGER_ACCEPT,
-            self::STATUS_HR_ACCEPT,
-        ];
     }
 }

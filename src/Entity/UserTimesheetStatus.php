@@ -12,9 +12,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Table(
  *     schema="dictionary",
- *     name="`user_work_schedule_statuses`",
+ *     name="`user_timesheet_statuses`",
  *     indexes={
- *          @ORM\Index(name="idx_user_work_schedule_statuses_name", columns={"name"}),
+ *          @ORM\Index(name="idx_user_timsheet_statuses_name", columns={"name"}),
  *     }
  * )
  * @ApiResource(
@@ -48,17 +48,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          }
  *      }
  * )
- * @ORM\Entity(repositoryClass="App\Repository\UserWorkScheduleStatusRepository")
+ * @ORM\Entity()
  */
-class UserWorkScheduleStatus implements RuleInterface
+class UserTimesheetStatus implements RuleInterface
 {
-    /**
-     * Status ID for HR Accept
-     *
-     * @var string
-     */
-    public const STATUS_HR_ACCEPT = 'WORK-SCHEDULE-REF-STATUS-HR-ACCEPT';
-
     /**
      * @var string
      *
@@ -95,9 +88,9 @@ class UserWorkScheduleStatus implements RuleInterface
     /**
      * @param string $id
      *
-     * @return UserWorkScheduleStatus
+     * @return UserTimesheetStatus
      */
-    public function setId(string $id): UserWorkScheduleStatus
+    public function setId(string $id): UserTimesheetStatus
     {
         $this->id = $id;
 
@@ -115,9 +108,9 @@ class UserWorkScheduleStatus implements RuleInterface
     /**
      * @param string $name
      *
-     * @return UserWorkScheduleStatus
+     * @return UserTimesheetStatus
      */
-    public function setName(string $name): UserWorkScheduleStatus
+    public function setName(string $name): UserTimesheetStatus
     {
         $this->name = $name;
 
@@ -139,9 +132,9 @@ class UserWorkScheduleStatus implements RuleInterface
      *
      * @param string $rules
      *
-     * @return UserWorkScheduleStatus
+     * @return UserTimesheetStatus
      */
-    public function setRules(string $rules): UserWorkScheduleStatus
+    public function setRules(string $rules): UserTimesheetStatus
     {
         $this->rules = $rules;
 

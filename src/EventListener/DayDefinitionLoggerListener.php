@@ -8,6 +8,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -83,10 +84,11 @@ class DayDefinitionLoggerListener
     private function addDayDefinitionLog(PreUpdateEventArgs $args, DayDefinition $entity, string $notice): void
     {
         $log = new DayDefinitionLog();
-        $log->setDayDefinition($entity);
-        $log->setLogDate(date('Y-m-d H:i:s'));
-        $log->setOwner($this->getCurrentUser($args->getEntityManager()));
-        $log->setNotice($notice);
+        $log->setDayDefinition($entity)
+            ->setLogDate(new DateTime())
+            ->setOwner($this->getCurrentUser($args->getEntityManager()))
+            ->setNotice($notice)
+        ;
 
         $this->dayDefinitionLogs[] = $log;
     }
@@ -98,11 +100,7 @@ class DayDefinitionLoggerListener
     private function getCurrentUser(EntityManager $entityManager): ?User
     {
         /* @var User $user */
-        if (null === $this->token) {
-            $userName = 'admin';
-        } else {
-            $userName = $this->token->getUser()->getUsername();
-        }
+        $userName = null === $this->token ? 'admin' : $this->token->getUser()->getUsername();
 
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);
 

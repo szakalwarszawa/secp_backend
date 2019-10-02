@@ -6,9 +6,11 @@ use App\Entity\User;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Exception;
 
 /**
  * Class UserWorkScheduleFixtures
@@ -37,7 +39,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
 
     /**
      * @param ObjectManager $manager
-     * @throws \Exception
+     * @throws Exception
      */
     public function load(ObjectManager $manager)
     {
@@ -103,7 +105,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
      * @param string $fromDate
      * @param string $toDate
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     private function makeUserWorkScheduleSets(
         ObjectManager $manager,
@@ -134,7 +136,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
      * @param string $fromDate
      * @param string $toDate
      * @return UserWorkSchedule
-     * @throws \Exception
+     * @throws Exception
      */
     private function makeUserWorkSchedule(
         ObjectManager $manager,
@@ -149,8 +151,8 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
         $userWorkSchedule->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus($status)
-            ->setFromDate(new \DateTime($fromDate))
-            ->setToDate(new \DateTime($toDate));
+            ->setFromDate(new DateTime($fromDate))
+            ->setToDate(new DateTime($toDate));
 
         $manager->persist($userWorkSchedule);
         $this->addReference($referenceName, $userWorkSchedule);

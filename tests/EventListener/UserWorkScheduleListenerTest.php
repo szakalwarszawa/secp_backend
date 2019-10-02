@@ -10,6 +10,7 @@ use App\Entity\UserWorkScheduleLog;
 use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -56,6 +57,7 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
     {
         $this->assertIsNumeric($this->userWorkScheduleId);
 
+
         $userWorkSchedule = $this->entityManager
             ->getRepository(UserWorkSchedule::class)
             ->find($this->userWorkScheduleId);
@@ -99,6 +101,7 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         parent::setUp();
 
         $owner = $this->getEntityFromReference(UserFixtures::REF_USER_USER);
+        $this->loginAsUser($owner, ['ROLE_HR']);
         $this->assertInstanceOf(User::class, $owner);
 
         $workScheduleProfile = $this->getEntityFromReference('work_schedule_profile_1');
@@ -113,8 +116,8 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         $userWorkSchedule->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus($workScheduleStatusRef)
-            ->setFromDate(new \DateTime(self::TEST_FROM_DATE))
-            ->setToDate(new \DateTime(self::TEST_TO_DATE));
+            ->setFromDate(new DateTime(self::TEST_FROM_DATE))
+            ->setToDate(new DateTime(self::TEST_TO_DATE));
 
         $this->entityManager->persist($userWorkSchedule);
         $this->entityManager->flush();

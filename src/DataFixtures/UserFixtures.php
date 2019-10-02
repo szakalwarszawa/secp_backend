@@ -64,7 +64,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             self::REF_USER_ADMIN,
             'admin',
             'admin',
-            'admin@quest.info.pl',
             'Adam',
             'Admin',
             [User::ROLE_ADMIN],
@@ -82,7 +81,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             self::REF_USER_MANAGER,
             'manager',
             'manager',
-            'manager@quest.info.pl',
             'Mariusz',
             'Manager',
             [User::ROLE_USER],
@@ -102,7 +100,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             self::REF_USER_USER,
             'user',
             'user',
-            'user@quest.info.pl',
             'Urszula',
             'User',
             [User::ROLE_USER],
@@ -126,7 +123,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
                 "user_$i",
                 $username,
                 $username,
-                $username . '@' . $this->faker->safeEmailDomain,
                 $firstName,
                 $lastName,
                 [User::ROLE_USER],
@@ -157,7 +153,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
      * @param string $referenceName
      * @param string $username
      * @param string $samAccountName
-     * @param string $email
      * @param string $firstName
      * @param string $lastName
      * @param array $roles
@@ -170,13 +165,13 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         string $referenceName,
         string $username,
         string $samAccountName,
-        string $email,
         string $firstName,
         string $lastName,
         array $roles,
         Department $department,
         WorkScheduleProfile $defaultWorkScheduleProfile
     ): User {
+        $email = $username . '@' . $this->faker->safeEmailDomain;
         $user = new User();
         $user->setUsername($username)
             ->setSamAccountName($samAccountName)

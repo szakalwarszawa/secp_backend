@@ -82,8 +82,7 @@ JSON;
             '/api/work_schedule_profiles',
             $payload,
             [],
-            405,
-            self::REF_ADMIN
+            405
         );
     }
 
@@ -108,8 +107,7 @@ JSON;
             '/api/work_schedule_profiles/' . $workScheduleProfileREF->getId(),
             $payload,
             [],
-            405,
-            self::REF_ADMIN
+            405
         );
     }
 }
