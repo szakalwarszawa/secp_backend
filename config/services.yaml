@@ -1,0 +1,115 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    Symfony\Component\Ldap\Ldap:
+        arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
+
+    Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
+        arguments:
+            - host: '%env(resolve:LDAP_HOST)%'
+            - port: '%env(resolve:LDAP_PORT)%'
+#                encryption: '%env(resolve:LDAP_ENCRYPTION)%'
+            - debug: true
+            - options:
+                - protocol_version: 3
+                - referrals: false
+
+    App\EventSubscriber\PasswordEncoderSubscriber:
+        autowire: true
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    App\EventListener\DayDefinitionLoggerListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
+
+    App\EventListener\UserWorkScheduleListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: prePersist, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: postPersist, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
+
+    App\EventListener\UserTimesheetDayListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: prePersist, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
+
+    App\EventListener\UserTimesheetListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
+
+    App\EventListener\LdapImportListener:
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: ldap.imported }
+
+    App\Filter\Configurator:
+        autowire: false
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $tokenStorage: '@security.token_storage'
+            $security: '@security.helper'
+            $reader: '@annotations.reader'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    App\Security\Authentication\Guard\JsonLdapGuardAuthenticator:
+        arguments:
+            - '%security.authentication.hide_user_not_found%'
+            - '@ldap_tools.security.user.ldap_user_checker'
+            - '@ldap_tools.ldap_manager'
+            - '@lexik_jwt_authentication.security.guard.jwt_token_authenticator' # Instead of '@ldap_tools.security.authentication.form_entry_point'
+            - '@event_dispatcher'
+            - '@lexik_jwt_authentication.handler.authentication_success' # Instead of '@ldap_tools.security.auth_success_handler'
+            - '@lexik_jwt_authentication.handler.authentication_failure' # Instead of '@ldap_tools.security.auth_failure_handler'
+            - '%ldap_tools.security.guard.options%'
+            - '@ldap_tools.security.user.ldap_user_provider'
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+    App\Ldap\Fetch\UsersFetcher:
+        autowire: true
+        arguments:
+            $usersBaseDn: '%env(resolve:LDAP_USERS_BASE_DN)%'
+            $inactiveUsersBaseDn: '%env(resolve:LDAP_INACTIVE_USERS_BASE_DN)%'
+
+    App\Serializer\UserContextBuilder:
+        decorates: 'api_platform.serializer.context_builder'
+        arguments: [ '@App\Serializer\UserContextBuilder.inner' ]
+        autoconfigure: false
+    App\Serializer\UserTimesheetDayNormalizer:
+        arguments: [ '@security.token_storage' ]
+        tags:
+            - { name: 'serializer.normalizer', priority: 64 }

@@ -1,0 +1,90 @@
+security:
+    role_hierarchy:
+        ROLE_USER: ROLE_USER
+        ROLE_SECTION_MANAGER: ROLE_USER
+        ROLE_DEPARTMENT_MANAGER: ROLE_USER
+        ROLE_SECRETARY: ROLE_USER
+        ROLE_HR: [ROLE_DEPARTMENT_MANAGER, ROLE_USER]
+        ROLE_SUPERVISOR: [ROLE_HR, ROLE_DEPARTMENT_MANAGER, ROLE_SECTION_MANAGER]
+        ROLE_ADMIN: [ROLE_SUPERVISOR, ROLE_DEPARTMENT_MANAGER, ROLE_SECTION_MANAGER, ROLE_HR, ROLE_USER]
+
+    encoders:
+        App\Entity\User:
+            algorithm: argon2i
+
+    providers:
+#        my_ldap:
+#            ldap:
+#                service: Symfony\Component\Ldap\Ldap
+#                base_dn: '%env(resolve:LDAP_BASE_DN)%'
+#                search_dn: '%env(resolve:LDAP_SEARCH_DN)%'
+#                search_password: '%env(resolve:LDAP_SEARCH_PASSWORD)%'
+#                uid_key: '%env(resolve:LDAP_UID_KEY)%'
+##                filter: '({uid_key}={username})'
+##                query_string: '(sAMAccountName={username})'
+#                default_roles: 'ROLE_ADMIN'
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+#        main:
+#            anonymous: false
+#            json_login_ldap:
+#                provider: my_ldap
+#                service: Symfony\Component\Ldap\Ldap
+#                dn_string: 'sAMAccountName={username},DC=egain,DC=local'
+##                query_string: '(&(sAMAccountName={username})(DC=egain,DC=local))'
+
+        login:
+            pattern:  ^/authentication_token
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path: /authentication_token
+                username_path: username
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            guard:
+                authenticators:
+                    - App\Security\Authentication\Guard\JsonLdapGuardAuthenticator
+
+        docs:
+            pattern: ^/api/docs
+            stateless: true
+            anonymous: true
+#        contexts:
+#            pattern: ^/api/contexts
+#            stateless: true
+#            anonymous: true
+
+        api:
+            pattern: ^/api/
+            stateless: true
+            anonymous: false
+            provider: app_user_provider
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+#        main:
+#            anonymous: true
+#            stateless: true
+#            provider: app_user_provider
+#            json_login:
+#                check_path: /authentication_token
+#                username_path: username
+#                password_path: password
+#                success_handler: lexik_jwt_authentication.handler.authentication_success
+#                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+    access_control:
+        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/contexts, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

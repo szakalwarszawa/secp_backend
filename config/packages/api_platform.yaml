@@ -1,0 +1,25 @@
+api_platform:
+    formats:
+        jsonld:
+            mime_types: ['application/ld+json']
+        json:
+            mime_types: ['application/json']
+        csv:
+            mime_types: ['text/csv']
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    swagger:
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
+    exception_to_status:
+        App\Exception\SectionNotBelongToDepartmentException: 400
+        App\Exception\IncorrectStatusChangeException: 400
+    eager_loading:
+        force_eager: false
+    collection:
+        pagination:
+            client_enabled: '%env(bool:CLIENT_CAN_ENABLE_DISALBE_PAGINATION)%'
+            client_items_per_page: true
+            maximum_items_per_page: 50
