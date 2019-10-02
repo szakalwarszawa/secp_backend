@@ -13,7 +13,8 @@ use App\Tests\AbstractWebTestCase;
 use Exception;
 
 
-class TestCase {
+class TestCase
+{
 
     /**
      * @var
@@ -82,6 +83,7 @@ class TestCase {
     {
         $this->preformattedDays = $preformattedDays;
     }
+
     /**
      * TestCase constructor.
      * @param $start
@@ -92,8 +94,16 @@ class TestCase {
      * @param $endStatus
      * @param array $days
      */
-    public function __construct(string $name, string $start, string $end, $user, $workSchedule, $baseStatus, $endStatus, array $days)
-    {
+    public function __construct(
+        string $name,
+        string $start,
+        string $end,
+        $user,
+        $workSchedule,
+        $baseStatus,
+        $endStatus,
+        array $days
+    ) {
         $this->name = $name;
         $this->start = $start;
         $this->end = $end;
@@ -232,46 +242,46 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 //              25 26 |27| 28 29 30 01 02 03
         $testCases[] = [
             [
-                   new TestCase(
-                         'first is starting earlier, first schedule',
-                         date('Y-m-d', strtotime('now -4 days')),
-                         date('Y-m-d', strtotime('now +1 days')),
-                        UserFixtures::REF_USER_USER,
-                         'work_schedule_profile_2',
-                        UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                        null,
-                         array(
-                            '-4 days' => true,
-                            '-3 days' => true,
-                            '-2 days' => true,
-                            '-1 days' => true,
-                            '+0 days' => true,
-                            '+1 days' => false
-                         )
-                    ),
-                    new TestCase(
-                        'first is starting earlier, second schedule',
+                new TestCase(
+                    'first is starting earlier, first schedule',
+                    date('Y-m-d', strtotime('now -4 days')),
+                    date('Y-m-d', strtotime('now +1 days')),
+                    UserFixtures::REF_USER_USER,
+                    'work_schedule_profile_2',
+                    UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
+                    null,
+                    array(
+                        '-4 days' => true,
+                        '-3 days' => true,
+                        '-2 days' => true,
+                        '-1 days' => true,
+                        '+0 days' => true,
+                        '+1 days' => false
+                    )
+                ),
+                new TestCase(
+                    'first is starting earlier, second schedule',
                     date('Y-m-d', strtotime('now -2 days')),
                     date('Y-m-d', strtotime('now +6 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                        array(
-                            '-2 days' => false,
-                            '-1 days' => false,
-                            '+0 days' => false,
-                            '+1 days' => true,
-                            '+2 days' => true,
-                            '+3 days' => true,
-                            '+4 days' => true,
-                            '+5 days' => true,
-                            '+6 days' => true,
-                        )
+                    array(
+                        '-2 days' => false,
+                        '-1 days' => false,
+                        '+0 days' => false,
+                        '+1 days' => true,
+                        '+2 days' => true,
+                        '+3 days' => true,
+                        '+4 days' => true,
+                        '+5 days' => true,
+                        '+6 days' => true,
                     )
+                )
             ]
         ];
-      //25 26 |27| 28 29 30 01 02 03
+        //25 26 |27| 28 29 30 01 02 03
 //23 24 25 26 |27| 28
         $testCases[] = [
             [
@@ -319,22 +329,22 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 //        //23 24 25 26 |27| 28
         $testCases[] = [
             [
-                 new TestCase(
-                     'both are equal, first schedule',
+                new TestCase(
+                    'both are equal, first schedule',
                     date('Y-m-d', strtotime('now -4 days')),
                     date('Y-m-d', strtotime('now +1 days')),
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     null,
-                     array(
+                    array(
                         '-4 days' => true,
                         '-3 days' => true,
                         '-2 days' => true,
                         '-1 days' => true,
                         '+0 days' => true,
                         '+1 days' => false,
-                     )
+                    )
                 ),
                 new TestCase(
                     'both are equal, second schedule',
@@ -357,8 +367,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         ];
 
 //         25 26 |27| 28 29 30 01 02 03
- //23 24 25 26  |27| 28
-   //                         01  02 03
+        //23 24 25 26  |27| 28
+        //                         01  02 03
         $testCases[] = [
             [
                 new TestCase(
@@ -636,15 +646,19 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             $badCaseCounter = 0;
 
             foreach ($userScheduleCase['expectedVisibilities'] as $scheduleDayId => $expectedVisibility) {
-
                 $scheduleDb1 = self::$container->get('doctrine')
                     ->getManager()
                     ->getRepository(UserWorkScheduleDay::class)
-                    ->findBy(array('dayDefinition' =>  $scheduleDayId, 'userWorkSchedule' => $userScheduleCase['schedule']));
+                    ->findBy(array(
+                        'dayDefinition' => $scheduleDayId,
+                        'userWorkSchedule' => $userScheduleCase['schedule']
+                    ));
 
                 $keys = array_keys($userScheduleCase['preFormatted']);
 
-                $this->assertCount(1, $scheduleDb1,
+                $this->assertCount(
+                    1,
+                    $scheduleDb1,
                     sprintf(
                         "schedule: %s\nday: %s\ncase: %s",
                         $userScheduleCase['schedule']->getId(),
@@ -671,7 +685,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 $badCaseCounter++;
             }
         }
-
+        $this->cleanUserWorkSchedule($userWorScheduleInTesting);
         return;
     }
 
@@ -721,5 +735,20 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         self::$container->get('doctrine')
             ->getManager()
             ->flush();
+    }
+
+    /**
+     * @param UserWorkSchedule[] $userWorkSchedules
+     */
+    private function cleanUserWorkSchedule(array $userWorkSchedules): void
+    {
+        $entityManager = self::$container->get('doctrine')
+            ->getManager();
+
+        foreach ($userWorkSchedules as $userWorkSchedule) {
+            $entityManager->remove($userWorkSchedule['schedule']);
+        }
+
+        $entityManager->flush();
     }
 }
