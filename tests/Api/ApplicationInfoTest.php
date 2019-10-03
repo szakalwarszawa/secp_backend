@@ -28,7 +28,6 @@ class ApplicationInfoTest extends AbstractWebTestCase
 
         $this->assertEquals($response->getStatusCode(), 200);
         $data = json_decode($response->getContent(), true);
-        var_dump($data);
         $this->assertArrayHasKey('git_commit', $data);
         $this->assertArrayHasKey('git_tag', $data);
         $this->assertArrayHasKey('deploy_time', $data);
