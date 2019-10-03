@@ -1,40 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use App\Utils\VersionsUtil;
 
 /**
  * Class ApplicationInfoAction
- * @package App\Controller
  */
 class ApplicationInfoAction extends AbstractController
 {
     /**
-     * @var TokenInterface|null
-     */
-    private $token;
-
-    /**
-     * ApplicationInfo constructor.
-     * @param TokenStorageInterface $tokenStorage
-     */
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->token = $tokenStorage->getToken();
-    }
-
-    /**
+     * get - git_commit (last commit hash), git_tag (current version), deploy_time (last build datetime)
      * @param VersionsUtil $versionsUtil
      * @return JsonResponse
      */
     public function __invoke(VersionsUtil $versionsUtil): JsonResponse
     {
-        $versions = $versionsUtil->getAll();
-        return $this->json($versions);
+        return $this->json($versionsUtil->getAll());
     }
 }

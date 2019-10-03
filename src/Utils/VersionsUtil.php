@@ -1,96 +1,78 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils;
 
+use DateTime;
+
 /**
- * Service VersionsUtil
- * @package App\Utils
+ * Class VersionsUtil
  */
 class VersionsUtil
 {
     /**
-     * @var
+     * @var string
      */
     private $commit;
-    /**
-     * @var
-     */
-    private $tag;
-    /**
-     * @var
-     */
-    private $deploy;
 
     /**
-     * @return mixed
+     * @var float
      */
-    public function getCommit()
+    private $tag;
+
+    /**
+     * @var DateTime
+     */
+    private $deployTime;
+
+    /**
+     * @return string
+     */
+    public function getCommit(): string
     {
         return $this->commit;
     }
 
     /**
-     * @param mixed $commit
+     * @return float
      */
-    public function setCommit($commit): void
-    {
-        $this->commit = $commit;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTag()
+    public function getTag(): float
     {
         return $this->tag;
     }
 
     /**
-     * @param mixed $tag
+     * @return DateTime
      */
-    public function setTag($tag): void
+    public function getDeployTime(): DateTime
     {
-        $this->tag = $tag;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDeploy()
-    {
-        return $this->deploy;
-    }
-
-    /**
-     * @param mixed $deploy
-     */
-    public function setDeploy($deploy): void
-    {
-        $this->deploy = $deploy;
+        return $this->deployTime;
     }
 
     /**
      * VersionsUtil constructor.
-     * @param $commit
-     * @param $tag
-     * @param $deploy
+     * commit (last commit hash), tag (current version), deployTime (last build datetime)
+     * @param string $commit
+     * @param string $tag
+     * @param string $deployTime
      */
-    public function __construct($commit, $tag, $deploy)
+    public function __construct(string $commit, string $tag, string $deployTime)
     {
         $this->commit = $commit;
-        $this->tag = $tag;
-        $this->deploy = $deploy;
+        $this->tag = (float)$tag;
+        $this->deployTime = DateTime::createFromFormat('Y-m-d H:i:s', $deployTime);
     }
 
     /**
      * @return array
      */
-    public function getAll()
+    public function getAll(): array
     {
         $versions = array(
             'git_commit' => $this->getCommit(),
             'git_tag' => $this->getTag(),
-            'deploy_time' =>$this->getDeploy()
+            'deploy_time' =>$this->getDeployTime()
         );
 
         return $versions;

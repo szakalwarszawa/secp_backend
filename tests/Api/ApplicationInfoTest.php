@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Tests\AbstractWebTestCase;
@@ -7,7 +9,6 @@ use Exception;
 
 /**
  * Class ApplicationInfoTest
- * @package App\Tests\Api
  */
 class ApplicationInfoTest extends AbstractWebTestCase
 {
@@ -27,6 +28,7 @@ class ApplicationInfoTest extends AbstractWebTestCase
 
         $this->assertEquals($response->getStatusCode(), 200);
         $data = json_decode($response->getContent(), true);
+        var_dump($data);
         $this->assertArrayHasKey('git_commit', $data);
         $this->assertArrayHasKey('git_tag', $data);
         $this->assertArrayHasKey('deploy_time', $data);

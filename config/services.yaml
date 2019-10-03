@@ -27,9 +27,9 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Utils\VersionsUtil:
         arguments:
-            - git_commit: '%env(resolve:GIT_COMMIT)%'
-            - git_tag: '%env(resolve:GIT_TAG)%'
-            - deploy_time: '%env(resolve:DEPLOY_TIME)%'
+            $commit: '%env(resolve:GIT_COMMIT)%'
+            $tag: '%env(resolve:GIT_TAG)%'
+            $deployTime: '%env(resolve:DEPLOY_TIME)%'
 
     Symfony\Component\Ldap\Ldap:
         arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
