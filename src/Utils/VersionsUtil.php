@@ -17,7 +17,7 @@ class VersionsUtil
     private $commit;
 
     /**
-     * @var float
+     * @var string
      */
     private $tag;
 
@@ -37,7 +37,7 @@ class VersionsUtil
     /**
      * @return float
      */
-    public function getTag(): float
+    public function getTag(): string
     {
         return $this->tag;
     }
@@ -53,15 +53,17 @@ class VersionsUtil
     /**
      * VersionsUtil constructor.
      * commit (last commit hash), tag (current version), deployTime (last build datetime)
+     *
      * @param string $commit
      * @param string $tag
      * @param string $deployTime
+     * @throws \Exception
      */
     public function __construct(string $commit, string $tag, string $deployTime)
     {
         $this->commit = $commit;
-        $this->tag = (float)$tag;
-        $this->deployTime = DateTime::createFromFormat('Y-m-d H:i:s', $deployTime);
+        $this->tag = $tag;
+        $this->deployTime = new DateTime($deployTime);
     }
 
     /**
@@ -72,7 +74,7 @@ class VersionsUtil
         return [
             'git_commit' => $this->getCommit(),
             'git_tag' => $this->getTag(),
-            'deploy_time' => $this->getDeployTime()
+            'deploy_time' => $this->getDeployTime(),
         ];
     }
 }
