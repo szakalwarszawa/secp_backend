@@ -108,7 +108,12 @@ class UserWorkScheduleListener
         }
     }
 
-    private function changeStatus($entityManager, $currentSchedule) {
+    /**
+     * @param $entityManager
+     * @param $currentSchedule
+     */
+    private function changeStatus($entityManager, $currentSchedule): void
+    {
             $entityManager->createQueryBuilder()
             ->update(UserWorkScheduleDay::class, 'p')
             ->set('p.deleted', ':setDeleted')
