@@ -69,12 +69,10 @@ class VersionsUtil
      */
     public function getAll(): array
     {
-        $versions = array(
+        return [
             'git_commit' => $this->getCommit(),
             'git_tag' => $this->getTag(),
-            'deploy_time' =>$this->getDeployTime()
-        );
-
-        return $versions;
+            'deploy_time' => $this->getDeployTime()
+        ];
     }
 }
