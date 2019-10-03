@@ -113,7 +113,7 @@ class UserWorkScheduleDay
     /**
      * @return bool|int
      */
-    public function getDeleted()
+    public function isDeleted()
     {
         return $this->deleted;
     }

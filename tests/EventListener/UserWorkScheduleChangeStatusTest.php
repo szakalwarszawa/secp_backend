@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\EventSubscriber;
 
 use App\DataFixtures\UserFixtures;
@@ -11,11 +13,10 @@ use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use Exception;
-use App\Tests\Api\UserWorkScheduleChangeStatusTestCase;
+use App\Tests\Utils\UserWorkScheduleChangeStatusTestCase;
 
 /**
  * Class UserWorkScheduleChangeStatusTest
- * @package App\Tests\EventSubscriber
  */
 class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 {
@@ -35,7 +36,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
+                    '',
                     array(
                         '-4 days' => true,
                         '-3 days' => true,
@@ -78,7 +79,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
+                    '',
                     array(
                         '-2 days' => true,
                         '-1 days' => true,
@@ -122,7 +123,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
+                    '',
                     array(
                         '-4 days' => true,
                         '-3 days' => true,
@@ -164,7 +165,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
+                    '',
                     array(
                         '-2 days' => true,
                         '-1 days' => true,
@@ -223,7 +224,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
+                    '',
                     array(
                         '+2 days' => true,
                         '+3 days' => true,
@@ -261,7 +262,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
+                    '',
                     array(
                         '-4 days' => true,
                         '-3 days' => true,
@@ -277,7 +278,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
+                    '',
                     array(
                         '+1 days' => true,
                         '+2 days' => true,
@@ -312,7 +313,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     UserFixtures::REF_USER_USER,
                     'work_schedule_profile_1',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    null,
+                    '',
                     array(
                         '-4 days' => true,
                         '-3 days' => true,
@@ -365,8 +366,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             foreach ($daysToFormat as $day => $value) {
                 $dateString = 'now ' . $day;
                 $key = date('Y-m-d', strtotime($dateString));
-                $val = $value;
-                $builtDates[$key] = $val;
+                $builtDates[$key] = $value;
             }
             $currentCase->setDays($builtDates);
         }
@@ -399,11 +399,11 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
             if ($userScheduleCase['statusOriginRefName'] === UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT) {
                 foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                    $this->assertTrue($userWorkScheduleDay->getDeleted());
+                    $this->assertTrue($userWorkScheduleDay->isDeleted());
                 }
             } else {
                 foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                    $this->assertFalse($userWorkScheduleDay->getDeleted());
+                    $this->assertFalse($userWorkScheduleDay->isDeleted());
                 }
             }
         }
@@ -416,7 +416,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 ->find($userScheduleCase['schedule']->getId());
             /* @var $scheduleDb UserWorkSchedule */
 
-            if ($userScheduleCase['statusFinalRefName'] !== null) {
+            if ($userScheduleCase['statusFinalRefName'] !== '') {
                 $scheduleDb->setStatus($this->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT));
                 $this->saveToDb($scheduleDb);
             }
@@ -448,7 +448,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     1,
                     $scheduleDb1,
                     sprintf(
-                        "schedule: %s\nday: %s\ncase: %s",
+                        'schedule: %s\nday: %s\ncase: %s',
                         $userScheduleCase['schedule']->getId(),
                         $scheduleDayId,
                         $keys[$badCaseCounter]
@@ -461,9 +461,9 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
                 $this->assertEquals(
                     $expectedDeleted,
-                    $scheduleDb1[0]->getDeleted(),
+                    $scheduleDb1[0]->isDeleted(),
                     sprintf(
-                        "schedule: %s\nday: %s\ncase: %s \nlabel: %s",
+                        'schedule: %s\nday: %s\ncase: %s \nlabel: %s',
                         $userScheduleCase['schedule']->getId(),
                         $scheduleDayId,
                         $keys[$badCaseCounter],
@@ -485,6 +485,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      * @param User $owner
      * @param WorkScheduleProfile $workScheduleProfile
      * @param UserWorkScheduleStatus $status
+     *
      * @return UserWorkSchedule
      * @throws Exception
      */

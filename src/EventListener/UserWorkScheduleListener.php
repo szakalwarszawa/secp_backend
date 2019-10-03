@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
-use App\DataFixtures\UserWorkScheduleStatusFixtures;
 use App\Entity\User;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
@@ -17,6 +16,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\OptimisticLockException;
 use DateTime;
 use Doctrine\ORM\ORMException;
@@ -104,35 +104,37 @@ class UserWorkScheduleListener
         if ($args->hasChangedField('status')
             && $args->getNewValue('status')->getId() === UserWorkSchedule::STATUS_HR_ACCEPT
         ) {
-            $args->getEntityManager()
-                ->createQueryBuilder()
-                ->update(UserWorkScheduleDay::class, 'p')
-                ->set('p.deleted', ':setDeleted')
-                ->setParameter('setDeleted', false)
-                ->andWhere('p.dayDefinition >= :tomorrowDate')
-                ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
-                ->andWhere('p.userWorkSchedule != :userWorkSchedule')
-                ->setParameter('userWorkSchedule', $currentSchedule)
-                ->andWhere('p.dayDefinition BETWEEN :fromDate AND :toDate')
-                ->setParameter('fromDate', $currentSchedule->getFromDate()->format('Y-m-d'))
-                ->setParameter('toDate', $currentSchedule->getToDate()->format('Y-m-d'))
-                ->andWhere('p.deleted = :previousDeleted')
-                ->setParameter('previousDeleted', true)
-                ->getQuery()
-                ->execute();
-
-            $args->getEntityManager()
-                ->createQueryBuilder()
-                ->update(UserWorkScheduleDay::class, 'p')
-                ->set('p.deleted', ':setDeleted')
-                ->setParameter('setDeleted', true)
-                ->where('p.dayDefinition >= :tomorrowDate')
-                ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
-                ->andWhere('p.userWorkSchedule = :userWorkSchedule')
-                ->setParameter('userWorkSchedule', $currentSchedule)
-                ->getQuery()
-                ->execute();
+            $this->changeStatus($args->getEntityManager(), $currentSchedule);
         }
+    }
+
+    private function changeStatus($entityManager, $currentSchedule) {
+            $entityManager->createQueryBuilder()
+            ->update(UserWorkScheduleDay::class, 'p')
+            ->set('p.deleted', ':setDeleted')
+            ->setParameter('setDeleted', false)
+            ->andWhere('p.dayDefinition >= :tomorrowDate')
+            ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
+            ->andWhere('p.userWorkSchedule != :userWorkSchedule')
+            ->setParameter('userWorkSchedule', $currentSchedule)
+            ->andWhere('p.dayDefinition BETWEEN :fromDate AND :toDate')
+            ->setParameter('fromDate', $currentSchedule->getFromDate()->format('Y-m-d'))
+            ->setParameter('toDate', $currentSchedule->getToDate()->format('Y-m-d'))
+            ->andWhere('p.deleted = :previousDeleted')
+            ->setParameter('previousDeleted', true)
+            ->getQuery()
+            ->execute();
+
+            $entityManager->createQueryBuilder()
+            ->update(UserWorkScheduleDay::class, 'p')
+            ->set('p.deleted', ':setDeleted')
+            ->setParameter('setDeleted', true)
+            ->where('p.dayDefinition >= :tomorrowDate')
+            ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
+            ->andWhere('p.userWorkSchedule = :userWorkSchedule')
+            ->setParameter('userWorkSchedule', $currentSchedule)
+            ->getQuery()
+            ->execute();
     }
 
     /**
