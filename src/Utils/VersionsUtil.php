@@ -35,7 +35,7 @@ class VersionsUtil
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getTag(): string
     {
@@ -57,7 +57,6 @@ class VersionsUtil
      * @param string $commit
      * @param string $tag
      * @param string $deployTime
-     * @throws \Exception
      */
     public function __construct(string $commit, string $tag, string $deployTime)
     {

@@ -15,7 +15,9 @@ class ApplicationInfoAction extends AbstractController
 {
     /**
      * get - git_commit (last commit hash), git_tag (current version), deploy_time (last build datetime)
+     *
      * @param VersionsUtil $versionsUtil
+     *
      * @return JsonResponse
      */
     public function __invoke(VersionsUtil $versionsUtil): JsonResponse
