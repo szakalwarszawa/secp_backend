@@ -26,7 +26,7 @@ class UserWorkScheduleChangeStatusTestCase
         string $start,
         string $end,
         string $user,
-        $workSchedule,
+        string $workSchedule,
         string $baseStatus,
         string $endStatus,
         array $days
