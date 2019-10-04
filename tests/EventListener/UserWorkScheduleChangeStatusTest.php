@@ -37,14 +37,14 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     '',
-                    array(
+                    [
                         '-4 days' => true,
                         '-3 days' => true,
                         '-2 days' => true,
                         '-1 days' => true,
                         '+0 days' => true,
                         '+1 days' => false
-                    )
+                    ]
                 ),
                 new UserWorkScheduleChangeStatusTestCase(
                     'first is starting earlier, second schedule',
@@ -54,7 +54,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    array(
+                    [
                         '-2 days' => false,
                         '-1 days' => false,
                         '+0 days' => false,
@@ -64,7 +64,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '+4 days' => true,
                         '+5 days' => true,
                         '+6 days' => true,
-                    )
+                    ]
                 )
             ]
         ];
@@ -80,7 +80,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     '',
-                    array(
+                    [
                         '-2 days' => true,
                         '-1 days' => true,
                         '+0 days' => true,
@@ -90,7 +90,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '+4 days' => true,
                         '+5 days' => true,
                         '+6 days' => true,
-                    )
+                    ]
                 ),
                 new UserWorkScheduleChangeStatusTestCase(
                     'second is starting earlier, second schedule',
@@ -100,14 +100,14 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    array(
+                    [
                         '-4 days' => false,
                         '-3 days' => false,
                         '-2 days' => false,
                         '-1 days' => false,
                         '+0 days' => false,
                         '+1 days' => true,
-                    )
+                    ]
                 )
             ]
         ];
@@ -124,14 +124,14 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     '',
-                    array(
+                    [
                         '-4 days' => true,
                         '-3 days' => true,
                         '-2 days' => true,
                         '-1 days' => true,
                         '+0 days' => true,
                         '+1 days' => false,
-                    )
+                    ]
                 ),
                 new UserWorkScheduleChangeStatusTestCase(
                     'both are equal, second schedule',
@@ -141,14 +141,14 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    array(
+                    [
                         '-4 days' => false,
                         '-3 days' => false,
                         '-2 days' => false,
                         '-1 days' => false,
                         '+0 days' => false,
                         '+1 days' => true,
-                    )
+                    ]
                 )
             ]
         ];
@@ -166,7 +166,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     '',
-                    array(
+                    [
                         '-2 days' => true,
                         '-1 days' => true,
                         '+0 days' => true,
@@ -176,7 +176,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                         '+4 days' => false,
                         '+5 days' => false,
                         '+6 days' => false,
-                    )
+                    ]
                 ),
 
                 new UserWorkScheduleChangeStatusTestCase(
@@ -187,14 +187,14 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    array(
+                    [
                         '-4 days' => false,
                         '-3 days' => false,
                         '-2 days' => false,
                         '-1 days' => false,
                         '+0 days' => false,
                         '+1 days' => true,
-                    )
+                    ]
                 ),
 
                 new UserWorkScheduleChangeStatusTestCase(
@@ -205,11 +205,11 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    array(
+                    [
                         '+4 days' => true,
                         '+5 days' => true,
                         '+6 days' => true,
-                    )
+                    ]
                 )
             ]
         ];
@@ -225,13 +225,13 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     '',
-                    array(
+                    [
                         '+2 days' => true,
                         '+3 days' => true,
                         '+4 days' => true,
                         '+5 days' => true,
                         '+6 days' => true,
-                    )
+                    ]
                 ),
                 new UserWorkScheduleChangeStatusTestCase(
                     'gaps on both sides, second schedule',
@@ -241,11 +241,11 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    array(
+                    [
                         '-2 days' => false,
                         '-3 days' => false,
                         '-4 days' => false,
-                    )
+                    ]
                 ),
             ]
         ];
@@ -263,13 +263,13 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     '',
-                    array(
+                    [
                         '-4 days' => true,
                         '-3 days' => true,
                         '-2 days' => true,
                         '-1 days' => true,
                         '-0 days' => true,
-                    )
+                    ]
                 ),
                 new UserWorkScheduleChangeStatusTestCase(
                     'three at once, second schedule',
@@ -279,11 +279,11 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     '',
-                    array(
+                    [
                         '+1 days' => true,
                         '+2 days' => true,
                         '+3 days' => true,
-                    )
+                    ]
                 ),
                 new UserWorkScheduleChangeStatusTestCase(
                     'three at once, third schedule',
@@ -293,10 +293,10 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    array(
+                    [
                         '-2 days' => false,
                         '-1 days' => false,
-                    )
+                    ]
                 )
             ]
         ];
@@ -314,14 +314,14 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_1',
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
                     '',
-                    array(
+                    [
                         '-4 days' => true,
                         '-3 days' => true,
                         '-2 days' => true,
                         '-1 days' => true,
                         '+0 days' => true,
                         '+1 days' => false,
-                    )
+                    ]
                 ),
                 new UserWorkScheduleChangeStatusTestCase(
                     'one does not affect each others, second schedule',
@@ -331,14 +331,14 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     'work_schedule_profile_2',
                     UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT,
                     UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT,
-                    array(
+                    [
                         '-4 days' => false,
                         '-3 days' => false,
                         '-2 days' => false,
                         '-1 days' => false,
                         '+0 days' => false,
                         '+1 days' => true,
-                    )
+                    ]
                 )
             ]
         ];
@@ -350,6 +350,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      * @test
      * @param array $currentCase
      * @dataProvider changeWorkScheduleStatusProvider
+     *
+     * @return void
      * @throws Exception
      */
     public function changeWorkScheduleStatus(array $currentCases): void
@@ -391,9 +393,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
         // faza II - sprawdzanie czy dni harmonogramów maja poprawnie ustawioną flagę "deleted"
         foreach ($userWorScheduleInTesting as $userScheduleCase) {
-            $scheduleDb = self::$container->get('doctrine')
-                ->getManager()
-                ->getRepository(UserWorkSchedule::class)
+            $scheduleDb = $this->entityManager->getRepository(UserWorkSchedule::class)
                 ->find($userScheduleCase['schedule']->getId());
             /* @var $scheduleDb UserWorkSchedule */
 
@@ -410,14 +410,14 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
         // faza III - zmiany statusu harmonogramów
         foreach ($userWorScheduleInTesting as $userScheduleCase) {
-            $scheduleDb = self::$container->get('doctrine')
-                ->getManager()
-                ->getRepository(UserWorkSchedule::class)
+            $scheduleDb = $this->entityManager->getRepository(UserWorkSchedule::class)
                 ->find($userScheduleCase['schedule']->getId());
             /* @var $scheduleDb UserWorkSchedule */
 
             if ($userScheduleCase['statusFinalRefName'] !== '') {
-                $scheduleDb->setStatus($this->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT));
+                $scheduleDb->setStatus(
+                    $this->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT)
+                );
                 $this->saveToDb($scheduleDb);
             }
         }
@@ -425,22 +425,15 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         // faza IV - badanie dni po zmianie statusów
         foreach ($userWorScheduleInTesting as $userScheduleCase) {
             //czy dzien w ogole wystepuje, zbadac czy true albo false
-            $scheduleDb = self::$container->get('doctrine')
-                ->getManager()
-                ->getRepository(UserWorkSchedule::class)
+            $scheduleDb = $this->entityManager->getRepository(UserWorkSchedule::class)
                 ->find($userScheduleCase['schedule']->getId());
             /* @var $scheduleDb UserWorkSchedule */
 
             $badCaseCounter = 0;
 
             foreach ($userScheduleCase['expectedDeleted'] as $scheduleDayId => $expectedDeleted) {
-                $scheduleDb1 = self::$container->get('doctrine')
-                    ->getManager()
-                    ->getRepository(UserWorkScheduleDay::class)
-                    ->findBy(array(
-                        'dayDefinition' => $scheduleDayId,
-                        'userWorkSchedule' => $userScheduleCase['schedule']
-                    ));
+                $scheduleDb1 = $this->entityManager->getRepository(UserWorkScheduleDay::class)
+                    ->findBy(['dayDefinition' => $scheduleDayId, 'userWorkSchedule' => $userScheduleCase['schedule']]);
 
                 $keys = array_keys($userScheduleCase['preFormatted']);
 
@@ -455,9 +448,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     )
                 );
 
-                self::$container->get('doctrine')
-                    ->getManager()
-                    ->refresh($scheduleDb1[0]);
+                $this->entityManager->refresh($scheduleDb1[0]);
 
                 $this->assertEquals(
                     $expectedDeleted,
@@ -476,7 +467,6 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
         // faza V - czyszczenie harmonogramów
         $this->cleanUserWorkSchedule($userWorScheduleInTesting);
-        return;
     }
 
     /**
@@ -516,30 +506,30 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
     /**
      * @param $entity
+     *
+     * @return void
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     private function saveToDb($entity): void
     {
-        self::$container->get('doctrine')
-            ->getManager()
-            ->persist($entity);
-
-        self::$container->get('doctrine')
-            ->getManager()
-            ->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
     }
 
     /**
      * @param array $userWorkSchedules
+     *
+     * @return void
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     private function cleanUserWorkSchedule(array $userWorkSchedules): void
     {
-        $entityManager = self::$container->get('doctrine')
-            ->getManager();
-
         foreach ($userWorkSchedules as $userWorkSchedule) {
-            $entityManager->remove($userWorkSchedule['schedule']);
+            $this->entityManager->remove($userWorkSchedule['schedule']);
         }
 
-        $entityManager->flush();
+        $this->entityManager->flush();
     }
 }

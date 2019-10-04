@@ -29,6 +29,10 @@ final class Version20190918114709 extends AbstractMigration
      */
     public function up(Schema $schema): void
     {
+        $this->abortIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
+            'Migration can only be executed safely on \'postgresql\'.'
+        );
         $this->addSql('ALTER TABLE user_work_schedule_days ADD deleted BOOLEAN DEFAULT TRUE NOT NULL');
     }
 
