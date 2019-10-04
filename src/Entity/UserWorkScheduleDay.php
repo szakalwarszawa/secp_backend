@@ -108,23 +108,23 @@ class UserWorkScheduleDay
      * )
      * @Groups({"get"})
      */
-    private $deleted;
+    private $active;
 
     /**
-     * @return bool|int
+     * @return bool|null
      */
-    public function isDeleted()
+    public function isActive()
     {
-        return $this->deleted;
+        return $this->active;
     }
 
     /**
-     * @param bool $deleted
+     * @param bool $active
      * @return UserWorkScheduleDay
      */
-    public function setDeleted(bool $deleted): UserWorkScheduleDay
+    public function setActive(bool $active): UserWorkScheduleDay
     {
-        $this->deleted = $deleted;
+        $this->active = $active;
 
         return $this;
     }

@@ -10,7 +10,6 @@ use App\Entity\UserWorkScheduleDay;
 use App\Entity\DayDefinition;
 use App\Entity\UserWorkScheduleLog;
 use App\Entity\WorkScheduleProfile;
-use App\Repository\UserWorkScheduleRepository;
 use App\Validator\Rules\StatusChangeDecision;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -105,7 +104,7 @@ class UserWorkScheduleListener
             && $args->getNewValue('status')->getId() === UserWorkSchedule::STATUS_HR_ACCEPT
         ) {
             $args->getEntityManager()->getRepository(UserWorkSchedule::class)
-                ->markPreviousScheduleDaysDeleted($currentSchedule);
+                ->markPreviousScheduleDaysNotActive($currentSchedule);
         }
     }
 
@@ -211,7 +210,7 @@ class UserWorkScheduleListener
             ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
             ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
             ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo())
-            ->setDeleted($userWorkSchedule->getStatus()->getId() === UserWorkSchedule::STATUS_HR_ACCEPT);
+            ->setActive($userWorkSchedule->getStatus()->getId() === UserWorkSchedule::STATUS_HR_ACCEPT);
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $entityManager->persist($userWorkScheduleDay);

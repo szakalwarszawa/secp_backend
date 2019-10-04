@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\DataFixtures\UserFixtures;
-use App\DataFixtures\UserWorkScheduleStatusFixtures;
-
 /**
  * Class UserWorkScheduleChangeStatusTestCase
  */
@@ -14,6 +11,7 @@ class UserWorkScheduleChangeStatusTestCase
 {
     /**
      * UserWorkScheduleChangeStatusTestCase constructor.
+     *
      * @param string $name
      * @param string $start
      * @param string $end
@@ -162,6 +160,7 @@ class UserWorkScheduleChangeStatusTestCase
 
     /**
      * @param $name
+     *
      * @return UserWorkScheduleChangeStatusTestCase
      */
     public function setName($name): UserWorkScheduleChangeStatusTestCase
@@ -173,6 +172,7 @@ class UserWorkScheduleChangeStatusTestCase
 
     /**
      * @param string $start
+     *
      * @return UserWorkScheduleChangeStatusTestCase
      */
     public function setStart(string $start): UserWorkScheduleChangeStatusTestCase
@@ -182,6 +182,11 @@ class UserWorkScheduleChangeStatusTestCase
         return $this;
     }
 
+    /**
+     * @param string $end
+     *
+     * @return UserWorkScheduleChangeStatusTestCase
+     */
     public function setEnd(string $end): UserWorkScheduleChangeStatusTestCase
     {
         $this->end = $end;
@@ -191,6 +196,7 @@ class UserWorkScheduleChangeStatusTestCase
 
     /**
      * @param string $user
+     *
      * @return UserWorkScheduleChangeStatusTestCase
      */
     public function setUser(string $user): UserWorkScheduleChangeStatusTestCase
@@ -202,6 +208,7 @@ class UserWorkScheduleChangeStatusTestCase
 
     /**
      * @param string $workSchedule
+     *
      * @return UserWorkScheduleChangeStatusTestCase
      */
     public function setWorkSchedule(string $workSchedule): UserWorkScheduleChangeStatusTestCase
@@ -213,6 +220,7 @@ class UserWorkScheduleChangeStatusTestCase
 
     /**
      * @param string $baseStatus
+     *
      * @return UserWorkScheduleChangeStatusTestCase
      */
     public function setBaseStatus(string $baseStatus): UserWorkScheduleChangeStatusTestCase
@@ -224,6 +232,7 @@ class UserWorkScheduleChangeStatusTestCase
 
     /**
      * @param string $endStatus
+     *
      * @return UserWorkScheduleChangeStatusTestCase
      */
     public function setEndStatus(string $endStatus): UserWorkScheduleChangeStatusTestCase
@@ -235,6 +244,7 @@ class UserWorkScheduleChangeStatusTestCase
 
     /**
      * @param array $days
+     *
      * @return UserWorkScheduleChangeStatusTestCase
      */
     public function setDays(array $days): UserWorkScheduleChangeStatusTestCase
@@ -246,6 +256,7 @@ class UserWorkScheduleChangeStatusTestCase
 
     /**
      * @param array $preformattedDays
+     *
      * @return UserWorkScheduleChangeStatusTestCase
      */
     public function setPreformattedDays(array $preformattedDays): UserWorkScheduleChangeStatusTestCase

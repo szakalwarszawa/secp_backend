@@ -29,12 +29,12 @@ class UserWorkScheduleRepository extends ServiceEntityRepository
      *
      * @return void
      */
-    public function markPreviousScheduleDaysDeleted($currentSchedule): void
+    public function markPreviousScheduleDaysNotActive($currentSchedule): void
     {
         $this->createQueryBuilder('p')
             ->update(UserWorkScheduleDay::class, 'p')
-            ->set('p.deleted', ':setDeleted')
-            ->setParameter('setDeleted', false)
+            ->set('p.active', ':setActive')
+            ->setParameter('setActive', false)
             ->andWhere('p.dayDefinition >= :tomorrowDate')
             ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
             ->andWhere('p.userWorkSchedule != :userWorkSchedule')
@@ -42,15 +42,15 @@ class UserWorkScheduleRepository extends ServiceEntityRepository
             ->andWhere('p.dayDefinition BETWEEN :fromDate AND :toDate')
             ->setParameter('fromDate', $currentSchedule->getFromDate()->format('Y-m-d'))
             ->setParameter('toDate', $currentSchedule->getToDate()->format('Y-m-d'))
-            ->andWhere('p.deleted = :previousDeleted')
-            ->setParameter('previousDeleted', true)
+            ->andWhere('p.active = :previousActive')
+            ->setParameter('previousActive', true)
             ->getQuery()
             ->execute();
 
         $this->createQueryBuilder('p')
             ->update(UserWorkScheduleDay::class, 'p')
-            ->set('p.deleted', ':setDeleted')
-            ->setParameter('setDeleted', true)
+            ->set('p.active', ':setActive')
+            ->setParameter('setActive', true)
             ->where('p.dayDefinition >= :tomorrowDate')
             ->setParameter('tomorrowDate', date('Y-m-d', strtotime('now +1 days')))
             ->andWhere('p.userWorkSchedule = :userWorkSchedule')

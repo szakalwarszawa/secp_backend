@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\EventSubscriber;
+namespace App\Tests\EventListener;
 
 use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserWorkScheduleStatusFixtures;
@@ -348,10 +348,13 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
     /**
      * @test
-     * @param array $currentCase
+     *
+     * @param UserWorkScheduleChangeStatusTestCase[] $currentCases
+     *
      * @dataProvider changeWorkScheduleStatusProvider
      *
      * @return void
+     *
      * @throws Exception
      */
     public function changeWorkScheduleStatus(array $currentCases): void
@@ -385,30 +388,13 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 'schedule' => $schedule,
                 'statusOriginRefName' => $userScheduleCase->getBaseStatus(),
                 'statusFinalRefName' => $userScheduleCase->getEndStatus(),
-                'expectedDeleted' => $userScheduleCase->getDays(),
+                'expectedNotActive' => $userScheduleCase->getDays(),
                 'preFormatted' => $userScheduleCase->getPreformattedDays(),
                 'name' => $userScheduleCase->getName()
             ];
         }
 
-        // faza II - sprawdzanie czy dni harmonogramów maja poprawnie ustawioną flagę "deleted"
-        foreach ($userWorScheduleInTesting as $userScheduleCase) {
-            $scheduleDb = $this->entityManager->getRepository(UserWorkSchedule::class)
-                ->find($userScheduleCase['schedule']->getId());
-            /* @var $scheduleDb UserWorkSchedule */
-
-            if ($userScheduleCase['statusOriginRefName'] === UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT) {
-                foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                    $this->assertTrue($userWorkScheduleDay->isDeleted());
-                }
-            } else {
-                foreach ($scheduleDb->getUserWorkScheduleDays() as $userWorkScheduleDay) {
-                    $this->assertFalse($userWorkScheduleDay->isDeleted());
-                }
-            }
-        }
-
-        // faza III - zmiany statusu harmonogramów
+        // faza II - zmiany statusu harmonogramów
         foreach ($userWorScheduleInTesting as $userScheduleCase) {
             $scheduleDb = $this->entityManager->getRepository(UserWorkSchedule::class)
                 ->find($userScheduleCase['schedule']->getId());
@@ -422,7 +408,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             }
         }
 
-        // faza IV - badanie dni po zmianie statusów
+        // faza III - badanie dni po zmianie statusów
         foreach ($userWorScheduleInTesting as $userScheduleCase) {
             //czy dzien w ogole wystepuje, zbadac czy true albo false
             $scheduleDb = $this->entityManager->getRepository(UserWorkSchedule::class)
@@ -431,7 +417,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
             $badCaseCounter = 0;
 
-            foreach ($userScheduleCase['expectedDeleted'] as $scheduleDayId => $expectedDeleted) {
+            foreach ($userScheduleCase['expectedNotActive'] as $scheduleDayId => $expectedNotActive) {
                 $scheduleDb1 = $this->entityManager->getRepository(UserWorkScheduleDay::class)
                     ->findBy(['dayDefinition' => $scheduleDayId, 'userWorkSchedule' => $userScheduleCase['schedule']]);
 
@@ -451,8 +437,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                 $this->entityManager->refresh($scheduleDb1[0]);
 
                 $this->assertEquals(
-                    $expectedDeleted,
-                    $scheduleDb1[0]->isDeleted(),
+                    $expectedNotActive,
+                    $scheduleDb1[0]->isActive(),
                     sprintf(
                         'schedule: %s\nday: %s\ncase: %s \nlabel: %s',
                         $userScheduleCase['schedule']->getId(),
@@ -465,7 +451,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
             }
         }
 
-        // faza V - czyszczenie harmonogramów
+        // faza IV - czyszczenie harmonogramów
         $this->cleanUserWorkSchedule($userWorScheduleInTesting);
     }
 
@@ -477,6 +463,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      * @param UserWorkScheduleStatus $status
      *
      * @return UserWorkSchedule
+     *
      * @throws Exception
      */
     private function makeUserWorkSchedule(
@@ -508,6 +495,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      * @param $entity
      *
      * @return void
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -521,6 +509,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      * @param array $userWorkSchedules
      *
      * @return void
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
