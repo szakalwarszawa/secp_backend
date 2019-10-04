@@ -104,7 +104,8 @@ class UserWorkScheduleListener
         if ($args->hasChangedField('status')
             && $args->getNewValue('status')->getId() === UserWorkSchedule::STATUS_HR_ACCEPT
         ) {
-            $args->getEntityManager()->getRepository(UserWorkSchedule::class)->markPreviousScheduleDaysDeleted($currentSchedule);
+            $args->getEntityManager()->getRepository(UserWorkSchedule::class)
+                ->markPreviousScheduleDaysDeleted($currentSchedule);
         }
     }
 
