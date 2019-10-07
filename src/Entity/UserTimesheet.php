@@ -139,11 +139,18 @@ class UserTimesheet
     private $userTimesheetDays;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserTimesheetLog", mappedBy="userTimesheet")
+     * @ApiSubresource(maxDepth=1)
+     */
+    private $userTimesheetLogs;
+
+    /**
      * UserTimesheet constructor.
      */
     public function __construct()
     {
         $this->userTimesheetDays = new ArrayCollection();
+        $this->userTimesheetLogs = new ArrayCollection();
     }
 
     /**
@@ -249,6 +256,47 @@ class UserTimesheet
             // set the owning side to null (unless already changed)
             if ($userTimesheetDay->getUserTimesheet() === $this) {
                 $userTimesheetDay->setUserTimesheet(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserTimesheetLog[]
+     */
+    public function getUserTimesheetLogs(): Collection
+    {
+        return $this->userTimesheetLogs;
+    }
+
+    /**
+     * @param UserTimesheetLog $userTimesheetLog
+     *
+     * @return UserTimesheet
+     */
+    public function addUserTimesheetLog(UserTimesheetLog $userTimesheetLog): UserTimesheet
+    {
+        if (!$this->userTimesheetLogs->contains($userTimesheetLog)) {
+            $this->userTimesheetLogs[] = $userTimesheetLog;
+            $userTimesheetLog->setUserTimesheet($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param UserTimesheetLog $userTimesheetLog
+     *
+     * @return UserTimesheet
+     */
+    public function removeUserTimesheetLog(UserTimesheetLog $userTimesheetLog): UserTimesheet
+    {
+        if ($this->userTimesheetLogs->contains($userTimesheetLog)) {
+            $this->userTimesheetLogs->removeElement($userTimesheetLog);
+            // set the owning side to null (unless already changed)
+            if ($userTimesheetLog->getUserTimesheet() === $this) {
+                $userTimesheetLog->setUserTimesheet(null);
             }
         }
 
