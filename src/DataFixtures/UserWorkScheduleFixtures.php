@@ -21,6 +21,8 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
     public const REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR = 'fixed_user_work_schedule_admin_hr';
     public const REF_FIXED_USER_WORK_SCHEDULE_ADMIN_EDIT = 'fixed_user_work_schedule_admin_edit';
     public const REF_FIXED_USER_WORK_SCHEDULE_MANAGER_HR = 'fixed_user_work_schedule_manager_hr';
+    public const REF_CURRENT_USER_WORK_SCHEDULE_SECTION_HR = 'fixed_user_work_schedule_section_hr';
+    public const REF_CURRENT_USER_WORK_SCHEDULE_SECRETARY_HR = 'fixed_user_work_schedule_secretary_hr';
     public const REF_FIXED_USER_WORK_SCHEDULE_USER_HR = 'fixed_user_work_schedule_user_hr';
     public const REF_FIXED_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT = 'fixed_user_work_schedule_user_owner_accept';
 
@@ -193,9 +195,29 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
 
         $this->makeUserWorkSchedule(
             $manager,
+            self::REF_CURRENT_USER_WORK_SCHEDULE_SECTION_HR,
+            $this->getReference(UserFixtures::REF_USER_SECTION_MANAGER),
+            $this->getReference('work_schedule_profile_1'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
+            date('Y-m-d H:i:s', strtotime('first day of previous month midnight')),
+            date('Y-m-d H:i:s', strtotime('last day of next month midnight'))
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_CURRENT_USER_WORK_SCHEDULE_SECRETARY_HR,
+            $this->getReference(UserFixtures::REF_USER_SECRETARY),
+            $this->getReference('work_schedule_profile_3'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
+            date('Y-m-d H:i:s', strtotime('first day of previous month midnight')),
+            date('Y-m-d H:i:s', strtotime('last day of next month midnight'))
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
             self::REF_CURRENT_USER_WORK_SCHEDULE_USER_HR,
             $this->getReference(UserFixtures::REF_USER_USER),
-            $this->getReference('work_schedule_profile_0'),
+            $this->getReference('work_schedule_profile_4'),
             $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
             date('Y-m-d H:i:s', strtotime('first day of previous month midnight')),
             date('Y-m-d H:i:s', strtotime('last day of next month midnight'))
