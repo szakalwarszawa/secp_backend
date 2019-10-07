@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\EventSubscriber;
+namespace App\Tests\EventListener;
 
 use App\DataFixtures\UserTimesheetFixtures;
 use App\DataFixtures\UserWorkScheduleFixtures;
@@ -37,10 +37,36 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
      */
     private $filledUserTimesheetDay;
 
+
     /**
      * @throws ORMException
      */
     public function testInsertUserTimesheetDayToNonexistentTimesheet(): void
+    {
+        $userWorkSchedule = $this->fixtures->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_ADMIN_HR);
+
+
+        $period = date('Y-m', strtotime($userWorkSchedule->getDayDefinition()->getId()));
+
+        $userTimesheetDay = new UserTimesheetDay();
+        $userTimesheetDay->setUserTimesheet(null)
+            ->setPresenceType($this->fixtures->getReference('presence_type_0'))
+            ->setAbsenceType(null)
+            ->setDayStartTime('09:00')
+            ->setDayEndTime(null)
+            ->setWorkingTime(8.00)
+            ->setDayDate(self::TEST_WORK_REPORT_DATE);
+
+        $this->entityManager->persist($userTimesheetDay);
+        $this->entityManager->flush();
+        $this->assertIsNumeric($userTimesheetDay->getId());
+        $this->assertInstanceOf(UserTimesheet::class, $userTimesheetDay->getUserTimesheet());
+    }
+
+    /**
+     * @throws ORMException
+     */
+    public function testInsertUserTimesheetDayToNonexistentSchedule(): void
     {
         $userTimesheetDay = new UserTimesheetDay();
         $userTimesheetDay->setUserTimesheet(null)

@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          @ORM\Index(name="idx_user_timsheet_statuses_name", columns={"name"}),
  *     }
  * )
+ * @ORM\Entity(repositoryClass="App\Repository\UserTimesheetStatusRepository")
  * @ApiResource(
  *      itemOperations={
  *          "get"={
@@ -48,10 +49,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          }
  *      }
  * )
- * @ORM\Entity()
  */
 class UserTimesheetStatus implements RuleInterface
 {
+    /**
+     * @var string
+     */
+    public const TIMESHEET_STATUS_OWNER_EDIT = 'TIMESHEET-STATUS-OWNER-EDIT';
+
+    /**
+     * @var string
+     */
+    public const TIMESHEET_STATUS_OWNER_ACCEPT = 'TIMESHEET-STATUS-OWNER-ACCEPT';
+
+    /**
+     * @var string
+     */
+    public const TIMESHEET_STATUS_MANAGER_ACCEPT = 'TIMESHEET-STATUS-MANAGER-ACCEPT';
+
+    /**
+     * @var string
+     */
+    public const TIMESHEET_STATUS_HR_ACCEPT = 'TIMESHEET-STATUS-HR-ACCEPT';
+
     /**
      * @var string
      *
