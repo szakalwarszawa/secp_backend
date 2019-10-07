@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\DataFixtures;
 
@@ -14,15 +15,20 @@ use Exception;
 
 /**
  * Class UserWorkScheduleFixtures
- * @package App\DataFixtures
  */
 class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const REF_USER_WORK_SCHEDULE_ADMIN_HR = 'user_work_schedule_admin_hr';
-    public const REF_USER_WORK_SCHEDULE_ADMIN_EDIT = 'user_work_schedule_admin_edit';
-    public const REF_USER_WORK_SCHEDULE_MANAGER_HR = 'user_work_schedule_manager_hr';
-    public const REF_USER_WORK_SCHEDULE_USER_HR = 'user_work_schedule_user_hr';
-    public const REF_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT = 'user_work_schedule_user_owner_accept';
+    public const REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR = 'fixed_user_work_schedule_admin_hr';
+    public const REF_FIXED_USER_WORK_SCHEDULE_ADMIN_EDIT = 'fixed_user_work_schedule_admin_edit';
+    public const REF_FIXED_USER_WORK_SCHEDULE_MANAGER_HR = 'fixed_user_work_schedule_manager_hr';
+    public const REF_FIXED_USER_WORK_SCHEDULE_USER_HR = 'fixed_user_work_schedule_user_hr';
+    public const REF_FIXED_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT = 'fixed_user_work_schedule_user_owner_accept';
+
+    public const REF_CURRENT_USER_WORK_SCHEDULE_ADMIN_HR = 'current_user_work_schedule_admin_hr';
+    public const REF_CURRENT_USER_WORK_SCHEDULE_ADMIN_EDIT = 'current_user_work_schedule_admin_edit';
+    public const REF_CURRENT_USER_WORK_SCHEDULE_MANAGER_HR = 'current_user_work_schedule_manager_hr';
+    public const REF_CURRENT_USER_WORK_SCHEDULE_USER_HR = 'current_user_work_schedule_user_hr';
+    public const REF_CURRENT_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT = 'current_user_work_schedule_user_owner_accept';
 
     /**
      * @return array
@@ -39,59 +45,15 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
 
     /**
      * @param ObjectManager $manager
+     *
+     * @return void
+     *
      * @throws Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $this->makeUserWorkScheduleSets(
-            $manager,
-            self::REF_USER_WORK_SCHEDULE_ADMIN_HR,
-            $this->getReference(UserFixtures::REF_USER_ADMIN),
-            $this->getReference('work_schedule_profile_2'),
-            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
-            '2019-05-01',
-            '2019-08-31'
-        );
-
-        $this->makeUserWorkScheduleSets(
-            $manager,
-            self::REF_USER_WORK_SCHEDULE_ADMIN_EDIT,
-            $this->getReference(UserFixtures::REF_USER_ADMIN),
-            $this->getReference('work_schedule_profile_2'),
-            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT),
-            '2019-07-01',
-            '2019-08-31'
-        );
-
-        $this->makeUserWorkScheduleSets(
-            $manager,
-            self::REF_USER_WORK_SCHEDULE_MANAGER_HR,
-            $this->getReference(UserFixtures::REF_USER_MANAGER),
-            $this->getReference('work_schedule_profile_0'),
-            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
-            '2019-05-01',
-            '2019-08-31'
-        );
-
-        $this->makeUserWorkScheduleSets(
-            $manager,
-            self::REF_USER_WORK_SCHEDULE_USER_HR,
-            $this->getReference(UserFixtures::REF_USER_USER),
-            $this->getReference('work_schedule_profile_0'),
-            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
-            '2019-05-01',
-            '2019-08-31'
-        );
-
-        $this->makeUserWorkScheduleSets(
-            $manager,
-            self::REF_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT,
-            $this->getReference(UserFixtures::REF_USER_USER),
-            $this->getReference('work_schedule_profile_0'),
-            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_ACCEPT),
-            '2019-07-01',
-            '2019-08-31'
-        );
+        $this->makeFixedUserSchedules($manager);
+        $this->makeCurrentDaysUserSchedules($manager);
 
         $manager->flush();
     }
@@ -104,38 +66,9 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
      * @param UserWorkScheduleStatus $status
      * @param string $fromDate
      * @param string $toDate
-     * @return void
-     * @throws Exception
-     */
-    private function makeUserWorkScheduleSets(
-        ObjectManager $manager,
-        string $referenceName,
-        User $owner,
-        WorkScheduleProfile $workScheduleProfile,
-        UserWorkScheduleStatus $status,
-        string $fromDate,
-        string $toDate
-    ): void {
-        $this->makeUserWorkSchedule(
-            $manager,
-            $referenceName,
-            $owner,
-            $workScheduleProfile,
-            $status,
-            $fromDate,
-            $toDate
-        );
-    }
-
-    /**
-     * @param ObjectManager $manager
-     * @param string $referenceName
-     * @param User $owner
-     * @param WorkScheduleProfile $workScheduleProfile
-     * @param UserWorkScheduleStatus $status
-     * @param string $fromDate
-     * @param string $toDate
+     *
      * @return UserWorkSchedule
+     *
      * @throws Exception
      */
     private function makeUserWorkSchedule(
@@ -157,5 +90,125 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
         $manager->persist($userWorkSchedule);
         $this->addReference($referenceName, $userWorkSchedule);
         return $userWorkSchedule;
+    }
+
+    /**
+     * @param ObjectManager $manager
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    private function makeFixedUserSchedules(ObjectManager $manager): void
+    {
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR,
+            $this->getReference(UserFixtures::REF_USER_ADMIN),
+            $this->getReference('work_schedule_profile_2'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
+            '2019-05-01',
+            '2019-08-31'
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_EDIT,
+            $this->getReference(UserFixtures::REF_USER_ADMIN),
+            $this->getReference('work_schedule_profile_2'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT),
+            '2019-07-01',
+            '2019-08-31'
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_FIXED_USER_WORK_SCHEDULE_MANAGER_HR,
+            $this->getReference(UserFixtures::REF_USER_MANAGER),
+            $this->getReference('work_schedule_profile_0'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
+            '2019-05-01',
+            '2019-08-31'
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_FIXED_USER_WORK_SCHEDULE_USER_HR,
+            $this->getReference(UserFixtures::REF_USER_USER),
+            $this->getReference('work_schedule_profile_0'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
+            '2019-05-01',
+            '2019-08-31'
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_FIXED_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT,
+            $this->getReference(UserFixtures::REF_USER_USER),
+            $this->getReference('work_schedule_profile_0'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_ACCEPT),
+            '2019-07-01',
+            '2019-08-31'
+        );
+    }
+
+    /**
+     * @param ObjectManager $manager
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    private function makeCurrentDaysUserSchedules(ObjectManager $manager): void
+    {
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_CURRENT_USER_WORK_SCHEDULE_ADMIN_HR,
+            $this->getReference(UserFixtures::REF_USER_ADMIN),
+            $this->getReference('work_schedule_profile_2'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
+            date('Y-m-d H:i:s', strtotime('first day of previous month midnight')),
+            date('Y-m-d H:i:s', strtotime('last day of next month midnight'))
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_CURRENT_USER_WORK_SCHEDULE_ADMIN_EDIT,
+            $this->getReference(UserFixtures::REF_USER_ADMIN),
+            $this->getReference('work_schedule_profile_2'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_EDIT),
+            date('Y-m-d H:i:s', strtotime('first day of now midnight')),
+            date('Y-m-d H:i:s', strtotime('last day of next month midnight'))
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_CURRENT_USER_WORK_SCHEDULE_MANAGER_HR,
+            $this->getReference(UserFixtures::REF_USER_MANAGER),
+            $this->getReference('work_schedule_profile_0'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
+            date('Y-m-d H:i:s', strtotime('first day of previous month midnight')),
+            date('Y-m-d H:i:s', strtotime('last day of next month midnight'))
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_CURRENT_USER_WORK_SCHEDULE_USER_HR,
+            $this->getReference(UserFixtures::REF_USER_USER),
+            $this->getReference('work_schedule_profile_0'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT),
+            date('Y-m-d H:i:s', strtotime('first day of previous month midnight')),
+            date('Y-m-d H:i:s', strtotime('last day of next month midnight'))
+        );
+
+        $this->makeUserWorkSchedule(
+            $manager,
+            self::REF_CURRENT_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT,
+            $this->getReference(UserFixtures::REF_USER_USER),
+            $this->getReference('work_schedule_profile_0'),
+            $this->getReference(UserWorkScheduleStatusFixtures::REF_STATUS_OWNER_ACCEPT),
+            date('Y-m-d H:i:s', strtotime('first day of now midnight')),
+            date('Y-m-d H:i:s', strtotime('last day of +2 month midnight'))
+        );
     }
 }

@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
+use App\DataFixtures\RoleFixtures;
 use App\Entity\Department;
 use App\Entity\User;
 use App\Tests\AbstractWebTestCase;
@@ -51,7 +53,7 @@ class UserTest extends AbstractWebTestCase
         $user->setEmail('user_email_1@example.com');
         $user->setFirstName('user_first_name');
         $user->setLastName('user_last_name');
-        $user->setRoles([User::ROLE_ADMIN]);
+        $user->setRoles([RoleFixtures::ROLE_ADMIN]);
         $user->setPlainPassword('test');
 
         $this->entityManager->persist($user);
