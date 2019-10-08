@@ -70,8 +70,8 @@ class UserWorkScheduleListener
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {
-        $entity = $args->getObject();
-        if (!$entity instanceof UserWorkSchedule) {
+        $currentSchedule = $args->getObject();
+        if (!$currentSchedule instanceof UserWorkSchedule) {
             return;
         }
 
@@ -89,13 +89,20 @@ class UserWorkScheduleListener
 
             $this->addUserWorkScheduleLog(
                 $args,
-                $entity,
+                $currentSchedule,
                 sprintf(
                     'Zmieniono status z: %s, na: %s',
                     $args->getOldValue('status')->getId(),
                     $args->getNewValue('status')->getId()
                 )
             );
+        }
+
+        if ($args->hasChangedField('status')
+            && $args->getNewValue('status')->getId() === UserWorkSchedule::STATUS_HR_ACCEPT
+        ) {
+            $args->getEntityManager()->getRepository(UserWorkSchedule::class)
+                ->markPreviousScheduleDaysNotActive($currentSchedule);
         }
     }
 
