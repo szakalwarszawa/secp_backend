@@ -12,6 +12,8 @@ use App\Entity\UserWorkScheduleDay;
 use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use App\Tests\Utils\UserWorkScheduleChangeStatusTestCase;
 
@@ -410,7 +412,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
 
         // faza III - badanie dni po zmianie statusów
         foreach ($userWorScheduleInTesting as $userScheduleCase) {
-            //czy dzien w ogole wystepuje, zbadac czy true albo false
+            //czy dzień w ogóle występuje, zbadać czy true albo false
             $scheduleDb = $this->entityManager->getRepository(UserWorkSchedule::class)
                 ->find($userScheduleCase['schedule']->getId());
             /* @var $scheduleDb UserWorkSchedule */
@@ -427,7 +429,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     1,
                     $scheduleDb1,
                     sprintf(
-                        'schedule: %s\nday: %s\ncase: %s',
+                        "schedule: %s\nday: %s\ncase: %s",
                         $userScheduleCase['schedule']->getId(),
                         $scheduleDayId,
                         $keys[$badCaseCounter]
@@ -440,7 +442,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
                     $expectedNotActive,
                     $scheduleDb1[0]->isActive(),
                     sprintf(
-                        'schedule: %s\nday: %s\ncase: %s \nlabel: %s',
+                        "schedule: %s\nday: %s\ncase: %s \nlabel: %s",
                         $userScheduleCase['schedule']->getId(),
                         $scheduleDayId,
                         $keys[$badCaseCounter],
@@ -496,8 +498,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      *
      * @return void
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function saveToDb($entity): void
     {
@@ -510,8 +512,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
      *
      * @return void
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function cleanUserWorkSchedule(array $userWorkSchedules): void
     {

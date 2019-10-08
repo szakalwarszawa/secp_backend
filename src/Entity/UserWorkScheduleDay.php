@@ -113,7 +113,7 @@ class UserWorkScheduleDay
     /**
      * @return bool|null
      */
-    public function isActive()
+    public function isActive(): ?bool
     {
         return $this->active;
     }
