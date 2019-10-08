@@ -298,4 +298,18 @@ abstract class AbstractWebTestCase extends WebTestCase
         $this->assertNotNull($this->security);
         $this->assertNotNull($this->tokenStorage);
     }
+
+    /**
+     * Returns current logged user.
+     *
+     * @return User|null
+     */
+    protected function userMe(): ?User
+    {
+        return $this
+            ->tokenStorage
+            ->getToken()
+            ->getUser()
+        ;
+    }
 }

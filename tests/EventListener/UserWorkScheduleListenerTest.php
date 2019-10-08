@@ -16,8 +16,35 @@ use Doctrine\ORM\ORMException;
 
 class UserWorkScheduleListenerTest extends AbstractWebTestCase
 {
+    /**
+     * @var string
+     */
     private const TEST_FROM_DATE = '2020-01-01';
+
+    /**
+     * @var string
+     */
     private const TEST_TO_DATE = '2020-01-31';
+
+    /**
+     * @var string
+     */
+    private const INDIVIDUAL_TEST_FROM_DATE = '2021-01-01';
+
+    /**
+     * @var string
+     */
+    private const INDIVIDUAL_TEST_TO_DATE = '2021-01-31';
+
+    /**
+     * @var string
+     */
+    private const INDIVIDUAL_TEST_WORK_TIME_START = '6:44';
+
+    /**
+     * @var string
+     */
+    private const INDIVIDUAL_TEST_WORK_TIME_END = '14:44';
 
     /**
      * @var int testing record ID
@@ -48,6 +75,65 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
 
         $days = $userWorkScheduleUpdated->getUserWorkScheduleDays();
         $this->assertCount(31, $days);
+
+
+        /**
+         * Test #1 https://redmine.parp.gov.pl/issues/91480
+         */
+        $individualScheduleProfile = $this->getEntityFromReference('work_schedule_profile_1');
+        $workScheduleStatusRef = $this
+            ->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT)
+        ;
+
+        /**
+         * Change owner work time
+         * Work schedule days params should be inherited from user.
+         */
+        $this
+            ->userMe()
+            ->setDayStartTimeFrom(self::INDIVIDUAL_TEST_WORK_TIME_START)
+            ->setDayStartTimeTo(self::INDIVIDUAL_TEST_WORK_TIME_START)
+            ->setDayEndTimeFrom(self::INDIVIDUAL_TEST_WORK_TIME_END)
+            ->setDayEndTimeTo(self::INDIVIDUAL_TEST_WORK_TIME_END)
+        ;
+
+        $this->assertInstanceOf(WorkScheduleProfile::class, $individualScheduleProfile);
+        $this->assertEquals('Indywidualny', $individualScheduleProfile->getName());
+        $newUserWorkSchedule = new UserWorkSchedule();
+        $newUserWorkSchedule
+            ->setOwner($this->userMe())
+            ->setFromDate(new DateTime(self::INDIVIDUAL_TEST_FROM_DATE))
+            ->setToDate(new DateTime(self::INDIVIDUAL_TEST_TO_DATE))
+            ->setWorkScheduleProfile($individualScheduleProfile)
+            ->setStatus($workScheduleStatusRef)
+        ;
+
+
+        $this->entityManager->persist($newUserWorkSchedule);
+        $this->entityManager->flush();
+
+        $days = $newUserWorkSchedule->getUserWorkScheduleDays();
+        $this->assertCount(31, $days);
+        $firstDay = $days->first();
+        $lastDay = $days->last();
+        /**
+         * Assert that day start time from is not inherited from default profile (individual - 8:30);
+         */
+        $this->assertNotEquals('8:30', $firstDay->getDayStartTimeFrom());
+
+
+        $this->assertEquals($firstDay->getDayStartTimeFrom(), self::INDIVIDUAL_TEST_WORK_TIME_START);
+        $this->assertEquals($firstDay->getDayStartTimeTo(), self::INDIVIDUAL_TEST_WORK_TIME_START);
+        $this->assertEquals($firstDay->getDayEndTimeFrom(), self::INDIVIDUAL_TEST_WORK_TIME_END);
+        $this->assertEquals($firstDay->getDayEndTimeTo(), self::INDIVIDUAL_TEST_WORK_TIME_END);
+
+        $this->assertEquals($lastDay->getDayStartTimeFrom(), self::INDIVIDUAL_TEST_WORK_TIME_START);
+        $this->assertEquals($lastDay->getDayStartTimeTo(), self::INDIVIDUAL_TEST_WORK_TIME_START);
+        $this->assertEquals($lastDay->getDayEndTimeFrom(), self::INDIVIDUAL_TEST_WORK_TIME_END);
+        $this->assertEquals($lastDay->getDayEndTimeTo(), self::INDIVIDUAL_TEST_WORK_TIME_END);
+        /**
+         * End Test #1
+         */
     }
 
     /**

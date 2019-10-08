@@ -49,6 +49,11 @@ class UserWorkScheduleListener
     private $statusChangeDecision;
 
     /**
+     * @var User
+     */
+    private $userWorkScheduleOwner;
+
+    /**
      * UserWorkScheduleListener constructor.
      *
      * @param TokenStorageInterface $tokenStorage
@@ -147,7 +152,9 @@ class UserWorkScheduleListener
 
     /**
      * @param LifecycleEventArgs $args
+     *
      * @return void
+     *
      * @throws ORMException
      */
     public function postPersist(LifecycleEventArgs $args): void
@@ -168,14 +175,15 @@ class UserWorkScheduleListener
         // @Todo Dodać sprawdzanie czy w zadanym okresie czasu są definicje dni [DayDefinition]
         // jeśli nie ma to albo exception albo dodawać definicje
 
-        foreach ($dayDefinitions as $dayDefinition) {
-            $userWorkScheduleProfile = $userWorkSchedule->getWorkScheduleProfile();
+        $this->userWorkScheduleOwner = $userWorkSchedule
+            ->getOwner()
+        ;
 
+        foreach ($dayDefinitions as $dayDefinition) {
             $this->userWorkScheduleDays[] = $this->addUserScheduleDays(
                 $args->getEntityManager(),
                 $dayDefinition,
-                $userWorkSchedule,
-                $userWorkScheduleProfile
+                $userWorkSchedule
             );
         }
     }
@@ -184,27 +192,30 @@ class UserWorkScheduleListener
      * @param EntityManager $entityManager
      * @param DayDefinition $dayDefinition
      * @param UserWorkSchedule $userWorkSchedule
-     * @param WorkScheduleProfile $userWorkScheduleProfile
+     *
      * @return UserWorkScheduleDay
+     *
      * @throws ORMException
      */
     private function addUserScheduleDays(
         EntityManager $entityManager,
         DayDefinition $dayDefinition,
-        UserWorkSchedule $userWorkSchedule,
-        WorkScheduleProfile $userWorkScheduleProfile
+        UserWorkSchedule $userWorkSchedule
     ): UserWorkScheduleDay {
         $userWorkScheduleDay = new UserWorkScheduleDay();
-        $userWorkScheduleDay->setDayDefinition($dayDefinition)
-            ->setDailyWorkingTime($userWorkScheduleProfile->getDailyWorkingTime())
+        $userWorkScheduleOwner = $this->userWorkScheduleOwner;
+        $userWorkScheduleDay
+            ->setDayDefinition($dayDefinition)
+            ->setDailyWorkingTime((float) $userWorkScheduleOwner->getDailyWorkingTime())
             ->setWorkingDay($dayDefinition->getWorkingDay())
-            ->setDayStartTimeFrom($userWorkScheduleProfile->getDayStartTimeFrom())
-            ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
-            ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
-            ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo());
+            ->setDayStartTimeFrom($userWorkScheduleOwner->getDayStartTimeFrom())
+            ->setDayStartTimeTo($userWorkScheduleOwner->getDayStartTimeTo())
+            ->setDayEndTimeFrom($userWorkScheduleOwner->getDayEndTimeFrom())
+            ->setDayEndTimeTo($userWorkScheduleOwner->getDayEndTimeTo());
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $entityManager->persist($userWorkScheduleDay);
+
         return $userWorkScheduleDay;
     }
 
