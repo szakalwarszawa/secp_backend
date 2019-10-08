@@ -9,7 +9,6 @@ use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use App\Entity\DayDefinition;
 use App\Entity\UserWorkScheduleLog;
-use App\Entity\WorkScheduleProfile;
 use App\Validator\Rules\StatusChangeDecision;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -49,7 +48,7 @@ class UserWorkScheduleListener
     private $statusChangeDecision;
 
     /**
-     * @var User
+     * @var null|User
      */
     private $userWorkScheduleOwner;
 

@@ -79,13 +79,7 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
 
         /**
          * Test #1 https://redmine.parp.gov.pl/issues/91480
-         */
-        $individualScheduleProfile = $this->getEntityFromReference('work_schedule_profile_1');
-        $workScheduleStatusRef = $this
-            ->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT)
-        ;
-
-        /**
+         *
          * Change owner work time
          * Work schedule days params should be inherited from user.
          */
@@ -97,8 +91,14 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
             ->setDayEndTimeTo(self::INDIVIDUAL_TEST_WORK_TIME_END)
         ;
 
+        $individualScheduleProfile = $this->getEntityFromReference('work_schedule_profile_1');
+        $workScheduleStatusRef = $this
+            ->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT)
+        ;
+
         $this->assertInstanceOf(WorkScheduleProfile::class, $individualScheduleProfile);
         $this->assertEquals('Indywidualny', $individualScheduleProfile->getName());
+
         $newUserWorkSchedule = new UserWorkSchedule();
         $newUserWorkSchedule
             ->setOwner($this->userMe())
