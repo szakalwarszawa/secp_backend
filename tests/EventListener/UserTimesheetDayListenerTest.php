@@ -8,6 +8,7 @@ use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetDay;
 use App\Entity\UserTimesheetDayLog;
 use App\Entity\UserWorkSchedule;
+use App\Entity\UserWorkScheduleDay;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -37,30 +38,29 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
      */
     private $filledUserTimesheetDay;
 
-
     /**
      * @throws ORMException
      */
     public function testInsertUserTimesheetDayToNonexistentTimesheet(): void
     {
-        $userWorkSchedule = $this->fixtures->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_ADMIN_HR);
+        $userWorkSchedule = $this->getEntityFromReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_ADMIN_HR);
+        /* @var UserWorkSchedule $userWorkSchedule */
 
+        $userWorkScheduleDay = $userWorkSchedule->getUserWorkScheduleDays()[0];
+        $this->assertInstanceOf(UserWorkScheduleDay::class, $userWorkScheduleDay);
+        $this->assertNull($userWorkScheduleDay->getUserTimesheetDay());
+        $this->assertCountUserTimesheet(0, $userWorkScheduleDay);
 
-        $period = date('Y-m', strtotime($userWorkSchedule->getDayDefinition()->getId()));
-
-        $userTimesheetDay = new UserTimesheetDay();
-        $userTimesheetDay->setUserTimesheet(null)
-            ->setPresenceType($this->fixtures->getReference('presence_type_0'))
-            ->setAbsenceType(null)
-            ->setDayStartTime('09:00')
-            ->setDayEndTime(null)
-            ->setWorkingTime(8.00)
-            ->setDayDate(self::TEST_WORK_REPORT_DATE);
-
-        $this->entityManager->persist($userTimesheetDay);
-        $this->entityManager->flush();
+        $userTimesheetDay = $this->addUserTimesheetDay($userWorkScheduleDay);
         $this->assertIsNumeric($userTimesheetDay->getId());
         $this->assertInstanceOf(UserTimesheet::class, $userTimesheetDay->getUserTimesheet());
+        $this->assertCountUserTimesheet(1, $userWorkScheduleDay);
+
+        $userWorkScheduleDay = $userWorkSchedule->getUserWorkScheduleDays()[1];
+        $userTimesheetDay = $this->addUserTimesheetDay($userWorkScheduleDay);
+        $this->assertIsNumeric($userTimesheetDay->getId());
+        $this->assertInstanceOf(UserTimesheet::class, $userTimesheetDay->getUserTimesheet());
+        $this->assertCountUserTimesheet(1, $userWorkScheduleDay);
     }
 
     /**
@@ -150,6 +150,7 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
 
     /**
      * @dataProvider userTimesheetDayChangeFromFilledProvider
+     *
      * @throws ORMException
      */
     public function testUserTimesheetDayChangeFromFilled($testCase): void
@@ -242,5 +243,50 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
         $this->entityManager->flush();
 
         parent::tearDown();
+    }
+
+    /**
+     * @param int $expectedCount
+     * @param UserWorkScheduleDay $userWorkScheduleDay
+     */
+    private function assertCountUserTimesheet(int $expectedCount, UserWorkScheduleDay $userWorkScheduleDay): void
+    {
+        $period = date('Y-m', strtotime($userWorkScheduleDay->getDayDefinition()->getId()));
+
+        $userTimesheet = $this->entityManager
+            ->getRepository(UserTimesheet::class)
+            ->findBy(
+                [
+                    'owner' => $userWorkScheduleDay->getUserWorkSchedule()->getOwner(),
+                    'period' => $period
+                ]
+            );
+
+        $this->assertCount($expectedCount, $userTimesheet, $period);
+    }
+
+    /**
+     * @param UserWorkScheduleDay $userWorkScheduleDay
+     *
+     * @return UserTimesheetDay
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    private function addUserTimesheetDay(UserWorkScheduleDay $userWorkScheduleDay): UserTimesheetDay
+    {
+        $userTimesheetDay = new UserTimesheetDay();
+        $userTimesheetDay->setUserTimesheet(null)
+            ->setPresenceType($this->getEntityFromReference('presence_type_0'))
+            ->setAbsenceType(null)
+            ->setDayStartTime('09:00')
+            ->setDayEndTime('17:00')
+            ->setWorkingTime(8.00)
+            ->setUserWorkScheduleDay($userWorkScheduleDay)
+            ->setDayDate($userWorkScheduleDay->getDayDefinition()->getId());
+
+        $this->entityManager->persist($userTimesheetDay);
+        $this->entityManager->flush();
+        return $userTimesheetDay;
     }
 }

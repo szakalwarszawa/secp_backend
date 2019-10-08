@@ -47,7 +47,9 @@ class UserTimesheetDayListener
 
     /**
      * @param PreUpdateEventArgs $args
+     *
      * @return void
+     *
      * @throws Exception
      */
     public function preUpdate(PreUpdateEventArgs $args): void
@@ -96,6 +98,7 @@ class UserTimesheetDayListener
      * @param string $fieldName
      * @param string $noticeTemplate
      * @param string|null $methodName
+     *
      * @throws Exception
      */
     private function checkChanges(
@@ -129,7 +132,9 @@ class UserTimesheetDayListener
      * @param PreUpdateEventArgs $args
      * @param UserTimesheetDay $entity
      * @param string $notice
+     *
      * @return void
+     *
      * @throws Exception
      */
     private function addUserTimeSheetDayLog(PreUpdateEventArgs $args, UserTimesheetDay $entity, string $notice): void
@@ -146,6 +151,7 @@ class UserTimesheetDayListener
 
     /**
      * @param EntityManager $entityManager
+     *
      * @return User|null
      */
     private function getCurrentUser(EntityManager $entityManager): ?User
@@ -160,7 +166,9 @@ class UserTimesheetDayListener
 
     /**
      * @param LifecycleEventArgs $args
+     *
      * @return void
+     *
      * @throws ORMException
      */
     public function prePersist(LifecycleEventArgs $args): void
@@ -177,27 +185,25 @@ class UserTimesheetDayListener
             return;
         }
 
-        $userWorkScheduleDay = $this->getUserWorkScheduleDay($entityManager, $userTimesheetDay);
+        $userWorkScheduleDay = $userTimesheetDay->getUserWorkScheduleDay();
         if ($userWorkScheduleDay === null || !$userWorkScheduleDay instanceof UserWorkScheduleDay) {
             throw new RuntimeException('Missing user work schedule day or user schedule is not defined');
         }
-
-        $userTimesheetDay->setUserWorkScheduleDay($userWorkScheduleDay);
 
         if ($userWorkScheduleDay->getDayDefinition() === null) {
             throw new RuntimeException('Missing user work schedule day');
         }
 
-        $period = date('Y-m', strtotime($userWorkScheduleDay->getDayDefinition()->getId()));
-
-        $userTimesheet = $this->getUserTimesheet($entityManager, $period);
+        $userTimesheet = $this->getUserTimesheet($entityManager, $userWorkScheduleDay);
 
         $userTimesheetDay->setUserTimesheet($userTimesheet);
     }
 
     /**
      * @param PostFlushEventArgs $args
+     *
      * @return void
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -232,18 +238,26 @@ class UserTimesheetDayListener
 
     /**
      * @param EntityManager $entityManager
-     * @param string $period
+     * @param UserWorkScheduleDay $userWorkScheduleDay
      *
      * @return UserTimesheet
      *
      * @throws ORMException
      */
-    private function getUserTimesheet(EntityManager $entityManager, string $period): UserTimesheet
-    {
+    private function getUserTimesheet(
+        EntityManager $entityManager,
+        UserWorkScheduleDay $userWorkScheduleDay
+    ): UserTimesheet {
+        $period = date(
+            'Y-m',
+            strtotime($userWorkScheduleDay->getDayDefinition()->getId())
+        );
+        $owner = $userWorkScheduleDay->getUserWorkSchedule()->getOwner();
+
         $userTimesheet = $entityManager
             ->getRepository(UserTimesheet::class)
             ->findByUserPeriod(
-                $this->getCurrentUser($entityManager),
+                $owner,
                 $period
             );
 
@@ -252,7 +266,7 @@ class UserTimesheetDayListener
             $userTimesheet
                 ->setStatus($this->getUserTimesheetStatusEdit($entityManager))
                 ->setPeriod($period)
-                ->setOwner($this->getCurrentUser($entityManager));
+                ->setOwner($owner);
 
             $entityManager->persist($userTimesheet);
             $entityManager->getUnitOfWork()
@@ -263,20 +277,5 @@ class UserTimesheetDayListener
         }
 
         return $userTimesheet;
-    }
-
-    /**
-     * @param EntityManager $entityManager
-     * @param UserTimesheetDay $userTimesheetDay
-     *
-     * @return UserWorkScheduleDay|null
-     */
-    private function getUserWorkScheduleDay(EntityManager $entityManager, $userTimesheetDay): ?UserWorkScheduleDay
-    {
-        $userWorkScheduleDay = $entityManager
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findWorkDay($this->getCurrentUser($entityManager), $userTimesheetDay->getDayDate());
-
-        return $userWorkScheduleDay;
     }
 }

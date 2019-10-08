@@ -54,26 +54,6 @@ class UserTimesheetStatus implements RuleInterface
 {
     /**
      * @var string
-     */
-    public const TIMESHEET_STATUS_OWNER_EDIT = 'TIMESHEET-STATUS-OWNER-EDIT';
-
-    /**
-     * @var string
-     */
-    public const TIMESHEET_STATUS_OWNER_ACCEPT = 'TIMESHEET-STATUS-OWNER-ACCEPT';
-
-    /**
-     * @var string
-     */
-    public const TIMESHEET_STATUS_MANAGER_ACCEPT = 'TIMESHEET-STATUS-MANAGER-ACCEPT';
-
-    /**
-     * @var string
-     */
-    public const TIMESHEET_STATUS_HR_ACCEPT = 'TIMESHEET-STATUS-HR-ACCEPT';
-
-    /**
-     * @var string
      *
      * @ORM\Id()
      * @ORM\Column(type="string", nullable=false, unique=true)
