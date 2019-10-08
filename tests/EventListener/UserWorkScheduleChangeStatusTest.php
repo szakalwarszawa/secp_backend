@@ -12,6 +12,7 @@ use App\Entity\UserWorkScheduleDay;
 use App\Entity\UserWorkScheduleStatus;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -369,7 +370,7 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         foreach ($currentCases as $currentCase) {
             $daysToFormat = $currentCase->getDays();
             $currentCase->setPreformattedDays($daysToFormat);
-            $builtDates = array();
+            $builtDates = [];
             foreach ($daysToFormat as $day => $value) {
                 $dateString = 'now ' . $day;
                 $key = date('Y-m-d', strtotime($dateString));
@@ -483,8 +484,8 @@ class UserWorkScheduleChangeStatusTest extends AbstractWebTestCase
         $userWorkSchedule->setOwner($owner)
             ->setWorkScheduleProfile($workScheduleProfile)
             ->setStatus($status)
-            ->setFromDate(new \DateTime($startFrom))
-            ->setToDate(new \DateTime($startTo));
+            ->setFromDate(new DateTime($startFrom))
+            ->setToDate(new DateTime($startTo));
 
         $this->saveToDb($userWorkSchedule);
 
