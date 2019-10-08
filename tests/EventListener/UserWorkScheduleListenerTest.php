@@ -171,7 +171,11 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         $notice = $userWorkScheduleLog->getNotice();
         $this->assertNotNull($userWorkScheduleUpdated);
         $this->assertStringContainsString(
-            sprintf('Zmieniono status z: %s, na: %s', $statusBefore->getId(), $userWorkScheduleUpdated->getStatus()->getId()),
+            sprintf(
+                'Zmieniono status z: %s, na: %s',
+                $statusBefore->getId(),
+                $userWorkScheduleUpdated->getStatus()->getId()
+            ),
             $notice
         );
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkScheduleUpdated->getWorkScheduleProfile());

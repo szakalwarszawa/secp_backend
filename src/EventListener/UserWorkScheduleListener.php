@@ -48,11 +48,6 @@ class UserWorkScheduleListener
     private $statusChangeDecision;
 
     /**
-     * @var null|User
-     */
-    private $userWorkScheduleOwner;
-
-    /**
      * UserWorkScheduleListener constructor.
      *
      * @param TokenStorageInterface $tokenStorage
@@ -174,10 +169,6 @@ class UserWorkScheduleListener
         // @Todo Dodać sprawdzanie czy w zadanym okresie czasu są definicje dni [DayDefinition]
         // jeśli nie ma to albo exception albo dodawać definicje
 
-        $this->userWorkScheduleOwner = $userWorkSchedule
-            ->getOwner()
-        ;
-
         foreach ($dayDefinitions as $dayDefinition) {
             $this->userWorkScheduleDays[] = $this->addUserScheduleDays(
                 $args->getEntityManager(),
@@ -202,7 +193,7 @@ class UserWorkScheduleListener
         UserWorkSchedule $userWorkSchedule
     ): UserWorkScheduleDay {
         $userWorkScheduleDay = new UserWorkScheduleDay();
-        $userWorkScheduleOwner = $this->userWorkScheduleOwner;
+        $userWorkScheduleOwner = $userWorkSchedule->getOwner();
         $userWorkScheduleDay
             ->setDayDefinition($dayDefinition)
             ->setDailyWorkingTime((float) $userWorkScheduleOwner->getDailyWorkingTime())
