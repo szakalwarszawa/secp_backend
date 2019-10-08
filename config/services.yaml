@@ -25,6 +25,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Utils\VersionsUtil:
+        arguments:
+            $commit: '%env(resolve:GIT_COMMIT)%'
+            $tag: '%env(resolve:GIT_TAG)%'
+            $deployTime: '%env(resolve:DEPLOY_TIME)%'
 
     Symfony\Component\Ldap\Ldap:
         arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
