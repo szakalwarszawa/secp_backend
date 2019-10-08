@@ -76,7 +76,7 @@ class SectionTest extends AbstractWebTestCase
 {
   "name": "section_test",
   "active": true,
-  "department": "/api/departments/$departmentId" 
+  "department": "/api/departments/$departmentId"
 }
 JSON;
 
