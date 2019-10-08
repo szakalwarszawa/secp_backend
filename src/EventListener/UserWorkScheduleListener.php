@@ -199,8 +199,8 @@ class UserWorkScheduleListener
         DayDefinition $dayDefinition,
         UserWorkSchedule $userWorkSchedule
     ): UserWorkScheduleDay {
-        $userWorkScheduleDay = new UserWorkScheduleDay();
         $userWorkScheduleOwner = $userWorkSchedule->getOwner();
+        $userWorkScheduleDay = new UserWorkScheduleDay();
         $userWorkScheduleDay
             ->setDayDefinition($dayDefinition)
             ->setDailyWorkingTime((float) $userWorkScheduleOwner->getDailyWorkingTime())
@@ -208,7 +208,9 @@ class UserWorkScheduleListener
             ->setDayStartTimeFrom($userWorkScheduleOwner->getDayStartTimeFrom())
             ->setDayStartTimeTo($userWorkScheduleOwner->getDayStartTimeTo())
             ->setDayEndTimeFrom($userWorkScheduleOwner->getDayEndTimeFrom())
-            ->setDayEndTimeTo($userWorkScheduleOwner->getDayEndTimeTo());
+            ->setDayEndTimeTo($userWorkScheduleOwner->getDayEndTimeTo())
+            ->setActive($userWorkSchedule->getStatus()->getId() === UserWorkSchedule::STATUS_HR_ACCEPT)
+            ;
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $entityManager->persist($userWorkScheduleDay);
