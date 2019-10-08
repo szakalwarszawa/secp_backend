@@ -121,7 +121,6 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
          */
         $this->assertNotEquals('8:30', $firstDay->getDayStartTimeFrom());
 
-
         $this->assertEquals($firstDay->getDayStartTimeFrom(), self::INDIVIDUAL_TEST_WORK_TIME_START);
         $this->assertEquals($firstDay->getDayStartTimeTo(), self::INDIVIDUAL_TEST_WORK_TIME_START);
         $this->assertEquals($firstDay->getDayEndTimeFrom(), self::INDIVIDUAL_TEST_WORK_TIME_END);
