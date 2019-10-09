@@ -146,8 +146,7 @@ class UserTimesheetDayListener
         $log->setUserTimesheetDay($entity)
             ->setLogDate(new DateTime())
             ->setOwner($this->getCurrentUser($args->getEntityManager()))
-            ->setNotice($notice)
-        ;
+            ->setNotice($notice);
 
         $this->userTimesheetDaysLogs[] = $log;
     }
