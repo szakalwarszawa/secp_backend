@@ -18,18 +18,66 @@ use Exception;
  */
 class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterface
 {
+
+    /**
+     * @var string
+     */
     public const REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR = 'fixed_user_work_schedule_admin_hr';
+
+    /**
+     * @var string
+     */
     public const REF_FIXED_USER_WORK_SCHEDULE_ADMIN_EDIT = 'fixed_user_work_schedule_admin_edit';
+
+    /**
+     * @var string
+     */
     public const REF_FIXED_USER_WORK_SCHEDULE_MANAGER_HR = 'fixed_user_work_schedule_manager_hr';
+
+    /**
+     * @var string
+     */
     public const REF_CURRENT_USER_WORK_SCHEDULE_SECTION_HR = 'fixed_user_work_schedule_section_hr';
+
+    /**
+     * @var string
+     */
     public const REF_CURRENT_USER_WORK_SCHEDULE_SECRETARY_HR = 'fixed_user_work_schedule_secretary_hr';
+
+    /**
+     * @var string
+     */
     public const REF_FIXED_USER_WORK_SCHEDULE_USER_HR = 'fixed_user_work_schedule_user_hr';
+
+    /**
+     * @var string
+     */
     public const REF_FIXED_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT = 'fixed_user_work_schedule_user_owner_accept';
 
+
+    /**
+     * @var string
+     */
     public const REF_CURRENT_USER_WORK_SCHEDULE_ADMIN_HR = 'current_user_work_schedule_admin_hr';
+
+    /**
+     * @var string
+     */
     public const REF_CURRENT_USER_WORK_SCHEDULE_ADMIN_EDIT = 'current_user_work_schedule_admin_edit';
+
+    /**
+     * @var string
+     */
     public const REF_CURRENT_USER_WORK_SCHEDULE_MANAGER_HR = 'current_user_work_schedule_manager_hr';
+
+    /**
+     * @var string
+     */
     public const REF_CURRENT_USER_WORK_SCHEDULE_USER_HR = 'current_user_work_schedule_user_hr';
+
+    /**
+     * @var string
+     */
     public const REF_CURRENT_USER_WORK_SCHEDULE_USER_OWNER_ACCEPT = 'current_user_work_schedule_user_owner_accept';
 
     /**
@@ -91,6 +139,7 @@ class UserWorkScheduleFixtures extends Fixture implements DependentFixtureInterf
 
         $manager->persist($userWorkSchedule);
         $this->addReference($referenceName, $userWorkSchedule);
+
         return $userWorkSchedule;
     }
 

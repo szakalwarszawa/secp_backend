@@ -18,15 +18,50 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
+
+    /**
+     * @var string
+     */
     public const REF_USER_ADMIN = 'user_admin';
+
+    /**
+     * @var string
+     */
     public const REF_USER_MANAGER = 'user_manager';
+
+    /**
+     * @var string
+     */
     public const REF_USER_SECTION_MANAGER = 'user_section_manager';
+
+    /**
+     * @var string
+     */
     public const REF_USER_SECRETARY = 'user_secretary';
+
+    /**
+     * @var string
+     */
     public const REF_USER_USER = 'user_user';
 
+    /**
+     * @var string
+     */
     public const REF_USER_HR_MANAGER = 'user_hr_manager';
+
+    /**
+     * @var string
+     */
     public const REF_USER_HR_SECTION_MANAGER = 'user_hr_section_manager';
+
+    /**
+     * @var string
+     */
     public const REF_USER_HR_SECRETARY = 'user_hr_secretary';
+
+    /**
+     * @var string
+     */
     public const REF_USER_HR_USER = 'user_hr_user';
 
     /**
@@ -255,7 +290,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     /**
      * @param ObjectManager $manager
      *
-     * @return void
+     *
+     * /**
+     * @var string@return void
+     *
      */
     private function makeFixedUserHr(ObjectManager $manager): void
     {
