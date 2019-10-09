@@ -9,7 +9,6 @@ use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use App\Entity\DayDefinition;
 use App\Entity\UserWorkScheduleLog;
-use App\Entity\WorkScheduleProfile;
 use App\Validator\Rules\StatusChangeDecision;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -71,8 +70,8 @@ class UserWorkScheduleListener
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {
-        $entity = $args->getObject();
-        if (!$entity instanceof UserWorkSchedule) {
+        $currentSchedule = $args->getObject();
+        if (!$currentSchedule instanceof UserWorkSchedule) {
             return;
         }
 
@@ -90,13 +89,20 @@ class UserWorkScheduleListener
 
             $this->addUserWorkScheduleLog(
                 $args,
-                $entity,
+                $currentSchedule,
                 sprintf(
                     'Zmieniono status z: %s, na: %s',
                     $args->getOldValue('status')->getId(),
                     $args->getNewValue('status')->getId()
                 )
             );
+        }
+
+        if ($args->hasChangedField('status')
+            && $args->getNewValue('status')->getId() === UserWorkSchedule::STATUS_HR_ACCEPT
+        ) {
+            $args->getEntityManager()->getRepository(UserWorkSchedule::class)
+                ->markPreviousScheduleDaysNotActive($currentSchedule);
         }
     }
 
@@ -147,7 +153,9 @@ class UserWorkScheduleListener
 
     /**
      * @param LifecycleEventArgs $args
+     *
      * @return void
+     *
      * @throws ORMException
      */
     public function postPersist(LifecycleEventArgs $args): void
@@ -169,13 +177,10 @@ class UserWorkScheduleListener
         // jeśli nie ma to albo exception albo dodawać definicje
 
         foreach ($dayDefinitions as $dayDefinition) {
-            $userWorkScheduleProfile = $userWorkSchedule->getWorkScheduleProfile();
-
             $this->userWorkScheduleDays[] = $this->addUserScheduleDays(
                 $args->getEntityManager(),
                 $dayDefinition,
-                $userWorkSchedule,
-                $userWorkScheduleProfile
+                $userWorkSchedule
             );
         }
     }
@@ -184,27 +189,32 @@ class UserWorkScheduleListener
      * @param EntityManager $entityManager
      * @param DayDefinition $dayDefinition
      * @param UserWorkSchedule $userWorkSchedule
-     * @param WorkScheduleProfile $userWorkScheduleProfile
+     *
      * @return UserWorkScheduleDay
+     *
      * @throws ORMException
      */
     private function addUserScheduleDays(
         EntityManager $entityManager,
         DayDefinition $dayDefinition,
-        UserWorkSchedule $userWorkSchedule,
-        WorkScheduleProfile $userWorkScheduleProfile
+        UserWorkSchedule $userWorkSchedule
     ): UserWorkScheduleDay {
+        $userWorkScheduleOwner = $userWorkSchedule->getOwner();
         $userWorkScheduleDay = new UserWorkScheduleDay();
-        $userWorkScheduleDay->setDayDefinition($dayDefinition)
-            ->setDailyWorkingTime($userWorkScheduleProfile->getDailyWorkingTime())
+        $userWorkScheduleDay
+            ->setDayDefinition($dayDefinition)
+            ->setDailyWorkingTime((float) $userWorkScheduleOwner->getDailyWorkingTime())
             ->setWorkingDay($dayDefinition->getWorkingDay())
-            ->setDayStartTimeFrom($userWorkScheduleProfile->getDayStartTimeFrom())
-            ->setDayStartTimeTo($userWorkScheduleProfile->getDayStartTimeTo())
-            ->setDayEndTimeFrom($userWorkScheduleProfile->getDayEndTimeFrom())
-            ->setDayEndTimeTo($userWorkScheduleProfile->getDayEndTimeTo());
+            ->setDayStartTimeFrom($userWorkScheduleOwner->getDayStartTimeFrom())
+            ->setDayStartTimeTo($userWorkScheduleOwner->getDayStartTimeTo())
+            ->setDayEndTimeFrom($userWorkScheduleOwner->getDayEndTimeFrom())
+            ->setDayEndTimeTo($userWorkScheduleOwner->getDayEndTimeTo())
+            ->setActive($userWorkSchedule->getStatus()->getId() === UserWorkSchedule::STATUS_HR_ACCEPT)
+            ;
 
         $userWorkSchedule->addUserWorkScheduleDay($userWorkScheduleDay);
         $entityManager->persist($userWorkScheduleDay);
+
         return $userWorkScheduleDay;
     }
 

@@ -102,6 +102,34 @@ class UserWorkScheduleDay
     private $dayDefinition;
 
     /**
+     * @ORM\Column(
+     *     type="boolean",
+     *     options={"default"=true}
+     * )
+     * @Groups({"get"})
+     */
+    private $active;
+
+    /**
+     * @return bool|null
+     */
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     * @return UserWorkScheduleDay
+     */
+    public function setActive(bool $active): UserWorkScheduleDay
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
      * @ORM\Column(type="boolean", nullable=false)
      * @Assert\NotNull()
      * @Groups({"get"})

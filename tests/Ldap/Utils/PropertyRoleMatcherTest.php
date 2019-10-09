@@ -55,7 +55,8 @@ class PropertyRoleMatcherTest extends AbstractWebTestCase
         $this->assertTrue($matcherResult);
 
         /**
-         * User must have 4 roles - ROLE_USER, ROLE_SUPERVISOR, ROLE_SECTION_MANAGER (due to his position - kierownik), ROLE_HR (due to his department - BZK)
+         * User must have 4 roles - ROLE_USER, ROLE_SUPERVISOR,
+         * ROLE_SECTION_MANAGER (due to his position - kierownik), ROLE_HR (due to his department - BZK)
          * Role ROLE_TO_REMOVE will be removed.
          */
         $this->assertEquals(4, count($user->getRoles()));
