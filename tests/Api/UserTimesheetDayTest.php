@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Tests\Api;
 
@@ -23,6 +23,9 @@ class UserTimesheetDayTest extends AbstractWebTestCase
 {
     /**
      * @test
+     *
+     * @return void
+     *
      * @throws NotFoundReferencedUserException
      */
     public function apiGetUserTimesheetDayDay(): void
@@ -54,6 +57,9 @@ class UserTimesheetDayTest extends AbstractWebTestCase
 
     /**
      * @test
+     *
+     * @return void
+     *
      * @throws NotFoundReferencedUserException
      * @throws NonUniqueResultException
      */
@@ -71,7 +77,7 @@ class UserTimesheetDayTest extends AbstractWebTestCase
         $userWorkScheduleDayDB = $this->entityManager
             ->getRepository(UserWorkScheduleDay::class)
             ->findDayForUserWorkSchedule(
-                $this->fixtures->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_USER_HR),
+                $this->fixtures->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_USER_HR),
                 '2019-05-20'
             );
         /* @var $userWorkScheduleDayDB UserWorkScheduleDay */
@@ -151,6 +157,9 @@ JSON;
 
     /**
      * @test
+     *
+     * @return void
+     *
      * @throws NotFoundReferencedUserException
      * @throws Exception
      */

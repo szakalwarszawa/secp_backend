@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\DataFixtures;
 
@@ -11,19 +12,22 @@ use Faker\Factory as Faker;
 
 /**
  * Class SectionFixtures
- * @package App\DataFixtures
  */
 class SectionFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
      * @var string
      */
-    const REF_BI_SECTION = 'section_bi';
+    public const REF_BI_SECTION = 'section_bi';
+    /**
+     * @var string
+     */
+    public const REF_HR_SECTION = 'section_hr';
 
     /**
      * @var string
      */
-    const REF_BP_SECTION = 'section_bp';
+    public const REF_BP_SECTION = 'section_bp';
 
     /**
      * @var Faker
@@ -50,6 +54,8 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
 
     /**
      * @param ObjectManager $manager
+     *
+     * @return void
      */
     public function load(ObjectManager $manager): void
     {
@@ -59,6 +65,14 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
             'Sekcja Rozwoju Oprogramowania',
             true,
             $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN)
+        );
+
+        $this->makeSection(
+            $manager,
+            self::REF_HR_SECTION,
+            'Sekcja kontroli HR',
+            true,
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR)
         );
 
         $this->makeSection(
@@ -88,6 +102,7 @@ class SectionFixtures extends Fixture implements DependentFixtureInterface
      * @param string $name
      * @param bool $active
      * @param Department $department
+     *
      * @return Section
      */
     private function makeSection(
