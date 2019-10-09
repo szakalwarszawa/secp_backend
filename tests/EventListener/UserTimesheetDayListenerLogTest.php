@@ -57,7 +57,7 @@ class UserTimesheetDayListenerLogTest extends AbstractWebTestCase
                 ['id' => 'desc']
             );
         $notice = $userTimesheetDayLog->getNotice();
-        $this->assertStringContainsString('Zmieniono rozpoczęcie dnia z: ' . $dayStartTime .', na: ' .
+        $this->assertStringContainsString('Zmieniono rozpoczęcie dnia z: ' . ($dayStartTime ?? 'brak') .', na: ' .
             $dayStartTimeChanged, $notice);
         $this->assertNotEquals($dayStartTime, $dayStartTimeChanged);
     }
