@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Tests\Api;
 
@@ -23,6 +23,7 @@ class UserTimesheetDayTest extends AbstractWebTestCase
 {
     /**
      * @test
+     *
      * @throws NotFoundReferencedUserException
      */
     public function apiGetUserTimesheetDayDay(): void
@@ -54,6 +55,7 @@ class UserTimesheetDayTest extends AbstractWebTestCase
 
     /**
      * @test
+     *
      * @throws NotFoundReferencedUserException
      * @throws NonUniqueResultException
      */
@@ -151,6 +153,7 @@ JSON;
 
     /**
      * @test
+     *
      * @throws NotFoundReferencedUserException
      * @throws Exception
      */

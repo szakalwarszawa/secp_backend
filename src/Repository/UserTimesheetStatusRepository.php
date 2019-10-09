@@ -15,11 +15,24 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 class UserTimesheetStatusRepository extends ServiceEntityRepository
 {
     /**
+     * @var string
+     */
+    public const TIMESHEET_STATUS_OWNER_EDIT = 'TIMESHEET-STATUS-OWNER-EDIT';
+
+    /**
      * UserTimesheetStatusRepository constructor.
      * @param RegistryInterface $registry
      */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, UserTimesheetStatus::class);
+    }
+
+    /**
+     * @return UserTimesheetStatus|null
+     */
+    public function getStatusOwnerEdit(): ?UserTimesheetStatus
+    {
+        return $this->find(self::TIMESHEET_STATUS_OWNER_EDIT);
     }
 }

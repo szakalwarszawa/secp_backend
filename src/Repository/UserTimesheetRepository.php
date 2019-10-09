@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\UserTimesheet;
-use App\Entity\UserTimesheetStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -18,6 +19,7 @@ class UserTimesheetRepository extends ServiceEntityRepository
 {
     /**
      * UserTimesheetRepository constructor.
+     *
      * @param RegistryInterface $registry
      */
     public function __construct(RegistryInterface $registry)
@@ -30,6 +32,8 @@ class UserTimesheetRepository extends ServiceEntityRepository
      * @param string $period
      *
      * @return UserTimesheet|null
+     *
+     * @throws NonUniqueResultException
      */
     public function findByUserPeriod(User $owner, string $period): ?UserTimesheet
     {
@@ -40,8 +44,8 @@ class UserTimesheetRepository extends ServiceEntityRepository
             ->setParameter('period', $period)
             ->setMaxResults(1)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
 
-        return $result[0] ?? null;
+        return $result;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\EventListener;
 
@@ -39,6 +40,8 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
     private $filledUserTimesheetDay;
 
     /**
+     * @return void
+     *
      * @throws ORMException
      */
     public function testInsertUserTimesheetDayToNonexistentTimesheet(): void
@@ -64,6 +67,8 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
     }
 
     /**
+     * @return void
+     *
      * @throws ORMException
      */
     public function testInsertUserTimesheetDayToNonexistentSchedule(): void
@@ -102,7 +107,13 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
 
     /**
      * @dataProvider userTimesheetDayChangeFromEmptyProvider
+     *
+     * @param $testCase
+     *
+     * @return void
+     *
      * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testUserTimesheetDayChangeFromEmpty($testCase): void
     {
@@ -151,7 +162,12 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
     /**
      * @dataProvider userTimesheetDayChangeFromFilledProvider
      *
+     * @param $testCase
+     *
+     * @return void
+     *
      * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testUserTimesheetDayChangeFromFilled($testCase): void
     {
@@ -178,6 +194,8 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
     }
 
     /**
+     * @return void
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -223,6 +241,8 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
     }
 
     /**
+     * @return void
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -248,6 +268,8 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
     /**
      * @param int $expectedCount
      * @param UserWorkScheduleDay $userWorkScheduleDay
+     *
+     * @return void
      */
     private function assertCountUserTimesheet(int $expectedCount, UserWorkScheduleDay $userWorkScheduleDay): void
     {
@@ -276,7 +298,7 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
     private function addUserTimesheetDay(UserWorkScheduleDay $userWorkScheduleDay): UserTimesheetDay
     {
         $userTimesheetDay = new UserTimesheetDay();
-        $userTimesheetDay->setUserTimesheet(null)
+        $userTimesheetDay
             ->setPresenceType($this->getEntityFromReference('presence_type_0'))
             ->setAbsenceType(null)
             ->setDayStartTime('09:00')
@@ -287,6 +309,7 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
 
         $this->entityManager->persist($userTimesheetDay);
         $this->entityManager->flush();
+
         return $userTimesheetDay;
     }
 }

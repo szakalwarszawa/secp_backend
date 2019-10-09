@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\EventListener;
 
@@ -22,7 +23,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Class UserTimesheetDayListener
- * @package App\EventListener
  */
 class UserTimesheetDayListener
 {
@@ -38,6 +38,7 @@ class UserTimesheetDayListener
 
     /**
      * UserTimesheetDayLoggerListener constructor.
+     *
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
@@ -98,6 +99,8 @@ class UserTimesheetDayListener
      * @param string $fieldName
      * @param string $noticeTemplate
      * @param string|null $methodName
+     *
+     * @return void
      *
      * @throws Exception
      */
@@ -224,20 +227,6 @@ class UserTimesheetDayListener
 
     /**
      * @param EntityManager $entityManager
-     *
-     * @return UserTimesheetStatus|null
-     */
-    private function getUserTimesheetStatusEdit(EntityManager $entityManager): ?UserTimesheetStatus
-    {
-        $userTimesheetStatusEdit = $entityManager
-            ->getRepository(UserTimesheetStatus::class)
-            ->find('TIMESHEET-STATUS-OWNER-EDIT');
-
-        return $userTimesheetStatusEdit;
-    }
-
-    /**
-     * @param EntityManager $entityManager
      * @param UserWorkScheduleDay $userWorkScheduleDay
      *
      * @return UserTimesheet
@@ -264,7 +253,7 @@ class UserTimesheetDayListener
         if ($userTimesheet === null) {
             $userTimesheet = new UserTimesheet();
             $userTimesheet
-                ->setStatus($this->getUserTimesheetStatusEdit($entityManager))
+                ->setStatus($entityManager->getRepository(UserTimesheetStatus::class)->getStatusOwnerEdit())
                 ->setPeriod($period)
                 ->setOwner($owner);
 
