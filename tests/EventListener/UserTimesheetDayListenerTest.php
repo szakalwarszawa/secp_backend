@@ -160,7 +160,9 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
 
         $userTimesheet = $this->getEntityFromReference(UserTimesheetFixtures::REF_USER_TIMESHEET_USER_EDIT);
         /* @var $userTimesheet UserTimesheet */
-        $userWorkSchedule = $this->getEntityFromReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_USER_HR);
+        $userWorkSchedule = $this->getEntityFromReference(
+            UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_USER_HR
+        );
         /* @var $userWorkSchedule UserWorkSchedule */
 
         $userTimesheetDayEmpty = new UserTimesheetDay();

@@ -21,6 +21,8 @@ class StatusChangeDecisionTest extends AbstractWebTestCase
      * Test StatusChangeDecision class.
      *
      * @return void
+     *
+     * @throws IncorrectStatusChangeException
      */
     public function testStatusChangeDecision(): void
     {
@@ -33,7 +35,9 @@ class StatusChangeDecisionTest extends AbstractWebTestCase
         /**
          * This schedule status is WORK-SCHEDULE-STATUS-OWNER-EDIT, it can be changed by ROLE_USER or ROLE_HR.
          */
-        $workSchedule = $this->getEntityFromReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_EDIT);
+        $workSchedule = $this->getEntityFromReference(
+            UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_EDIT
+        );
         $this->assertInstanceOf(UserWorkSchedule::class, $workSchedule);
 
         $statusChangeDecision = new StatusChangeDecision($authorizationChecker);
