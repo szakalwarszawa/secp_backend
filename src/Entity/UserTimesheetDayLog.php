@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use App\Entity\Types\LogEntityInterface;
+use App\Entity\Utils\UserAware;
 
 /**
  * @ORM\Table(
@@ -21,8 +22,10 @@ use App\Entity\Types\LogEntityInterface;
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserTimesheetDayLogRepository")
+ * @UserAware(
+ *     userFieldName="owner_id"
+ * )
  * @ApiResource(
- *      attributes={"access_control"="is_granted('ROLE_HR')"},
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
