@@ -46,7 +46,9 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
      */
     public function testInsertUserTimesheetDayToNonexistentTimesheet(): void
     {
-        $userWorkSchedule = $this->getEntityFromReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR);
+        $userWorkSchedule = $this->getEntityFromReference(
+            UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR
+        );
         /* @var UserWorkSchedule $userWorkSchedule */
 
         $userWorkScheduleDay = $userWorkSchedule->getUserWorkScheduleDays()[0];
