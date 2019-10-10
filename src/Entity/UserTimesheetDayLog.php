@@ -97,6 +97,14 @@ class UserTimesheetDayLog implements LogEntityInterface
     private $notice;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups({"get"})
+     */
+    private $trigger;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -114,6 +122,7 @@ class UserTimesheetDayLog implements LogEntityInterface
 
     /**
      * @param UserTimesheetDay|null $userTimesheetDay
+     *
      * @return UserTimesheetDayLog
      */
     public function setUserTimesheetDay(?UserTimesheetDay $userTimesheetDay): self
@@ -182,4 +191,28 @@ class UserTimesheetDayLog implements LogEntityInterface
 
         return $this;
     }
+
+    /**
+	 * Get trigger
+	 *
+	 * @return string|null
+	 */
+	public function getTrigger(): ?string
+	{
+		return $this->trigger;
+	}
+
+	/**
+	 * Set trigger
+	 *
+	 * @param string|null $trigger
+	 *
+	 * @return UserTimesheetDayLog
+	 */
+	public function setTrigger(?string $trigger): UserTimesheetDayLog
+	{
+		$this->trigger = $trigger;
+
+		return $this;
+	}
 }
