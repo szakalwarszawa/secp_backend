@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\DataFixtures;
 
@@ -13,10 +14,10 @@ use App\Entity\UserWorkScheduleDay;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Exception;
 
 /**
  * Class UserTimesheetFixtures
- * @package App\DataFixtures
  */
 class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -45,9 +46,12 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
 
     /**
      * @param ObjectManager $manager
-     * @throws \Exception
+     *
+     * @return void
+     *
+     * @throws Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->makeUserTimesheetSets(
             $manager,
@@ -55,7 +59,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
             $this->getReference('user_admin'),
             '2019-06',
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_EDIT),
-            $this->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_ADMIN_HR),
+            $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR),
             ['2019-06-03', '2019-06-04', '2019-06-05', '2019-06-06', '2019-06-07']
         );
 
@@ -65,7 +69,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
             $this->getReference('user_manager'),
             '2019-05',
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_HR_ACCEPT),
-            $this->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_MANAGER_HR),
+            $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_MANAGER_HR),
             ['2019-05-27', '2019-05-28', '2019-05-29', '2019-05-30', '2019-05-31']
         );
 
@@ -75,7 +79,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
             $this->getReference('user_manager'),
             '2019-05',
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_EDIT),
-            $this->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_MANAGER_HR),
+            $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_MANAGER_HR),
             ['2019-06-03', '2019-06-04', '2019-06-05', '2019-06-06', '2019-06-07']
         );
 
@@ -85,7 +89,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
             $this->getReference('user_user'),
             '2019-05',
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_HR_ACCEPT),
-            $this->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_USER_HR),
+            $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_USER_HR),
             ['2019-05-27', '2019-05-28', '2019-05-29', '2019-05-30', '2019-05-31']
         );
 
@@ -95,7 +99,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
             $this->getReference('user_user'),
             '2019-06',
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_EDIT),
-            $this->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_USER_HR),
+            $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_USER_HR),
             ['2019-06-03', '2019-06-04', '2019-06-05', '2019-06-06', '2019-06-07']
         );
 
@@ -110,8 +114,10 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
      * @param UserTimesheetStatus $status
      * @param UserWorkSchedule $userWorkSchedule
      * @param array $workingDays
+     *
      * @return void
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     private function makeUserTimesheetSets(
         ObjectManager $manager,
@@ -177,6 +183,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
      * @param User $owner
      * @param string $period
      * @param UserTimesheetStatus $status
+     *
      * @return UserTimesheet
      */
     private function makeUserTimesheet(
@@ -205,6 +212,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
      * @param float $workingTime
      * @param PresenceType $presenceType
      * @param AbsenceType $absenceType
+     *
      * @return UserTimesheetDay
      */
     private function makeUserWorkScheduleDay(
