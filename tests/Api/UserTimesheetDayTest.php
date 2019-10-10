@@ -77,7 +77,9 @@ class UserTimesheetDayTest extends AbstractWebTestCase
         $userWorkScheduleDayDB = $this->entityManager
             ->getRepository(UserWorkScheduleDay::class)
             ->findDayForUserWorkSchedule(
-                $this->fixtures->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_USER_HR),
+                $this->fixtures->getReference(
+                    UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_USER_HR
+                ),
                 '2019-05-20'
             );
         /* @var $userWorkScheduleDayDB UserWorkScheduleDay */
