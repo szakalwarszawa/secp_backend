@@ -6,14 +6,7 @@ namespace App\Tests\Serializer;
 
 use App\Tests\AbstractWebTestCase;
 use App\DataFixtures\UserFixtures;
-use App\DataFixtures\UserTimesheetFixtures;
-use App\DataFixtures\UserWorkScheduleFixtures;
 use App\Entity\UserTimesheetDay;
-use App\Entity\UserTimesheetDayLog;
-use App\Entity\UserWorkScheduleDay;
-use Symfony\Component\VarDumper\VarDumper;
-use function strlen;
-
 /**
  * Class UserTimesheetDayLogNormalizerTest
  */
@@ -57,7 +50,11 @@ class UserTimesheetDayLogNormalizerTest extends AbstractWebTestCase
 
         $response = $this->getActionResponse(
             self::HTTP_GET,
-            '/api/user_timesheet_days/' . $userTimesheetDay->getId() . '/logs',
+            implode('/', [
+                '/api/user_timesheet_days',
+                $userTimesheetDay->getId(),
+                'logs',
+            ]),
             null,
             [],
             200,
