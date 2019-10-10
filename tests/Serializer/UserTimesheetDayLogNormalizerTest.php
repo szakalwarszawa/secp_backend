@@ -7,6 +7,7 @@ namespace App\Tests\Serializer;
 use App\Tests\AbstractWebTestCase;
 use App\DataFixtures\UserFixtures;
 use App\Entity\UserTimesheetDay;
+
 /**
  * Class UserTimesheetDayLogNormalizerTest
  */
