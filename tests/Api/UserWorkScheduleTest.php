@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Tests\Api;
 
@@ -19,6 +19,9 @@ class UserWorkScheduleTest extends AbstractWebTestCase
 {
     /**
      * @test
+     *
+     * @return void
+     *
      * @throws NotFoundReferencedUserException
      */
     public function apiGetUserWorkSchedules(): void
@@ -49,7 +52,11 @@ class UserWorkScheduleTest extends AbstractWebTestCase
     /**
      * @test
      * @dataProvider apiGetUserWorkScheduleProvider
+     *
      * @param string $referenceName
+     *
+     * @return void
+     *
      * @throws NotFoundReferencedUserException
      */
     public function apiGetUserWorkSchedule($referenceName): void
@@ -72,16 +79,17 @@ class UserWorkScheduleTest extends AbstractWebTestCase
 
     /**
      * @return array
+     *
      * @throws Exception
      */
     public function apiGetUserWorkScheduleProvider(): array
     {
         $referenceList = [
-            ['user_work_schedule_admin_hr'],
-            ['user_work_schedule_admin_edit'],
-            ['user_work_schedule_manager_hr'],
-            ['user_work_schedule_user_hr'],
-            ['user_work_schedule_user_owner_accept'],
+            ['fixed_user_work_schedule_admin_hr'],
+            ['fixed_user_work_schedule_admin_edit'],
+            ['fixed_user_work_schedule_manager_hr'],
+            ['fixed_user_work_schedule_user_hr'],
+            ['fixed_user_work_schedule_user_owner_accept'],
         ];
 
         return $referenceList;
@@ -89,6 +97,9 @@ class UserWorkScheduleTest extends AbstractWebTestCase
 
     /**
      * @test
+     *
+     * @return void
+     *
      * @throws NotFoundReferencedUserException
      */
     public function apiPostUserWorkSchedule(): void
@@ -157,6 +168,9 @@ JSON;
 
     /**
      * @test
+     *
+     * @return void
+     *
      * @throws NotFoundReferencedUserException
      * @throws Exception
      */
@@ -170,7 +184,7 @@ JSON;
 
         $userWorkScheduleREF = $this
             ->fixtures
-            ->getReference(UserWorkScheduleFixtures::REF_USER_WORK_SCHEDULE_MANAGER_HR)
+            ->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_MANAGER_HR)
         ;
 
         $workScheduleStatusRef = $this

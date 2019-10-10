@@ -217,5 +217,4 @@ class UserUpdaterTest extends AbstractWebTestCase
          */
         $this->assertTrue($managerMatch);
     }
-
 }
