@@ -193,26 +193,26 @@ class UserTimesheetDayLog implements LogEntityInterface
     }
 
     /**
-	 * Get trigger
-	 *
-	 * @return string|null
-	 */
-	public function getTrigger(): ?string
-	{
-		return $this->trigger;
-	}
+     * Get trigger
+     *
+     * @return string|null
+     */
+    public function getTrigger(): ?string
+    {
+        return $this->trigger;
+    }
 
-	/**
-	 * Set trigger
-	 *
-	 * @param string|null $trigger
-	 *
-	 * @return UserTimesheetDayLog
-	 */
-	public function setTrigger(?string $trigger): UserTimesheetDayLog
-	{
-		$this->trigger = $trigger;
+    /**
+     * Set trigger
+     *
+     * @param string|null $trigger
+     *
+     * @return UserTimesheetDayLog
+     */
+    public function setTrigger(?string $trigger): UserTimesheetDayLog
+    {
+        $this->trigger = $trigger;
 
-		return $this;
-	}
+        return $this;
+    }
 }

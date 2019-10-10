@@ -180,26 +180,26 @@ class DayDefinitionLog implements LogEntityInterface
     }
 
     /**
-	 * Get trigger
-	 *
-	 * @return string|null
-	 */
-	public function getTrigger(): ?string
-	{
-		return $this->trigger;
-	}
+     * Get trigger
+     *
+     * @return string|null
+     */
+    public function getTrigger(): ?string
+    {
+        return $this->trigger;
+    }
 
-	/**
-	 * Set trigger
-	 *
-	 * @param string|null $trigger
-	 *
-	 * @return DayDefinitionLog
-	 */
-	public function setTrigger(?string $trigger): DayDefinitionLog
-	{
-		$this->trigger = $trigger;
+    /**
+     * Set trigger
+     *
+     * @param string|null $trigger
+     *
+     * @return DayDefinitionLog
+     */
+    public function setTrigger(?string $trigger): DayDefinitionLog
+    {
+        $this->trigger = $trigger;
 
-		return $this;
-	}
+        return $this;
+    }
 }

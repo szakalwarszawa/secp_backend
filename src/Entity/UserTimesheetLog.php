@@ -180,27 +180,27 @@ class UserTimesheetLog implements LogEntityInterface
         return $this;
     }
 
-	/**
-	 * Get trigger
-	 *
-	 * @return string|null
-	 */
-	public function getTrigger(): ?string
-	{
-		return $this->trigger;
-	}
+    /**
+     * Get trigger
+     *
+     * @return string|null
+     */
+    public function getTrigger(): ?string
+    {
+        return $this->trigger;
+    }
 
-	/**
-	 * Set trigger
-	 *
-	 * @param string|null $trigger
-	 *
-	 * @return UserTimesheetLog
-	 */
-	public function setTrigger(?string $trigger): UserTimesheetLog
-	{
-		$this->trigger = $trigger;
+    /**
+     * Set trigger
+     *
+     * @param string|null $trigger
+     *
+     * @return UserTimesheetLog
+     */
+    public function setTrigger(?string $trigger): UserTimesheetLog
+    {
+        $this->trigger = $trigger;
 
-		return $this;
-	}
+        return $this;
+    }
 }
