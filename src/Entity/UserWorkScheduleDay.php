@@ -377,7 +377,7 @@ class UserWorkScheduleDay
      */
     public function getDailyWorkingTime(): float
     {
-        return $this->dailyWorkingTime;
+        return (float)$this->dailyWorkingTime;
     }
 
     /**
