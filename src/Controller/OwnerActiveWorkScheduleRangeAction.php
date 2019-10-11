@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -10,10 +11,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Class UserActiveWorkScheduleAction
- * @package App\Controller
+ * Class OwnerActiveWorkScheduleRangeAction
  */
-class UserActiveWorkScheduleAction
+class OwnerActiveWorkScheduleRangeAction
 {
     /**
      * @var TokenInterface|null
@@ -26,7 +26,6 @@ class UserActiveWorkScheduleAction
     private $entityManager;
 
     /**
-     * UserMe constructor.
      * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
      */
@@ -39,6 +38,7 @@ class UserActiveWorkScheduleAction
     /**
      * @param $dateFrom
      * @param $dateTo
+     *
      * @return UserWorkScheduleDay[]
      */
     public function __invoke($dateFrom, $dateTo): array
@@ -46,8 +46,10 @@ class UserActiveWorkScheduleAction
         $currentUser = $this->token->getUser();
         /* @var $currentUser User */
 
-        $userWorkSchedules = $this->entityManager->getRepository(UserWorkScheduleDay::class)
-            ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo);
+        $userWorkSchedules = $this->entityManager
+            ->getRepository(UserWorkScheduleDay::class)
+            ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo)
+        ;
 
         return $userWorkSchedules;
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repository;
 
@@ -6,6 +7,7 @@ use App\Entity\User;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -18,6 +20,7 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
 {
     /**
      * UserWorkScheduleDayRepository constructor.
+     *
      * @param RegistryInterface $registry
      */
     public function __construct(RegistryInterface $registry)
@@ -28,55 +31,69 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
     /**
      * @param UserWorkSchedule $userWorkSchedule
      * @param string $dayDate
+     *
      * @return UserWorkScheduleDay|null
+     *
+     * @throws NonUniqueResultException
      */
     public function findDayForUserWorkSchedule(
         UserWorkSchedule $userWorkSchedule,
         string $dayDate
     ): ?UserWorkScheduleDay {
-        $query = $this->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
             ->andWhere('p.userWorkSchedule = :userWorkSchedule')
             ->setParameter('userWorkSchedule', $userWorkSchedule)
             ->andWhere('dayDefinition.id = :dayDate')
             ->setParameter('dayDate', $dayDate)
             ->setMaxResults(1)
-            ->getQuery();
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
 
-        $result = $query->getResult();
-
-        return $result[0] ?? null;
+        return $result;
     }
 
     /**
-     * @param User $owner
+     * @param int $userId
      * @param string $dayDate
+     *
      * @return UserWorkScheduleDay|null
+     *
+     * @throws NonUniqueResultException
      */
-    public function findWorkDay($owner, $dayDate): ?UserWorkScheduleDay
+    public function findWorkDay($userId, $dayDate): ?UserWorkScheduleDay
     {
-        $query = $this->createQueryBuilder('p')
+        $user = $this->getEntityManager()
+            ->getRepository(User::class)
+            ->find($userId)
+        ;
+
+        $result = $this->createQueryBuilder('p')
             ->innerJoin('p.userWorkSchedule', 'userWorkSchedule')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
             ->innerJoin('userWorkSchedule.status', 'status')
             ->andWhere('userWorkSchedule.owner = :owner')
-            ->setParameter('owner', $owner)
+            ->setParameter('owner', $user)
             ->andWhere('dayDefinition.id = :dayDate')
             ->setParameter('dayDate', $dayDate)
             ->andWhere('status.id = :status')
             ->setParameter('status', UserWorkSchedule::STATUS_HR_ACCEPT)
+            ->andWhere('p.active = :active')
+            ->setParameter('active', true)
             ->setMaxResults(1)
-            ->getQuery();
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
 
-        $result = $query->getResult();
-
-        return $result[0] ?? null;
+        return $result;
     }
 
     /**
      * @param User $owner
      * @param string $dayFromDate
      * @param string $dayToDate
+     *
      * @return UserWorkScheduleDay[] | null
      */
     public function findWorkDayBetweenDate(User $owner, string $dayFromDate, string $dayToDate): ?array
