@@ -86,7 +86,11 @@ class DayDefinitionLog implements LogEntityInterface
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(
+     *  type="string",
+     *  length=100,
+     *  nullable=true
+     * )
      * @Groups({"get"})
      */
     private $trigger;

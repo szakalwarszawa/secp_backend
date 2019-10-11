@@ -6,9 +6,10 @@ namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use Doctrine\DBAL\DBALException;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * Class Version20191010064118
  */
 final class Version20191010064118 extends AbstractMigration
 {
@@ -22,8 +23,11 @@ final class Version20191010064118 extends AbstractMigration
 
     /**
      * @param Schema $schema
-     * @throws \Doctrine\DBAL\DBALException
+     *
+     * @throws DBALException
+     *
      * @return void
+     *
      * @SuppressWarnings("unused")
      */
     public function up(Schema $schema) : void
@@ -34,15 +38,17 @@ final class Version20191010064118 extends AbstractMigration
             'Migration can only be executed safely on \'postgresql\'.'
         );
 
-        $this->addSql('ALTER TABLE logs.user_timesheet_logs ADD trigger TEXT DEFAULT NULL');
-        $this->addSql('ALTER TABLE logs.user_timesheet_day_logs ADD trigger TEXT DEFAULT NULL');
-        $this->addSql('ALTER TABLE logs.user_work_schedule_logs ADD trigger TEXT DEFAULT NULL');
-        $this->addSql('ALTER TABLE logs.day_definition_logs ADD trigger TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE logs.user_timesheet_logs ADD trigger VARCHAR(100) DEFAULT NULL');
+        $this->addSql('ALTER TABLE logs.user_timesheet_day_logs ADD trigger VARCHAR(100) DEFAULT NULL');
+        $this->addSql('ALTER TABLE logs.user_work_schedule_logs ADD trigger VARCHAR(100) DEFAULT NULL');
+        $this->addSql('ALTER TABLE logs.day_definition_logs ADD trigger VARCHAR(100) DEFAULT NULL');
     }
 
     /**
      * @param Schema $schema
+     *
      * @return void
+     *
      * @SuppressWarnings("unused")
      */
     public function down(Schema $schema) : void
