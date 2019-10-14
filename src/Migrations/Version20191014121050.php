@@ -37,7 +37,6 @@ final class Version20191014121050 extends AbstractMigration
             'Migration can only be executed safely on \'postgresql\'.'
         );
 
-
         $this->addSql('ALTER TABLE users ADD profile_expire_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 
