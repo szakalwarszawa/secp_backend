@@ -886,26 +886,26 @@ class User implements UserInterface
         return $this;
     }
 
-	/**
-	 * @return DateTime|null
-	 */
-	public function getProfileExpireDate(): ?DateTime
-	{
-		return $this->profileExpireDate;
-	}
+    /**
+     * @return DateTime|null
+     */
+    public function getProfileExpireDate(): ?DateTime
+    {
+        return $this->profileExpireDate;
+    }
 
-	/**
-	 * @param DateTime|null $profileExpireDate
-	 *
-	 * @return User
-	 */
-	public function setProfileExpireDate(?DateTime $profileExpireDate): User
-	{
+    /**
+     * @param DateTime|null $profileExpireDate
+     *
+     * @return User
+     */
+    public function setProfileExpireDate(?DateTime $profileExpireDate): User
+    {
         if ($profileExpireDate instanceof DateTime) {
             $profileExpireDate->setTime(23, 59, 59);
         }
-		$this->profileExpireDate = $profileExpireDate;
+        $this->profileExpireDate = $profileExpireDate;
 
-		return $this;
-	}
+        return $this;
+    }
 }
