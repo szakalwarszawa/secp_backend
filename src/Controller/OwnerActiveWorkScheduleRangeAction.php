@@ -36,21 +36,19 @@ class OwnerActiveWorkScheduleRangeAction
     }
 
     /**
-     * @param $dateFrom
-     * @param $dateTo
+     * @param string $dateFrom
+     * @param string $dateTo
      *
      * @return UserWorkScheduleDay[]
      */
-    public function __invoke($dateFrom, $dateTo): array
+    public function __invoke(string $dateFrom, string $dateTo): array
     {
         $currentUser = $this->token->getUser();
         /* @var $currentUser User */
 
-        $userWorkSchedules = $this->entityManager
+        return $this->entityManager
             ->getRepository(UserWorkScheduleDay::class)
             ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo)
         ;
-
-        return $userWorkSchedules;
     }
 }

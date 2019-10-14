@@ -40,7 +40,7 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
         UserWorkSchedule $userWorkSchedule,
         string $dayDate
     ): ?UserWorkScheduleDay {
-        $result = $this->createQueryBuilder('p')
+        return $this->createQueryBuilder('p')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
             ->andWhere('p.userWorkSchedule = :userWorkSchedule')
             ->setParameter('userWorkSchedule', $userWorkSchedule)
@@ -50,8 +50,6 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
-
-        return $result;
     }
 
     /**
@@ -69,7 +67,7 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
             ->find($userId)
         ;
 
-        $result = $this->createQueryBuilder('p')
+        return $this->createQueryBuilder('p')
             ->innerJoin('p.userWorkSchedule', 'userWorkSchedule')
             ->innerJoin('p.dayDefinition', 'dayDefinition')
             ->innerJoin('userWorkSchedule.status', 'status')
@@ -85,8 +83,6 @@ class UserWorkScheduleDayRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
-
-        return $result;
     }
 
     /**

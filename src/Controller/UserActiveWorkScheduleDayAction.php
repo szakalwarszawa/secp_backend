@@ -31,7 +31,7 @@ class UserActiveWorkScheduleDayAction
      *
      * @return UserWorkScheduleDay|null
      */
-    public function __invoke($userId, $dayDate): ?UserWorkScheduleDay
+    public function __invoke(int $userId, string $dayDate): ?UserWorkScheduleDay
     {
         return $this->entityManager
             ->getRepository(UserWorkScheduleDay::class)
