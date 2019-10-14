@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\ValueExists;
 use App\Entity\Utils\UserAware;
-use DateTime;
+use DateTimeInterface;
 
 /**
  * @ORM\Table(
@@ -277,7 +277,7 @@ class User implements UserInterface
     private $defaultWorkScheduleProfile;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      *
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups({"put", "post", "get"})
@@ -887,19 +887,19 @@ class User implements UserInterface
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getProfileExpireDate(): ?DateTime
+    public function getProfileExpireDate(): ?DateTimeInterface
     {
         return $this->profileExpireDate;
     }
 
     /**
-     * @param DateTime|null $profileExpireDate
+     * @param DateTimeInterface|null $profileExpireDate
      *
      * @return User
      */
-    public function setProfileExpireDate(?DateTime $profileExpireDate): User
+    public function setProfileExpireDate(?DateTimeInterface $profileExpireDate): User
     {
         if ($profileExpireDate instanceof DateTime) {
             $profileExpireDate->setTime(23, 59, 59);
