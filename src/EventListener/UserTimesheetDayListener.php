@@ -126,7 +126,8 @@ class UserTimesheetDayListener
                     $noticeTemplate,
                     $oldValue ?? 'brak',
                     $newValue ?? 'brak'
-                )
+                ),
+                $fieldName
             );
         }
     }
@@ -135,18 +136,25 @@ class UserTimesheetDayListener
      * @param PreUpdateEventArgs $args
      * @param UserTimesheetDay $entity
      * @param string $notice
+     * @param string $triggerField
      *
      * @return void
      *
      * @throws Exception
      */
-    private function addUserTimeSheetDayLog(PreUpdateEventArgs $args, UserTimesheetDay $entity, string $notice): void
-    {
+    private function addUserTimeSheetDayLog(
+        PreUpdateEventArgs $args,
+        UserTimesheetDay $entity,
+        string $notice,
+        string $triggerField
+    ): void {
         $log = new UserTimesheetDayLog();
         $log->setUserTimesheetDay($entity)
             ->setLogDate(new DateTime())
             ->setOwner($this->getCurrentUser($args->getEntityManager()))
-            ->setNotice($notice);
+            ->setNotice($notice)
+            ->setTrigger($triggerField)
+        ;
 
         $this->userTimesheetDaysLogs[] = $log;
     }
