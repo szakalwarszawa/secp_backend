@@ -99,6 +99,16 @@ class UserWorkSchedule
     public const STATUS_HR_ACCEPT = 'WORK-SCHEDULE-STATUS-HR-ACCEPT';
 
     /**
+     * @var string
+     */
+    public const CREATED_BY_SYSTEM = 'created_by_system';
+
+    /**
+     * @var string
+     */
+    public const CREATED_BY_USER = 'created_by_user';
+
+    /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -154,6 +164,19 @@ class UserWorkSchedule
      * @ApiSubresource()
      */
     private $userWorkScheduleLogs;
+
+    /**
+     * Object created by.
+     *
+     * @ORM\Column(
+     *      type="string",
+     *      length=20,
+     *      options={"default"=UserWorkSchedule::CREATED_BY_USER}
+     * )
+     * @Assert\Choice(callback="getCreatedByOptions")
+     * @Groups({"get", "post"})
+     */
+    private $createdBy = self::CREATED_BY_USER;
 
     /**
      * @return mixed
@@ -326,4 +349,37 @@ class UserWorkSchedule
 
         return $this;
     }
+
+    /**
+     * Returns createdBy available options.
+     *
+     * @return array
+     */
+    public function getCreatedByOptions(): array
+    {
+        return [
+            self::CREATED_BY_SYSTEM,
+            self::CREATED_BY_USER,
+        ];
+    }
+
+	/**
+	 * @return string
+	 */
+	public function getCreatedBy(): string
+	{
+		return $this->createdBy;
+	}
+
+	/**
+	 * @param string $createdBy
+	 *
+	 * @return UserWorkSchedule
+	 */
+	public function setCreatedBy(string $createdBy): UserWorkSchedule
+	{
+		$this->createdBy = $createdBy;
+
+		return $this;
+	}
 }

@@ -13,6 +13,42 @@ use Faker\Factory as Faker;
  */
 class WorkScheduleProfileFixtures extends Fixture
 {
+    /**
+     * @var array
+     */
+    private $properties = [
+        'dayStartTimeFromDate' => [
+            'visible' => true,
+        ],
+        'dayStartTimeToDate' => [
+            'visible' => true,
+        ],
+        'dayEndTimeFromDate' => [
+            'visible' => true,
+        ],
+        'dayEndTimeToDate' => [
+            'visible' => true,
+        ],
+        'dailyWorkingTime' => [
+            'visible' => true,
+        ],
+        'dayStartTimeFrom' => [
+            'visible' => true,
+        ],
+        'dayStartTimeTo' => [
+            'visible' => true,
+        ],
+        'dayEndTimeFrom' => [
+            'visible' => true,
+        ],
+        'dayEndTimeTo' => [
+            'visible' => true,
+        ],
+    ];
+
+    /**
+     * @var array
+     */
     private $profiles = [
         ['Domyślny', '08:30', '08:30', '16:30', '16:30', 8.00],
         ['Indywidualny', '08:30', '08:30', '16:30', '16:30', 8.00],
@@ -47,7 +83,9 @@ class WorkScheduleProfileFixtures extends Fixture
                 ->setDayStartTimeTo($profile[2])
                 ->setDayEndTimeFrom($profile[3])
                 ->setDayEndTimeTo($profile[4])
-                ->setDailyWorkingTime($profile[5]);
+                ->setDailyWorkingTime($profile[5])
+                ->setProperties($this->properties)
+            ;
 
             $manager->persist($workScheduleProfile);
 
