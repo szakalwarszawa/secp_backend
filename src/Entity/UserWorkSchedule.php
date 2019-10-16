@@ -363,23 +363,23 @@ class UserWorkSchedule
         ];
     }
 
-	/**
-	 * @return string
-	 */
-	public function getCreatedBy(): string
-	{
-		return $this->createdBy;
-	}
+    /**
+     * @return string
+     */
+    public function getCreatedBy(): string
+    {
+        return $this->createdBy;
+    }
 
-	/**
-	 * @param string $createdBy
-	 *
-	 * @return UserWorkSchedule
-	 */
-	public function setCreatedBy(string $createdBy): UserWorkSchedule
-	{
-		$this->createdBy = $createdBy;
+    /**
+     * @param string $createdBy
+     *
+     * @return UserWorkSchedule
+     */
+    public function setCreatedBy(string $createdBy): UserWorkSchedule
+    {
+        $this->createdBy = $createdBy;
 
-		return $this;
-	}
+        return $this;
+    }
 }
