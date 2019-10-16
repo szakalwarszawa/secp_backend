@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\DataFixtures;
 
@@ -8,18 +9,60 @@ use App\Entity\WorkScheduleProfile;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Exception;
 use Faker\Factory as Faker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class UserFixtures
- * @package App\DataFixtures
  */
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
+
+    /**
+     * @var string
+     */
     public const REF_USER_ADMIN = 'user_admin';
+
+    /**
+     * @var string
+     */
     public const REF_USER_MANAGER = 'user_manager';
+
+    /**
+     * @var string
+     */
+    public const REF_USER_SECTION_MANAGER = 'user_section_manager';
+
+    /**
+     * @var string
+     */
+    public const REF_USER_SECRETARY = 'user_secretary';
+
+    /**
+     * @var string
+     */
     public const REF_USER_USER = 'user_user';
+
+    /**
+     * @var string
+     */
+    public const REF_USER_HR_MANAGER = 'user_hr_manager';
+
+    /**
+     * @var string
+     */
+    public const REF_USER_HR_SECTION_MANAGER = 'user_hr_section_manager';
+
+    /**
+     * @var string
+     */
+    public const REF_USER_HR_SECRETARY = 'user_hr_secretary';
+
+    /**
+     * @var string
+     */
+    public const REF_USER_HR_USER = 'user_hr_user';
 
     /**
      * @var UserPasswordEncoderInterface
@@ -33,6 +76,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
     /**
      * UserFixtures constructor.
+     *
      * @param UserPasswordEncoderInterface $passwordEncoder
      */
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
@@ -55,63 +99,15 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
     /**
      * @param ObjectManager $manager
-     * @throws \Exception
+     *
+     * @return void
+     *
+     * @throws Exception
      */
     public function load(ObjectManager $manager): void
     {
-        $user = $this->makeUser(
-            $manager,
-            self::REF_USER_ADMIN,
-            'admin',
-            'admin',
-            'Adam',
-            'Admin',
-            [User::ROLE_ADMIN],
-            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
-            $this->getReference('work_schedule_profile_0')
-        );
-
-        $manager->flush();
-
-        $user->getDepartment()->addUser($user);
-        $user->getDepartment()->addManager($user);
-
-        $user = $this->makeUser(
-            $manager,
-            self::REF_USER_MANAGER,
-            'manager',
-            'manager',
-            'Mariusz',
-            'Manager',
-            [User::ROLE_USER],
-            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
-            $this->getReference('work_schedule_profile_1')
-        );
-
-        $manager->flush();
-
-        $user->getDepartment()->addUser($user);
-        $user->getDepartment()->addManager($user);
-
-        $manager->flush();
-
-        $user = $this->makeUser(
-            $manager,
-            self::REF_USER_USER,
-            'user',
-            'user',
-            'Urszula',
-            'User',
-            [User::ROLE_USER],
-            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
-            $this->getReference('work_schedule_profile_3')
-        );
-
-        $manager->flush();
-
-        $user->getDepartment()->addUser($user);
-
-        $manager->flush();
+        $this->makeFixedUserBi($manager);
+        $this->makeFixedUserHr($manager);
 
         for ($i = 0; $i < 100; $i++) {
             $firstName = $this->faker->firstName();
@@ -125,7 +121,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
                 $username,
                 $firstName,
                 $lastName,
-                [User::ROLE_USER],
+                [RoleFixtures::ROLE_USER],
                 $this->getReference('department_' . random_int(0, 19)),
                 $this->getReference('work_schedule_profile_0')
             );
@@ -158,6 +154,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
      * @param array $roles
      * @param Department $department
      * @param WorkScheduleProfile $defaultWorkScheduleProfile
+     *
      * @return User
      */
     private function makeUser(
@@ -191,5 +188,185 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $this->addReference($referenceName, $user);
         $manager->persist($user);
         return $user;
+    }
+
+    /**
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
+    private function makeFixedUserBi(ObjectManager $manager): void
+    {
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_ADMIN,
+            'admin',
+            'admin',
+            'Adam',
+            'Admin',
+            [RoleFixtures::ROLE_ADMIN],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
+            $this->getReference('work_schedule_profile_0')
+        );
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $user->getDepartment()->addManager($user);
+        $manager->flush();
+
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_MANAGER,
+            'manager',
+            'manager',
+            'Mariusz',
+            'Manager',
+            [RoleFixtures::ROLE_USER],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
+            $this->getReference('work_schedule_profile_1')
+        );
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $user->getDepartment()->addManager($user);
+        $manager->flush();
+
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_SECTION_MANAGER,
+            'section',
+            'section',
+            'Stanisław',
+            'Section',
+            [RoleFixtures::ROLE_SECTION_MANAGER],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
+            $this->getReference('work_schedule_profile_4')
+        );
+        $user->setSection($this->getReference(SectionFixtures::REF_BI_SECTION));
+        $manager->persist($user);
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $user->getSection()->addUser($user);
+        $user->getSection()->addManager($user);
+        $manager->flush();
+
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_SECRETARY,
+            'secretary',
+            'secretary',
+            'Sylwia',
+            'Secretary',
+            [RoleFixtures::ROLE_SECRETARY],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
+            $this->getReference('work_schedule_profile_2')
+        );
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $manager->flush();
+
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_USER,
+            'user',
+            'user',
+            'Urszula',
+            'User',
+            [RoleFixtures::ROLE_USER],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
+            $this->getReference('work_schedule_profile_3')
+        );
+        $user->setSection($this->getReference(SectionFixtures::REF_BI_SECTION));
+        $manager->persist($user);
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $user->getSection()->addUser($user);
+        $manager->flush();
+    }
+
+    /**
+     * @param ObjectManager $manager
+     *
+     *
+     * /**
+     * @var string@return void
+     *
+     */
+    private function makeFixedUserHr(ObjectManager $manager): void
+    {
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_HR_MANAGER,
+            'hr_manager',
+            'hr_manager',
+            'Monika',
+            'Hr-Manger',
+            [RoleFixtures::ROLE_HR],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR),
+            $this->getReference('work_schedule_profile_0')
+        );
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $user->getDepartment()->addManager($user);
+        $manager->flush();
+
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_HR_SECTION_MANAGER,
+            'hr_section',
+            'hr_section',
+            'Halina',
+            'Hr-Section',
+            [RoleFixtures::ROLE_SECTION_MANAGER],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR),
+            $this->getReference('work_schedule_profile_0')
+        );
+        $user->setSection($this->getReference(SectionFixtures::REF_HR_SECTION));
+        $manager->persist($user);
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $user->getSection()->addUser($user);
+        $user->getSection()->addManager($user);
+        $manager->flush();
+
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_HR_SECRETARY,
+            'hr_secretary',
+            'hr_secretary',
+            'Stefania',
+            'Hr_secretary',
+            [RoleFixtures::ROLE_SECRETARY],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR),
+            $this->getReference('work_schedule_profile_1')
+        );
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $manager->flush();
+
+        $user = $this->makeUser(
+            $manager,
+            self::REF_USER_HR_USER,
+            'hr_user',
+            'hr_user',
+            'Honorata',
+            'Hr-User',
+            [RoleFixtures::ROLE_USER],
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR),
+            $this->getReference('work_schedule_profile_3')
+        );
+        $user->setSection($this->getReference(SectionFixtures::REF_HR_SECTION));
+        $manager->persist($user);
+        $manager->flush();
+
+        $user->getDepartment()->addUser($user);
+        $user->getSection()->addUser($user);
+        $manager->flush();
     }
 }

@@ -85,6 +85,18 @@ class UserWorkScheduleLog implements LogEntityInterface
     private $notice;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(
+     *  type="string",
+     *  length=100,
+     *  nullable=true
+     * )
+     * @Groups({"get"})
+     */
+    private $trigger;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -168,6 +180,30 @@ class UserWorkScheduleLog implements LogEntityInterface
     public function setNotice(string $notice): UserWorkScheduleLog
     {
         $this->notice = $notice;
+
+        return $this;
+    }
+
+    /**
+     * Get trigger
+     *
+     * @return string|null
+     */
+    public function getTrigger(): ?string
+    {
+        return $this->trigger;
+    }
+
+    /**
+     * Set trigger
+     *
+     * @param string|null $trigger
+     *
+     * @return UserWorkScheduleLog
+     */
+    public function setTrigger(?string $trigger): UserWorkScheduleLog
+    {
+        $this->trigger = $trigger;
 
         return $this;
     }

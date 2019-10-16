@@ -76,7 +76,7 @@ class PresenceTypeTest extends AbstractWebTestCase
     {
         $payload = <<<JSON
 {
-  "shortName": "SN", 
+  "shortName": "SN",
   "name": "presence type test",
   "active": true
 }

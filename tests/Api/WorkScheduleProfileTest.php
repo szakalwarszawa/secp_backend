@@ -73,7 +73,7 @@ class WorkScheduleProfileTest extends AbstractWebTestCase
         $payload = <<<JSON
 {
   "name": "work_schedule_profile_test",
-  "notice": "Test work Schedule Profile Notice" 
+  "notice": "Test work Schedule Profile Notice"
 }
 JSON;
 

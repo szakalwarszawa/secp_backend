@@ -41,4 +41,15 @@ interface LogEntityInterface
      * @param string $notice
      */
     public function setNotice(string $notice);
+
+    /**
+     * @return string|null
+     */
+    public function getTrigger(): ?string;
+
+    /**
+     *
+     * @param string|null $triggerName
+     */
+    public function setTrigger(?string $triggerName);
 }

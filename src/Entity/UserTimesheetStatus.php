@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          @ORM\Index(name="idx_user_timsheet_statuses_name", columns={"name"}),
  *     }
  * )
+ * @ORM\Entity(repositoryClass="App\Repository\UserTimesheetStatusRepository")
  * @ApiResource(
  *      itemOperations={
  *          "get"={
@@ -48,7 +49,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          }
  *      }
  * )
- * @ORM\Entity()
  */
 class UserTimesheetStatus implements RuleInterface
 {
