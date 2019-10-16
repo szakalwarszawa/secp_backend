@@ -39,9 +39,6 @@ final class Version20191016064701 extends AbstractMigration
 
         $this->addSql('ALTER TABLE dictionary.work_schedule_profiles ADD properties JSON DEFAULT NULL');
         $this->addSql('COMMENT ON COLUMN dictionary.work_schedule_profiles.properties IS \'(DC2Type:json_array)\'');
-        $this->addSql(
-            'ALTER TABLE user_work_schedules ADD created_by VARCHAR(20) DEFAULT \'created_by_user\' NOT NULL'
-        );
     }
 
     /**

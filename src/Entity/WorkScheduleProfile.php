@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -289,7 +290,7 @@ class WorkScheduleProfile
      */
     public function getDailyWorkingTime(): float
     {
-        return $this->dailyWorkingTime;
+        return (float)$this->dailyWorkingTime;
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\DataFixtures;
 
@@ -9,7 +10,6 @@ use Faker\Factory as Faker;
 
 /**
  * Class WorkScheduleProfileFixtures
- * @package App\DataFixtures
  */
 class WorkScheduleProfileFixtures extends Fixture
 {
@@ -17,18 +17,6 @@ class WorkScheduleProfileFixtures extends Fixture
      * @var array
      */
     private $properties = [
-        'dayStartTimeFromDate' => [
-            'visible' => true,
-        ],
-        'dayStartTimeToDate' => [
-            'visible' => true,
-        ],
-        'dayEndTimeFromDate' => [
-            'visible' => true,
-        ],
-        'dayEndTimeToDate' => [
-            'visible' => true,
-        ],
         'dailyWorkingTime' => [
             'visible' => true,
         ],
@@ -72,6 +60,8 @@ class WorkScheduleProfileFixtures extends Fixture
 
     /**
      * @param ObjectManager $manager
+     *
+     * @return void
      */
     public function load(ObjectManager $manager): void
     {
