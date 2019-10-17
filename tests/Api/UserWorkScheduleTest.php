@@ -30,7 +30,7 @@ class UserWorkScheduleTest extends AbstractWebTestCase
             ->getRepository(UserWorkSchedule::class)
             ->createQueryBuilder('p')
             ->andWhere('p.owner = :owner')
-            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_MANAGER))
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_USER))
             ->getQuery()
             ->getResult();
         /* @var $userWorkScheduleDB UserWorkSchedule */
@@ -41,7 +41,7 @@ class UserWorkScheduleTest extends AbstractWebTestCase
             null,
             [],
             200,
-            UserFixtures::REF_USER_MANAGER
+            UserFixtures::REF_USER_USER
         );
         $userWorkScheduleJSON = json_decode($response->getContent(), false);
 
