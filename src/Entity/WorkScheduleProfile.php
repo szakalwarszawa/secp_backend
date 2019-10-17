@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -151,6 +152,14 @@ class WorkScheduleProfile
     private $dailyWorkingTime = 8.00;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"get"})
+     */
+    private $properties = [];
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -281,7 +290,7 @@ class WorkScheduleProfile
      */
     public function getDailyWorkingTime(): float
     {
-        return $this->dailyWorkingTime;
+        return (float)$this->dailyWorkingTime;
     }
 
     /**
@@ -294,5 +303,64 @@ class WorkScheduleProfile
         $this->dailyWorkingTime = $dailyWorkingTime;
 
         return $this;
+    }
+
+    /**
+     * @return null|array
+     */
+    public function getProperties(): ?array
+    {
+        return $this->properties;
+    }
+
+    /**
+     * @param array $properties
+     *
+     * @return WorkScheduleProfile
+     */
+    public function setProperties(array $properties): WorkScheduleProfile
+    {
+        $this->properties = $properties;
+
+        return $this;
+    }
+
+    /**
+     * @param string $propertyKey
+     * @param string $value
+     *
+     * @return WorkScheduleProfile
+     */
+    public function addModifyProperty(string $propertyKey, string $value): WorkScheduleProfile
+    {
+        $this->properties[$propertyKey] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $propertyKey
+     *
+     * @return WorkScheduleProfile
+     */
+    public function removeProperty(string $propertyKey): WorkScheduleProfile
+    {
+        if ($this->getProperty($propertyKey)) {
+            unset($this->properties[$propertyKey]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get single property from properties.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function getProperty(string $key)
+    {
+        return $this->properties[$key] ?? null;
     }
 }
