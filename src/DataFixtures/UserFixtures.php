@@ -221,7 +221,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             'manager',
             'Mariusz',
             'Manager',
-            [RoleFixtures::ROLE_USER],
+            [RoleFixtures::ROLE_USER, RoleFixtures::ROLE_DEPARTMENT_MANAGER],
             $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
             $this->getReference('work_schedule_profile_1')
         );
@@ -238,7 +238,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             'section',
             'Stanisław',
             'Section',
-            [RoleFixtures::ROLE_SECTION_MANAGER],
+            [RoleFixtures::ROLE_USER, RoleFixtures::ROLE_SECTION_MANAGER],
             $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
             $this->getReference('work_schedule_profile_4')
         );
@@ -258,7 +258,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             'secretary',
             'Sylwia',
             'Secretary',
-            [RoleFixtures::ROLE_SECRETARY],
+            [RoleFixtures::ROLE_USER, RoleFixtures::ROLE_SECRETARY],
             $this->getReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN),
             $this->getReference('work_schedule_profile_2')
         );
@@ -304,7 +304,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             'hr_manager',
             'Monika',
             'Hr-Manger',
-            [RoleFixtures::ROLE_HR],
+            [RoleFixtures::ROLE_USER, RoleFixtures::ROLE_HR],
             $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR),
             $this->getReference('work_schedule_profile_0')
         );
@@ -321,7 +321,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             'hr_section',
             'Halina',
             'Hr-Section',
-            [RoleFixtures::ROLE_SECTION_MANAGER],
+            [RoleFixtures::ROLE_USER, RoleFixtures::ROLE_SECTION_MANAGER, RoleFixtures::ROLE_HR],
             $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR),
             $this->getReference('work_schedule_profile_0')
         );
@@ -341,7 +341,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             'hr_secretary',
             'Stefania',
             'Hr_secretary',
-            [RoleFixtures::ROLE_SECRETARY],
+            [RoleFixtures::ROLE_USER, RoleFixtures::ROLE_SECRETARY],
             $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR),
             $this->getReference('work_schedule_profile_1')
         );
@@ -358,7 +358,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             'Honorata',
             'Hr-User',
             [RoleFixtures::ROLE_USER],
-            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR),
+            $this->getReference(DepartmentFixtures::REF_DEPARTMENT_HR, RoleFixtures::ROLE_HR),
             $this->getReference('work_schedule_profile_3')
         );
         $user->setSection($this->getReference(SectionFixtures::REF_HR_SECTION));
