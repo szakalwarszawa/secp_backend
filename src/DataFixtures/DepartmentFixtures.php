@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\DataFixtures;
 
@@ -9,16 +10,23 @@ use Faker\Factory as Faker;
 
 /**
  * Class DepartmentFixtures
- * @package App\DataFixtures
  */
 class DepartmentFixtures extends Fixture
 {
+    /**
+     * @var string
+     */
     public const REF_DEPARTMENT_ADMIN = 'department_admin';
 
     /**
      * @var string
      */
-    const REF_DEPARTMENT_BP = 'department_bp';
+    public const REF_DEPARTMENT_HR = 'department_hr';
+
+    /**
+     * @var string
+     */
+    public const REF_DEPARTMENT_BP = 'department_bp';
 
     /**
      * @var Faker
@@ -43,6 +51,14 @@ class DepartmentFixtures extends Fixture
             self::REF_DEPARTMENT_ADMIN,
             'Biuro Informatyki',
             'BI',
+            true
+        );
+
+        $this->makeDepartment(
+            $manager,
+            self::REF_DEPARTMENT_HR,
+            'Biuro Zarządzania Kadrami',
+            'BZK',
             true
         );
 
@@ -73,6 +89,7 @@ class DepartmentFixtures extends Fixture
      * @param string $name
      * @param string $shortName
      * @param bool $active
+     *
      * @return Department
      */
     private function makeDepartment(

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\EventListener;
 
@@ -22,7 +23,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Class UserTimesheetDayListener
- * @package App\EventListener
  */
 class UserTimesheetDayListener
 {
@@ -38,6 +38,7 @@ class UserTimesheetDayListener
 
     /**
      * UserTimesheetDayLoggerListener constructor.
+     *
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
@@ -47,7 +48,9 @@ class UserTimesheetDayListener
 
     /**
      * @param PreUpdateEventArgs $args
+     *
      * @return void
+     *
      * @throws Exception
      */
     public function preUpdate(PreUpdateEventArgs $args): void
@@ -96,6 +99,9 @@ class UserTimesheetDayListener
      * @param string $fieldName
      * @param string $noticeTemplate
      * @param string|null $methodName
+     *
+     * @return void
+     *
      * @throws Exception
      */
     private function checkChanges(
@@ -120,7 +126,8 @@ class UserTimesheetDayListener
                     $noticeTemplate,
                     $oldValue ?? 'brak',
                     $newValue ?? 'brak'
-                )
+                ),
+                $fieldName
             );
         }
     }
@@ -129,16 +136,24 @@ class UserTimesheetDayListener
      * @param PreUpdateEventArgs $args
      * @param UserTimesheetDay $entity
      * @param string $notice
+     * @param string $triggerField
+     *
      * @return void
+     *
      * @throws Exception
      */
-    private function addUserTimeSheetDayLog(PreUpdateEventArgs $args, UserTimesheetDay $entity, string $notice): void
-    {
+    private function addUserTimeSheetDayLog(
+        PreUpdateEventArgs $args,
+        UserTimesheetDay $entity,
+        string $notice,
+        string $triggerField
+    ): void {
         $log = new UserTimesheetDayLog();
         $log->setUserTimesheetDay($entity)
             ->setLogDate(new DateTime())
             ->setOwner($this->getCurrentUser($args->getEntityManager()))
             ->setNotice($notice)
+            ->setTrigger($triggerField)
         ;
 
         $this->userTimesheetDaysLogs[] = $log;
@@ -146,6 +161,7 @@ class UserTimesheetDayListener
 
     /**
      * @param EntityManager $entityManager
+     *
      * @return User|null
      */
     private function getCurrentUser(EntityManager $entityManager): ?User
@@ -160,7 +176,9 @@ class UserTimesheetDayListener
 
     /**
      * @param LifecycleEventArgs $args
+     *
      * @return void
+     *
      * @throws ORMException
      */
     public function prePersist(LifecycleEventArgs $args): void
@@ -177,46 +195,25 @@ class UserTimesheetDayListener
             return;
         }
 
-        $userWorkScheduleDay = $entityManager
-            ->getRepository(UserWorkScheduleDay::class)
-            ->findWorkDay($this->getCurrentUser($entityManager), $userTimesheetDay->getDayDate());
-        /* @var $userWorkScheduleDay UserWorkScheduleDay */
-
+        $userWorkScheduleDay = $userTimesheetDay->getUserWorkScheduleDay();
         if ($userWorkScheduleDay === null || !$userWorkScheduleDay instanceof UserWorkScheduleDay) {
             throw new RuntimeException('Missing user work schedule day or user schedule is not defined');
         }
-
-        $userTimesheetDay->setUserWorkScheduleDay($userWorkScheduleDay);
 
         if ($userWorkScheduleDay->getDayDefinition() === null) {
             throw new RuntimeException('Missing user work schedule day');
         }
 
-        $period = date('Y-m', strtotime($userWorkScheduleDay->getDayDefinition()->getId()));
-
-        $userTimesheetStatusEdit = $entityManager
-            ->getRepository(UserTimesheetStatus::class)
-            ->find('TIMESHEET-STATUS-OWNER-EDIT');
-
-        $userTimesheet = new UserTimesheet();
-        $userTimesheet
-            ->setStatus($userTimesheetStatusEdit)
-            ->setPeriod($period)
-            ->setOwner($this->getCurrentUser($entityManager));
-
-        $entityManager->persist($userTimesheet);
-        $entityManager->getUnitOfWork()
-            ->computeChangeSet(
-                $entityManager->getClassMetadata(UserTimesheet::class),
-                $userTimesheet
-            );
+        $userTimesheet = $this->getUserTimesheet($entityManager, $userWorkScheduleDay);
 
         $userTimesheetDay->setUserTimesheet($userTimesheet);
     }
 
     /**
      * @param PostFlushEventArgs $args
+     *
      * @return void
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -233,5 +230,48 @@ class UserTimesheetDayListener
             $this->userTimesheetDaysLogs = [];
             $em->flush();
         }
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     * @param UserWorkScheduleDay $userWorkScheduleDay
+     *
+     * @return UserTimesheet
+     *
+     * @throws ORMException
+     */
+    private function getUserTimesheet(
+        EntityManager $entityManager,
+        UserWorkScheduleDay $userWorkScheduleDay
+    ): UserTimesheet {
+        $period = date(
+            'Y-m',
+            strtotime($userWorkScheduleDay->getDayDefinition()->getId())
+        );
+        $owner = $userWorkScheduleDay->getUserWorkSchedule()->getOwner();
+
+        $userTimesheet = $entityManager
+            ->getRepository(UserTimesheet::class)
+            ->findByUserPeriod(
+                $owner,
+                $period
+            );
+
+        if ($userTimesheet === null) {
+            $userTimesheet = new UserTimesheet();
+            $userTimesheet
+                ->setStatus($entityManager->getRepository(UserTimesheetStatus::class)->getStatusOwnerEdit())
+                ->setPeriod($period)
+                ->setOwner($owner);
+
+            $entityManager->persist($userTimesheet);
+            $entityManager->getUnitOfWork()
+                ->computeChangeSet(
+                    $entityManager->getClassMetadata(UserTimesheet::class),
+                    $userTimesheet
+                );
+        }
+
+        return $userTimesheet;
     }
 }

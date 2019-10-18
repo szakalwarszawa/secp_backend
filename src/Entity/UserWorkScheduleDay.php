@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
-use App\Controller\UserActiveWorkScheduleAction;
+use App\Controller\OwnerActiveWorkScheduleRangeAction;
+use App\Controller\UserActiveWorkScheduleDayAction;
 use App\Entity\Utils\UserAware;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
@@ -51,12 +53,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  }
  *              }
  *          },
- *          "get-active-work-schedule"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *          "get-active-owner-work-schedule"={
  *              "method"="GET",
  *              "path"="/user_work_schedule_days/own/active/{dateFrom}/{dateTo}",
  *              "requirements"={"dateFrom"="\d{4}-\d{2}-\d{2}", "dateTo"="\d{4}-\d{2}-\d{2}"},
- *              "controller"=UserActiveWorkScheduleAction::class,
+ *              "controller"=OwnerActiveWorkScheduleRangeAction::class,
+ *              "normalization_context"={
+ *                  "groups"={
+ *                      "get"
+ *                  }
+ *              }
+ *          },
+ *          "get-active-user-work-schedule"={
+ *              "method"="GET",
+ *              "path"="/user_work_schedule_days/active/{userId}/{dayDate}",
+ *              "requirements"={"userId"="\d+", "dayDate"="\d{4}-\d{2}-\d{2}"},
+ *              "controller"=UserActiveWorkScheduleDayAction::class,
  *              "normalization_context"={
  *                  "groups"={
  *                      "get"
@@ -100,6 +112,34 @@ class UserWorkScheduleDay
      * @Groups({"get"})
      */
     private $dayDefinition;
+
+    /**
+     * @ORM\Column(
+     *     type="boolean",
+     *     options={"default"=true}
+     * )
+     * @Groups({"get"})
+     */
+    private $active;
+
+    /**
+     * @return bool|null
+     */
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     * @return UserWorkScheduleDay
+     */
+    public function setActive(bool $active): UserWorkScheduleDay
+    {
+        $this->active = $active;
+
+        return $this;
+    }
 
     /**
      * @ORM\Column(type="boolean", nullable=false)
@@ -337,7 +377,7 @@ class UserWorkScheduleDay
      */
     public function getDailyWorkingTime(): float
     {
-        return $this->dailyWorkingTime;
+        return (float)$this->dailyWorkingTime;
     }
 
     /**
