@@ -280,26 +280,26 @@ class User implements UserInterface
      *     type="string",
      *     length=5,
      *     nullable=false,
-     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '07:30'",
-     *     options={"default"="07:30"}
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '08:30'",
+     *     options={"default"="08:30"}
      * )
      * @Assert\NotNull()
      * @Groups({"get", "put"})
      */
-    private $dayStartTimeFrom = '07:30';
+    private $dayStartTimeFrom = '08:30';
 
     /**
      * @ORM\Column(
      *     type="string",
      *     length=5,
      *     nullable=false,
-     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '07:30'",
-     *     options={"default"="07:30"}
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '08:30'",
+     *     options={"default"="08:30"}
      * )
      * @Assert\NotNull()
      * @Groups({"get", "put"})
      */
-    private $dayStartTimeTo = '07:30';
+    private $dayStartTimeTo = '08:30';
 
     /**
      * @ORM\Column(
