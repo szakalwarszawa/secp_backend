@@ -44,12 +44,28 @@ interface LogEntityInterface
 
     /**
      * @return string|null
+     *
+     * @deprecated
      */
-    public function getTrigger(): ?string;
+    //public function getTrigger(): ?string;
+
+    /**
+     *
+     * @param string|null $triggerName
+     * @deprecated
+     */
+    //public function setTrigger(?string $triggerName);
+
+    /**
+     * @return string|null
+     *
+     * @
+     */
+    //public function getElementTrigger(): ?string;
 
     /**
      *
      * @param string|null $triggerName
      */
-    public function setTrigger(?string $triggerName);
+    //public function setElementTrigger(?string $triggerName);
 }

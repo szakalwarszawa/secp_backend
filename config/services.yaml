@@ -81,6 +81,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: ldap.imported }
 
+    App\EventListener\LogListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: onFlush, connection: default, priority: -10000 }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, priority: -10000 }
+
     App\Filter\Configurator:
         autowire: false
         arguments:
