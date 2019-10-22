@@ -44,10 +44,10 @@ class LogListener
      */
     public function onFlush(OnFlushEventArgs $args): void
     {
-         $unitOfWork = $args->getEntityManager()->getUnitOfWork();
+        $unitOfWork = $args->getEntityManager()->getUnitOfWork();
 
-         foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
-             if ($entity instanceof LoggableEntityInterface) {
+        foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
+            if ($entity instanceof LoggableEntityInterface) {
                 $logs = $this
                     ->entityChangeSetLogBuilder
                     ->build($entity)
@@ -56,8 +56,8 @@ class LogListener
                 if ($logs) {
                     $this->logPersistSchedule[] = $logs;
                 }
-             }
-         }
+            }
+        }
     }
 
     /**

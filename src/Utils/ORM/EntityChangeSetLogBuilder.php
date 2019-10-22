@@ -83,7 +83,7 @@ class EntityChangeSetLogBuilder
      *
      * @return ArrayCollection
      */
-     public function build(LoggableEntityInterface $entity): ArrayCollection
+    public function build(LoggableEntityInterface $entity): ArrayCollection
     {
         $propertiesToLog = EntityLogAnnotationReader::getPropertiesToLog(get_class($entity));
         if (empty($propertiesToLog)) {
