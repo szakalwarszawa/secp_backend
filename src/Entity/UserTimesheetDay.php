@@ -124,6 +124,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *      SearchFilter::class,
  *      properties={
  *          "id": "exact",
+ *          "userTimesheet.id": "exact",
  *          "userTimesheet.period": "istart",
  *          "userTimesheet.owner.username": "iexact",
  *          "userTimesheet.owner.email": "iexact",
