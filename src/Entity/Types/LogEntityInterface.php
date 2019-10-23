@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Types;
 
 use DateTimeInterface;
+use App\Entity\Types\LoggableEntityInterface;
 use App\Entity\User;
 
 /**
@@ -43,6 +44,13 @@ interface LogEntityInterface
     public function setNotice(string $notice);
 
     /**
+     * @todo Na czas migracji na nowy sposób logowania zmian poniższe elementy
+     * muszą zostać zakomentowane. Po przeniesieniu wszystkich logów na nowy mechanizm
+     * zostaną zaimplementowane.
+     *
+     */
+
+    /**
      * @return string|null
      *
      * @deprecated
@@ -50,7 +58,6 @@ interface LogEntityInterface
     //public function getTrigger(): ?string;
 
     /**
-     *
      * @param string|null $triggerName
      *
      * @deprecated
@@ -59,16 +66,30 @@ interface LogEntityInterface
 
     /**
      * @return string|null
-     *
+     * @todo
      */
     //public function getElementTrigger(): ?string;
 
     /**
      *
      * @param string|null $triggerName
+     * @todo
      */
     //public function setElementTrigger(?string $triggerName);
 
+    /**
+     * @todo
+     *
+     * @return LoggableEntityInterface
+     */
     //public function getParent();
-    //private function setParent();
+
+    /**
+     * @todo
+     *
+     * @param LoggableEntityInterface
+     *
+     * @return void
+     */
+    //private function setParent(LoggableEntityInterface $parent);
 }

@@ -9,7 +9,7 @@ use App\Entity\Types\LogEntityInterface;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * Class LogAccessorTrait
+ * Trait LogAccessorTrait
  */
 trait LogAccessorTrait
 {

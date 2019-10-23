@@ -8,7 +8,6 @@ use App\Entity\Types\LoggableEntityInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\Entity\User;
 use App\Utils\UserUtilsInterface;
 use Doctrine\Common\Annotations\AnnotationException;
@@ -57,7 +56,7 @@ class EntityChangeSetLogBuilder
 
     /**
      * @param EntityManagerInterface $entityManager
-     * @param TokenStorageInterface $tokenStorage
+     * @param UserUtilsInterface $userUtil
      */
     public function __construct(EntityManagerInterface $entityManager, UserUtilsInterface $userUtil)
     {
@@ -68,6 +67,7 @@ class EntityChangeSetLogBuilder
 
     /**
      * Create log entities.
+     * Single changed property is one log entity.
      *
      * @param LoggableEntityInterface $entity
      *

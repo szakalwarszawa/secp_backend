@@ -104,7 +104,7 @@ class UserLog implements LogEntityInterface
     private $triggerElement;
 
     /**
-     * @return integer|null
+     * @return int|null
      */
     public function getId(): ?int
     {

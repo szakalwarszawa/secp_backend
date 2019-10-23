@@ -61,7 +61,7 @@ class LogListener
     }
 
     /**
-     * Persist and flushe scheduled logs.
+     * Persist and flush scheduled logs.
      *
      * @param PostFlushEventArgs $args
      *
@@ -71,8 +71,8 @@ class LogListener
     {
         $entityManager = $args->getEntityManager();
         if (!empty($this->logPersistSchedule)) {
-            foreach ($this->logPersistSchedule as $data) {
-                foreach ($data as $log) {
+            foreach ($this->logPersistSchedule as $singleEntityLogs) {
+                foreach ($singleEntityLogs as $log) {
                     $entityManager->persist($log);
                 }
             }

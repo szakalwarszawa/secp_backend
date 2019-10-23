@@ -32,7 +32,7 @@ class EntityLogAnnotationReader
      * It must be defined in `AnnotatedLogEntity` annotation as `logClass`.
      * Also acts as a validator.
      *
-     * @param string $className
+     * @param string $baseClassName
      *
      * @throws AnnotationException when base class does not contain requried annotation
      * @throws InvalidArgumentException when class defined in logClass is not instance of LogEntityInterface
@@ -67,24 +67,24 @@ class EntityLogAnnotationReader
      * Get supported annotation options with properties names.
      * It calls AnnotatedLogEntity method `validateOptions`.
      *
-     * @param string $className
+     * @param string $baseClassName
      *
      * @return array
      */
-    public static function getPropertiesToLog(string $className): array
+    public static function getPropertiesToLog(string $baseClassName): array
     {
-        $reflectionClass = new ReflectionClass($className);
+        $reflectionClass = new ReflectionClass($baseClassName);
         $annotationReader = new AnnotationReader();
 
-        self::getEntityLogClassInstance($className);
+        self::getEntityLogClassInstance($baseClassName);
 
         $classProperties = $reflectionClass->getProperties();
         $propertiesToLog = [];
         foreach ($classProperties as $property) {
-            $prop = $annotationReader->getPropertyAnnotation($property, self::supportsAnnnotation());
-            if ($prop) {
-                $prop->validateOptions();
-                $propertiesToLog[$property->name] = $prop->options;
+            $annotationData = $annotationReader->getPropertyAnnotation($property, self::supportsAnnnotation());
+            if ($annotationData) {
+                $annotationData->validateOptions();
+                $propertiesToLog[$property->name] = $annotationData->options;
             }
         }
 
