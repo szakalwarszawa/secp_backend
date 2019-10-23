@@ -44,7 +44,7 @@ psr2:
     stage: standards
     allow_failure: false
     script:
-        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard=PSR2 --extensions=php src/ tests/
+        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard=PSR12 --extensions=php src/ tests/
 
 linelength:
     stage: standards
