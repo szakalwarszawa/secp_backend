@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\Entity\User;
+use App\Utils\UserUtilsInterface;
 use Doctrine\Common\Annotations\AnnotationException;
 
 /**
@@ -58,19 +59,10 @@ class EntityChangeSetLogBuilder
      * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
+    public function __construct(EntityManagerInterface $entityManager, UserUtilsInterface $userUtil)
     {
         $this->entityManager = $entityManager;
-        $token = $tokenStorage->getToken();
-        if (null !== $token) {
-            $this->currentUser = $entityManager
-                ->getRepository(User::class)
-                ->findOneBy([
-                    'username' => $token->getUser()->getUsername()
-                ])
-            ;
-        }
-
+        $this->currentUser = $userUtil->getCurrentUser();
         $this->logsCollection = new ArrayCollection();
     }
 
@@ -79,7 +71,7 @@ class EntityChangeSetLogBuilder
      *
      * @param LoggableEntityInterface $entity
      *
-     * @throws AnnotationException when any property is marked with @AnnotatedLogEntity
+     * @throws AnnotationException when any property is marked as @AnnotatedLogEntity
      *
      * @return ArrayCollection
      */
@@ -87,7 +79,7 @@ class EntityChangeSetLogBuilder
     {
         $propertiesToLog = EntityLogAnnotationReader::getPropertiesToLog(get_class($entity));
         if (empty($propertiesToLog)) {
-            throw new AnnotationException('There is any property marked with @AnnotatedLogEntity');
+            throw new AnnotationException('There is no property marked as @AnnotatedLogEntity');
         }
 
         $changeSet = $this->getEntityChangeSet($entity);

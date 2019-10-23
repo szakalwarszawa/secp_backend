@@ -120,3 +120,6 @@ services:
         decorates: 'api_platform.serializer.context_builder'
         arguments: [ '@App\Serializer\UserContextBuilder.inner' ]
         autoconfigure: false
+
+    App\Utils\ClientInterface:
+        class: App\Utils\UserUtil

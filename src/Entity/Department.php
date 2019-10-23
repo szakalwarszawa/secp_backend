@@ -137,6 +137,14 @@ class Department
     }
 
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
+    /**
      * @return integer|null
      */
     public function getId(): ?int

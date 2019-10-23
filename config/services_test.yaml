@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+    autowire: true
+    autoconfigure: true
+
+  App\Utils\UserUtilsInterface:
+    class: App\Tests\UserUtil

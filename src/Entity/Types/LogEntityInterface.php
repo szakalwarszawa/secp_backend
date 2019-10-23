@@ -52,6 +52,7 @@ interface LogEntityInterface
     /**
      *
      * @param string|null $triggerName
+     *
      * @deprecated
      */
     //public function setTrigger(?string $triggerName);
@@ -59,7 +60,6 @@ interface LogEntityInterface
     /**
      * @return string|null
      *
-     * @
      */
     //public function getElementTrigger(): ?string;
 
@@ -68,4 +68,7 @@ interface LogEntityInterface
      * @param string|null $triggerName
      */
     //public function setElementTrigger(?string $triggerName);
+
+    //public function getParent();
+    //private function setParent();
 }
