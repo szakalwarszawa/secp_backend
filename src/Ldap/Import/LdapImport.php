@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Ldap\Import;
 
+use App\Ldap\Constants\ImportResources;
+use App\Ldap\Event\LdapImportedEvent;
 use App\Ldap\Fetch\UsersFetcher;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Ldap\Import\Updater\DepartmentSectionUpdater;
 use App\Ldap\Import\Updater\UserUpdater;
-use App\Ldap\Constants\ImportResources;
+use App\Ldap\Utils\PropertyRoleMatcher;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
-use App\Ldap\Event\LdapImportedEvent;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use App\Ldap\Utils\PropertyRoleMatcher;
 
 /**
  * Class LdapImport
@@ -72,7 +72,7 @@ class LdapImport
      *
      * @param int $importResources
      *
-     * @return array
+     * @return ArrayCollection
      */
     public function import(int $importResources = ImportResources::IMPORT_ALL): ArrayCollection
     {
@@ -85,10 +85,16 @@ class LdapImport
         ;
 
         $results = [];
-        if (in_array($importResources, [
-                ImportResources::IMPORT_ALL,
-                ImportResources::IMPORT_DEPARTMENT_SECTION,
-            ], true)) {
+        if (
+            in_array(
+                $importResources,
+                [
+                    ImportResources::IMPORT_ALL,
+                    ImportResources::IMPORT_DEPARTMENT_SECTION,
+                ],
+                true
+            )
+        ) {
             $departmentSectionUpdater = new DepartmentSectionUpdater($usersData, $this->entityManager);
             $departmentSectionUpdater->update();
 
@@ -96,10 +102,16 @@ class LdapImport
             $results['department_section'] = $departmentSectionUpdater->getResultsCollector();
         }
 
-        if (in_array($importResources, [
-                ImportResources::IMPORT_ALL,
-                ImportResources::IMPORT_USERS,
-            ], true)) {
+        if (
+            in_array(
+                $importResources,
+                [
+                    ImportResources::IMPORT_ALL,
+                    ImportResources::IMPORT_USERS,
+                ],
+                true
+            )
+        ) {
             $userUpdater = new UserUpdater($usersData, $this->entityManager, $this->propertyRoleMatcher);
             $userUpdater->update();
 

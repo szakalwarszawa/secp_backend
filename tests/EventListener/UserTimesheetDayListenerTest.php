@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\EventListener;
@@ -215,7 +216,7 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
         $userTimesheetDayEmpty = new UserTimesheetDay();
         $userTimesheetDayEmpty->setUserTimesheet($userTimesheet)
             ->setUserWorkScheduleDay(
-                $userWorkSchedule->getUserWorkScheduleDays()[count($userWorkSchedule->getUserWorkScheduleDays()) -1]
+                $userWorkSchedule->getUserWorkScheduleDays()[count($userWorkSchedule->getUserWorkScheduleDays()) - 1]
             )
             ->setPresenceType($this->getEntityFromReference('presence_type_0'))
             ->setAbsenceType(null)
@@ -229,7 +230,7 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
         $userTimesheetDayFilled = new UserTimesheetDay();
         $userTimesheetDayFilled->setUserTimesheet($userTimesheet)
             ->setUserWorkScheduleDay(
-                $userWorkSchedule->getUserWorkScheduleDays()[count($userWorkSchedule->getUserWorkScheduleDays()) -2]
+                $userWorkSchedule->getUserWorkScheduleDays()[count($userWorkSchedule->getUserWorkScheduleDays()) - 2]
             )
             ->setPresenceType($this->getEntityFromReference('presence_type_0'))
             ->setAbsenceType($this->getEntityFromReference('absence_type_0'))

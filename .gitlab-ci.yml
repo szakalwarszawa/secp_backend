@@ -40,7 +40,7 @@ yamllint:
         - /root/.composer/vendor/bin/yaml-lint --format txt src/
         - /root/.composer/vendor/bin/yaml-lint --format txt config/
 
-psr2:
+psr12:
     stage: standards
     allow_failure: false
     script:

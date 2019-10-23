@@ -75,7 +75,8 @@ class UserWorkScheduleListener
             return;
         }
 
-        if ($args->hasChangedField('status')
+        if (
+            $args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')
         ) {
             $this
@@ -98,7 +99,8 @@ class UserWorkScheduleListener
             );
         }
 
-        if ($args->hasChangedField('status')
+        if (
+            $args->hasChangedField('status')
             && $args->getNewValue('status')->getId() === UserWorkSchedule::STATUS_HR_ACCEPT
         ) {
             $args->getEntityManager()->getRepository(UserWorkSchedule::class)
