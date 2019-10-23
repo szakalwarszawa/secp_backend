@@ -27,6 +27,11 @@ use App\Validator\ValueExists;
  * @UserAware(userFieldName="owner_id")
  * @ORM\Entity(repositoryClass="App\Repository\UserTimesheetRepository")
  * @ApiResource(
+ *      subresourceOperations={
+ *          "user_timesheet_logs_get_subresource"= {
+ *              "path"="/user_timesheets/{id}/logs"
+ *          }
+ *      },
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
