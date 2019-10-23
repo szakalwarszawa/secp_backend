@@ -121,5 +121,5 @@ services:
         arguments: [ '@App\Serializer\UserContextBuilder.inner' ]
         autoconfigure: false
 
-    App\Utils\ClientInterface:
+    App\Utils\UserUtilsInterface:
         class: App\Utils\UserUtil
