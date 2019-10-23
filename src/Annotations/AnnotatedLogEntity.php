@@ -42,7 +42,7 @@ class AnnotatedLogEntity
     /**
      * Validate options.
      *
-     * @return array
+     * @return void
      */
     public function validateOptions(): void
     {
