@@ -109,9 +109,11 @@ class EntityChangeSetLogBuilder
     /**
      * Get entity changeset.
      *
+     * @param LoggableEntityInterface $entity
+     *
      * @return array
      */
-    private function getEntityChangeSet($entity): array
+    private function getEntityChangeSet(LoggableEntityInterface $entity): array
     {
         $unitOfWork = $this->entityManager->getUnitOfWork();
 
@@ -129,8 +131,7 @@ class EntityChangeSetLogBuilder
      */
     private function prepareNotice(string $noticeFormat, array $changedValues): string
     {
-        $oldValue = $changedValues[0];
-        $newValue = $changedValues[1];
+        list($oldValue, $newValue) = $changedValues;
 
         if (is_array($oldValue)) {
             $oldValue = implode(', ', $oldValue);
