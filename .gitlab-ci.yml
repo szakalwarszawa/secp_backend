@@ -18,7 +18,7 @@ build:
         - /root/.composer/vendor/bin/phpcs --version
         - ./vendor/squizlabs/php_codesniffer/bin/phpcs --version
         - /root/.composer/vendor/bin/phpmd --version
-        - ./vendor/phpmd/phpmdsrc/bin/phpmd --version
+        - ./vendor/phpmd/phpmd/src/bin/phpmd --version
     artifacts:
         expire_in: 1 day
         untracked: true
@@ -68,7 +68,7 @@ phpmd:
     stage: standards
     allow_failure: false
     script:
-        - php -d memory_limit=1G ./vendor/phpmd/phpmdsrc/bin/phpmd src/ text ".gitlab-ci/phpmd.xml"
+        - php -d memory_limit=1G ./vendor/phpmd/phpmd/src/bin/phpmd src/ text ".gitlab-ci/phpmd.xml"
 
 phpdoc:
     stage: standards
