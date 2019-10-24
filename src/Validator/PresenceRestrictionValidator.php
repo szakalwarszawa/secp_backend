@@ -84,7 +84,7 @@ class PresenceRestrictionValidator extends ConstraintValidator
     private function validateCheckDate(UserTimesheetDay $userTimesheetDay): bool
     {
         $restriction = $this->getRestriction($userTimesheetDay);
-        $currentDate = (new DateTime())->setTime(0, 0 ,0);
+        $currentDate = (new DateTime())->setTime(0, 0, 0);
         $userTimesheetDayDate = new DateTime(
             $userTimesheetDay
                 ->getUserWorkScheduleDay()
