@@ -55,14 +55,14 @@ class EntityLogAnnotationReader
         }
 
 
-        if (!(new $logAnnotation())->logClass instanceof LogEntityInterface) {
+        if (!new $logAnnotation->logClass() instanceof LogEntityInterface) {
             throw new InvalidArgumentException(sprintf(
                 'Instance of %s class expected.',
                 LogEntityInterface::class
             ));
         }
 
-        return (new $logAnnotation())->logClass;
+        return new $logAnnotation->logClass();
     }
 
     /**
