@@ -183,9 +183,9 @@ class UserLog implements LogEntityInterface
     /**
      * @param string $notice
      *
-     * @return UserLog
+     * @return LogEntityInterface
      */
-    public function setNotice(string $notice): UserLog
+    public function setNotice(string $notice): LogEntityInterface
     {
         $this->notice = $notice;
 
@@ -193,26 +193,22 @@ class UserLog implements LogEntityInterface
     }
 
     /**
-     * Get elementTrigger
+     * @param string|null $triggerElement
      *
-     * @return string|null
+     * @return LogEntityInterface
      */
-    public function getElementTrigger(): ?string
+    public function setTriggerElement(?string $triggerElement): LogEntityInterface
     {
-        return $this->triggerElement;
-    }
-
-    /**
-     * Set elementTrigger
-     *
-     * @param string|null $elementTrigger
-     *
-     * @return UserLog
-     */
-    public function setElementTrigger(?string $elementTrigger): UserLog
-    {
-        $this->elementTrigger = $elementTrigger;
+        $this->triggerElement = $triggerElement;
 
         return $this;
+}
+
+    /**
+     * @return string|null
+     */
+    public function getTriggerElement(): ?string
+    {
+        return $this->triggerElement;
     }
 }

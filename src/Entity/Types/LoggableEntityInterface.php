@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity\Types;
 
 use Doctrine\Common\Collections\Collection;
-use App\Entity\Types\LogEntityInterface;
 
 /**
  * Entities that implement this interface are considered as loggable.

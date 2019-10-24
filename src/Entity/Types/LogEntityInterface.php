@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity\Types;
 
 use DateTimeInterface;
-use App\Entity\Types\LoggableEntityInterface;
 use App\Entity\User;
 
 /**
@@ -20,6 +19,8 @@ interface LogEntityInterface
 
     /**
      * @param null|User $owner
+     *
+     * @todo dodać returnType LogEntityInterface po refaktoryzacji wszystkich logów
      */
     public function setOwner(?User $owner);
 
@@ -30,6 +31,7 @@ interface LogEntityInterface
 
     /**
      * @param DateTimeInterface $logDate
+     * @todo dodać returnType LogEntityInterface po refaktoryzacji wszystkich logów
      */
     public function setLogDate(DateTimeInterface $logDate);
 
@@ -40,6 +42,7 @@ interface LogEntityInterface
 
     /**
      * @param string $notice
+     * @todo dodać returnType LogEntityInterface po refaktoryzacji wszystkich logów
      */
     public function setNotice(string $notice);
 
@@ -68,14 +71,14 @@ interface LogEntityInterface
      * @return string|null
      * @todo
      */
-    //public function getElementTrigger(): ?string;
+    //public function getTriggerElement(): ?string;
 
     /**
      *
      * @param string|null $triggerName
      * @todo
      */
-    //public function setElementTrigger(?string $triggerName);
+    //public function setTriggerElement(?string $triggerName);
 
     /**
      * @todo

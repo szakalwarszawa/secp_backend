@@ -96,7 +96,7 @@ class EntityChangeSetLogBuilder
                     $propertiesToLog[$key]['message'],
                     $value
                 ))
-                ->setElementTrigger($key)
+                ->setTriggerElement($key)
                 ->setParent($entity)
             ;
 

@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Entity\Types\LoggableEntityInterface;
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use App\Utils\ORM\EntityChangeSetLogBuilder;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * Class LogListener
  */
 class LogListener
 {
-   /**
+    /**
      * @var EntityChangeSetLogBuilder
      */
     private $entityChangeSetLogBuilder;
@@ -25,22 +28,19 @@ class LogListener
     private $logPersistSchedule = [];
 
     /**
-     * @param EntityChangeSetLogBuilder $tokenStorage
+     * @param EntityChangeSetLogBuilder $entityChangeSetLogBuilder
      */
     public function __construct(EntityChangeSetLogBuilder $entityChangeSetLogBuilder)
     {
         $this->entityChangeSetLogBuilder = $entityChangeSetLogBuilder;
     }
 
-   /**
+    /**
      * Store logs to persist in postFlush.
      *
-     * @param PostFlushEventArgs $args
-
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param OnFlushEventArgs $args
      *
-     * @return void
+     * @throws AnnotationException
      */
     public function onFlush(OnFlushEventArgs $args): void
     {
@@ -65,9 +65,12 @@ class LogListener
      *
      * @param PostFlushEventArgs $args
      *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     *
      * @return void
      */
-    public function postFlush(PostFlushEventArgs $args)
+    public function postFlush(PostFlushEventArgs $args): void
     {
         $entityManager = $args->getEntityManager();
         if (!empty($this->logPersistSchedule)) {
