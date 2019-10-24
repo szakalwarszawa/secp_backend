@@ -247,7 +247,7 @@ JSON;
     /**
      * Check log write correctness.
      *
-     * @param $log
+     * @param StdClass $log
      * @param User $beforeChangeUserObject
      *
      * @return void
@@ -259,22 +259,29 @@ JSON;
                 $this->assertEquals(
                     sprintf('Zmiana nazwy użytkownika z %s na user_test_put', $beforeChangeUserObject->getUsername()),
                     $log->notice
-                ); break;
+                );
+                break;
             case 'email':
                 $this->assertEquals(
-                    sprintf('Zmiana adresu email z %s na user_test_put@example.net', $beforeChangeUserObject->getEmail()),
+                    sprintf(
+                        'Zmiana adresu email z %s na user_test_put@example.net',
+                        $beforeChangeUserObject->getEmail()
+                    ),
                     $log->notice
-                ); break;
+                );
+                break;
             case 'department':
                 $this->assertEquals(
                     sprintf('Zmiana departamentu z %s na Biuro Informatyki', $beforeChangeUserObject->getDepartment()),
                     $log->notice
-                ); break;
+                );
+                break;
             case 'section':
                 $this->assertEquals(
                     sprintf('Zmiana sekcji z %s na brak', $beforeChangeUserObject->getSection()),
                     $log->notice
-                ); break;
+                );
+                break;
         }
     }
 
