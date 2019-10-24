@@ -10,7 +10,6 @@ use App\Entity\User;
 use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
-use Doctrine\Tests\Common\DataFixtures\TestFixtures\UserFixture;
 use Exception;
 
 class UserTest extends AbstractWebTestCase
@@ -162,6 +161,11 @@ JSON;
         $userREF = $this->fixtures->getReference('user_' . random_int(0, 99));
         /* @var $userREF User */
 
+        /**
+         * User cannot have logs before this test.
+         */
+        $this->assertEquals(0, $userREF->getLogs()->count());
+
         $departmentRef = $this->fixtures->getReference('department_admin');
         /* @var $departmentRef Department */
 
@@ -220,6 +224,23 @@ JSON;
         $this->assertEquals($userDB->getLastName(), $userJSON->lastName);
         $this->assertEquals($userDB->getRoles(), $userJSON->roles);
         $this->assertEquals($userDB->getTitle(), $userJSON->title);
+        $this->assertGreaterThan(0, $userDB->getLogs()->count());
+
+        $response = $this->getActionResponse('GET', implode('/',
+            [
+                '/api/users',
+                $userREF->getId(),
+                'logs',
+            ]
+        ));
+
+        $logsJson = json_decode($response->getContent(), false);
+        $this->assertNotNull($logsJson);
+        $logsArray = $logsJson->{'hydra:member'};
+        foreach ($logsArray as $log) {
+            $this->assertStringContainsString('Zmiana', $log->notice);
+            $this->assertObjectHasAttribute('triggerElement', $log);
+        }
     }
 
     /**
