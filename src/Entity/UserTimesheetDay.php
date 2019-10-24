@@ -84,7 +84,6 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *              }
  *          },
  *          "post-users-create-timesheet-day"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="POST",
  *              "path"="/user_timesheet_days/own/create/{day}",
  *              "requirements"={"day"="\d{4}-\d{2}-\d{2}"},
@@ -100,7 +99,6 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *              }
  *          },
  *          "get-users-own-timesheet-days"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="GET",
  *              "path"="/user_timesheet_days/own/{dateFrom}/{dateTo}",
  *              "requirements"={"dateFrom"="\d{4}-\d{2}-\d{2}", "dateTo"="\d{4}-\d{2}-\d{2}"},
@@ -124,6 +122,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *      SearchFilter::class,
  *      properties={
  *          "id": "exact",
+ *          "userTimesheet.id": "exact",
  *          "userTimesheet.period": "istart",
  *          "userTimesheet.owner.username": "iexact",
  *          "userTimesheet.owner.email": "iexact",

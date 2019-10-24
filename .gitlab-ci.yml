@@ -40,18 +40,20 @@ yamllint:
         - /root/.composer/vendor/bin/yaml-lint --format txt src/
         - /root/.composer/vendor/bin/yaml-lint --format txt config/
 
-psr2:
+psr12:
     stage: standards
     allow_failure: false
     script:
-        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard=PSR2 --extensions=php src/ tests/
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs --version
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs -n --colors --report=full --standard=PSR12 --extensions=php src/ tests/
 
 linelength:
     stage: standards
     allow_failure: false
     script:
-        - /root/.composer/vendor/bin/phpcs --config-set encoding utf-8
-        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard="./.gitlab-ci/phpcs_line_length.xml" --extensions=php src/ tests/
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs --version
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs --config-set encoding utf-8
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs -n --colors --report=full --standard="./.gitlab-ci/phpcs_line_length.xml" --extensions=php src/ tests/
 
 twigcs:
     stage: standards
@@ -64,7 +66,8 @@ phpmd:
     stage: standards
     allow_failure: false
     script:
-        - php -d memory_limit=1G /root/.composer/vendor/bin/phpmd src/ text ".gitlab-ci/phpmd.xml"
+        - ./vendor/phpmd/phpmd/src/bin/phpmd --version
+        - php -d memory_limit=1G ./vendor/phpmd/phpmd/src/bin/phpmd src/ text ".gitlab-ci/phpmd.xml"
 
 phpdoc:
     stage: standards

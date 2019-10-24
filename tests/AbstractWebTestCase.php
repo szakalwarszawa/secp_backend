@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Tests;
 
@@ -192,8 +193,7 @@ abstract class AbstractWebTestCase extends WebTestCase
             $this->assertTrue(
                 $response->headers->contains('Content-Type', 'application/json') ||
                 $response->headers->contains('Content-Type', 'application/json; charset=utf-8') ||
-                $response->headers->contains('Content-Type', 'application/ld+json; charset=utf-8'),
-                $response->headers
+                $response->headers->contains('Content-Type', 'application/ld+json; charset=utf-8')
             );
         }
     }

@@ -63,7 +63,8 @@ class UserTimesheetListener
             return;
         }
 
-        if ($args->hasChangedField('status')
+        if (
+            $args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')
         ) {
             $this

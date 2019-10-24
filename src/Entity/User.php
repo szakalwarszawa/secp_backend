@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Entity;
@@ -71,7 +72,6 @@ use App\Traits\LogAccessorTrait;
  *      },
  *      collectionOperations={
  *          "get-users-me"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="GET",
  *              "path"="/users/me",
  *              "controller"=UserMeAction::class,
@@ -330,8 +330,8 @@ class User implements UserInterface, LoggableEntityInterface
      *     type="string",
      *     length=5,
      *     nullable=false,
-     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '07:30'",
-     *     options={"default"="07:30"}
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '08:30'",
+     *     options={"default"="08:30"}
      * )
      * @Assert\NotNull()
      * @Groups({"get", "put"})
@@ -339,15 +339,15 @@ class User implements UserInterface, LoggableEntityInterface
      *      "message": "Zmiana godziny rozpoczęcia pracy od z %s na %s"
      * })
      */
-    private $dayStartTimeFrom = '07:30';
+    private $dayStartTimeFrom = '08:30';
 
     /**
      * @ORM\Column(
      *     type="string",
      *     length=5,
      *     nullable=false,
-     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '07:30'",
-     *     options={"default"="07:30"}
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '08:30'",
+     *     options={"default"="08:30"}
      * )
      * @Assert\NotNull()
      * @Groups({"get", "put"})
@@ -355,7 +355,7 @@ class User implements UserInterface, LoggableEntityInterface
      *      "message": "Zmiana godziny rozpoczęcia pracy do z %s na %s"
      * })
      */
-    private $dayStartTimeTo = '07:30';
+    private $dayStartTimeTo = '08:30';
 
     /**
      * @ORM\Column(
@@ -747,7 +747,8 @@ class User implements UserInterface, LoggableEntityInterface
      */
     public function checkSameSectionAsDepartmentValidate(): void
     {
-        if ($this->getSection() !== null &&
+        if (
+            $this->getSection() !== null &&
             $this->getDepartment() !== null &&
             !$this->getDepartment()->getSections()->contains($this->getSection())
         ) {

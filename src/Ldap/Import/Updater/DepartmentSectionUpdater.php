@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Ldap\Import\Updater;
 
@@ -92,9 +94,9 @@ final class DepartmentSectionUpdater extends AbstractUpdater
             sprintf(
                 'Department %s has been %s.',
                 $department->getName(),
-                $departmentNotExists? 'created' : 'updated'
+                $departmentNotExists ? 'created' : 'updated'
             ),
-            $departmentNotExists? Actions::CREATE : Actions::UPDATE
+            $departmentNotExists ? Actions::CREATE : Actions::UPDATE
         ));
 
         return $department;
@@ -136,9 +138,9 @@ final class DepartmentSectionUpdater extends AbstractUpdater
             sprintf(
                 'Section %s has been %s.',
                 $section->getName(),
-                $sectionNotExists? 'created' : 'updated'
+                $sectionNotExists ? 'created' : 'updated'
             ),
-            $sectionNotExists? Actions::CREATE : Actions::UPDATE
+            $sectionNotExists ? Actions::CREATE : Actions::UPDATE
         ));
 
         return $section;

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\EventSubscriber;
 
+use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserTimesheetStatusFixtures;
 use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetLog;
 use App\Tests\AbstractWebTestCase;
-use App\DataFixtures\UserFixtures;
 
 /**
  * Class UserTimesheetListenerTest
@@ -56,8 +56,10 @@ class UserTimesheetListenerTest extends AbstractWebTestCase
 
         $this->assertNotNull($userTimesheetLog);
         $notice = $userTimesheetLog->getNotice();
-        $this->assertStringContainsString('Zmieniono status z: ' . $status->getId() .' na: ' .
-            $statusChanged->getId(), $notice);
+        $this->assertStringContainsString(
+            sprintf('Zmieniono status z: %s na: %s', $status->getId(), $statusChanged->getId()),
+            $notice
+        );
         $this->assertNotEquals($status, $statusChanged);
     }
 }

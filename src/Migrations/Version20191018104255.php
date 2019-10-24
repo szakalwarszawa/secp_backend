@@ -9,9 +9,9 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * Class Version20191018104255
  */
-final class Version20190805095840 extends AbstractMigration
+final class Version20191018104255 extends AbstractMigration
 {
     /**
      * @return string
@@ -23,28 +23,33 @@ final class Version20190805095840 extends AbstractMigration
 
     /**
      * @param Schema $schema
-     * @return void
+
      * @throws DBALException
+
+     * @return void
+
      * @SuppressWarnings("unused")
      */
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf(
             $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
             'Migration can only be executed safely on \'postgresql\'.'
         );
 
-        $this->addSql('ALTER TABLE users ALTER email DROP NOT NULL');
+        $this->addSql('ALTER TABLE users ALTER day_start_time_from SET DEFAULT \'08:30\'');
+        $this->addSql('ALTER TABLE users ALTER day_start_time_to SET DEFAULT \'08:30\'');
     }
 
     /**
      * @param Schema $schema
+
      * @return void
+
      * @SuppressWarnings("unused")
      */
     public function down(Schema $schema): void
     {
-        $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
+        $this->abortIf(true, 'Migration can only be executed safely on \'postgresql\'.');
     }
 }

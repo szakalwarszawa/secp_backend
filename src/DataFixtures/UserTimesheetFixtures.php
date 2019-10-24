@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\DataFixtures;
@@ -56,7 +57,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
         $this->makeUserTimesheetSets(
             $manager,
             self::REF_USER_TIMESHEET_ADMIN_EDIT,
-            $this->getReference('user_admin'),
+            $this->getReference(UserFixtures::REF_USER_ADMIN),
             '2019-06',
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_EDIT),
             $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR),
@@ -76,8 +77,8 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
         $this->makeUserTimesheetSets(
             $manager,
             self::REF_USER_TIMESHEET_MANAGER_EDIT,
-            $this->getReference('user_manager'),
-            '2019-05',
+            $this->getReference(UserFixtures::REF_USER_MANAGER),
+            '2019-06',
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_EDIT),
             $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_MANAGER_HR),
             ['2019-06-03', '2019-06-04', '2019-06-05', '2019-06-06', '2019-06-07']
@@ -86,7 +87,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
         $this->makeUserTimesheetSets(
             $manager,
             self::REF_USER_TIMESHEET_USER_HR,
-            $this->getReference('user_user'),
+            $this->getReference(UserFixtures::REF_USER_USER),
             '2019-05',
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_HR_ACCEPT),
             $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_USER_HR),
@@ -96,7 +97,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
         $this->makeUserTimesheetSets(
             $manager,
             self::REF_USER_TIMESHEET_USER_EDIT,
-            $this->getReference('user_user'),
+            $this->getReference(UserFixtures::REF_USER_USER),
             '2019-06',
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_EDIT),
             $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_USER_HR),

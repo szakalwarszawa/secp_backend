@@ -16,15 +16,18 @@ final class Version20190918114709 extends AbstractMigration
     /**
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
     /**
      * @param Schema $schema
+     *
      * @return void
+     *
      * @throws DBALException
+     *
      * @SuppressWarnings("unused")
      */
     public function up(Schema $schema): void
@@ -38,7 +41,9 @@ final class Version20190918114709 extends AbstractMigration
 
     /**
      * @param Schema $schema
+     *
      * @return void
+     *
      * @SuppressWarnings("unused")
      */
     public function down(Schema $schema): void

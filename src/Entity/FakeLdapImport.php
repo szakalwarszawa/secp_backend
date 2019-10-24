@@ -15,7 +15,7 @@ use ApiPlatform\Core\Annotation\ApiProperty;
  * @ApiResource(collectionOperations={
  *     "get",
  *     "ldap_import"={
- *         "access_control"="is_granted('ROLE_ADMIN')",
+ *         "security"="is_granted('ROLE_ADMIN')",
  *         "method"="GET",
  *         "path"="/ldap/import",
  *         "controller"=LdapImportAction::class,
