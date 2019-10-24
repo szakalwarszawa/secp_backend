@@ -236,6 +236,7 @@ JSON;
 
         $logsJson = json_decode($response->getContent(), false);
         $this->assertNotNull($logsJson);
+
         $logsArray = $logsJson->{'hydra:member'};
         foreach ($logsArray as $log) {
             $this->assertStringContainsString('Zmiana', $log->notice);
