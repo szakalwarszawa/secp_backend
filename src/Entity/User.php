@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Entity;
@@ -66,7 +67,6 @@ use App\Entity\Utils\UserAware;
  *      },
  *      collectionOperations={
  *          "get-users-me"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="GET",
  *              "path"="/users/me",
  *              "controller"=UserMeAction::class,
@@ -671,7 +671,8 @@ class User implements UserInterface
      */
     public function checkSameSectionAsDepartmentValidate(): void
     {
-        if ($this->getSection() !== null &&
+        if (
+            $this->getSection() !== null &&
             $this->getDepartment() !== null &&
             !$this->getDepartment()->getSections()->contains($this->getSection())
         ) {

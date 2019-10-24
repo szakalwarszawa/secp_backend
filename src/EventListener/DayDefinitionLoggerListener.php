@@ -50,7 +50,8 @@ class DayDefinitionLoggerListener
             return;
         }
 
-        if ($args->hasChangedField('workingDay')
+        if (
+            $args->hasChangedField('workingDay')
             && $args->getOldValue('workingDay') !== $args->getNewValue('workingDay')
         ) {
             $this->addDayDefinitionLog(

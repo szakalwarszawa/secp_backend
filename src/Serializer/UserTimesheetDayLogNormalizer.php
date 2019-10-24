@@ -68,7 +68,9 @@ final class UserTimesheetDayLogNormalizer implements ContextAwareNormalizerInter
     {
         $context[self::ALREADY_CALLED] = true;
 
-        if (!($this->isCurrentUserOwner($object) || $this->authorizationChecker->isGranted('ROLE_HR'))
+        if (
+            !$this->isCurrentUserOwner($object)
+            && !$this->authorizationChecker->isGranted('ROLE_HR')
             && array_key_exists($object->getTrigger(), self::ERASE_TRIGGERS_LIST)
         ) {
             $object->setNotice(self::ERASE_TRIGGERS_LIST[$object->getTrigger()]);

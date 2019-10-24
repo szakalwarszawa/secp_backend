@@ -67,8 +67,9 @@ final class GroupRestriction
         foreach ($this->registeredRestrictions as $restriction) {
             if ($this->isContextSupported($context, $restriction, $normalization)) {
                 foreach ($restriction::getAll() as $condition) {
-                    if ($this->authorizationChecker->isGranted($condition['roles'])
-                        && !in_array($condition['group_name'], $context->groups)
+                    if (
+                        $this->authorizationChecker->isGranted($condition['roles'])
+                        && !in_array($condition['group_name'], $context->groups, true)
                     ) {
                         $context->groups[] = $condition['group_name'];
                         $this->initializedRestrictions[] = $restriction;
