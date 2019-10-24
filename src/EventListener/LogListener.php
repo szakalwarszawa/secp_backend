@@ -41,6 +41,8 @@ class LogListener
      * @param OnFlushEventArgs $args
      *
      * @throws AnnotationException
+     *
+     * @return void
      */
     public function onFlush(OnFlushEventArgs $args): void
     {
