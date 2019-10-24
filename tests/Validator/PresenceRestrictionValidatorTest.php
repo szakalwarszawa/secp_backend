@@ -6,27 +6,82 @@ namespace App\Tests\Validator;
 
 use ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException;
 use App\DataFixtures\UserWorkScheduleFixtures;
+use App\Entity\DayDefinition;
 use App\Entity\PresenceType;
-use App\Entity\Role;
 use App\Entity\UserTimesheetDay;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use App\Tests\AbstractWebTestCase;
-use App\Validator\PresenceRestriction;
-use App\Validator\ValueExists;
-use App\Validator\ValueExistsValidator;
-use Symfony\Component\Validator\Context\ExecutionContext;
-use Symfony\Component\Validator\Violation\ConstraintViolationBuilder;
-use Symfony\Component\VarDumper\VarDumper;
+use Exception;
 
 /**
  * Class ValueExistsValidatorTest
  */
 class PresenceRestrictionValidatorTest extends AbstractWebTestCase
 {
+    /**
+     * @var UserWorkSchedule
+     */
     private $userWorkSchedule;
+
+    /**
+     * @var array
+     */
     private $workScheduleWorkingDays = [];
+
+    /**
+     * @var array
+     */
     private $workScheduleNonWorkingDays = [];
+
+    /**
+     * @throws Exception
+     */
+    public function testPresenceRestrictionValidatorCase0(): void
+    {
+        /** @var UserWorkScheduleDay $userWorkScheduleDay */
+        $userWorkScheduleDay = $this->workScheduleWorkingDays[array_rand($this->workScheduleWorkingDays)];
+        $this->assertInstanceOf(UserWorkScheduleDay::class, $userWorkScheduleDay);
+
+        /** @var PresenceType $presenceType */
+        $presenceType = $this->getEntityFromReference('presence_type_0');
+
+        /**
+         * Assume that presence type is available only for today.
+         */
+        $this->assertEquals('O', $presenceType->getShortName());
+        $this->assertEquals(PresenceType::EDIT_RESTRICTION_TODAY, $presenceType->getCreateRestriction());
+        $this->assertEquals(PresenceType::EDIT_RESTRICTION_TODAY, $presenceType->getEditRestriction());
+
+        /**
+         * Get current date DayDefinition
+         */
+        $currentDateDayDefinition = $this
+            ->entityManager
+            ->getRepository(DayDefinition::class)
+            ->findTodayDayDefinition()
+        ;
+
+        $this->assertInstanceOf(DayDefinition::class, $currentDateDayDefinition);
+
+        /**
+         * Change WorkScheduleDay date to be sure it's today.
+         */
+        $userWorkScheduleDay->setDayDefinition($currentDateDayDefinition);
+
+        $timesheetDay = new UserTimesheetDay();
+        $timesheetDay
+            ->setUserWorkScheduleDay($userWorkScheduleDay)
+            ->setPresenceType($presenceType)
+            ->setWorkingTime(8.00)
+        ;
+
+        $apiPlatformValidator = self::$container->get('api_platform.validator');
+        /**
+         * It should not throw exception.
+         */
+        $apiPlatformValidator->validate($timesheetDay);
+    }
 
     /**
      * Test case description:
@@ -40,8 +95,6 @@ class PresenceRestrictionValidatorTest extends AbstractWebTestCase
     {
         $userWorkScheduleDay = $this->workScheduleNonWorkingDays[array_rand($this->workScheduleNonWorkingDays)];
         $this->assertInstanceOf(UserWorkScheduleDay::class, $userWorkScheduleDay);
-
-        $dayDefinition = $userWorkScheduleDay->getDayDefinition();
 
         /** @var PresenceType $presenceType */
         $presenceType = $this->getEntityFromReference('presence_type_0');
@@ -83,8 +136,6 @@ class PresenceRestrictionValidatorTest extends AbstractWebTestCase
         $userWorkScheduleDay = $this->workScheduleWorkingDays[array_rand($this->workScheduleWorkingDays)];
         $this->assertInstanceOf(UserWorkScheduleDay::class, $userWorkScheduleDay);
 
-        $dayDefinition = $userWorkScheduleDay->getDayDefinition();
-
         $timesheetDay = new UserTimesheetDay();
         $timesheetDay
             ->setUserWorkScheduleDay($userWorkScheduleDay)
@@ -112,15 +163,13 @@ class PresenceRestrictionValidatorTest extends AbstractWebTestCase
          * @var PresenceType $presenceType
          *
          * This PresenceType does not have restrictions to it could be possible
-         * to add it to any UserSchedule.
+         * to add it to any UserSchedule any time.
          */
         $presenceType = $this->getEntityFromReference('presence_type_2');
         $this->assertEquals('S', $presenceType->getShortName());
 
         $userWorkScheduleDay = $this->workScheduleWorkingDays[array_rand($this->workScheduleWorkingDays)];
         $this->assertInstanceOf(UserWorkScheduleDay::class, $userWorkScheduleDay);
-
-        $dayDefinition = $userWorkScheduleDay->getDayDefinition();
 
         $timesheetDay = new UserTimesheetDay();
         $timesheetDay
