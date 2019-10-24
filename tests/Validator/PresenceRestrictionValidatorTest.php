@@ -40,7 +40,7 @@ class PresenceRestrictionValidatorTest extends AbstractWebTestCase
      *      UserWorkScheduleDay's DayDefinition will be set as today so it must pass validation.
      *
      * @throws Exception
-     * 
+     *
      * @return void
      */
     public function testPresenceRestrictionValidatorCase0(): void
