@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use App\Utils\UserUtilsInterface;
 use Doctrine\Common\Annotations\AnnotationException;
+use ReflectionException;
 
 /**
  * Class EntityChangeSetLogBuilder
@@ -71,9 +72,10 @@ class EntityChangeSetLogBuilder
      *
      * @param LoggableEntityInterface $entity
      *
-     * @throws AnnotationException when any property is marked as @AnnotatedLogEntity
-     *
      * @return ArrayCollection
+     *
+     * @throws AnnotationException when any property is marked as @AnnotatedLogEntity
+     * @throws ReflectionException
      */
     public function build(LoggableEntityInterface $entity): ArrayCollection
     {
@@ -150,8 +152,8 @@ class EntityChangeSetLogBuilder
         }
 
         return vsprintf($noticeFormat, [
-            empty($oldValue)? self::EMPTY_PREVIOUS_VALUE_MESSAGE : $oldValue,
-            empty($newValue)? self::EMPTY_NEXT_VALUE_MESSAGE : $newValue,
+            empty($oldValue) ? self::EMPTY_PREVIOUS_VALUE_MESSAGE : $oldValue,
+            empty($newValue) ? self::EMPTY_NEXT_VALUE_MESSAGE : $newValue,
         ]);
     }
 

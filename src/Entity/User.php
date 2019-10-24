@@ -22,7 +22,6 @@ use App\Entity\Utils\UserAware;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Entity\Types\LoggableEntityInterface;
 use App\Annotations\AnnotatedLogEntity;
-use App\Entity\Types\LogEntityInterface;
 use App\Traits\LogAccessorTrait;
 
 /**
@@ -153,6 +152,8 @@ use App\Traits\LogAccessorTrait;
  */
 class User implements UserInterface, LoggableEntityInterface
 {
+    use LogAccessorTrait;
+
     /**
      * @var int
      *
@@ -429,8 +430,6 @@ class User implements UserInterface, LoggableEntityInterface
         $this->userTimesheets = new ArrayCollection();
         $this->logs = new ArrayCollection();
     }
-
-    use LogAccessorTrait;
 
     /**
      * @return string|null

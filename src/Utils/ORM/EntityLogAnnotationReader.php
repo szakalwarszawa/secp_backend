@@ -10,6 +10,7 @@ use Doctrine\Common\Annotations\AnnotationException;
 use App\Annotations\AnnotatedLogEntity;
 use App\Entity\Types\LogEntityInterface;
 use InvalidArgumentException;
+use ReflectionException;
 
 /**
  * Class EntityLogAnnotationReader
@@ -22,7 +23,7 @@ class EntityLogAnnotationReader
      *
      * @return string
      */
-    private static function supportsAnnnotation(): string
+    private static function supportsAnnotation(): string
     {
         return AnnotatedLogEntity::class;
     }
@@ -34,33 +35,34 @@ class EntityLogAnnotationReader
      *
      * @param string $baseClassName
      *
-     * @throws AnnotationException when base class does not contain requried annotation
-     * @throws InvalidArgumentException when class defined in logClass is not instance of LogEntityInterface
-     *
      * @return LogEntityInterface
+     *
+     * @throws AnnotationException
+     * @throws ReflectionException
      */
     public static function getEntityLogClassInstance(string $baseClassName): LogEntityInterface
     {
         $reflectionClass = new ReflectionClass($baseClassName);
         $annotationReader = new AnnotationReader();
-        $logAnnotation = $annotationReader->getClassAnnotation($reflectionClass, self::supportsAnnnotation());
+        $logAnnotation = $annotationReader->getClassAnnotation($reflectionClass, self::supportsAnnotation());
 
         if (!$logAnnotation) {
             throw new AnnotationException(sprintf(
                 'Class %s does not contain %s annotation.',
                 $baseClassName,
-                self::supportsAnnnotation()
+                self::supportsAnnotation()
             ));
         }
 
-        if (!new $logAnnotation->logClass instanceof LogEntityInterface) {
+
+        if (!(new $logAnnotation())->logClass instanceof LogEntityInterface) {
             throw new InvalidArgumentException(sprintf(
                 'Instance of %s class expected.',
                 LogEntityInterface::class
             ));
         }
 
-        return new $logAnnotation->logClass;
+        return (new $logAnnotation())->logClass;
     }
 
     /**
@@ -70,6 +72,9 @@ class EntityLogAnnotationReader
      * @param string $baseClassName
      *
      * @return array
+     *
+     * @throws AnnotationException
+     * @throws ReflectionException
      */
     public static function getPropertiesToLog(string $baseClassName): array
     {
@@ -81,7 +86,7 @@ class EntityLogAnnotationReader
         $classProperties = $reflectionClass->getProperties();
         $propertiesToLog = [];
         foreach ($classProperties as $property) {
-            $annotationData = $annotationReader->getPropertyAnnotation($property, self::supportsAnnnotation());
+            $annotationData = $annotationReader->getPropertyAnnotation($property, self::supportsAnnotation());
             if ($annotationData) {
                 $annotationData->validateOptions();
                 $propertiesToLog[$property->name] = $annotationData->options;

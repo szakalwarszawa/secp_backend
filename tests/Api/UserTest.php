@@ -161,11 +161,6 @@ JSON;
         $userREF = $this->fixtures->getReference('user_' . random_int(0, 99));
         /* @var $userREF User */
 
-        /**
-         * User cannot have logs before this test.
-         */
-        $this->assertEquals(0, $userREF->getLogs()->count());
-
         $departmentRef = $this->fixtures->getReference('department_admin');
         /* @var $departmentRef Department */
 
@@ -226,13 +221,17 @@ JSON;
         $this->assertEquals($userDB->getTitle(), $userJSON->title);
         $this->assertGreaterThan(0, $userDB->getLogs()->count());
 
-        $response = $this->getActionResponse('GET', implode('/',
-            [
-                '/api/users',
-                $userREF->getId(),
-                'logs',
-            ]
-        ));
+        $response = $this->getActionResponse(
+            'GET',
+            implode(
+                '/',
+                [
+                    '/api/users',
+                    $userREF->getId(),
+                    'logs',
+                ]
+            )
+        );
 
         $logsJson = json_decode($response->getContent(), false);
         $this->assertNotNull($logsJson);
