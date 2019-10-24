@@ -35,6 +35,10 @@ class PresenceRestrictionValidatorTest extends AbstractWebTestCase
     private $workScheduleNonWorkingDays = [];
 
     /**
+     * Test case description:
+     *      Insert UserTimesheetDay with restricted (today only) presence type.
+     *      UserWorkScheduleDay's DayDefinition will be set as today so it must pass validation.
+     *
      * @throws Exception
      */
     public function testPresenceRestrictionValidatorCase0(): void

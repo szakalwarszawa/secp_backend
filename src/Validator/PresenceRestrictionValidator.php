@@ -43,13 +43,13 @@ class PresenceRestrictionValidator extends ConstraintValidator
     }
 
     /**
-     * Validate persisted value.
-     * Value must be present in entity class defined in constraint property.
+     * Validate persisted entity.
      *
      * @param mixed $entity
      * @param Constraint $constraint
      *
      * @return void
+     *
      * @throws Exception
      */
     public function validate($entity, Constraint $constraint): void
@@ -146,17 +146,17 @@ class PresenceRestrictionValidator extends ConstraintValidator
         $this->entityManager->initializeObject($dayDefinition);
 
         if ($presenceType->getWorkingDayRestriction() === PresenceType::RESTRICTION_WORKING_DAY
-            && !$dayDefinition->getWorkingDay()
+            && $dayDefinition->getWorkingDay()
         ) {
-            return false;
+            return true;
         }
 
         if ($presenceType->getWorkingDayRestriction() === PresenceType::RESTRICTION_NON_WORKING_DAY
-            && $dayDefinition->getWorkingDay()
+            && !$dayDefinition->getWorkingDay()
         ) {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }
