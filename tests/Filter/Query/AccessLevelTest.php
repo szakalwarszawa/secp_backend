@@ -35,7 +35,7 @@ class AccessLevelTest extends AbstractWebTestCase
 
         $accessLevel = new AccessLevel($userAdmin, $this->security);
         $userAware = new UserAware();
-        $userAware->userFieldName ='user_id';
+        $userAware->userFieldName = 'user_id';
         $conditionQuery = $accessLevel->getQuery('s', $userAware);
 
         $expectedQuery = sprintf(
