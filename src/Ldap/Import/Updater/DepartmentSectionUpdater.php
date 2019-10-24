@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Ldap\Import\Updater;
 
@@ -92,9 +94,9 @@ final class DepartmentSectionUpdater extends AbstractUpdater
             sprintf(
                 'Department %s has been %s.',
                 $department->getName(),
-                $departmentNotExists? 'created' : 'updated'
+                $departmentNotExists ? 'created' : 'updated'
             ),
-            $departmentNotExists? Actions::CREATE : Actions::UPDATE
+            $departmentNotExists ? Actions::CREATE : Actions::UPDATE
         ));
 
         return $department;
@@ -104,16 +106,18 @@ final class DepartmentSectionUpdater extends AbstractUpdater
      * Create section if not exists.
      *
      * @param string $sectionName
+     * @param Department $department
      *
      * @return Section
      */
-    private function createSectionIfNotExists(string $sectionName): Section
+    private function createSectionIfNotExists(string $sectionName, Department $department): Section
     {
         $section = $this
             ->entityManager
             ->getRepository(Section::class)
             ->findOneBy([
-                'name' => $sectionName
+                'name' => $sectionName,
+                'department' => $department->getId(),
             ]);
 
         $sectionNotExists = null === $section;
@@ -136,9 +140,9 @@ final class DepartmentSectionUpdater extends AbstractUpdater
             sprintf(
                 'Section %s has been %s.',
                 $section->getName(),
-                $sectionNotExists? 'created' : 'updated'
+                $sectionNotExists ? 'created' : 'updated'
             ),
-            $sectionNotExists? Actions::CREATE : Actions::UPDATE
+            $sectionNotExists ? Actions::CREATE : Actions::UPDATE
         ));
 
         return $section;
@@ -156,7 +160,7 @@ final class DepartmentSectionUpdater extends AbstractUpdater
     {
         foreach ($sections as $section) {
             if (!$section instanceof Section) {
-                $section = $this->createSectionIfNotExists($section);
+                $section = $this->createSectionIfNotExists($section, $department);
             }
 
             $department->addSection($section);
