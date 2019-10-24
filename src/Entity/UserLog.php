@@ -202,7 +202,7 @@ class UserLog implements LogEntityInterface
         $this->triggerElement = $triggerElement;
 
         return $this;
-}
+    }
 
     /**
      * @return string|null
