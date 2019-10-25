@@ -81,6 +81,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: ldap.imported }
 
+    App\EventSubscriber\DynamicRelationSubscriber:
+        tags:
+            - {name: doctrine.event_listener, event: loadClassMetadata }
+
     App\EventListener\LogListener:
         autowire: true
         tags:

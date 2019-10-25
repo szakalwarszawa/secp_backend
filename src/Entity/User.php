@@ -19,7 +19,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\ValueExists;
 use App\Entity\Utils\UserAware;
-use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Entity\Types\LoggableEntityInterface;
 use App\Annotations\AnnotatedLogEntity;
 use App\Traits\LogAccessorTrait;
@@ -41,6 +40,7 @@ use App\Traits\LogAccessorTrait;
  * @UserAware(
  *     userFieldName="id"
  * )
+ *
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity("username", errorPath="username", groups={"post", "put"})
@@ -413,14 +413,6 @@ class User implements UserInterface, LoggableEntityInterface
     private $userTimesheets;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\UserLog", mappedBy="parent", orphanRemoval=true)
-     * @ApiSubresource
-     */
-    private $logs;
-
-    /**
      * User constructor.
      */
     public function __construct()
@@ -428,7 +420,6 @@ class User implements UserInterface, LoggableEntityInterface
         $this->managedDepartments = new ArrayCollection();
         $this->managedSections = new ArrayCollection();
         $this->userTimesheets = new ArrayCollection();
-        $this->logs = new ArrayCollection();
     }
 
     /**

@@ -6,7 +6,9 @@ namespace App\Traits;
 
 use App\Entity\Types\LoggableEntityInterface;
 use App\Entity\Types\LogEntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * Trait LogAccessorTrait
@@ -14,7 +16,22 @@ use Doctrine\Common\Collections\Collection;
 trait LogAccessorTrait
 {
     /**
-     * {@inheritDoc}
+     * @var ArrayCollection
+     *
+     * @ApiSubresource
+     */
+    private $logs;
+
+    /**
+     * LogAccessorTrait constructor.
+     */
+    public function __construct()
+    {
+        $this->logs = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection
      */
     public function getLogs(): Collection
     {
@@ -22,7 +39,9 @@ trait LogAccessorTrait
     }
 
     /**
-     * {@inheritDoc}
+     * @param LogEntityInterface $log
+     *
+     * @return LoggableEntityInterface
      */
     public function addLog(LogEntityInterface $log): LoggableEntityInterface
     {
@@ -35,9 +54,9 @@ trait LogAccessorTrait
     }
 
     /**
-     * @param UserLog $log
+     * @param LogEntityInterface $log
      *
-     * @return User
+     * @return LoggableEntityInterface
      */
     public function removeLog(LogEntityInterface $log): LoggableEntityInterface
     {
