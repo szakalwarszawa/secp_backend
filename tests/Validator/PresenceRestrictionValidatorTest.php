@@ -210,15 +210,9 @@ class PresenceRestrictionValidatorTest extends AbstractWebTestCase
          * Loop to find working day.
          */
         foreach ($userWorkScheduleDays as $userWorkScheduleDay) {
-            $dayDefinition = $userWorkScheduleDay->getDayDefinition();
-
-            if ($dayDefinition->getWorkingDay()) {
-                $this->workScheduleWorkingDays[] = $userWorkScheduleDay;
-
-                continue;
-            }
-
-            $this->workScheduleNonWorkingDays[] = $userWorkScheduleDay;
+            $userWorkScheduleDay->getDayDefinition()->getWorkingDay()
+                ? $this->workScheduleWorkingDays[] = $userWorkScheduleDay
+                : $this->workScheduleNonWorkingDays[] = $userWorkScheduleDay;
         }
     }
 }
