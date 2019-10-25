@@ -145,16 +145,13 @@ class PresenceRestrictionValidator extends ConstraintValidator
 
         $this->entityManager->initializeObject($dayDefinition);
 
-        if ($presenceType->getWorkingDayRestriction() === PresenceType::RESTRICTION_WORKING_DAY
-            && $dayDefinition->getWorkingDay()
-        ) {
-            return true;
-        }
-
-        if ($presenceType->getWorkingDayRestriction() === PresenceType::RESTRICTION_NON_WORKING_DAY
-            && !$dayDefinition->getWorkingDay()
-        ) {
-            return true;
+        switch ($presenceType->getWorkingDayRestriction()) {
+            case PresenceType::RESTRICTION_WORKING_DAY:
+                return $dayDefinition->getWorkingDay() === true;
+            case PresenceType::RESTRICTION_NON_WORKING_DAY:
+                return $dayDefinition->getWorkingDay() === false;
+            case PresenceType::RESTRICTION_WORKING_AND_NON_WORKING_DAY:
+                return true;
         }
 
         return false;
