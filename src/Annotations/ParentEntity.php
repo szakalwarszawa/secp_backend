@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Annotations;
 
-use Symfony\Component\VarDumper\VarDumper;
-
 /**
  * Class ParentEntity
  *

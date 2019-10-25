@@ -44,7 +44,7 @@ class DynamicRelationSubscriber
             $this->mapLoggableEntity($metadata, $reflectionClass);
         }
 
-        if(in_array(LogEntityInterface::class, $reflectionClass->getInterfaceNames(), true)) {
+        if (in_array(LogEntityInterface::class, $reflectionClass->getInterfaceNames(), true)) {
             $this->mapLogEntity($metadata, $reflectionClass);
         }
     }
@@ -65,7 +65,7 @@ class DynamicRelationSubscriber
 
         $classMetadata->mapOneToMany([
             'fieldName' => self::LOGS_FIELD,
-            'targetEntity'=> get_class($logEntityClass),
+            'targetEntity' => get_class($logEntityClass),
             'mappedBy' => self::PARENT_FIELD,
             'orphanRemoval' => true,
         ]);
@@ -83,9 +83,9 @@ class DynamicRelationSubscriber
      */
     private function mapLogEntity(ClassMetadata $classMetadata, ReflectionClass $reflectionClass): void
     {
-       $logParentClass = EntityLogAnnotationReader::getEntityLogParentInstance($reflectionClass->getName());
+        $logParentClass = EntityLogAnnotationReader::getEntityLogParentInstance($reflectionClass->getName());
 
-       $classMetadata->mapManyToOne([
+        $classMetadata->mapManyToOne([
            'fieldName' => self::PARENT_FIELD,
            'targetEntity' => get_class($logParentClass),
            'inversedBy' => self::LOGS_FIELD,
