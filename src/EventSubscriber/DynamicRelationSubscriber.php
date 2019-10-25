@@ -94,6 +94,6 @@ class DynamicRelationSubscriber
                'referencedColumnName' => 'id',
                'nullable' => false,
            ]
-       ]);
+        ]);
     }
 }
