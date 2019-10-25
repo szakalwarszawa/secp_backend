@@ -69,7 +69,7 @@ class UserTimesheetDayTest extends AbstractWebTestCase
         $userTimesheetRef = $this->fixtures->getReference(UserTimesheetFixtures::REF_USER_TIMESHEET_USER_HR);
         /* @var $userTimesheetRef UserTimesheetDay */
 
-        $presenceTypeRef = $this->fixtures->getReference('presence_type_5');
+        $presenceTypeRef = $this->fixtures->getReference('presence_type_4');
         /* @var $presenceTypeRef PresenceType */
 
         $absenceTypeRef = $this->fixtures->getReference('absence_type_7');
@@ -171,7 +171,7 @@ JSON;
         $userTimesheetREF = $this->fixtures->getReference(UserTimesheetFixtures::REF_USER_TIMESHEET_USER_EDIT);
         /* @var $userTimesheetREF UserTimesheet */
 
-        $presenceTypeRef = $this->fixtures->getReference('presence_type_0');
+        $presenceTypeRef = $this->fixtures->getReference('presence_type_6');
         /* @var $presenceTypeRef PresenceType */
 
         $payload = <<<JSON
