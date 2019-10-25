@@ -44,7 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      }
  * )
  */
-class UserWorkScheduleLog implements LogEntityInterface
+class UserWorkScheduleLog /*implements LogEntityInterface*/
 {
     /**
      * @ORM\Id()

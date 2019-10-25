@@ -81,6 +81,16 @@ services:
         tags:
             - { name: kernel.event_listener, event: ldap.imported }
 
+    App\EventSubscriber\DynamicRelationSubscriber:
+        tags:
+            - {name: doctrine.event_listener, event: loadClassMetadata }
+
+    App\EventListener\LogListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: onFlush, connection: default, priority: -10000 }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, priority: -10000 }
+
     App\Filter\Configurator:
         autowire: false
         arguments:
@@ -114,3 +124,6 @@ services:
         decorates: 'api_platform.serializer.context_builder'
         arguments: [ '@App\Serializer\UserContextBuilder.inner' ]
         autoconfigure: false
+
+    App\Utils\UserUtilsInterface:
+        class: App\Utils\UserUtil

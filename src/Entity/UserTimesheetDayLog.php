@@ -56,7 +56,7 @@ use App\Entity\Utils\UserAware;
  *      }
  * )
  */
-class UserTimesheetDayLog implements LogEntityInterface
+class UserTimesheetDayLog /* implements LogEntityInterface*/
 {
     /**
      * @ORM\Id()
