@@ -133,7 +133,7 @@ class EntityChangeSetLogBuilder
      */
     private function prepareNotice(string $noticeFormat, array $changedValues): string
     {
-        list($oldValue, $newValue) = $changedValues;
+        [$oldValue, $newValue] = $changedValues;
 
         if (is_array($oldValue)) {
             $oldValue = implode(', ', $oldValue);

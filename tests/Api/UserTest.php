@@ -225,14 +225,7 @@ JSON;
 
         $response = $this->getActionResponse(
             'GET',
-            implode(
-                '/',
-                [
-                    '/api/users',
-                    $userREF->getId(),
-                    'logs',
-                ]
-            )
+            sprintf('/api/users/%d/logs', $userREF->getId())
         );
 
         $logsJson = json_decode($response->getContent(), false);
