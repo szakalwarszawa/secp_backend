@@ -53,6 +53,11 @@ class PresenceRestrictionValidatorTest extends AbstractWebTestCase
         $presenceType = $this->getEntityFromReference('presence_type_0');
 
         /**
+         * To be sure that test will pass on weekends too.
+         */
+        $presenceType->setWorkingDayRestriction(PresenceType::RESTRICTION_WORKING_AND_NON_WORKING_DAY);
+
+        /**
          * Assume that presence type is available only for today.
          */
         $this->assertEquals('O', $presenceType->getShortName());
