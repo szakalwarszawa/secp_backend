@@ -11,9 +11,9 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
- * Trait LogAccessorTrait
+ * Trait LoggableEntityTrait
  */
-trait LogAccessorTrait
+trait LoggableEntityTrait
 {
     /**
      * @var ArrayCollection
@@ -23,7 +23,7 @@ trait LogAccessorTrait
     private $logs;
 
     /**
-     * LogAccessorTrait constructor.
+     * LoggableEntityTrait constructor.
      */
     public function __construct()
     {

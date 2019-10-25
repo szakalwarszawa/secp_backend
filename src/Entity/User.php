@@ -21,7 +21,7 @@ use App\Validator\ValueExists;
 use App\Entity\Utils\UserAware;
 use App\Entity\Types\LoggableEntityInterface;
 use App\Annotations\AnnotatedLogEntity;
-use App\Traits\LogAccessorTrait;
+use App\Traits\LoggableEntityTrait;
 
 /**
  * @ORM\Table(
@@ -152,7 +152,7 @@ use App\Traits\LogAccessorTrait;
  */
 class User implements UserInterface, LoggableEntityInterface
 {
-    use LogAccessorTrait;
+    use LoggableEntityTrait;
 
     /**
      * @var int

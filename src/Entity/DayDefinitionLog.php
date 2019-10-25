@@ -43,7 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      }
  * )
  */
-class DayDefinitionLog implements LogEntityInterface
+class DayDefinitionLog /*implements LogEntityInterface*/
 {
     /**
      * @ORM\Id()
