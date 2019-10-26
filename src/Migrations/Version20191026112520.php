@@ -45,7 +45,7 @@ ALTER TABLE logs.user_timesheet_day_logs ADD CONSTRAINT FK_A0D8D20E727ACA70
 FOREIGN KEY (parent_id) 
 REFERENCES "user_timesheet_days" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
 SQL
-);
+        );
         $this->addSql('ALTER INDEX logs.idx_a0d8d20e5b30fbb2 RENAME TO IDX_A0D8D20E727ACA70');
     }
 
