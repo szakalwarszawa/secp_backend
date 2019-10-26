@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use App\DataFixtures\UserFixtures;
-use App\Entity\Department;
 use App\Entity\User;
-use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
 use Exception;
-use stdClass;
 
+/**
+ * Class UserTest
+ */
 class UserTest extends AbstractWebTestCase
 {
     /**
@@ -161,8 +161,7 @@ JSON;
     {
         $userREF = $this->fixtures->getReference('user_' . random_int(0, 99));
         /* @var $userREF User */
-        $userBeforePut = clone $userREF;
-
+        $userBeforeUpdate = clone $userREF;
         $departmentRef = $this->fixtures->getReference('department_admin');
         /* @var $departmentRef Department */
 
@@ -223,59 +222,10 @@ JSON;
         $this->assertEquals($userDB->getTitle(), $userJSON->title);
         $this->assertGreaterThan(0, $userDB->getLogs()->count());
 
-        $response = $this->getActionResponse(
-            'GET',
-            sprintf('/api/users/%d/logs', $userREF->getId())
+        $this->assertApiLogsSaving(
+            sprintf('/api/users/%d/logs', $userBeforeUpdate->getId()),
+            $userBeforeUpdate
         );
-
-        $logsJson = json_decode($response->getContent(), false);
-        $this->assertNotNull($logsJson);
-
-        $logsArray = $logsJson->{'hydra:member'};
-        foreach ($logsArray as $log) {
-            $this->assertLogCorrectness($log, $userBeforePut);
-        }
-    }
-
-    /**
-     * Check log write correctness.
-     *
-     * @param StdClass $log
-     * @param User $beforeChangeUserObject
-     *
-     * @return void
-     */
-    private function assertLogCorrectness(StdClass $log, User $beforeChangeUserObject): void
-    {
-        switch ($log->triggerElement) {
-            case 'username':
-                $this->assertEquals(
-                    sprintf('Zmiana nazwy użytkownika z %s na user_test_put', $beforeChangeUserObject->getUsername()),
-                    $log->notice
-                );
-                break;
-            case 'email':
-                $this->assertEquals(
-                    sprintf(
-                        'Zmiana adresu email z %s na user_test_put@example.net',
-                        $beforeChangeUserObject->getEmail()
-                    ),
-                    $log->notice
-                );
-                break;
-            case 'department':
-                $this->assertEquals(
-                    sprintf('Zmiana departamentu z %s na Biuro Informatyki', $beforeChangeUserObject->getDepartment()),
-                    $log->notice
-                );
-                break;
-            case 'section':
-                $this->assertEquals(
-                    sprintf('Zmiana sekcji z %s na brak', $beforeChangeUserObject->getSection()),
-                    $log->notice
-                );
-                break;
-        }
     }
 
     /**
