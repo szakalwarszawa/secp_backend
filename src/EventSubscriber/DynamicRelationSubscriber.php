@@ -89,10 +89,12 @@ class DynamicRelationSubscriber
            'fieldName' => self::PARENT_FIELD,
            'targetEntity' => get_class($logParentClass),
            'inversedBy' => self::LOGS_FIELD,
-           'joinColumn' => [
-               'name' => 'parent_id',
-               'referencedColumnName' => 'id',
-               'nullable' => false,
+           'joinColumns' => [
+               [
+                   'name' => 'parent_id',
+                   'referencedColumnName' => 'id',
+                   'nullable' => false,
+               ]
            ]
         ]);
     }
