@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests;
 
 use App\DataFixtures\UserFixtures;
+use App\Entity\Types\LoggableEntityInterface;
 use App\Entity\User;
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -13,6 +15,7 @@ use Doctrine\ORM\Proxy\Proxy;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use ReflectionException;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -326,8 +329,9 @@ abstract class AbstractWebTestCase extends WebTestCase
      * @param Proxy|LoggableEntityInterface $beforeChangeObject
      *
      * @return void
-     *
-     * @todo phpdoc @throws
+     * @throws AnnotationException
+     * @throws NotFoundReferencedUserException
+     * @throws ReflectionException
      */
     protected function assertApiLogsSaving(string $apiUrl, $beforeChangeObject): void
     {
@@ -347,9 +351,11 @@ abstract class AbstractWebTestCase extends WebTestCase
      * to the object before the change.
      *
      * @param StdClass $log
-     * @param Proxy|LoggableEntityInterface $entity
+     * @param $beforeChangeEntity
      *
      * @return void
+     * @throws AnnotationException
+     * @throws ReflectionException
      */
     protected function assertLog(StdClass $log, $beforeChangeEntity): void
     {

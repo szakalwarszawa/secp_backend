@@ -55,7 +55,7 @@ use App\Annotations\ParentEntity;
  *          "parent.id": "exact",
  *      }
  * )
- * 
+ *
  * @ParentEntity(UserTimesheetDay::class)
  */
 class UserTimesheetDayLog extends LogEntity
