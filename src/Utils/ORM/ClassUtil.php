@@ -20,12 +20,13 @@ class ClassUtil
      *
      * @return string
      */
-    public static function getRealClass($class): string
+    public static function getRealClass(string $class): string
     {
-        if (false === $pos = strrpos($class, '\\' . Proxy::MARKER . '\\')) {
+        $proxyMarker = strrpos($class, '\\' . Proxy::MARKER . '\\');
+        if (false === $proxyMarker) {
             return $class;
         }
 
-        return substr($class, $pos + Proxy::MARKER_LENGTH + 2);
+        return substr($class, $proxyMarker + Proxy::MARKER_LENGTH + 2);
     }
 }

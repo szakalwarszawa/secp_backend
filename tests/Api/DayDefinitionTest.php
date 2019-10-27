@@ -140,12 +140,11 @@ JSON;
 
         $this->assertApiLogsSaving(
             sprintf(
-            '/api/day_definitions/%s/logs',
+                '/api/day_definitions/%s/logs',
                 $dayDefinitionDB->getId()
             ),
             $beforeUpdateDayDefinition
         );
-
     }
 
     /**
