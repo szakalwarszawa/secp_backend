@@ -88,11 +88,11 @@ class LogEntity implements LogEntityInterface
     }
 
     /**
-     * @param LoggableEntityInterface $parent
+     * @param null|LoggableEntityInterface $parent
      *
      * @return LogEntityInterface
      */
-    public function setParent(LoggableEntityInterface $parent): LogEntityInterface
+    public function setParent(?LoggableEntityInterface $parent): LogEntityInterface
     {
         $this->parent = $parent;
 

@@ -13,6 +13,9 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 
+/**
+ * Class DayDefinitionTest
+ */
 class DayDefinitionTest extends AbstractWebTestCase
 {
     private const DAY_DEFINITION_TEST_ID = '2000-01-11';
@@ -107,75 +110,47 @@ JSON;
 }
 JSON;
 
+        $beforeUpdateDayDefinition = self::$container
+           ->get('doctrine')
+            ->getManager()
+            ->getRepository(DayDefinition::class)
+            ->find(self::DAY_DEFINITION_TEST_ID)
+        ;
+
         $response = $this->getActionResponse(
             self::HTTP_PUT,
             '/api/day_definitions/' . self::DAY_DEFINITION_TEST_ID,
             $payload,
             [],
             200,
-            'user_0' //self::REF_ADMIN
+            UserFixtures::REF_USER_ADMIN
         );
         $dayDefinitionJSON = json_decode($response->getContent(), false);
 
         $dayDefinitionDB = self::$container->get('doctrine')->getManager()->getRepository(DayDefinition::class)->find(
             self::DAY_DEFINITION_TEST_ID
         );
+
         /* @var $dayDefinitionDB DayDefinition */
 
         $this->assertNotNull($dayDefinitionJSON);
         $this->assertEquals($dayDefinitionDB->getId(), $dayDefinitionJSON->id);
         $this->assertEquals($dayDefinitionDB->getWorkingDay(), $dayDefinitionJSON->workingDay);
         $this->assertEquals($dayDefinitionDB->getNotice(), $dayDefinitionJSON->notice);
+
+        $this->assertApiLogsSaving(
+            sprintf(
+            '/api/day_definitions/%s/logs',
+                $dayDefinitionDB->getId()
+            ),
+            $beforeUpdateDayDefinition
+        );
+
     }
 
     /**
-     * @test
-     * @throws Exception
+     * {@inheritDoc}
      */
-    public function apiShouldHaveLogAfterPutDayDefinition(): void
-    {
-        $payload = <<<JSON
-{
-  "workingDay": false,
-  "notice": "Nowszy dzień niepracujący"
-}
-JSON;
-
-        $this->getActionResponse(
-            self::HTTP_PUT,
-            '/api/day_definitions/' . self::DAY_DEFINITION_TEST_ID,
-            $payload,
-            [],
-            200,
-            'user_0' //self::REF_ADMIN
-        );
-
-        $response = $this->getActionResponse(
-            self::HTTP_GET,
-            '/api/day_definitions/' . self::DAY_DEFINITION_TEST_ID . '/day_definition_logs',
-            $payload,
-            [],
-            200,
-            'user_0' //self::REF_ADMIN
-        );
-
-        $this->assertJson($response->getContent());
-        $dayDefinitionJSON = json_decode($response->getContent(), false);
-
-        $this->assertNotNull($dayDefinitionJSON);
-        $this->assertCount(2, $dayDefinitionJSON->{'hydra:member'});
-        $this->assertArrayContainsSameKeyWithValue(
-            $dayDefinitionJSON->{'hydra:member'},
-            'notice',
-            'Dzień został ustawiony jako niepracujący'
-        );
-        $this->assertArrayContainsSameKeyWithValue(
-            $dayDefinitionJSON->{'hydra:member'},
-            'notice',
-            sprintf("Zmieniono opis z:\n%s\nna:\n%s", '', 'Nowszy dzień niepracujący')
-        );
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -201,10 +176,10 @@ JSON;
         $dayDefinition = $em->getRepository(DayDefinition::class)->find(self::DAY_DEFINITION_TEST_ID);
         /* @var $dayDefinition DayDefinition */
 
-        foreach ($dayDefinition->getDayDefinitionLogs() as $log) {
-            $dayDefinition->removeDayDefinitionLog($log);
-            $em->remove($log);
+        if (!$dayDefinition) {
+            return;
         }
+
         $em->remove($dayDefinition);
 
         $em->flush();
