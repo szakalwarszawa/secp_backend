@@ -7,9 +7,6 @@ namespace App\Tests\Api;
 use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserTimesheetFixtures;
 use App\DataFixtures\UserWorkScheduleFixtures;
-use App\Entity\AbsenceType;
-use App\Entity\PresenceType;
-use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetDay;
 use App\Entity\UserWorkScheduleDay;
 use App\Tests\AbstractWebTestCase;
@@ -219,5 +216,10 @@ JSON;
         $this->assertEquals($userTimesheetDayDB->getWorkingTime(), $userTimesheetDayJSON->workingTime);
         $this->assertEquals($userTimesheetDayDB->getPresenceType()->getId(), $userTimesheetDayJSON->presenceType->id);
         $this->assertEquals($userTimesheetDayDB->getAbsenceType(), $userTimesheetDayJSON->absenceType);
+
+        $this->assertApiLogsSaving(
+            sprintf('/api/user_timesheet_days/%d/logs', $userTimesheetREF->getUserTimesheetDays()[0]->getId()),
+            $userTimesheetREF->getUserTimesheetDays()[0]
+        );
     }
 }
