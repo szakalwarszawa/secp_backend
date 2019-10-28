@@ -18,7 +18,8 @@ use App\Annotations\ParentEntity;
  *     name="`user_timesheet_day_logs`",
  *     indexes={
  *          @ORM\Index(name="idx_user_timesheet_day_log_date", columns={"log_date"}),
- *          @ORM\Index(name="idx_user_timesheet_day_log_log_date", columns={"parent_id", "log_date"}),
+ *          @ORM\Index(name="idx_user_timesheet_day_log_parent", columns={"parent_id"}),
+ *          @ORM\Index(name="idx_user_timesheet_day_log_owner", columns={"owner_id"})
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserTimesheetDayLogRepository")
