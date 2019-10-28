@@ -38,15 +38,18 @@ final class Version20191026112520 extends AbstractMigration
         );
 
         $this->addSql('ALTER TABLE logs.user_timesheet_day_logs DROP CONSTRAINT fk_657e6c545b30fbb2');
+        $this->addSql('DROP INDEX logs.idx_a0d8d20e5b30fbb2');
+        $this->addSql('DROP INDEX logs.idx_user_timesheet_day_log_log_date');
         $this->addSql('ALTER TABLE logs.user_timesheet_day_logs RENAME COLUMN user_timesheet_day_id TO parent_id');
         $this->addSql('ALTER TABLE logs.user_timesheet_day_logs RENAME COLUMN trigger TO trigger_element');
         $this->addSql(<<<'SQL'
 ALTER TABLE logs.user_timesheet_day_logs ADD CONSTRAINT FK_A0D8D20E727ACA70 
-FOREIGN KEY (parent_id) 
-REFERENCES "user_timesheet_days" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+    FOREIGN KEY (parent_id)
+        REFERENCES "user_timesheet_days" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
 SQL
         );
-        $this->addSql('ALTER INDEX logs.idx_a0d8d20e5b30fbb2 RENAME TO IDX_A0D8D20E727ACA70');
+        $this->addSql('CREATE INDEX idx_user_timesheet_day_log_parent ON logs.user_timesheet_day_logs (parent_id)');
+        $this->addSql('ALTER INDEX logs.idx_a0d8d20e7e3c61f9 RENAME TO idx_user_timesheet_day_log_owner');
     }
 
     /**
