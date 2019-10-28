@@ -35,7 +35,6 @@ final class Version20191026112520 extends AbstractMigration
             'Migration can only be executed safely on \'postgresql\'.'
         );
 
-        $this->addSql('ALTER TABLE logs.user_timesheet_logs DROP trigger');
         $this->addSql('ALTER TABLE logs.user_timesheet_day_logs DROP CONSTRAINT fk_657e6c545b30fbb2');
         $this->addSql('DROP INDEX logs.idx_a0d8d20e5b30fbb2');
         $this->addSql('DROP INDEX logs.idx_user_timesheet_day_log_log_date');
