@@ -48,7 +48,9 @@ ALTER TABLE logs.day_definition_logs ADD CONSTRAINT FK_BD1EF8D0727ACA70
         REFERENCES "dictionary"."day_definitions" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
 SQL
         );
-        $this->addSql('CREATE INDEX idx_day_definitions_day_definition_log_parent ON logs.day_definition_logs (parent_id)');
+        $this->addSql(
+            'CREATE INDEX idx_day_definitions_day_definition_log_parent ON logs.day_definition_logs (parent_id)'
+        );
         $this->addSql('ALTER INDEX logs.idx_bd1ef8d07e3c61f9 RENAME TO idx_day_definitions_day_definition_log_owner');
     }
 
