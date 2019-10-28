@@ -9,9 +9,9 @@ use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\DBALException;
 
 /**
-* Class Version20191026112520
+* Class Version20191028080708
 */
-final class Version20191026112520 extends AbstractMigration
+final class Version20191028080708 extends AbstractMigration
 {
     /**
      * @return string
@@ -37,19 +37,21 @@ final class Version20191026112520 extends AbstractMigration
             'Migration can only be executed safely on \'postgresql\'.'
         );
 
-        $this->addSql('ALTER TABLE logs.user_timesheet_day_logs DROP CONSTRAINT fk_657e6c545b30fbb2');
-        $this->addSql('DROP INDEX logs.idx_a0d8d20e5b30fbb2');
-        $this->addSql('DROP INDEX logs.idx_user_timesheet_day_log_log_date');
-        $this->addSql('ALTER TABLE logs.user_timesheet_day_logs RENAME COLUMN user_timesheet_day_id TO parent_id');
-        $this->addSql('ALTER TABLE logs.user_timesheet_day_logs RENAME COLUMN trigger TO trigger_element');
+        $this->addSql('ALTER TABLE logs.day_definition_logs DROP CONSTRAINT fk_bd1ef8d081f0c051');
+        $this->addSql('DROP INDEX logs.idx_day_definitions_day_definition_log_date');
+        $this->addSql('DROP INDEX logs.idx_bd1ef8d081f0c051');
+        $this->addSql('ALTER TABLE logs.day_definition_logs RENAME COLUMN day_definition_id TO parent_id');
+        $this->addSql('ALTER TABLE logs.day_definition_logs RENAME COLUMN trigger TO trigger_element');
         $this->addSql(<<<'SQL'
-ALTER TABLE logs.user_timesheet_day_logs ADD CONSTRAINT FK_A0D8D20E727ACA70
+ALTER TABLE logs.day_definition_logs ADD CONSTRAINT FK_BD1EF8D0727ACA70
     FOREIGN KEY (parent_id)
-        REFERENCES "user_timesheet_days" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+        REFERENCES "dictionary"."day_definitions" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
 SQL
         );
-        $this->addSql('CREATE INDEX idx_user_timesheet_day_log_parent ON logs.user_timesheet_day_logs (parent_id)');
-        $this->addSql('ALTER INDEX logs.idx_a0d8d20e7e3c61f9 RENAME TO idx_user_timesheet_day_log_owner');
+        $this->addSql(
+            'CREATE INDEX idx_day_definitions_day_definition_log_parent ON logs.day_definition_logs (parent_id)'
+        );
+        $this->addSql('ALTER INDEX logs.idx_bd1ef8d07e3c61f9 RENAME TO idx_day_definitions_day_definition_log_owner');
     }
 
     /**

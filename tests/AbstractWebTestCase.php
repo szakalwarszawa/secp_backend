@@ -7,6 +7,7 @@ namespace App\Tests;
 use App\DataFixtures\UserFixtures;
 use App\Entity\Types\LoggableEntityInterface;
 use App\Entity\User;
+use App\Utils\ORM\ClassUtil;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManager;
@@ -25,7 +26,6 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Exception;
 use StdClass;
-use Doctrine\Common\Util\ClassUtils;
 use App\Utils\ORM\EntityLogAnnotationReader;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -361,7 +361,7 @@ abstract class AbstractWebTestCase extends WebTestCase
     {
         $className = get_class($beforeChangeEntity);
         if ($beforeChangeEntity instanceof Proxy) {
-            $className = ClassUtils::getRealClass(get_class($beforeChangeEntity));
+            $className = ClassUtil::getRealClass(get_class($beforeChangeEntity));
         }
         $propertiesToLog = EntityLogAnnotationReader::getPropertiesToLog($className);
         $afterChangeEntity = $this
