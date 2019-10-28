@@ -15,7 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="`day_definition_logs`",
  *     indexes={
  *          @ORM\Index(name="idx_day_definitions_log_date", columns={"log_date"}),
- *          @ORM\Index(name="idx_day_definitions_day_definition_log_date", columns={"parent_id", "log_date"}),
+ *          @ORM\Index(name="idx_day_definitions_day_definition_log_parent", columns={"parent_id"}),
+ *          @ORM\Index(name="idx_day_definitions_day_definition_log_owner", columns={"owner_id"})
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\DayDefinitionLogRepository")
