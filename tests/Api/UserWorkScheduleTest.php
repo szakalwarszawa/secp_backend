@@ -225,5 +225,10 @@ JSON;
         $this->assertNotNull($userJSON);
         $this->assertEquals($userWorkScheduleDB->getId(), $userJSON->id);
         $this->assertEquals($userWorkScheduleDB->getStatus()->getId(), $userJSON->status->id);
+
+        $this->assertApiLogsSaving(
+            sprintf('/api/user_work_schedules/%s/logs', $userWorkScheduleREF->getId()),
+            $userWorkScheduleREF
+        );
     }
 }

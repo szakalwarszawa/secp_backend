@@ -211,5 +211,10 @@ JSON;
         $this->assertNotNull($userJSON);
         $this->assertEquals($userTimesheetDB->getId(), $userJSON->id);
         $this->assertEquals($userTimesheetDB->getStatus()->getId(), $userJSON->status->id);
+
+        $this->assertApiLogsSaving(
+            sprintf('/api/user_timesheets/%s/logs', $userTimesheetREF->getId()),
+            $userTimesheetREF
+        );
     }
 }

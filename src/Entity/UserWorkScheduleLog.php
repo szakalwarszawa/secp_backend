@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Entity\Types\LogEntityInterface;
-use DateTimeInterface;
+use App\Annotations\ParentEntity;
+use App\Entity\Types\Model\LogEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(
@@ -15,8 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     name="`user_work_schedule_logs`",
  *     indexes={
  *          @ORM\Index(name="idx_user_work_schedule_log_date", columns={"log_date"}),
- *          @ORM\Index(name="idx_user_work_schedule_user_work_schedule_log_date", columns={"user_work_schedule_id",
- *          "log_date"}),
+ *          @ORM\Index(name="idx_user_work_schedule_user_parent", columns={"parent_id"}),
+ *          @ORM\Index(name="idx_user_work_schedule_user_owner", columns={"owner_id"})
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserWorkScheduleLogRepository")
@@ -43,168 +43,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          }
  *      }
  * )
+ * @ParentEntity(UserWorkSchedule::class)
  */
-class UserWorkScheduleLog /*implements LogEntityInterface*/
+class UserWorkScheduleLog extends LogEntity
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     * @Groups({"get"})
-     */
-    private $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\UserWorkSchedule", inversedBy="userWorkScheduleLogs")
-     * @ORM\JoinColumn(nullable=false, columnDefinition="INTEGER NOT NULL")
-     * @Groups({"get"})
-     */
-    private $userWorkSchedule;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get"})
-     */
-    private $owner;
-
-    /**
-     * @var DateTimeInterface
-     *
-     * @ORM\Column(type="datetime")
-     * @Assert\NotBlank()
-     * @Groups({"get"})
-     */
-    private $logDate;
-
-    /**
-     * @ORM\Column(type="text")
-     * @Assert\NotBlank()
-     * @Groups({"get"})
-     */
-    private $notice;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(
-     *  type="string",
-     *  length=100,
-     *  nullable=true
-     * )
-     * @Groups({"get"})
-     */
-    private $trigger;
-
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return User|null
-     */
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    /**
-     * @param User|null $owner
-     *
-     * @return UserWorkScheduleLog
-     */
-    public function setOwner(?User $owner): UserWorkScheduleLog
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
-    /**
-     * @return UserWorkSchedule
-     */
-    public function getUserWorkSchedule(): UserWorkSchedule
-    {
-        return $this->userWorkSchedule;
-    }
-
-    /**
-     * @param UserWorkSchedule $userWorkSchedule
-     *
-     * @return UserWorkScheduleLog
-     */
-    public function setUserWorkSchedule(UserWorkSchedule $userWorkSchedule): UserWorkScheduleLog
-    {
-        $this->userWorkSchedule = $userWorkSchedule;
-
-        return $this;
-    }
-
-    /**
-     * @return DateTimeInterface
-     */
-    public function getLogDate(): DateTimeInterface
-    {
-        return $this->logDate;
-    }
-
-    /**
-     * @param DateTimeInterface $logDate
-     *
-     * @return UserWorkScheduleLog
-     */
-    public function setLogDate(DateTimeInterface $logDate): UserWorkScheduleLog
-    {
-        $this->logDate = $logDate;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getNotice(): ?string
-    {
-        return $this->notice;
-    }
-
-    /**
-     * @param string $notice
-     *
-     * @return UserWorkScheduleLog
-     */
-    public function setNotice(string $notice): UserWorkScheduleLog
-    {
-        $this->notice = $notice;
-
-        return $this;
-    }
-
-    /**
-     * Get trigger
-     *
-     * @return string|null
-     */
-    public function getTrigger(): ?string
-    {
-        return $this->trigger;
-    }
-
-    /**
-     * Set trigger
-     *
-     * @param string|null $trigger
-     *
-     * @return UserWorkScheduleLog
-     */
-    public function setTrigger(?string $trigger): UserWorkScheduleLog
-    {
-        $this->trigger = $trigger;
-
-        return $this;
-    }
 }

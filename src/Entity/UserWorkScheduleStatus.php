@@ -78,6 +78,14 @@ class UserWorkScheduleStatus implements RuleInterface
     protected $rules;
 
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
+    /**
      * @return null|string
      */
     public function getId(): ?string
