@@ -25,6 +25,7 @@ final class Version20190924080935 extends AbstractMigration
     /**
      * @param Schema $schema
      *
+     * @return void
      * @throws DBALException
      *
      * @SuppressWarnings("unused")

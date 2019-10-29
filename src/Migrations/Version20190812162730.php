@@ -23,6 +23,8 @@ final class Version20190812162730 extends AbstractMigration
 
     /**
      * @param Schema $schema
+     *
+     * @return void
      * @throws DBALException
      * @SuppressWarnings("unused")
      */
@@ -40,6 +42,8 @@ final class Version20190812162730 extends AbstractMigration
 
     /**
      * @param Schema $schema
+     *
+     * @return void
      * @SuppressWarnings("unused")
      */
     public function down(Schema $schema): void

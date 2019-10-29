@@ -24,11 +24,10 @@ final class Version20190918105733 extends AbstractMigration
     /**
      * @param Schema $schema
      *
+     * @return void
      * @throws DBALException
      *
      * @SuppressWarnings("unused")
-     *
-     * @return void
      */
     public function up(Schema $schema): void
     {
@@ -63,6 +62,8 @@ SQL
 
     /**
      * @param Schema $schema
+     *
+     * @return void
      *
      * @SuppressWarnings("unused")
      */
