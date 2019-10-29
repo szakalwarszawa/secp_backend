@@ -23,6 +23,7 @@ class LogEntity implements LogEntityInterface
     * @ORM\Id()
     * @ORM\GeneratedValue()
     * @ORM\Column(type="integer")
+    * @Groups({"get"})
     */
     protected $id;
 
