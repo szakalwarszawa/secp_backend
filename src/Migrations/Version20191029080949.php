@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
@@ -8,7 +8,6 @@ use App\Entity\User;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
 * Class Version20191029080949
