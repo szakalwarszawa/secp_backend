@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -21,5 +22,27 @@ class UserRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    /**
+     * Finds system user.
+     *
+     * @return User
+     * @throws EntityNotFoundException
+     */
+    public function findSystemUser(): User
+    {
+        $queryResult = $this
+            ->createQueryBuilder('u')
+            ->where('u.username = :systemUsername')
+            ->setParameter('systemUsername', User::SYSTEM_USERNAME)
+            ->getQuery()
+            ->getResult()
+        ;
+        if (!$queryResult) {
+            throw new EntityNotFoundException('There is no system user in database.');
+        }
+
+        return $queryResult;
     }
 }
