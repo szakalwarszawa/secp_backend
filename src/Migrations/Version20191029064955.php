@@ -32,7 +32,10 @@ final class Version20191029064955 extends AbstractMigration
      */
     public function up(Schema $schema): void
     {
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
+            'Migration can only be executed safely on \'postgresql\'.'
+        );
 
         $this->addSql('ALTER TABLE logs.user_work_schedule_logs DROP CONSTRAINT fk_39f8c792c6df60cb');
         $this->addSql('DROP INDEX logs.idx_39f8c792c6df60cb');
