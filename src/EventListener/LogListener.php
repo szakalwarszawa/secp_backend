@@ -11,6 +11,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use App\Utils\ORM\EntityChangeSetLogBuilder;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use ReflectionException;
 
 /**
  * Class LogListener
@@ -40,9 +41,9 @@ class LogListener
      *
      * @param OnFlushEventArgs $args
      *
-     * @throws AnnotationException
-     *
      * @return void
+     * @throws ReflectionException
+     * @throws AnnotationException
      */
     public function onFlush(OnFlushEventArgs $args): void
     {

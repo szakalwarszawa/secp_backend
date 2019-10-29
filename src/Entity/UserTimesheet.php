@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -7,7 +9,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Annotations\AnnotatedLogEntity;
+use App\Entity\Types\LoggableEntityInterface;
 use App\Entity\Utils\UserAware;
+use App\Traits\LoggableEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -103,9 +108,13 @@ use App\Validator\ValueExists;
  *     },
  *     arguments={"orderParameterName"="_order"}
  * )
+ *
+ * @AnnotatedLogEntity(logClass=UserTimesheetLog::class)
  */
-class UserTimesheet
+class UserTimesheet implements LoggableEntityInterface
 {
+    use LoggableEntityTrait;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -134,6 +143,9 @@ class UserTimesheet
      * @ValueExists(entity="App\Entity\UserTimesheetStatus", searchField="id")
      * @ORM\ManyToOne(targetEntity="App\Entity\UserTimesheetStatus")
      * @Groups({"get", "post", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana statusu z %s na %s"
+     * })
      */
     private $status;
 
@@ -144,18 +156,11 @@ class UserTimesheet
     private $userTimesheetDays;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\UserTimesheetLog", mappedBy="userTimesheet")
-     * @ApiSubresource(maxDepth=1)
-     */
-    private $userTimesheetLogs;
-
-    /**
      * UserTimesheet constructor.
      */
     public function __construct()
     {
         $this->userTimesheetDays = new ArrayCollection();
-        $this->userTimesheetLogs = new ArrayCollection();
     }
 
     /**
@@ -261,47 +266,6 @@ class UserTimesheet
             // set the owning side to null (unless already changed)
             if ($userTimesheetDay->getUserTimesheet() === $this) {
                 $userTimesheetDay->setUserTimesheet(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|UserTimesheetLog[]
-     */
-    public function getUserTimesheetLogs(): Collection
-    {
-        return $this->userTimesheetLogs;
-    }
-
-    /**
-     * @param UserTimesheetLog $userTimesheetLog
-     *
-     * @return UserTimesheet
-     */
-    public function addUserTimesheetLog(UserTimesheetLog $userTimesheetLog): UserTimesheet
-    {
-        if (!$this->userTimesheetLogs->contains($userTimesheetLog)) {
-            $this->userTimesheetLogs[] = $userTimesheetLog;
-            $userTimesheetLog->setUserTimesheet($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param UserTimesheetLog $userTimesheetLog
-     *
-     * @return UserTimesheet
-     */
-    public function removeUserTimesheetLog(UserTimesheetLog $userTimesheetLog): UserTimesheet
-    {
-        if ($this->userTimesheetLogs->contains($userTimesheetLog)) {
-            $this->userTimesheetLogs->removeElement($userTimesheetLog);
-            // set the owning side to null (unless already changed)
-            if ($userTimesheetLog->getUserTimesheet() === $this) {
-                $userTimesheetLog->setUserTimesheet(null);
             }
         }
 
