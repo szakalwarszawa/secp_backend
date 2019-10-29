@@ -147,6 +147,11 @@ use App\Entity\Utils\UserAware;
 class User implements UserInterface
 {
     /**
+     * @var string
+     */
+    public const SYSTEM_USERNAME = 'system';
+
+    /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
