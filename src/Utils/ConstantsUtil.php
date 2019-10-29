@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class ConstantsUtil
@@ -32,6 +33,7 @@ class ConstantsUtil
      * @param bool $includeKeys
      *
      * @return array
+     * @throws ReflectionException
      */
     public static function getAllConstants(?string $subjectClassName = null, bool $includeKeys = false): array
     {
@@ -56,12 +58,12 @@ class ConstantsUtil
      * Check if value exists in subject class constants.
      *
      * @param mixed $value
-     * @param null|string $className
+     * @param null|string $subjectClassName
      * @param bool $throwException
      *
-     * @throws InvalidArgumentException when subject class does not contain constant with given value
-     *
      * @return mixed
+     * @throws InvalidArgumentException when subject class does not contain constant with given value
+     * @throws ReflectionException
      */
     public static function constCheckValue(
         $value = null,
@@ -97,6 +99,7 @@ class ConstantsUtil
      * @param null|string $subjectClassName
      *
      * @return null|int
+     * @throws ReflectionException
      */
     public static function keyToValue(string $key, ?string $subjectClassName = null): ?int
     {
@@ -112,6 +115,7 @@ class ConstantsUtil
      * @param null|string $subjectClassName
      *
      * @return null|string
+     * @throws ReflectionException
      */
     public static function valueToKey(int $value, ?string $subjectClassName = null): ?string
     {
@@ -126,6 +130,7 @@ class ConstantsUtil
      * @param null|string $subjectClassName
      *
      * @return string
+     * @throws ReflectionException
      */
     public static function stringify(?string $subjectClassName = null): string
     {

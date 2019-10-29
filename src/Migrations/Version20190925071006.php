@@ -14,8 +14,7 @@ use Doctrine\Migrations\AbstractMigration;
 final class Version20190925071006 extends AbstractMigration
 {
     /**
-     * @param Schema $schema
-     *
+     * @return string
      * @SuppressWarnings("unused")
      */
     public function getDescription(): string

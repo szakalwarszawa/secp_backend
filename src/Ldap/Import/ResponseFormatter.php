@@ -30,9 +30,6 @@ class ResponseFormatter
      * Converts Collector`s elements to FakeLdapImport object.
      *
      * @param array|Collector[]
-     * @param int $format
-     *
-     * @throws InvalidArgumentException when $results element is not a Collector object.
      *
      * @return ArrayCollection
      */

@@ -49,7 +49,7 @@ final class UserUpdater extends AbstractUpdater
     private $propertyRoleMatcher;
 
     /**
-     * @param LdapObjectCollection $usersList
+     * @param LdapObjectCollection|Traversable $usersList
      * @param EntityManagerInterface $entityManager
      * @param PropertyRoleMatcher $propertyRoleMatcher
      */
