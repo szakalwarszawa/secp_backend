@@ -14,8 +14,7 @@ use Doctrine\Migrations\AbstractMigration;
 final class Version20190924054037 extends AbstractMigration
 {
     /**
-     * @param Schema $schema
-     *
+     * @return string
      * @SuppressWarnings("unused")
      */
     public function getDescription(): string
@@ -26,6 +25,7 @@ final class Version20190924054037 extends AbstractMigration
     /**
      * @param Schema $schema
      *
+     * @return void
      * @throws DBALException
      *
      * @SuppressWarnings("unused")
@@ -111,9 +111,9 @@ SQL
     /**
      * @param Schema $schema
      *
-     * @SuppressWarnings("unused")
-     *
      * @return void
+     *
+     * @SuppressWarnings("unused")
      */
     public function down(Schema $schema): void
     {

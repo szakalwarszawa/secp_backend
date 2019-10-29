@@ -55,7 +55,7 @@ class FakeLdapImport
     /**
      * Set succeed count
      *
-     * @param array $succeedCount
+     * @param int $succeedCount
      *
      * @return FakeLdapImport
      */
@@ -69,7 +69,7 @@ class FakeLdapImport
     /**
      * Get succeedCount
      *
-     * @return array
+     * @return int
      */
     public function getSucceedCount(): int
     {
@@ -79,7 +79,7 @@ class FakeLdapImport
     /**
      * Get failedCount
      *
-     * @return array
+     * @return int
      */
     public function getFailedCount(): int
     {
@@ -89,7 +89,7 @@ class FakeLdapImport
     /**
      * Set failedCount
      *
-     * @param array $failedCount
+     * @param int $failedCount
      *
      * @return FakeLdapImport
      */
