@@ -9,8 +9,4 @@ namespace App\Redmine;
  */
 interface RedmineRequestInterface
 {
-    /**
-     * @var string
-     */
-    public const ISSUE_ID_KEY = 'issue_id';
 }

@@ -104,16 +104,6 @@ class HttpClientConfigurator
      */
     public function getClientByArray(array $issueData): ?HttpClientInterface
     {
-        $resolver = new OptionsResolver();
-        $resolver
-            ->setRequired([
-                'subject',
-                'description',
-                'reporter_name',
-            ])
-            ->resolve($issueData)
-        ;
-
         return $this->makeClient($issueData);
     }
 
