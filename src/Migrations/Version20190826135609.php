@@ -24,6 +24,7 @@ final class Version20190826135609 extends AbstractMigration
     /**
      * @param Schema $schema
      *
+     * @return void
      * @throws DBALException
      *
      * @SuppressWarnings("unused")
@@ -60,6 +61,8 @@ final class Version20190826135609 extends AbstractMigration
 
     /**
      * @param Schema $schema
+     *
+     * @return void
      *
      * @SuppressWarnings("unused")
      */

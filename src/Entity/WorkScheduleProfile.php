@@ -161,6 +161,14 @@ class WorkScheduleProfile
     private $properties = [];
 
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
+    /**
      * @return int
      */
     public function getId(): int

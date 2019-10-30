@@ -7,9 +7,6 @@ namespace App\Tests\Api;
 use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserTimesheetFixtures;
 use App\DataFixtures\UserWorkScheduleFixtures;
-use App\Entity\AbsenceType;
-use App\Entity\PresenceType;
-use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetDay;
 use App\Entity\UserWorkScheduleDay;
 use App\Tests\AbstractWebTestCase;
@@ -69,7 +66,7 @@ class UserTimesheetDayTest extends AbstractWebTestCase
         $userTimesheetRef = $this->fixtures->getReference(UserTimesheetFixtures::REF_USER_TIMESHEET_USER_HR);
         /* @var $userTimesheetRef UserTimesheetDay */
 
-        $presenceTypeRef = $this->fixtures->getReference('presence_type_5');
+        $presenceTypeRef = $this->fixtures->getReference('presence_type_4');
         /* @var $presenceTypeRef PresenceType */
 
         $absenceTypeRef = $this->fixtures->getReference('absence_type_7');
@@ -171,7 +168,7 @@ JSON;
         $userTimesheetREF = $this->fixtures->getReference(UserTimesheetFixtures::REF_USER_TIMESHEET_USER_EDIT);
         /* @var $userTimesheetREF UserTimesheet */
 
-        $presenceTypeRef = $this->fixtures->getReference('presence_type_0');
+        $presenceTypeRef = $this->fixtures->getReference('presence_type_6');
         /* @var $presenceTypeRef PresenceType */
 
         $payload = <<<JSON
@@ -219,5 +216,10 @@ JSON;
         $this->assertEquals($userTimesheetDayDB->getWorkingTime(), $userTimesheetDayJSON->workingTime);
         $this->assertEquals($userTimesheetDayDB->getPresenceType()->getId(), $userTimesheetDayJSON->presenceType->id);
         $this->assertEquals($userTimesheetDayDB->getAbsenceType(), $userTimesheetDayJSON->absenceType);
+
+        $this->assertApiLogsSaving(
+            sprintf('/api/user_timesheet_days/%d/logs', $userTimesheetREF->getUserTimesheetDays()[0]->getId()),
+            $userTimesheetREF->getUserTimesheetDays()[0]
+        );
     }
 }

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use App\DataFixtures\UserFixtures;
-use App\Entity\Department;
 use App\Entity\User;
-use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
-use Doctrine\Tests\Common\DataFixtures\TestFixtures\UserFixture;
 use Exception;
 
+/**
+ * Class UserTest
+ */
 class UserTest extends AbstractWebTestCase
 {
     /**
@@ -161,7 +161,7 @@ JSON;
     {
         $userREF = $this->fixtures->getReference('user_' . random_int(0, 99));
         /* @var $userREF User */
-
+        $userBeforeUpdate = clone $userREF;
         $departmentRef = $this->fixtures->getReference('department_admin');
         /* @var $departmentRef Department */
 
@@ -220,6 +220,12 @@ JSON;
         $this->assertEquals($userDB->getLastName(), $userJSON->lastName);
         $this->assertEquals($userDB->getRoles(), $userJSON->roles);
         $this->assertEquals($userDB->getTitle(), $userJSON->title);
+        $this->assertGreaterThan(0, $userDB->getLogs()->count());
+
+        $this->assertApiLogsSaving(
+            sprintf('/api/users/%d/logs', $userBeforeUpdate->getId()),
+            $userBeforeUpdate
+        );
     }
 
     /**

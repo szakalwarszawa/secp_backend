@@ -7,8 +7,9 @@ namespace App\Tests\EventSubscriber;
 use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserTimesheetStatusFixtures;
 use App\Entity\UserTimesheet;
-use App\Entity\UserTimesheetLog;
 use App\Tests\AbstractWebTestCase;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * Class UserTimesheetListenerTest
@@ -22,8 +23,10 @@ class UserTimesheetListenerTest extends AbstractWebTestCase
 
     /**
      * @test
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function firePreUpdateOnUserTimesheetTest(): void
     {
@@ -38,28 +41,23 @@ class UserTimesheetListenerTest extends AbstractWebTestCase
             ->findOneBy([
                 'id' => self::SAMPLE_ID,
             ]);
+        $preUpdateUserTimesheet = clone $userTimesheet;
 
-        $status = $userTimesheet->getStatus();
         $workScheduleStatusRef = $this
             ->getEntityFromReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_ACCEPT)
         ;
         $userTimesheet->setStatus($workScheduleStatusRef);
         $this->entityManager->flush();
 
-        $statusChanged = $userTimesheet->getStatus();
-        $userTimesheetLog = $this->entityManager
-            ->getRepository(UserTimesheetLog::class)
-            ->findOneBy(
-                [],
-                ['id' => 'desc']
-            );
+        $refreshedUserTimesheet = $this->entityManager
+            ->getRepository(UserTimesheet::class)
+            ->findOneBy([
+                'id' => self::SAMPLE_ID,
+            ]);
 
-        $this->assertNotNull($userTimesheetLog);
-        $notice = $userTimesheetLog->getNotice();
-        $this->assertStringContainsString(
-            sprintf('Zmieniono status z: %s na: %s', $status->getId(), $statusChanged->getId()),
-            $notice
+        $this->assertNotEquals(
+            $preUpdateUserTimesheet->getStatus()->getId(),
+            $refreshedUserTimesheet->getStatus()->getId()
         );
-        $this->assertNotEquals($status, $statusChanged);
     }
 }

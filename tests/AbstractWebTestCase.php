@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace App\Tests;
 
 use App\DataFixtures\UserFixtures;
+use App\Entity\Types\LoggableEntityInterface;
 use App\Entity\User;
+use App\Utils\ORM\ClassUtil;
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Proxy\Proxy;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use ReflectionException;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -20,6 +25,9 @@ use Symfony\Component\Security\Core\Event\AuthenticationEvent;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Exception;
+use StdClass;
+use App\Utils\ORM\EntityLogAnnotationReader;
+use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractWebTestCase extends WebTestCase
 {
@@ -311,5 +319,70 @@ abstract class AbstractWebTestCase extends WebTestCase
             ->getToken()
             ->getUser()
         ;
+    }
+
+    /**
+     * Assert object's all logs by fetch them via api.
+     * It calls assertLog method in loop.
+     *
+     * @param string $apiUrl
+     * @param Proxy|LoggableEntityInterface $beforeChangeObject
+     *
+     * @return void
+     * @throws AnnotationException
+     * @throws NotFoundReferencedUserException
+     * @throws ReflectionException
+     */
+    protected function assertApiLogsSaving(string $apiUrl, $beforeChangeObject): void
+    {
+        $response = $this->getActionResponse(Request::METHOD_GET, $apiUrl);
+
+        $logsJson = json_decode($response->getContent(), false);
+        $this->assertNotNull($logsJson);
+
+        $logsArray = $logsJson->{'hydra:member'};
+        foreach ($logsArray as $log) {
+            $this->assertLog($log, $beforeChangeObject);
+        }
+    }
+
+    /**
+     * Checks the correctness of single log, relative
+     * to the object before the change.
+     *
+     * @param StdClass $log
+     * @param $beforeChangeEntity
+     *
+     * @return void
+     * @throws AnnotationException
+     * @throws ReflectionException
+     */
+    protected function assertLog(StdClass $log, $beforeChangeEntity): void
+    {
+        $className = get_class($beforeChangeEntity);
+        if ($beforeChangeEntity instanceof Proxy) {
+            $className = ClassUtil::getRealClass(get_class($beforeChangeEntity));
+        }
+        $propertiesToLog = EntityLogAnnotationReader::getPropertiesToLog($className);
+        $afterChangeEntity = $this
+            ->entityManager
+            ->getRepository($className)
+            ->findOneById($beforeChangeEntity->getId())
+        ;
+
+        $triggerElement = $log->triggerElement;
+        $logMessageFormat = $propertiesToLog[$triggerElement];
+        $getter = 'get' . ucfirst($triggerElement);
+        $oldValue = $beforeChangeEntity->$getter();
+        $newValue = $afterChangeEntity->$getter();
+
+        if (!$newValue || !$oldValue) {
+            return;
+        }
+
+        $this->assertEquals(
+            sprintf($logMessageFormat['message'], $oldValue, $newValue),
+            $log->notice
+        );
     }
 }
