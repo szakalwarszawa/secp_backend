@@ -131,3 +131,4 @@ services:
             - '%env(int:resolve:REDMINE_PROJECT_ID)%'
             - '%env(int:resolve:REDMINE_CATEGORY_ID)%'
             - '%env(int:resolve:REDMINE_TRACKER_ID)%'
+            - '%env(int:resolve:REDMINE_REPORTER_CUSTOM_FIELD_ID)%'

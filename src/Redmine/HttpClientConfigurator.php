@@ -32,6 +32,11 @@ class HttpClientConfigurator
     private $redmineServiceStatus;
 
     /**
+     * @var int
+     */
+    private $reporterCustomFieldId;
+
+    /**
      * @var array
      */
     public $requestOptions;
@@ -46,6 +51,7 @@ class HttpClientConfigurator
      * @param int $projectId
      * @param int $categoryId
      * @param int $trackerId
+     * @param int $reporterCustomFieldId
      */
     public function __construct(
         bool $redmineServiceStatus,
@@ -53,17 +59,20 @@ class HttpClientConfigurator
         ?string $apiKey,
         int $projectId,
         int $categoryId,
-        int $trackerId
+        int $trackerId,
+        int $reporterCustomFieldId
     ) {
         $this->apiUrl = $apiUrl;
         $this->apiKey = $apiKey;
         $this->redmineServiceStatus = $redmineServiceStatus;
+        $this->reporterCustomFieldId = $reporterCustomFieldId;
 
         $this->requestOptions = [
             RedmineRequest::REQUEST_DATA_KEY => [
                 'project_id' => $projectId,
                 'category_id' => $categoryId,
                 'tracker_id' => $trackerId,
+                'custom_fields' => []
             ],
         ];
     }
@@ -135,6 +144,11 @@ class HttpClientConfigurator
             $this->appendOptions($requestData);
         }
 
+        $this->addCustomFieldData([
+            'id' => $this->reporterCustomFieldId,
+            'value' => $requestData['reporter_name'],
+        ]);
+
         return HttpClient::create([
             'headers' => [
                'X-Redmine-API-Key' =>  $this->apiKey,
@@ -153,7 +167,17 @@ class HttpClientConfigurator
      */
     private function appendOptions(array $additionalData): void
     {
-        $defaultIssueData = $this->requestOptions['issue'];
-        $this->requestOptions['issue'] = array_merge($defaultIssueData, $additionalData);
+        $defaultIssueData = $this->requestOptions[RedmineRequest::REQUEST_DATA_KEY];
+        $this->requestOptions[RedmineRequest::REQUEST_DATA_KEY] = array_merge($defaultIssueData, $additionalData);
+    }
+
+    /**
+     * Append custom fields data.
+     *
+     * @param array $customField
+     */
+    private function addCustomFieldData(array $customField): void
+    {
+        $this->requestOptions[RedmineRequest::REQUEST_DATA_KEY]['custom_fields'][] = $customField;
     }
 }

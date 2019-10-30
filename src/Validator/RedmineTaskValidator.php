@@ -12,7 +12,6 @@ use App\Utils\UserUtilsInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Class RedmineTaskValidator
@@ -46,7 +45,6 @@ class RedmineTaskValidator extends ConstraintValidator
         RedmineRequestInterface $redmineRequest,
         HttpClientConfigurator $httpClient,
         UserUtilsInterface $userUtils
-
     ) {
         $this->redmineRequest = $redmineRequest;
         $this->httpClient = $httpClient;
@@ -85,13 +83,13 @@ class RedmineTaskValidator extends ConstraintValidator
             return;
         }
 
-        $httpClient = $this->httpClient->getClientByEntity($entity);
-        $redmineResponse = $this->redmineRequest->executeClient($httpClient);
-
         $currentUser = $this->userUtils->getCurrentUser();
         if ($currentUser instanceof User) {
             $entity->setReporterName($currentUser->getUsername());
         }
+
+        $httpClient = $this->httpClient->getClientByEntity($entity);
+        $redmineResponse = $this->redmineRequest->executeClient($httpClient);
 
         $entity->setRedmineTaskId($redmineResponse->id ?? null);
     }

@@ -164,6 +164,9 @@ class AppIssue
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getRedmineTaskId(): ?int
     {
         return $this->redmineTaskId;
