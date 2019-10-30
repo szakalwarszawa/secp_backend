@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Namshi\JOSE\JWS;
 use Prophecy\Argument\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,21 +29,23 @@ class UserUtil implements UserUtilsInterface
     private $token;
 
     /**
-     * @var RequestStack
+     * @var string
      */
-    private $requestStack;
+    private $jwtToken;
 
     /**
      * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
      * @param RequestStack $requestStack
+     * @param TokenExtractorInterface $jwtExtractor
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        TokenExtractorInterface $jwtExtractor
     ) {
-        $this->requestStack = $requestStack;
+        $this->jwtToken = $jwtExtractor->extract($requestStack->getCurrentRequest());
         $this->entityManager = $entityManager;
         $this->token = $tokenStorage->getToken();
     }
@@ -54,28 +56,16 @@ class UserUtil implements UserUtilsInterface
      * In that case TokenStorage:getUser() contains only 'anon.' string.
      * But if user provided token in request it could be extracted.
      *
+     * @param null|string $jwtToken
+     *
      * @return string|null
      */
-    public function extractUsernameFromRequestTokenHeader(): ?string
+    public function extractUsernameByJwtToken(?string $jwtToken = null): ?string
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $authorizationHeader = $request
-            ->headers
-            ->get('authorization')
-            ;
-
-        if (!$authorizationHeader) {
-            return null;
+        $jwtToken = $jwtToken ? $jwtToken : $this->jwtToken;
+        if ($jwtToken) {
+            return JWS::load($this->jwtToken)->getPayload()['username'];
         }
-
-        if (preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
-            try {
-                return JWS::load($matches[1])->getPayload()['username'];
-            } catch (InvalidArgumentException $exception) {
-                return null;
-            }
-        }
-
 
         return null;
     }
@@ -97,7 +87,7 @@ class UserUtil implements UserUtilsInterface
             }
 
             if ($token->getUser() === UserUtilsInterface::ANONYMOUS_USER) {
-                $username = $this->extractUsernameFromRequestTokenHeader();
+                $username = $this->extractUsernameByJwtToken();
             }
 
             if (!$username) {
