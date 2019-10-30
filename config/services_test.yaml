@@ -6,3 +6,6 @@ services:
 
   App\Utils\UserUtilsInterface:
     class: App\Tests\UserUtil
+
+  App\Redmine\RedmineRequestInterface:
+    class: App\Tests\ApiFakeResponse

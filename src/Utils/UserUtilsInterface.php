@@ -14,6 +14,13 @@ use App\Entity\User;
 interface UserUtilsInterface
 {
     /**
+     * In anonymous path TokenInterface:getUser() is not User object, it is string 'anon.'
+     *
+     * @var string
+     */
+    public const ANONYMOUS_USER = 'anon.';
+
+    /**
      * Get current user object.
      *
      * @param bool $refreshFromDb - if true, user object will be fetched from database.

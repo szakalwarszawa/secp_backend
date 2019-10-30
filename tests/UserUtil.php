@@ -23,7 +23,7 @@ class UserUtil implements UserUtilsInterface
     /**
      * @var string
      */
-    private const DEFAULT_USER = 'user';
+    public const DEFAULT_USER = 'user';
 
     /**
      * @param EntityManagerInterface $entityManager
