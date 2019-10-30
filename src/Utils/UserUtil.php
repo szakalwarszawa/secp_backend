@@ -29,9 +29,9 @@ class UserUtil implements UserUtilsInterface
     private $token;
 
     /**
-     * @var string
+     * @var null|string
      */
-    private $jwtToken;
+    private $jwtToken = null;
 
     /**
      * @param EntityManagerInterface $entityManager
@@ -45,7 +45,9 @@ class UserUtil implements UserUtilsInterface
         RequestStack $requestStack,
         TokenExtractorInterface $jwtExtractor
     ) {
-        $this->jwtToken = $jwtExtractor->extract($requestStack->getCurrentRequest());
+        if ($requestStack->getCurrentRequest()) {
+            $this->jwtToken = $jwtExtractor->extract($requestStack->getCurrentRequest());
+        }
         $this->entityManager = $entityManager;
         $this->token = $tokenStorage->getToken();
     }
@@ -64,7 +66,12 @@ class UserUtil implements UserUtilsInterface
     {
         $jwtToken = $jwtToken ? $jwtToken : $this->jwtToken;
         if ($jwtToken) {
-            return JWS::load($this->jwtToken)->getPayload()['username'];
+            try {
+                return JWS::load($this->jwtToken)->getPayload()['username'];
+            } catch (\InvalidArgumentException $exception) {
+                return null;
+            }
+
         }
 
         return null;
