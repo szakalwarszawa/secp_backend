@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Namshi\JOSE\JWS;
 use Prophecy\Argument\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -68,7 +69,11 @@ class UserUtil implements UserUtilsInterface
         }
 
         if (preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
-            return JWS::load($matches[1])->getPayload()['username'];
+            try {
+                return JWS::load($matches[1])->getPayload()['username'];
+            } catch (InvalidArgumentException $exception) {
+                return null;
+            }
         }
 
 
