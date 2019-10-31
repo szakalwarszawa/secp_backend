@@ -39,6 +39,16 @@ class UserUtilTest extends AbstractWebTestCase
          */
         $this->loginAsUser($user, ['ROLE_ADMIN']);
 
+        /**
+         * UserUtil is an PROD instance of UserUtilsInterface.
+         * Depends on environment UserUtilsInterface is:
+         *  - Test: App\Tests\UserUtil
+         *  - DEV/PROD: App\Utils\UserUtil
+         *
+         * This time DEV/PROD is called explicitly. Due to services configuration,
+         * calling it in this way is only possible in test env.
+         * (services_test.yaml UserUtil is defined as public)
+         */
         $currentUserShouldBeLogged = self::$container->get(UserUtil::class)->getCurrentUser();
         $this->assertInstanceOf(User::class, $currentUserShouldBeLogged);
     }

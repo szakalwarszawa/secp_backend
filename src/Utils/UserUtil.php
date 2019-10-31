@@ -45,11 +45,12 @@ class UserUtil implements UserUtilsInterface
         RequestStack $requestStack,
         TokenExtractorInterface $jwtExtractor
     ) {
+        $this->entityManager = $entityManager;
+        $this->token = $tokenStorage->getToken();
+
         if ($requestStack->getCurrentRequest()) {
             $this->jwtToken = $jwtExtractor->extract($requestStack->getCurrentRequest());
         }
-        $this->entityManager = $entityManager;
-        $this->token = $tokenStorage->getToken();
     }
 
     /**
