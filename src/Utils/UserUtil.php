@@ -11,6 +11,7 @@ use Prophecy\Argument\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\Entity\User;
+use InvalidArgumentException;
 
 /**
  * Class UserUtil
@@ -69,10 +70,9 @@ class UserUtil implements UserUtilsInterface
         if ($jwtToken) {
             try {
                 return JWS::load($this->jwtToken)->getPayload()['username'];
-            } catch (\InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException $exception) {
                 return null;
             }
-
         }
 
         return null;
