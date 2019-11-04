@@ -158,7 +158,7 @@ class PropertyBasedRole
     }
 
     /**
-     * @param string $role
+     * @param Role $role
      *
      * @return PropertyBasedRole
      */

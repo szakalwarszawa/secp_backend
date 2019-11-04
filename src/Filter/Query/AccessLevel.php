@@ -127,7 +127,6 @@ class AccessLevel
      * Returns conditional query based on user role. (trough reference table)
      *
      * @param string $targetTableAlias
-     * @param User $user
      * @param UserAware $userAware
      *
      * @return string
