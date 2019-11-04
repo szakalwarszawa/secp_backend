@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Annotations\AnnotatedLogEntity;
+use App\Entity\Types\LoggableEntityInterface;
+use App\Traits\LoggableEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -52,9 +54,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          }
  *      }
  * )
+ * @AnnotatedLogEntity(logClass=DayDefinitionLog::class)
  */
-class DayDefinition
+class DayDefinition implements LoggableEntityInterface
 {
+    use LoggableEntityTrait;
+
     /**
      * @ORM\Id()
      * @ORM\Column(type="string", length=10, nullable=false, unique=true, options={"fixed" = true})
@@ -67,28 +72,20 @@ class DayDefinition
      * @ORM\Column(type="boolean", nullable=false)
      * @Assert\NotNull()
      * @Groups({"get", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana typu dnia pracujący z %s na %s"
+     * })
      */
     private $workingDay;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"get", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana opisu z %s na %s"
+     * })
      */
     private $notice;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\DayDefinitionLog", mappedBy="dayDefinition")
-     * @ApiSubresource()
-     */
-    private $dayDefinitionLogs;
-
-    /**
-     * DayDefinition constructor.
-     */
-    public function __construct()
-    {
-        $this->dayDefinitionLogs = new ArrayCollection();
-    }
 
     /**
      * @return string
@@ -146,47 +143,6 @@ class DayDefinition
     public function setNotice(?string $notice): self
     {
         $this->notice = $notice;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|DayDefinitionLog[]
-     */
-    public function getDayDefinitionLogs(): Collection
-    {
-        return $this->dayDefinitionLogs;
-    }
-
-    /**
-     * @param DayDefinitionLog $dayDefinitionLog
-     *
-     * @return DayDefinition
-     */
-    public function addDayDefinitionLog(DayDefinitionLog $dayDefinitionLog): self
-    {
-        if (!$this->dayDefinitionLogs->contains($dayDefinitionLog)) {
-            $this->dayDefinitionLogs[] = $dayDefinitionLog;
-            $dayDefinitionLog->setDayDefinition($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param DayDefinitionLog $dayDefinitionLog
-     *
-     * @return DayDefinition
-     */
-    public function removeDayDefinitionLog(DayDefinitionLog $dayDefinitionLog): self
-    {
-        if ($this->dayDefinitionLogs->contains($dayDefinitionLog)) {
-            $this->dayDefinitionLogs->removeElement($dayDefinitionLog);
-            // set the owning side to null (unless already changed)
-            if ($dayDefinitionLog->getDayDefinition() === $this) {
-                $dayDefinitionLog->setDayDefinition(null);
-            }
-        }
 
         return $this;
     }

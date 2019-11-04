@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 use App\Entity\WorkScheduleProfile;
@@ -9,16 +11,39 @@ use Faker\Factory as Faker;
 
 /**
  * Class WorkScheduleProfileFixtures
- * @package App\DataFixtures
  */
 class WorkScheduleProfileFixtures extends Fixture
 {
+    /**
+     * @var array
+     */
+    private $properties = [
+        'dailyWorkingTime' => [
+            'visible' => true,
+        ],
+        'dayStartTimeFrom' => [
+            'visible' => true,
+        ],
+        'dayStartTimeTo' => [
+            'visible' => true,
+        ],
+        'dayEndTimeFrom' => [
+            'visible' => true,
+        ],
+        'dayEndTimeTo' => [
+            'visible' => true,
+        ],
+    ];
+
+    /**
+     * @var array
+     */
     private $profiles = [
-        ['Domyślny', '08:30', '08:30', '16:30', '16:30', 8.00],
-        ['Indywidualny', '08:30', '08:30', '16:30', '16:30', 8.00],
-        ['Ruchomy', '08:00', '10:00', '16:00', '18:00', 8.00],
-        ['Harmonogram', '08:30', '08:30', '16:30', '16:30', 8.00],
-        ['Brak', '08:30', '08:30', '16:30', '16:30', 8.00],
+        ['Domyślny', '08:30', '08:30', '16:30', '16:30', 8.00, 'FFFFF'],
+        ['Indywidualny', '08:30', '08:30', '16:30', '16:30', 8.00, 'TFTFT'],
+        ['Ruchomy', '08:00', '10:00', '16:00', '18:00', 8.00, 'TTTTT'],
+        ['Harmonogram', '08:30', '08:30', '16:30', '16:30', 8.00, 'TFTFT'],
+        ['Brak', '08:30', '08:30', '16:30', '16:30', 8.00, 'FFFFF'],
     ];
 
     /**
@@ -36,6 +61,8 @@ class WorkScheduleProfileFixtures extends Fixture
 
     /**
      * @param ObjectManager $manager
+     *
+     * @return void
      */
     public function load(ObjectManager $manager): void
     {
@@ -47,7 +74,9 @@ class WorkScheduleProfileFixtures extends Fixture
                 ->setDayStartTimeTo($profile[2])
                 ->setDayEndTimeFrom($profile[3])
                 ->setDayEndTimeTo($profile[4])
-                ->setDailyWorkingTime($profile[5]);
+                ->setDailyWorkingTime($profile[5])
+                ->setProperties($this->prepareProperties($profile[6]))
+            ;
 
             $manager->persist($workScheduleProfile);
 
@@ -55,5 +84,29 @@ class WorkScheduleProfileFixtures extends Fixture
         }
 
         $manager->flush();
+    }
+
+    /**
+     * @param string $settings
+     *
+     * @return array
+     */
+    private function prepareProperties(string $settings): array
+    {
+        $fields = [
+            'dayStartTimeFrom',
+            'dayStartTimeTo',
+            'dayEndTimeFrom',
+            'dayEndTimeTo',
+            'dailyWorkingTime',
+        ];
+
+        $properties = $this->properties;
+
+        foreach ($fields as $idx => $field) {
+            $properties[$field] = ['visible' => $settings[$idx] === 'T'];
+        }
+
+        return $properties;
     }
 }

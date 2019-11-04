@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\EventListener;
@@ -7,8 +8,6 @@ use App\DataFixtures\UserTimesheetFixtures;
 use App\DataFixtures\UserWorkScheduleFixtures;
 use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetDay;
-use App\Entity\UserTimesheetDayLog;
-use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\OptimisticLockException;
@@ -93,109 +92,6 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
     }
 
     /**
-     * @return array
-     */
-    public function userTimesheetDayChangeFromEmptyProvider(): array
-    {
-        return [
-            [['setNotice', null, 'test notice', 'Zmieniono opis z: brak, na: test notice']],
-            [['setWorkingTime', null, 7.50, 'Zmieniono czas pracy z: 8, na: 7.5']],
-            [['setDayStartTime', null, '07:25', 'Zmieniono rozpoczęcie dnia z: brak, na: 07:25']],
-            [['setDayEndTime', null, '15:55', 'Zmieniono zakończenie dnia z: brak, na: 15:55']],
-            [['setPresenceType', 'presence_type_2', null, 'Zmieniono typ obecności z: obecność, na: szkolenie']],
-            [['setAbsenceType', 'absence_type_2', null, 'Zmieniono typ nieobecności z: brak, na: urlop na żądanie']],
-        ];
-    }
-
-    /**
-     * @dataProvider userTimesheetDayChangeFromEmptyProvider
-     *
-     * @param $testCase
-     *
-     * @return void
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function testUserTimesheetDayChangeFromEmpty($testCase): void
-    {
-        [$fieldName, $newValueReference, $newValue, $expectedMessage] = $testCase;
-        $newValue = $newValueReference !== null
-            ? $this->getEntityFromReference($newValueReference)
-            : $newValue;
-
-        $this->entityManager->refresh($this->emptyUserTimesheetDay);
-
-        $this->emptyUserTimesheetDay->$fieldName($newValue);
-        $this->entityManager->persist($this->emptyUserTimesheetDay);
-        $this->entityManager->flush();
-
-        $userTimesheetDayLogs = $this->entityManager
-            ->getRepository(UserTimesheetDayLog::class)
-            ->findBy([
-                'userTimesheetDay' => $this->emptyUserTimesheetDay,
-            ]);
-        /* @var UserTimesheetDayLog[] $userTimesheetDayLogs */
-
-        $this->assertCount(1, $userTimesheetDayLogs);
-        $this->assertEquals($expectedMessage, $userTimesheetDayLogs[0]->getNotice());
-    }
-
-    /**
-     * @return array
-     */
-    public function userTimesheetDayChangeFromFilledProvider(): array
-    {
-        return [
-            [['setNotice', null, 'test notice', 'Zmieniono opis z: first notice, na: test notice']],
-            [['setWorkingTime', null, 7.50, 'Zmieniono czas pracy z: 8, na: 7.5']],
-            [['setDayStartTime', null, '07:25', 'Zmieniono rozpoczęcie dnia z: 09:00, na: 07:25']],
-            [['setDayEndTime', null, '15:55', 'Zmieniono zakończenie dnia z: 17:00, na: 15:55']],
-            [['setPresenceType', 'presence_type_2', null, 'Zmieniono typ obecności z: obecność, na: szkolenie']],
-            [[
-                'setAbsenceType',
-                'absence_type_2',
-                null,
-                'Zmieniono typ nieobecności z: urlop wypoczynkowy, na: urlop na żądanie'
-            ]],
-        ];
-    }
-
-    /**
-     * @dataProvider userTimesheetDayChangeFromFilledProvider
-     *
-     * @param $testCase
-     *
-     * @return void
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function testUserTimesheetDayChangeFromFilled($testCase): void
-    {
-        [$fieldName, $newValueReference, $newValue, $expectedMessage] = $testCase;
-        $newValue = $newValueReference !== null
-            ? $this->getEntityFromReference($newValueReference)
-            : $newValue;
-
-        $this->entityManager->refresh($this->filledUserTimesheetDay);
-
-        $this->filledUserTimesheetDay->$fieldName($newValue);
-        $this->entityManager->persist($this->filledUserTimesheetDay);
-        $this->entityManager->flush();
-
-        $userTimesheetDayLogs = $this->entityManager
-            ->getRepository(UserTimesheetDayLog::class)
-            ->findBy([
-                'userTimesheetDay' => $this->filledUserTimesheetDay,
-            ]);
-        /* @var UserTimesheetDayLog[] $userTimesheetDayLogs */
-
-        $this->assertCount(1, $userTimesheetDayLogs);
-        $this->assertEquals($expectedMessage, $userTimesheetDayLogs[0]->getNotice());
-    }
-
-    /**
      * @return void
      *
      * @throws ORMException
@@ -215,7 +111,7 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
         $userTimesheetDayEmpty = new UserTimesheetDay();
         $userTimesheetDayEmpty->setUserTimesheet($userTimesheet)
             ->setUserWorkScheduleDay(
-                $userWorkSchedule->getUserWorkScheduleDays()[count($userWorkSchedule->getUserWorkScheduleDays()) -1]
+                $userWorkSchedule->getUserWorkScheduleDays()[count($userWorkSchedule->getUserWorkScheduleDays()) - 1]
             )
             ->setPresenceType($this->getEntityFromReference('presence_type_0'))
             ->setAbsenceType(null)
@@ -229,7 +125,7 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
         $userTimesheetDayFilled = new UserTimesheetDay();
         $userTimesheetDayFilled->setUserTimesheet($userTimesheet)
             ->setUserWorkScheduleDay(
-                $userWorkSchedule->getUserWorkScheduleDays()[count($userWorkSchedule->getUserWorkScheduleDays()) -2]
+                $userWorkSchedule->getUserWorkScheduleDays()[count($userWorkSchedule->getUserWorkScheduleDays()) - 2]
             )
             ->setPresenceType($this->getEntityFromReference('presence_type_0'))
             ->setAbsenceType($this->getEntityFromReference('absence_type_0'))
@@ -252,14 +148,14 @@ class UserTimesheetDayListenerTest extends AbstractWebTestCase
      */
     protected function tearDown(): void
     {
-        foreach ($this->emptyUserTimesheetDay->getUserTimesheetDayLogs() as $log) {
-            $this->emptyUserTimesheetDay->removeUserTimesheetDayLog($log);
+        foreach ($this->emptyUserTimesheetDay->getLogs() as $log) {
+            $this->emptyUserTimesheetDay->removeLog($log);
             $this->entityManager->remove($log);
         }
         $this->entityManager->remove($this->emptyUserTimesheetDay);
 
-        foreach ($this->filledUserTimesheetDay->getUserTimesheetDayLogs() as $log) {
-            $this->filledUserTimesheetDay->removeUserTimesheetDayLog($log);
+        foreach ($this->filledUserTimesheetDay->getLogs() as $log) {
+            $this->filledUserTimesheetDay->removeLog($log);
             $this->entityManager->remove($log);
         }
         $this->entityManager->remove($this->filledUserTimesheetDay);

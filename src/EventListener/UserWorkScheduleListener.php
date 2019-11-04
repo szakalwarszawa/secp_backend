@@ -4,43 +4,27 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
-use App\Entity\User;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
 use App\Entity\DayDefinition;
-use App\Entity\UserWorkScheduleLog;
 use App\Validator\Rules\StatusChangeDecision;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\OptimisticLockException;
-use DateTime;
 use Doctrine\ORM\ORMException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use App\Exception\IncorrectStatusChangeException;
 
 /**
  * Class UserWorkScheduleListener
- * @package App\EventListener
  */
 class UserWorkScheduleListener
 {
     /**
-     * @var TokenInterface|null
-     */
-    private $token;
-
-    /**
      * @var UserWorkScheduleDay[]
      */
     private $userWorkScheduleDays = [];
-
-    /**
-     * @var array
-     */
-    private $userWorkScheduleDaysLogs = [];
 
     /**
      * @var StatusChangeDecision
@@ -50,14 +34,10 @@ class UserWorkScheduleListener
     /**
      * UserWorkScheduleListener constructor.
      *
-     * @param TokenStorageInterface $tokenStorage
      * @param StatusChangeDecision $statusChangeDecision
      */
-    public function __construct(
-        TokenStorageInterface $tokenStorage,
-        StatusChangeDecision $statusChangeDecision
-    ) {
-        $this->token = $tokenStorage->getToken();
+    public function __construct(StatusChangeDecision $statusChangeDecision)
+    {
         $this->statusChangeDecision = $statusChangeDecision;
     }
 
@@ -65,6 +45,8 @@ class UserWorkScheduleListener
      * @param PreUpdateEventArgs $args
      *
      * @throws IncorrectStatusChangeException by StatusChangeDecision::class
+     *
+     * @todo statusChangeDecision move to validator
      *
      * @return void
      */
@@ -75,7 +57,8 @@ class UserWorkScheduleListener
             return;
         }
 
-        if ($args->hasChangedField('status')
+        if (
+            $args->hasChangedField('status')
             && $args->getOldValue('status') !== $args->getNewValue('status')
         ) {
             $this
@@ -86,56 +69,15 @@ class UserWorkScheduleListener
                     $args->getNewValue('status')
                 )
             ;
-
-            $this->addUserWorkScheduleLog(
-                $args,
-                $currentSchedule,
-                sprintf(
-                    'Zmieniono status z: %s, na: %s',
-                    $args->getOldValue('status')->getId(),
-                    $args->getNewValue('status')->getId()
-                )
-            );
         }
 
-        if ($args->hasChangedField('status')
+        if (
+            $args->hasChangedField('status')
             && $args->getNewValue('status')->getId() === UserWorkSchedule::STATUS_HR_ACCEPT
         ) {
             $args->getEntityManager()->getRepository(UserWorkSchedule::class)
                 ->markPreviousScheduleDaysNotActive($currentSchedule);
         }
-    }
-
-    /**
-     * @param PreUpdateEventArgs $args
-     * @param UserWorkSchedule $entity
-     * @param string $notice
-     * @return void
-     */
-    private function addUserWorkScheduleLog(PreUpdateEventArgs $args, UserWorkSchedule $entity, string $notice): void
-    {
-        $log = new UserWorkScheduleLog();
-        $log->setUserWorkSchedule($entity)
-            ->setLogDate(new DateTime())
-            ->setOwner($this->getCurrentUser($args->getEntityManager()))
-            ->setNotice($notice)
-        ;
-
-        $this->userWorkScheduleDaysLogs[] = $log;
-    }
-
-    /**
-     * @param EntityManager $entityManager
-     * @return User|null
-     */
-    private function getCurrentUser(EntityManager $entityManager): ?User
-    {
-        /* @var User $user */
-        $userName = null === $this->token ? 'admin' : $this->token->getUser()->getUsername();
-
-        $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);
-
-        return $user;
     }
 
     /**
@@ -235,17 +177,6 @@ class UserWorkScheduleListener
             }
 
             $this->userWorkScheduleDays = [];
-            $em->flush();
-        }
-
-        if (!empty($this->userWorkScheduleDaysLogs)) {
-            $em = $args->getEntityManager();
-
-            foreach ($this->userWorkScheduleDaysLogs as $log) {
-                $em->persist($log);
-            }
-
-            $this->userWorkScheduleDaysLogs = [];
             $em->flush();
         }
     }

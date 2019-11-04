@@ -68,10 +68,12 @@ final class UserTimesheetDayLogNormalizer implements ContextAwareNormalizerInter
     {
         $context[self::ALREADY_CALLED] = true;
 
-        if (!($this->isCurrentUserOwner($object) || $this->authorizationChecker->isGranted('ROLE_HR'))
-            && array_key_exists($object->getTrigger(), self::ERASE_TRIGGERS_LIST)
+        if (
+            !$this->isCurrentUserOwner($object)
+            && !$this->authorizationChecker->isGranted('ROLE_HR')
+            && array_key_exists($object->getTriggerElement(), self::ERASE_TRIGGERS_LIST)
         ) {
-            $object->setNotice(self::ERASE_TRIGGERS_LIST[$object->getTrigger()]);
+            $object->setNotice(self::ERASE_TRIGGERS_LIST[$object->getTriggerElement()]);
         }
 
         return $this
@@ -102,7 +104,7 @@ final class UserTimesheetDayLogNormalizer implements ContextAwareNormalizerInter
     private function isCurrentUserOwner(UserTimesheetDayLog $userTimesheetDayLog): bool
     {
         $userTimesheetDayOwner = $userTimesheetDayLog
-            ->getUserTimesheetDay()
+            ->getParent()
             ->getUserTimesheet()
             ->getOwner()
             ->getUsername()

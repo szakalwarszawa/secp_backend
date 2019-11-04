@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Ldap\Import\Updater;
 
@@ -47,7 +49,7 @@ final class UserUpdater extends AbstractUpdater
     private $propertyRoleMatcher;
 
     /**
-     * @param LdapObjectCollection $usersList
+     * @param LdapObjectCollection|Traversable $usersList
      * @param EntityManagerInterface $entityManager
      * @param PropertyRoleMatcher $propertyRoleMatcher
      */
@@ -189,9 +191,9 @@ final class UserUpdater extends AbstractUpdater
             sprintf(
                 'User %s has been %s.',
                 $user->getUsername(),
-                $userNotExists? 'created' : 'updated'
+                $userNotExists ? 'created' : 'updated'
             ),
-            $userNotExists? Actions::CREATE : Actions::UPDATE
+            $userNotExists ? Actions::CREATE : Actions::UPDATE
         ));
 
         return true;

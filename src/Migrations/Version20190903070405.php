@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -15,17 +16,20 @@ final class Version20190903070405 extends AbstractMigration
     /**
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
     /**
      * @param Schema $schema
+     *
+     * @return void
      * @throws DBALException
+     *
      * @SuppressWarnings("unused")
      */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->abortIf(
             $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
@@ -54,11 +58,11 @@ SQL
     /**
      * @param Schema $schema
      *
-     * @SuppressWarnings("unused")
-     *
      * @return void
+     *
+     * @SuppressWarnings("unused")
      */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Entity\UserTimesheetDay;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,19 +34,28 @@ class UserCreateTimesheetDayAction
     private $serializer;
 
     /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
      * UserMe constructor.
+     *
      * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
      * @param SerializerInterface $serializer
+     * @param ValidatorInterface $validator
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        ValidatorInterface $validator
     ) {
         $this->token = $tokenStorage->getToken();
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
+        $this->validator = $validator;
     }
 
     /**
@@ -63,7 +73,9 @@ class UserCreateTimesheetDayAction
         /* @var $userTimesheetDay UserTimesheetDay */
 
         $userTimesheetDay->setDayDate($dayDate);
+
         $this->entityManager->persist($userTimesheetDay);
+        $this->validator->validate($userTimesheetDay);
         $this->entityManager->flush();
 
         return $userTimesheetDay;

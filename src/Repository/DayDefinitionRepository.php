@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\DayDefinition;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -39,5 +42,24 @@ class DayDefinitionRepository extends ServiceEntityRepository
             ->getQuery();
 
         return $qb->execute();
+    }
+
+    /**
+     * @return DayDefinition|null
+     *
+     * @throws Exception
+     */
+    public function findTodayDayDefinition(): ?DayDefinition
+    {
+        try {
+            return $this
+                ->createQueryBuilder('d')
+                ->where('d.id = :today')
+                ->setParameter('today', (new DateTime())->format('Y-m-d'))
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
     }
 }

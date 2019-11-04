@@ -12,44 +12,4 @@ use App\Entity\User;
  */
 interface LogEntityInterface
 {
-     /**
-     * @return null|User
-     */
-    public function getOwner(): ?User;
-
-    /**
-     * @param null|User $owner
-     */
-    public function setOwner(?User $owner);
-
-    /**
-     * @return DateTimeInterface
-     */
-    public function getLogDate(): DateTimeInterface;
-
-    /**
-     * @param DateTimeInterface $logDate
-     */
-    public function setLogDate(DateTimeInterface $logDate);
-
-    /**
-     * @return null|string
-     */
-    public function getNotice(): ?string;
-
-    /**
-     * @param string $notice
-     */
-    public function setNotice(string $notice);
-
-    /**
-     * @return string|null
-     */
-    public function getTrigger(): ?string;
-
-    /**
-     *
-     * @param string|null $triggerName
-     */
-    public function setTrigger(?string $triggerName);
 }

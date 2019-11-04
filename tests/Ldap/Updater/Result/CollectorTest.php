@@ -31,7 +31,7 @@ class CollectorTest extends AbstractWebTestCase
             Types::SUCCESS,
             '',
             $message1,
-            $departmentExists? Actions::UPDATE : Actions::CREATE
+            $departmentExists ? Actions::UPDATE : Actions::CREATE
         );
 
         $userNotCreatedCorrectly = new Result(

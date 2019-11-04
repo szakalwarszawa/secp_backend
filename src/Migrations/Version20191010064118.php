@@ -16,7 +16,7 @@ final class Version20191010064118 extends AbstractMigration
     /**
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
@@ -30,7 +30,7 @@ final class Version20191010064118 extends AbstractMigration
      *
      * @SuppressWarnings("unused")
      */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf(
@@ -51,7 +51,7 @@ final class Version20191010064118 extends AbstractMigration
      *
      * @SuppressWarnings("unused")
      */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->abortIf(true, 'Migration can only be executed safely on \'postgresql\'.');
     }

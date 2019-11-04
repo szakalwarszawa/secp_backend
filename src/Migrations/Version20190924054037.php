@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -13,21 +14,23 @@ use Doctrine\Migrations\AbstractMigration;
 final class Version20190924054037 extends AbstractMigration
 {
     /**
-     * @param Schema $schema
-     * @throws DBALException
+     * @return string
      * @SuppressWarnings("unused")
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
     /**
      * @param Schema $schema
+     *
+     * @return void
      * @throws DBALException
+     *
      * @SuppressWarnings("unused")
      */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf(
@@ -108,11 +111,11 @@ SQL
     /**
      * @param Schema $schema
      *
-     * @SuppressWarnings("unused")
-     *
      * @return void
+     *
+     * @SuppressWarnings("unused")
      */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
     }

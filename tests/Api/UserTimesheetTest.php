@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Tests\Api;
 
@@ -22,7 +23,7 @@ class UserTimesheetTest extends AbstractWebTestCase
     {
         $userTimesheetDB = $this->entityManager->getRepository(UserTimesheet::class)->createQueryBuilder('p')
             ->andWhere('p.owner = :owner')
-            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_MANAGER))
+            ->setParameter('owner', $this->fixtures->getReference(UserFixtures::REF_USER_USER))
             ->getQuery()
             ->getResult();
         /* @var $userTimesheetDB UserTimesheet */
@@ -32,7 +33,7 @@ class UserTimesheetTest extends AbstractWebTestCase
             null,
             [],
             200,
-            UserFixtures::REF_USER_MANAGER
+            UserFixtures::REF_USER_USER
         );
         $userTimesheetJSON = json_decode($response->getContent(), false);
 
@@ -210,5 +211,10 @@ JSON;
         $this->assertNotNull($userJSON);
         $this->assertEquals($userTimesheetDB->getId(), $userJSON->id);
         $this->assertEquals($userTimesheetDB->getStatus()->getId(), $userJSON->status->id);
+
+        $this->assertApiLogsSaving(
+            sprintf('/api/user_timesheets/%s/logs', $userTimesheetREF->getId()),
+            $userTimesheetREF
+        );
     }
 }
