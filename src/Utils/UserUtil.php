@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
+use Namshi\JOSE\JWS;
 use Prophecy\Argument\Token\TokenInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\Entity\User;
+use InvalidArgumentException;
 
 /**
  * Class UserUtil
@@ -26,13 +30,52 @@ class UserUtil implements UserUtilsInterface
     private $token;
 
     /**
+     * @var null|string
+     */
+    private $jwtToken = null;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
+     * @param RequestStack $requestStack
+     * @param TokenExtractorInterface $jwtExtractor
      */
-    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage,
+        RequestStack $requestStack,
+        TokenExtractorInterface $jwtExtractor
+    ) {
         $this->entityManager = $entityManager;
         $this->token = $tokenStorage->getToken();
+
+        if ($requestStack->getCurrentRequest()) {
+            $this->jwtToken = $jwtExtractor->extract($requestStack->getCurrentRequest());
+        }
+    }
+
+    /**
+     * Extract username from bearer token.
+     * It is helpful in routes that are restricted to `IS_AUTHENTICATED_ANONYMOUSLY`.
+     * In that case TokenStorage:getUser() contains only 'anon.' string.
+     * But if user provided token in request it could be extracted.
+     *
+     * @param null|string $jwtToken
+     *
+     * @return string|null
+     */
+    public function extractUsernameByJwtToken(?string $jwtToken = null): ?string
+    {
+        $jwtToken = $jwtToken ? $jwtToken : $this->jwtToken;
+        if ($jwtToken) {
+            try {
+                return JWS::load($this->jwtToken)->getPayload()['username'];
+            } catch (InvalidArgumentException $exception) {
+                return null;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -46,11 +89,24 @@ class UserUtil implements UserUtilsInterface
                 return $token->getUser();
             }
 
+            $username = null;
+            if ($token->getUser() instanceof User) {
+                $username = $token->getUser()->getUsername();
+            }
+
+            if ($token->getUser() === UserUtilsInterface::ANONYMOUS_USER) {
+                $username = $this->extractUsernameByJwtToken();
+            }
+
+            if (!$username) {
+                return null;
+            }
+
             return $this
                 ->entityManager
                 ->getRepository(User::class)
                 ->findOneBy([
-                    'username' => $token->getUser()->getUsername()
+                    'username' => $username,
                 ])
             ;
         }

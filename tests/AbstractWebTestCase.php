@@ -15,6 +15,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Proxy\Proxy;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
+use InvalidArgumentException;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use ReflectionException;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -23,6 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\AuthenticationEvents;
 use Symfony\Component\Security\Core\Event\AuthenticationEvent;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Exception;
 use StdClass;
@@ -137,6 +140,8 @@ abstract class AbstractWebTestCase extends WebTestCase
      * @param int $expectedStatus
      * @param string $userReference
      * @param string $contentTypeAccept
+     * @param bool $anonymousRequest - ignore userReference and make an anonymous request
+     *
      * @return null|Response
      * @throws NotFoundReferencedUserException
      */
@@ -147,9 +152,13 @@ abstract class AbstractWebTestCase extends WebTestCase
         $parameters = [],
         $expectedStatus = 200,
         $userReference = UserFixtures::REF_USER_ADMIN,
-        $contentTypeAccept = self::CONTENT_TYPE_LD_JSON
+        $contentTypeAccept = self::CONTENT_TYPE_LD_JSON,
+        $anonymousRequest = false
     ): ?Response {
         $client = $this->makeAuthenticatedClient($userReference);
+        if ($anonymousRequest) {
+            $client = $this->makeClient(false);
+        }
 
         $client->request(
             $method,
@@ -159,6 +168,8 @@ abstract class AbstractWebTestCase extends WebTestCase
             [
                 'HTTP_Accept' => $contentTypeAccept,
                 'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => $this->createJWTTokenByReference($userReference),
+                'HTTP_X_ANONYMOUS_REQUEST' => $anonymousRequest,
             ],
             $payload
         );
@@ -168,6 +179,24 @@ abstract class AbstractWebTestCase extends WebTestCase
         $this->assertJsonResponse($client->getResponse(), $expectedStatus);
 
         return $client->getResponse();
+    }
+
+    /**
+     * Create JWT Token from user reference.
+     *
+     * @param string $userRef
+     *
+     * @return string
+     * @throws InvalidArgumentException when userRef entity is not UserInterface object
+     */
+    protected function createJWTTokenByReference(string $userRef): string
+    {
+        $entity = $this->getEntityFromReference($userRef);
+        if (!$entity instanceof UserInterface) {
+            throw new InvalidArgumentException('Instance of UserInterface expected.');
+        }
+
+        return self::$container->get(JWTTokenManagerInterface::class)->create($entity);
     }
 
     /**
@@ -289,9 +318,11 @@ abstract class AbstractWebTestCase extends WebTestCase
         try {
             $authenticationManager = self::$container->get('security.authentication.manager');
             $token = new PostAuthenticationGuardToken($user, $providerKey, $roles);
+
             $authenticatedToken = $authenticationManager->authenticate($token);
             $tokenStorage = self::$container->get('security.token_storage');
             $tokenStorage->setToken($authenticatedToken);
+
             self::$container
                 ->get('event_dispatcher')
                 ->dispatch(
@@ -303,8 +334,8 @@ abstract class AbstractWebTestCase extends WebTestCase
         } catch (Exception $exception) {
         }
 
-        $this->assertNotNull($this->security);
-        $this->assertNotNull($this->tokenStorage);
+        $this->assertNotNull($this->security, 'Unable to set Security (loginAsUser)');
+        $this->assertNotNull($this->tokenStorage, 'Unable to set Token Storage (loginAsUser)');
     }
 
     /**
