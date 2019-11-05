@@ -61,6 +61,6 @@ SQL
      */
     public function down(Schema $schema): void
     {
-        $this->abortIf(true, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
     }
 }
