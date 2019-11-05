@@ -60,7 +60,7 @@ class RedmineTaskValidator extends ConstraintValidator
      */
     private function supports($value): bool
     {
-        return $value instanceof  AppIssue;
+        return $value instanceof AppIssue;
     }
 
     /**
