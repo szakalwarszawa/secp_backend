@@ -417,7 +417,7 @@ class User implements UserInterface, LoggableEntityInterface
      *
      * @Groups({"get", "put", "post"})
      */
-    private $fullName = '';
+    private $fullName;
 
     /**
      * User constructor.
@@ -427,6 +427,7 @@ class User implements UserInterface, LoggableEntityInterface
         $this->managedDepartments = new ArrayCollection();
         $this->managedSections = new ArrayCollection();
         $this->userTimesheets = new ArrayCollection();
+        $this->fullName = '';
     }
 
     /**
