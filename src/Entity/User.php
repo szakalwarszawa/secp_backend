@@ -413,6 +413,13 @@ class User implements UserInterface, LoggableEntityInterface
     private $userTimesheets;
 
     /**
+     * @var string
+     *
+     * @Groups({"get", "put", "post"})
+     */
+    private $fullName = '';
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -942,5 +949,13 @@ class User implements UserInterface, LoggableEntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 }
