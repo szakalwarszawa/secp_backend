@@ -11,7 +11,6 @@ use App\Redmine\RedmineRequestInterface;
 use App\Utils\UserUtilsInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class RedmineTaskValidator

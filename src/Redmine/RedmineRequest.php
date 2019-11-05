@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Redmine;
 
+use ErrorException;
 use stdClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
@@ -48,6 +49,8 @@ class RedmineRequest implements RedmineRequestInterface
         try {
             return json_decode($response->getContent(), false)->{self::REQUEST_DATA_KEY};
         } catch (HttpExceptionInterface $exception) {
+            return null;
+        } catch (ErrorException $exception) {
             return null;
         }
     }
