@@ -119,3 +119,16 @@ services:
 
     App\Utils\UserUtilsInterface:
         class: App\Utils\UserUtil
+
+    App\Redmine\RedmineRequestInterface:
+        class: App\Redmine\RedmineRequest
+
+    App\Redmine\HttpClientConfigurator:
+        arguments:
+            - '%env(bool:resolve:REDMINE_REPORTS)%'
+            - '%env(string:resolve:REDMINE_URL)%'
+            - '%env(string:resolve:REDMINE_API_KEY)%'
+            - '%env(int:resolve:REDMINE_PROJECT_ID)%'
+            - '%env(int:resolve:REDMINE_CATEGORY_ID)%'
+            - '%env(int:resolve:REDMINE_TRACKER_ID)%'
+            - '%env(int:resolve:REDMINE_REPORTER_CUSTOM_FIELD_ID)%'
