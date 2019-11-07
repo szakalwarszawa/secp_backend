@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Class UserOwnTimesheetDayAction
- * @package App\Controller
  */
 class UserOwnTimesheetDayAction
 {
@@ -27,6 +26,7 @@ class UserOwnTimesheetDayAction
 
     /**
      * UserMe constructor.
+     *
      * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
      */
@@ -39,17 +39,27 @@ class UserOwnTimesheetDayAction
     }
 
     /**
+     * @param integer $userId
      * @param string $dateFrom
      * @param string $dateTo
+     *
      * @return UserTimesheetDay[]
      */
-    public function __invoke($dateFrom, $dateTo): array
+    public function __invoke($userId, $dateFrom, $dateTo): array
     {
         $currentUser = $this->token->getUser();
         /* @var $currentUser User */
+        if ($userId) {
+            $currentUser = $this->entityManager
+                ->getRepository(User::class)
+                ->find((int)$userId)
+            ;
+        }
 
-        $userTimesheetDays = $this->entityManager->getRepository(UserTimesheetDay::class)
-            ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo);
+        $userTimesheetDays = $this->entityManager
+            ->getRepository(UserTimesheetDay::class)
+            ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo)
+        ;
 
         return $userTimesheetDays;
     }
