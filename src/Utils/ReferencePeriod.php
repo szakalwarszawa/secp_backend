@@ -59,7 +59,7 @@ class ReferencePeriod
      * @return array
      * @throws Exception
      */
-    private function createReferencePeriods(string $referencePeriodStart)
+    private function createReferencePeriods(string $referencePeriodStart): array
     {
         $periods = [];
         $lastDate = null;

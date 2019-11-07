@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\User;
+use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
+use App\Entity\UserWorkScheduleStatus;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class WorkScheduleCreator
- * @package App\Utils
  */
 class WorkScheduleCreator
 {
@@ -27,10 +30,31 @@ class WorkScheduleCreator
      */
     private $entityManager;
 
+    /**
+     * @var UserWorkScheduleStatus|null
+     */
+    private $workScheduleStatus = null;
+
     public function __construct(ReferencePeriod $referencePeriod, EntityManagerInterface $entityManager)
     {
         $this->referencePeriod = $referencePeriod;
         $this->entityManager = $entityManager;
+        $this->workScheduleStatus = $entityManager
+            ->getRepository(UserWorkScheduleStatus::class)
+            ->findOneById(UserWorkScheduleStatus::HR_ACCEPTED_STATUS)
+            ;
+    }
+
+    /**
+     * @param UserWorkScheduleStatus $workScheduleStatus
+     *
+     * @return WorkScheduleCreator
+     */
+    public function setWorkScheduleStatus(UserWorkScheduleStatus $workScheduleStatus): WorkScheduleCreator
+    {
+        $this->workScheduleStatus = $workScheduleStatus;
+
+        return $this;
     }
 
     /**
@@ -38,13 +62,13 @@ class WorkScheduleCreator
      * If the `dateRange` value is empty|null, an attempt will be made
      * to create a schedule for the next reference period.
      *
+     * @param User $user
      * @param array|null $dateRange
      *
      * @return bool
      */
-    public function createWorkSchedule(?array $dateRange = []): bool
+    public function createWorkSchedule(User $user, ?array $dateRange = []): bool
     {
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['id' => 2037]);
         if (empty($dateRange)) {
             try {
                 $dateRange = $this->specifyRange($user);
@@ -53,14 +77,37 @@ class WorkScheduleCreator
             }
         }
 
-        if ($dateRange === false) {
+        if (!$dateRange) {
             return false;
         }
 
+        $this->create($user, $dateRange);
+        $this->entityManager->flush();
 
         return true;
+    }
 
-        //todo
+    /**
+     * @param User $user
+     * @param DateTimeInterface[]|array $dateRange
+     *
+     * @return void
+     */
+    private function create(User $user, array $dateRange): void
+    {
+        [$fromDate, $toDate] = $dateRange;
+        $userWorkSchedule = new UserWorkSchedule();
+        $userWorkSchedule
+            ->setOwner($user)
+            ->setFromDate($fromDate)
+            ->setToDate($toDate)
+            ->setWorkScheduleProfile($user->getDefaultWorkScheduleProfile())
+            ->setStatus($this->workScheduleStatus)
+            ;
+
+        $this->entityManager->persist($userWorkSchedule);
+
+        return;
     }
 
     /**
@@ -73,7 +120,7 @@ class WorkScheduleCreator
      * @return array|null
      * @throws Exception
      */
-    private function specifyRange(User $user): ?array
+    public function specifyRange(User $user): ?array
     {
         /**
          * @var DateTime $startPeriodDate
@@ -90,15 +137,16 @@ class WorkScheduleCreator
             );
 
         if ($activeWorkDaysInNextPeriod) {
-            $startPeriodDate = end($activeWorkDaysInNextPeriod)->getDayDefinition()->getId();
+            $startPeriodDateText = end($activeWorkDaysInNextPeriod)->getDayDefinition()->getId();
+            $startPeriodDate = (new DateTimeImmutable($startPeriodDateText))->modify('+1 day');
+
+            if ($startPeriodDate > $endPeriodDate) {
+                return null;
+            }
         }
 
-        $dayAfter = (new DateTimeImmutable($startPeriodDate))->modify('+1 day');
-        if ($dayAfter > $endPeriodDate) {
-            return null;
-        }
         return [
-            $dayAfter,
+            $startPeriodDate,
             $endPeriodDate,
         ];
     }

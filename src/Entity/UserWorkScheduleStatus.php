@@ -54,6 +54,11 @@ class UserWorkScheduleStatus implements RuleInterface
 {
     /**
      * @var string
+     */
+    public const HR_ACCEPTED_STATUS = 'WORK-SCHEDULE-STATUS-HR-ACCEPT';
+
+    /**
+     * @var string
      *
      * @ORM\Id()
      * @ORM\Column(type="string", nullable=false, unique=true)
