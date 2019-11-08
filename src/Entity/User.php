@@ -40,7 +40,6 @@ use App\Traits\LoggableEntityTrait;
  * @UserAware(
  *     userFieldName="id"
  * )
- *
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity("username", errorPath="username", groups={"post", "put"})
