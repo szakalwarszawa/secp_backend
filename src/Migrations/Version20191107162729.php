@@ -14,8 +14,8 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
-* Class Version20191107162729
-*/
+ * Class Version20191107162729
+ */
 final class Version20191107162729 extends AbstractMigration
 {
     /**
@@ -81,6 +81,6 @@ SQL
      */
     public function down(Schema $schema): void
     {
-        $this->abortIf(false, 'Downgrade migration can only be executed by next migration.');
+        $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
     }
 }
