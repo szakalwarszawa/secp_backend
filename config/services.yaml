@@ -49,11 +49,11 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
-    App\EventListener\DayDefinitionLoggerListener:
+    App\EventListener\UserTimesheetDayListener:
         autowire: true
         tags:
-            - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
-            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
+            - { name: doctrine.event_listener, event: prePersist, connection: default, lazy: true }
+
 
     App\EventListener\UserWorkScheduleListener:
         autowire: true
@@ -63,23 +63,25 @@ services:
             - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
             - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
 
-    App\EventListener\UserTimesheetDayListener:
-        autowire: true
-        tags:
-            - { name: doctrine.event_listener, event: prePersist, connection: default, lazy: true }
-            - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
-            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
-
     App\EventListener\UserTimesheetListener:
         autowire: true
         tags:
             - { name: doctrine.event_listener, event: preUpdate, connection: default, lazy: true }
-            - { name: doctrine.event_listener, event: postFlush, connection: default, lazy: true }
 
     App\EventListener\LdapImportListener:
         autowire: true
         tags:
             - { name: kernel.event_listener, event: ldap.imported }
+
+    App\EventSubscriber\DynamicRelationSubscriber:
+        tags:
+            - {name: doctrine.event_listener, event: loadClassMetadata }
+
+    App\EventListener\LogListener:
+        autowire: true
+        tags:
+            - { name: doctrine.event_listener, event: onFlush, connection: default, priority: -10000 }
+            - { name: doctrine.event_listener, event: postFlush, connection: default, priority: -10000 }
 
     App\Filter\Configurator:
         autowire: false
@@ -114,3 +116,19 @@ services:
         decorates: 'api_platform.serializer.context_builder'
         arguments: [ '@App\Serializer\UserContextBuilder.inner' ]
         autoconfigure: false
+
+    App\Utils\UserUtilsInterface:
+        class: App\Utils\UserUtil
+
+    App\Redmine\RedmineRequestInterface:
+        class: App\Redmine\RedmineRequest
+
+    App\Redmine\HttpClientConfigurator:
+        arguments:
+            - '%env(bool:resolve:REDMINE_REPORTS)%'
+            - '%env(string:resolve:REDMINE_URL)%'
+            - '%env(string:resolve:REDMINE_API_KEY)%'
+            - '%env(int:resolve:REDMINE_PROJECT_ID)%'
+            - '%env(int:resolve:REDMINE_CATEGORY_ID)%'
+            - '%env(int:resolve:REDMINE_TRACKER_ID)%'
+            - '%env(int:resolve:REDMINE_REPORTER_CUSTOM_FIELD_ID)%'

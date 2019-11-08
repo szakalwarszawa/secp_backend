@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Entity;
@@ -18,6 +19,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\ValueExists;
 use App\Entity\Utils\UserAware;
+use App\Entity\Types\LoggableEntityInterface;
+use App\Annotations\AnnotatedLogEntity;
+use App\Traits\LoggableEntityTrait;
 
 /**
  * @ORM\Table(
@@ -66,7 +70,6 @@ use App\Entity\Utils\UserAware;
  *      },
  *      collectionOperations={
  *          "get-users-me"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="GET",
  *              "path"="/users/me",
  *              "controller"=UserMeAction::class,
@@ -143,15 +146,21 @@ use App\Entity\Utils\UserAware;
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.TooManyMethods)
+ *
+ * @AnnotatedLogEntity(logClass=UserLog::class)
  */
-class User implements UserInterface
+class User implements UserInterface, LoggableEntityInterface
 {
+    use LoggableEntityTrait;
+
     /**
      * @var string
      */
     public const SYSTEM_USERNAME = 'system';
 
     /**
+     * @var int
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -160,6 +169,8 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=256)
      * @Assert\Length(max=256, groups={"post"})
      * @Groups({"get", "put", "post"})
@@ -167,44 +178,71 @@ class User implements UserInterface
     private $samAccountName;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=6, max=255, groups={"post"})
      * @Groups({"get", "put", "post"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana nazwy użytkownika z %s na %s"
+     * })
      */
     private $username;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      * @Assert\Email()
      * @Groups({"get", "post", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana adresu email z %s na %s"
+     * })
      */
     private $email;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=3, max=255, groups={"post", "put"})
      * @Groups({"get", "post", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana imienia z %s na %s"
+     * })
      */
     private $firstName;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=3, max=255, groups={"post", "put"})
      * @Groups({"get", "post", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana nazwiska z %s na %s"
+     * })
      */
     private $lastName;
 
     /**
+     * @var array
+     *
      * @ORM\Column(type="simple_array", length=255)
      * @Groups({"get", "post", "admin-supervisor:input"})
      * @ValueExists(entity="App\Entity\Role", searchField="name")
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana uprawnień z %s na %s"
+     * })
      */
     private $roles = [];
 
     /**
+     * @var string
+     *
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(max=256)
      * @Groups({"post", "put"})
@@ -213,12 +251,15 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
+     *
      * @ORM\Column(type="string", length=256, nullable=true)
      * @Groups({"user_prohibited"})
      */
     private $password;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max=255, groups={"post"})
      * @Groups({"get", "put", "post"})
@@ -244,6 +285,9 @@ class User implements UserInterface
      *  "UserWorkSchedule-get-user-with-section-department",
      *  "UserTimesheet-get-owner-with-department-and-section"
      * })
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana departamentu z %s na %s"
+     * })
      */
     private $department;
 
@@ -257,6 +301,9 @@ class User implements UserInterface
      *  "get-user-timesheet-day-with-user-timesheet",
      *  "UserWorkSchedule-get-user-with-section-department",
      *  "UserTimesheet-get-owner-with-department-and-section"
+     * })
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana sekcji z %s na %s"
      * })
      */
     private $section;
@@ -277,6 +324,9 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity="App\Entity\WorkScheduleProfile")
      * @ORM\JoinColumn(nullable=false, columnDefinition="INT NOT NULL DEFAULT 1")
      * @Groups({"put", "post", "get-user-with-default_work_schedule_profile"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana profilu z %s na %s"
+     * })
      */
     private $defaultWorkScheduleProfile;
 
@@ -285,26 +335,32 @@ class User implements UserInterface
      *     type="string",
      *     length=5,
      *     nullable=false,
-     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '07:30'",
-     *     options={"default"="07:30"}
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '08:30'",
+     *     options={"default"="08:30"}
      * )
      * @Assert\NotNull()
      * @Groups({"get", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana godziny rozpoczęcia pracy od z %s na %s"
+     * })
      */
-    private $dayStartTimeFrom = '07:30';
+    private $dayStartTimeFrom = '08:30';
 
     /**
      * @ORM\Column(
      *     type="string",
      *     length=5,
      *     nullable=false,
-     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '07:30'",
-     *     options={"default"="07:30"}
+     *     columnDefinition="VARCHAR(5) NOT NULL DEFAULT '08:30'",
+     *     options={"default"="08:30"}
      * )
      * @Assert\NotNull()
      * @Groups({"get", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana godziny rozpoczęcia pracy do z %s na %s"
+     * })
      */
-    private $dayStartTimeTo = '07:30';
+    private $dayStartTimeTo = '08:30';
 
     /**
      * @ORM\Column(
@@ -316,6 +372,9 @@ class User implements UserInterface
      * )
      * @Assert\NotNull()
      * @Groups({"get", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana godziny zakończenia pracy do z %s na %s"
+     * })
      */
     private $dayEndTimeFrom = '16:30';
 
@@ -329,6 +388,9 @@ class User implements UserInterface
      * )
      * @Assert\NotNull()
      * @Groups({"get", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana godziny zakończenia pracy do z %s na %s"
+     * })
      */
     private $dayEndTimeTo = '16:30';
 
@@ -343,6 +405,9 @@ class User implements UserInterface
      * )
      * @Assert\NotNull()
      * @Groups({"get", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana czasu pracy z %s na %s"
+     * })
      */
     private $dailyWorkingTime = 8.00;
 
@@ -352,6 +417,13 @@ class User implements UserInterface
     private $userTimesheets;
 
     /**
+     * @var string
+     *
+     * @Groups({"get", "put", "post"})
+     */
+    private $fullName;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -359,6 +431,7 @@ class User implements UserInterface
         $this->managedDepartments = new ArrayCollection();
         $this->managedSections = new ArrayCollection();
         $this->userTimesheets = new ArrayCollection();
+        $this->fullName = '';
     }
 
     /**
@@ -676,7 +749,8 @@ class User implements UserInterface
      */
     public function checkSameSectionAsDepartmentValidate(): void
     {
-        if ($this->getSection() !== null &&
+        if (
+            $this->getSection() !== null &&
             $this->getDepartment() !== null &&
             !$this->getDepartment()->getSections()->contains($this->getSection())
         ) {
@@ -880,5 +954,13 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 }

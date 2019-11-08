@@ -15,6 +15,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Entity\Types\LoggableEntityInterface;
+use App\Traits\LoggableEntityTrait;
+use App\Validator\PresenceRestriction;
+use App\Annotations\AnnotatedLogEntity;
 
 /**
  * @ORM\Table(
@@ -84,7 +88,6 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *              }
  *          },
  *          "post-users-create-timesheet-day"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="POST",
  *              "path"="/user_timesheet_days/own/create/{day}",
  *              "requirements"={"day"="\d{4}-\d{2}-\d{2}"},
@@ -100,7 +103,6 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *              }
  *          },
  *          "get-users-own-timesheet-days"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *              "method"="GET",
  *              "path"="/user_timesheet_days/own/{dateFrom}/{dateTo}",
  *              "requirements"={"dateFrom"="\d{4}-\d{2}-\d{2}", "dateTo"="\d{4}-\d{2}-\d{2}"},
@@ -124,6 +126,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *      SearchFilter::class,
  *      properties={
  *          "id": "exact",
+ *          "userTimesheet.id": "exact",
  *          "userTimesheet.period": "istart",
  *          "userTimesheet.owner.username": "iexact",
  *          "userTimesheet.owner.email": "iexact",
@@ -161,9 +164,13 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *     },
  *     arguments={"orderParameterName"="_order"}
  * )
+ * @PresenceRestriction
+ * @AnnotatedLogEntity(logClass=UserTimesheetDayLog::class)
  */
-class UserTimesheetDay
+class UserTimesheetDay implements LoggableEntityInterface
 {
+    use LoggableEntityTrait;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -193,18 +200,27 @@ class UserTimesheetDay
     /**
      * @ORM\Column(type="string", length=5, nullable=true)
      * @Groups({"get", "post", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana godziny rozpoczęcia pracy z %s na %s"
+     * })
      */
     private $dayStartTime;
 
     /**
      * @ORM\Column(type="string", length=5, nullable=true)
      * @Groups({"get", "post", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana godziny zakończenia pracy z %s na %s"
+     * })
      */
     private $dayEndTime;
 
     /**
      * @ORM\Column(type="decimal", precision=4, scale=2)
      * @Groups({"get", "post", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana czasu pracy z %s na %s"
+     * })
      */
     private $workingTime;
 
@@ -212,25 +228,34 @@ class UserTimesheetDay
      * @ORM\ManyToOne(targetEntity="App\Entity\PresenceType")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"get", "post", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana typu obecności z %s na %s"
+     * })
      */
     private $presenceType;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AbsenceType")
      * @Groups({"hr:output", "current_user_is_owner", "put", "post"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana typu nieobecności z %s na %s"
+     * })
      */
     private $absenceType;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get","put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana opisu z %s na %s"
+     * })
+     */
+    private $notice;
 
     /**
      * @var string
      */
     private $dayDate;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get","put"})
-     */
-    private $notice;
 
     /**
      * @return string|null
@@ -250,20 +275,6 @@ class UserTimesheetDay
         $this->notice = $notice;
 
         return $this;
-    }
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\UserTimesheetDayLog", mappedBy="userTimesheetDay")
-     * @ApiSubresource()
-     */
-    private $userTimesheetDayLogs;
-
-    /**
-     * UserTimesheetDay constructor.
-     */
-    public function __construct()
-    {
-        $this->userTimesheetDayLogs = new ArrayCollection();
     }
 
     /**
@@ -388,7 +399,7 @@ class UserTimesheetDay
      */
     public function setWorkingTime($workingTime): UserTimesheetDay
     {
-        $this->workingTime = $workingTime;
+        $this->workingTime = (float) $workingTime;
 
         return $this;
     }
@@ -429,47 +440,6 @@ class UserTimesheetDay
     public function setAbsenceType(?AbsenceType $absenceType): UserTimesheetDay
     {
         $this->absenceType = $absenceType;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|UserTimesheetDayLog[]
-     */
-    public function getUserTimesheetDayLogs(): Collection
-    {
-        return $this->userTimesheetDayLogs;
-    }
-
-    /**
-     * @param UserTimesheetDayLog $userTimesheetDayLog
-     *
-     * @return UserTimesheetDay
-     */
-    public function addUserTimesheetDayLog(UserTimesheetDayLog $userTimesheetDayLog): self
-    {
-        if (!$this->userTimesheetDayLogs->contains($userTimesheetDayLog)) {
-            $this->userTimesheetDayLogs[] = $userTimesheetDayLog;
-            $userTimesheetDayLog->setUserTimesheetDay($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param UserTimesheetDayLog $userTimesheetDayLog
-     *
-     * @return UserTimesheetDay
-     */
-    public function removeUserTimesheetDayLog(UserTimesheetDayLog $userTimesheetDayLog): self
-    {
-        if ($this->userTimesheetDayLogs->contains($userTimesheetDayLog)) {
-            $this->userTimesheetDayLogs->removeElement($userTimesheetDayLog);
-            // set the owning side to null (unless already changed)
-            if ($userTimesheetDayLog->getUserTimesheetDay() === $this) {
-                $userTimesheetDayLog->setUserTimesheetDay(null);
-            }
-        }
 
         return $this;
     }

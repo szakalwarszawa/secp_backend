@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace <namespace>;
 
@@ -23,11 +23,10 @@ final class Version<version> extends AbstractMigration
 
     /**
      * @param Schema $schema
-
-     * @throws DBALException
-
+     *
      * @return void
-
+     * @throws DBALException
+     *
      * @SuppressWarnings("unused")
      */
     public function up(Schema $schema): void
@@ -37,13 +36,13 @@ final class Version<version> extends AbstractMigration
 
     /**
      * @param Schema $schema
-
+     *
      * @return void
-
+     *
      * @SuppressWarnings("unused")
      */
     public function down(Schema $schema): void
     {
-        $this->abortIf(true, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf(true, 'Downgrade migration can only be executed by next migration.');
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Tests\EventSubscriber;
+declare(strict_types=1);
+
+namespace App\Tests\EventListener;
 
 use App\DataFixtures\UserFixtures;
 use App\DataFixtures\UserWorkScheduleStatusFixtures;
@@ -13,7 +15,11 @@ use App\Tests\AbstractWebTestCase;
 use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 
+/**
+ * Class UserWorkScheduleListenerTest
+ */
 class UserWorkScheduleListenerTest extends AbstractWebTestCase
 {
     /**
@@ -53,7 +59,7 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
 
     /**
      * @test
-     * @throws \Exception
+     * @throws Exception
      */
     public function insertUserWorkSchedule(): void
     {
@@ -142,7 +148,6 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
     {
         $this->assertIsNumeric($this->userWorkScheduleId);
 
-
         $userWorkSchedule = $this->entityManager
             ->getRepository(UserWorkSchedule::class)
             ->find($this->userWorkScheduleId);
@@ -151,39 +156,23 @@ class UserWorkScheduleListenerTest extends AbstractWebTestCase
         $this->assertNotNull($userWorkSchedule);
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkSchedule->getWorkScheduleProfile());
 
-        $statusBefore = $userWorkSchedule->getStatus();
         $workScheduleStatusRef = $this
             ->getEntityFromReference(UserWorkScheduleStatusFixtures::REF_STATUS_HR_ACCEPT)
         ;
         $userWorkSchedule->setStatus($workScheduleStatusRef);
-        $this->entityManager
-            ->flush();
+        $this->entityManager->flush();
 
         $userWorkScheduleUpdated = $this->entityManager
             ->getRepository(UserWorkSchedule::class)
             ->find($this->userWorkScheduleId);
         /* @var $userWorkScheduleUpdated UserWorkSchedule */
 
-        $userWorkScheduleLog = $this->entityManager
-            ->getRepository(UserWorkScheduleLog::class)
-            ->findOneBy([], ['id' => 'desc']);
-
-        $notice = $userWorkScheduleLog->getNotice();
-        $this->assertNotNull($userWorkScheduleUpdated);
-        $this->assertStringContainsString(
-            sprintf(
-                'Zmieniono status z: %s, na: %s',
-                $statusBefore->getId(),
-                $userWorkScheduleUpdated->getStatus()->getId()
-            ),
-            $notice
-        );
         $this->assertInstanceOf(WorkScheduleProfile::class, $userWorkScheduleUpdated->getWorkScheduleProfile());
         $this->assertEquals($workScheduleStatusRef->getId(), $userWorkScheduleUpdated->getStatus()->getId());
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function setUp(): void
     {

@@ -10,7 +10,7 @@ security:
 
     encoders:
         App\Entity\User:
-            algorithm: argon2i
+            algorithm: sodium
 
     providers:
 #        my_ldap:
@@ -59,10 +59,11 @@ security:
             pattern: ^/api/docs
             stateless: true
             anonymous: true
-#        contexts:
-#            pattern: ^/api/contexts
-#            stateless: true
-#            anonymous: true
+
+        app_issues:
+            pattern: ^/api/app_issues
+            stateless: true
+            anonymous: true
 
         api:
             pattern: ^/api/
@@ -85,6 +86,7 @@ security:
 
     access_control:
         - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/app_issues, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: ^/api/contexts, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

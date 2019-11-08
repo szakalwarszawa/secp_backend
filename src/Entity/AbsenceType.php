@@ -100,6 +100,14 @@ class AbsenceType
     private $active;
 
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
+    /**
      * @return int|null
      */
     public function getId(): ?int

@@ -15,7 +15,7 @@ use ApiPlatform\Core\Annotation\ApiProperty;
  * @ApiResource(collectionOperations={
  *     "get",
  *     "ldap_import"={
- *         "access_control"="is_granted('ROLE_ADMIN')",
+ *         "security"="is_granted('ROLE_ADMIN')",
  *         "method"="GET",
  *         "path"="/ldap/import",
  *         "controller"=LdapImportAction::class,
@@ -55,7 +55,7 @@ class FakeLdapImport
     /**
      * Set succeed count
      *
-     * @param array $succeedCount
+     * @param int $succeedCount
      *
      * @return FakeLdapImport
      */
@@ -69,7 +69,7 @@ class FakeLdapImport
     /**
      * Get succeedCount
      *
-     * @return array
+     * @return int
      */
     public function getSucceedCount(): int
     {
@@ -79,7 +79,7 @@ class FakeLdapImport
     /**
      * Get failedCount
      *
-     * @return array
+     * @return int
      */
     public function getFailedCount(): int
     {
@@ -89,7 +89,7 @@ class FakeLdapImport
     /**
      * Set failedCount
      *
-     * @param array $failedCount
+     * @param int $failedCount
      *
      * @return FakeLdapImport
      */

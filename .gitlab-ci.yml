@@ -15,6 +15,18 @@ build:
     script:
         - /usr/bin/composer.phar global show -i > .gitlab-ci/composer.dump
         - php -d memory_limit=5G /usr/bin/composer.phar install --prefer-dist --no-suggest --no-progress --no-interaction --no-scripts
+        - apk add openssl
+        - mkdir ./var
+        - mkdir ./var/log
+        - KEY_PASS=`date | sha256sum | cut -d " " -f 1`
+        - JWT_KEY_PATH="./config/jwt"
+        - mkdir "$JWT_KEY_PATH" 
+        - openssl genrsa -out "$JWT_KEY_PATH"/private.pem -aes256 -passout pass:"$KEY_PASS" 4096 2> /dev/null
+        - openssl rsa -passin pass:"$KEY_PASS" -pubout -in "$JWT_KEY_PATH"/private.pem -out "$JWT_KEY_PATH"/public.pem 2> /dev/null
+        - cat ./.env.test
+        - echo "JWT_PASSPHRASE=$KEY_PASS" >> ./.env.test
+        - ls config/jwt/ -l
+        - cat ./.env.test
     artifacts:
         expire_in: 1 day
         untracked: true
@@ -24,6 +36,16 @@ phpunit:
     allow_failure: false
     dependencies:
         - build
+    before_script:
+        - apk add openssl
+        - mkdir ./var
+        - mkdir ./var/log
+        - KEY_PASS=`date | sha256sum | cut -d " " -f 1`
+        - JWT_KEY_PATH="./config/jwt"
+        - openssl genrsa -out "$JWT_KEY_PATH"/private.pem -aes256 -passout pass:"$KEY_PASS" 4096 2> /dev/null
+        - openssl rsa -passin pass:"$KEY_PASS" -pubout -in "$JWT_KEY_PATH"/private.pem -out "$JWT_KEY_PATH"/public.pem 2> /dev/null
+        - echo "JWT_PASSPHRASE=$KEY_PASS" >> ./.env.test
+        - cat ./.env.test
     script:
         - php -d memory_limit=1G /root/.composer/vendor/bin/phpunit --testdox --config="./.gitlab-ci/phpunit.xml" ./tests
 
@@ -40,18 +62,20 @@ yamllint:
         - /root/.composer/vendor/bin/yaml-lint --format txt src/
         - /root/.composer/vendor/bin/yaml-lint --format txt config/
 
-psr2:
+psr12:
     stage: standards
     allow_failure: false
     script:
-        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard=PSR2 --extensions=php src/ tests/
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs --version
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs -n --colors --report=full --standard=PSR12 --extensions=php src/ tests/
 
 linelength:
     stage: standards
     allow_failure: false
     script:
-        - /root/.composer/vendor/bin/phpcs --config-set encoding utf-8
-        - /root/.composer/vendor/bin/phpcs -n --colors --report=full --standard="./.gitlab-ci/phpcs_line_length.xml" --extensions=php src/ tests/
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs --version
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs --config-set encoding utf-8
+        - ./vendor/squizlabs/php_codesniffer/bin/phpcs -n --colors --report=full --standard="./.gitlab-ci/phpcs_line_length.xml" --extensions=php src/ tests/
 
 twigcs:
     stage: standards
@@ -64,7 +88,8 @@ phpmd:
     stage: standards
     allow_failure: false
     script:
-        - php -d memory_limit=1G /root/.composer/vendor/bin/phpmd src/ text ".gitlab-ci/phpmd.xml"
+        - ./vendor/phpmd/phpmd/src/bin/phpmd --version
+        - php -d memory_limit=1G ./vendor/phpmd/phpmd/src/bin/phpmd src/ text ".gitlab-ci/phpmd.xml"
 
 phpdoc:
     stage: standards
@@ -74,7 +99,7 @@ phpdoc:
 
 phpcpd:
     stage: stats
-    allow_failure: true
+    allow_failure: false
     script:
         - php -d memory_limit=1G /root/.composer/vendor/bin/phpcpd --min-lines=10 --min-tokens=100 --verbose --exclude="tests/" src/
 

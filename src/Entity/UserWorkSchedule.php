@@ -1,10 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Annotations\AnnotatedLogEntity;
+use App\Entity\Types\LoggableEntityInterface;
 use App\Entity\Utils\UserAware;
+use App\Traits\LoggableEntityTrait;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -90,9 +96,12 @@ use App\Validator\ValueExists;
  *          "toDate"
  *      }
  * )
+ * @AnnotatedLogEntity(UserWorkScheduleLog::class)
  */
-class UserWorkSchedule
+class UserWorkSchedule implements LoggableEntityInterface
 {
+    use LoggableEntityTrait;
+
     /**
      * @var string
      */
@@ -127,6 +136,10 @@ class UserWorkSchedule
      * @ValueExists(entity="App\Entity\UserWorkScheduleStatus", searchField="id")
      * @ORM\ManyToOne(targetEntity="App\Entity\UserWorkScheduleStatus", fetch="EAGER")
      * @Groups({"get", "post", "put"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana statusu z %s na %s"
+     * })
+
      */
     private $status;
 
@@ -141,6 +154,9 @@ class UserWorkSchedule
      * @ORM\ManyToOne(targetEntity="App\Entity\WorkScheduleProfile")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"get", "post"})
+     * @AnnotatedLogEntity(options={
+     *      "message": "Zmiana profilu z %s na %s"
+     * })
      */
     private $workScheduleProfile;
 
@@ -149,27 +165,6 @@ class UserWorkSchedule
      */
     private $userWorkScheduleDays;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\UserWorkScheduleLog", mappedBy="userWorkSchedule")
-     * @ApiSubresource()
-     */
-    private $userWorkScheduleLogs;
-
-    /**
-     * @return mixed
-     */
-    public function getUserWorkScheduleLogs()
-    {
-        return $this->userWorkScheduleLogs;
-    }
-
-    /**
-     * @param mixed $userWorkScheduleLogs
-     */
-    public function setUserWorkScheduleLogs($userWorkScheduleLogs): void
-    {
-        $this->userWorkScheduleLogs = $userWorkScheduleLogs;
-    }
     /**
      * UserWorkSchedule constructor.
      */
@@ -187,19 +182,19 @@ class UserWorkSchedule
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getFromDate(): ?\DateTimeInterface
+    public function getFromDate(): ?DateTimeInterface
     {
         return $this->fromDate;
     }
 
     /**
-     * @param \DateTimeInterface $fromDate
+     * @param DateTimeInterface $fromDate
      *
      * @return UserWorkSchedule
      */
-    public function setFromDate(\DateTimeInterface $fromDate): UserWorkSchedule
+    public function setFromDate(DateTimeInterface $fromDate): UserWorkSchedule
     {
         $this->fromDate = $fromDate;
 
@@ -207,19 +202,19 @@ class UserWorkSchedule
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getToDate(): ?\DateTimeInterface
+    public function getToDate(): ?DateTimeInterface
     {
         return $this->toDate;
     }
 
     /**
-     * @param \DateTimeInterface $toDate
+     * @param DateTimeInterface $toDate
      *
      * @return UserWorkSchedule
      */
-    public function setToDate(\DateTimeInterface $toDate): UserWorkSchedule
+    public function setToDate(DateTimeInterface $toDate): UserWorkSchedule
     {
         $this->toDate = $toDate;
 

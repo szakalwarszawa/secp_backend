@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    public: true
+    autowire: true
+    autoconfigure: true
+
+  App\Utils\UserUtilsInterface:
+    class: App\Tests\UserUtil
+
+  App\Redmine\RedmineRequestInterface:
+    class: App\Tests\ApiFakeResponse
+
+  App\Utils\UserUtil:
+      public: true
