@@ -1,24 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
+use App\Entity\Department;
+use App\Entity\Section;
 use App\Entity\User;
 use App\Utils\WorkScheduleCreator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\VarDumper\VarDumper;
 
+/**
+ * Class AutoCreateSchedulesCommand
+ */
 class AutoCreateSchedulesCommand extends Command
 {
+    /**
+     * @var string
+     */
+    private const SINGLE_USER = 'username';
+
+    /**
+     * @var string
+     */
+    private const ALL_USERS = 'all';
+
+    /**
+     * @var string
+     */
+    private const ONLY_SECTION = 'section';
+
+    /**
+     * @var string
+     */
+    private const ONLY_DEPARTMENT = 'department';
+
+    /**
+     * @var string
+     */
     protected static $defaultName = 'app:auto-create-schedules';
 
     /**
@@ -59,66 +91,204 @@ class AutoCreateSchedulesCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Add a short description for your command')
-            ->addArgument('username', InputArgument::OPTIONAL, 'Username to create schedule.')
-            ->addOption('allUsers', 'all', InputOption::VALUE_NONE, 'Schedules will be created for all users.')
+            ->setDescription(
+                <<<'TXT'
+Creates work schedules (for next reference period or specified date range) users or single user (`username` target).
+TXT
+            )
+            ->addOption(
+                'target',
+                null,
+                InputOption::VALUE_REQUIRED,
+                sprintf(
+                    'Create shedules for user/users by (this is an User::class property name) %s',
+                    implode(', ', $this->availableOptions())
+                ),
+                self::ALL_USERS
+            )
+            ->addOption(
+                'value',
+                'val',
+                InputOption::VALUE_OPTIONAL,
+                'Target value to search users. (ommit when target is `all`)'
+            )
             ->addOption('fromDate', 'f', InputOption::VALUE_OPTIONAL, 'Schedule will be created from date.')
             ->addOption('toDate', 't', InputOption::VALUE_OPTIONAL, 'Schedule will be created to date.')
         ;
     }
 
     /**
+     * @return array
+     */
+    private function availableOptions(): array
+    {
+        return [
+            self::ONLY_DEPARTMENT,
+            self::ONLY_SECTION,
+            self::SINGLE_USER,
+            self::ALL_USERS,
+        ];
+    }
+
+    /**
      * {@inheritDoc}
+     *
+     * @throws EntityNotFoundException
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->resolveOptions($input);
         $this->symfonyStyle = new SymfonyStyle($input, $output);
+
         $stopwatch = new Stopwatch();
         $stopwatch->start('measure');
-        if ($input->getOption('allUsers')) {
-            $this->createSchedulesForAllUsers();
-        }
+        $options = $input->getOptions();
+        $this->beginCreationProcess($options['target'], $options['value']);
 
-        if ($input->getArgument('username')) {
-            $user = $this
-                ->entityManager
-                ->getRepository(User::class)
-                ->findOneBy([
-                    'username' => $input->getArgument('username')
-                ]);
-
-            $this->createScheduleForUser($user);
-        }
         $stopwatch->stop('measure');
 
+        $this->symfonyStyle->newLine(2);
         $this->symfonyStyle->success(
             sprintf(
-                '%s',
-                $stopwatch->getEvent('measure')->getDuration()
+                'Time: %ss',
+                $stopwatch->getEvent('measure')->getDuration() / 1000
             )
         );
     }
 
-    private function createSchedulesForAllUsers()
+    /**
+     * @param string $target
+     * @param null|string $value
+     *
+     * @return void
+     * @throws EntityNotFoundException
+     */
+    private function beginCreationProcess(string $target, ?string $value = null): void
     {
-        $allUsers = $this
+        switch ($target) {
+            case self::ALL_USERS:
+                $this->createSchedulesFor($this->getData($target));
+                break;
+            case self::SINGLE_USER:
+                $this->createSchedulesFor($this->getData($target, $value));
+                break;
+            case self::ONLY_DEPARTMENT:
+                $this->createSchedulesForOrganizationalUnit(self::ONLY_DEPARTMENT, $value);
+                break;
+            case self::ONLY_SECTION:
+                $this->createSchedulesForOrganizationalUnit(self::ONLY_SECTION, $value);
+                break;
+        }
+
+        return;
+    }
+
+    /**
+     * Finds department/section by name and pass it to creation.
+     *
+     * @param string $target
+     * @param string $value
+     *
+     * @return void
+     * @throws EntityNotFoundException
+     */
+    private function createSchedulesForOrganizationalUnit(string $target, string $value): void
+    {
+        /**
+         * @var Section|Department|null $ouEntity
+         */
+        $ouEntity = $this
             ->entityManager
-            ->getRepository(User::class)
-            ->findAll()
+            ->getRepository(
+                $target === self::ONLY_SECTION ? Section::class : Department::class
+            )
+            ->findOneBy([
+                'name' => $value,
+            ])
         ;
 
-        $this->symfonyStyle->progressStart(count($allUsers));
+        if ($ouEntity) {
+            $question = new ConfirmationQuestion(
+                sprintf(
+                    'Proceed to create schedules for `%s` %s?',
+                    $ouEntity->getName(),
+                    $target
+                )
+            );
+            $createSchedules = $this->symfonyStyle->askQuestion($question);
 
-        foreach ($allUsers as $user) {
+            if (!$createSchedules) {
+                $this->symfonyStyle->caution('Aborted');
+
+                return;
+            }
+
+            $this->createSchedulesFor($this->getData($target, $ouEntity->getId()));
+
+            return;
+        }
+
+        throw new EntityNotFoundException(
+            sprintf(
+                'Unable to find entity for %s - %s',
+                $target,
+                $value
+            )
+        );
+    }
+
+    /**
+     * Get user/users to create schedules.
+     *
+     * @param string $target
+     * @param mixed $value
+     *
+     * @return User[]
+     */
+    private function getData(string $target, $value = null): array
+    {
+        $repository = $this
+            ->entityManager
+            ->getRepository(User::class)
+            ;
+
+        if ($target === self::ALL_USERS) {
+            return $repository->findAll();
+        }
+
+        return $repository
+            ->findBy([
+                $target => $value,
+            ]);
+    }
+
+    /**
+     * Loop to create schedules for single user.
+     *
+     * @param array $userList
+     */
+    private function createSchedulesFor(array $userList): void
+    {
+        $this->symfonyStyle->progressStart(count($userList));
+        foreach ($userList as $user) {
             $this->symfonyStyle->progressAdvance();
             $this->createScheduleForUser($user);
         }
+
+        return;
     }
 
-    private function createScheduleForUser(User $user)
+    /**
+     * Pass data to WorkScheduleCreator.
+     *
+     * @param User $user
+     */
+    private function createScheduleForUser(User $user): void
     {
         $this->workScheduleCreator->createWorkSchedule($user, $this->dateRange);
+
+        return;
     }
 
     /**
@@ -128,7 +298,8 @@ class AutoCreateSchedulesCommand extends Command
      *
      * @return void
      * @throws InvalidOptionException when only one value from range is provided
-     * @throws InvalidOptionException when username and allUsers option are defined
+     * @throws InvalidOptionException when target is different than 'all' and no value is provided
+     * @throws InvalidOptionException when target is invalid
      * @throws Exception when invalid date string was passed to DateTime constructor
      */
     private function resolveOptions(InputInterface $input): void
@@ -138,9 +309,18 @@ class AutoCreateSchedulesCommand extends Command
             throw new InvalidOptionException('If you provide date range, it must be two values - fromDate and toDate');
         }
 
-        if ($options['allUsers'] && $input->getArgument('username')) {
+        if (!in_array($options['target'], $this->availableOptions())) {
             throw new InvalidOptionException(
-                'You can not create schedule for single user and all users at the same time'
+                sprintf(
+                    'Invalid target. Available: %s',
+                    implode(', ', $this->availableOptions())
+                )
+            );
+        }
+
+        if ($options['target'] !== self::ALL_USERS && !$options['value']) {
+            throw new InvalidOptionException(
+                'You need to provide `value` option.'
             );
         }
 

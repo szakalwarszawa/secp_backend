@@ -80,13 +80,14 @@ class WorkScheduleCreatorTest extends AbstractWebTestCase
      * @return void
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Exception
      */
     public function testSpecifyRange(): void
     {
         /**
          * @var $userEntity User
          */
-        $userEntity = $this->getEntityFromReference(UserFixtures::REF_USER_USER);
+        $userEntity = $this->getEntityFromReference(UserFixtures::REF_USER_SECRETARY);
         $this->assertInstanceOf(User::class, $userEntity);
 
         $activeUserSchedule = $this
