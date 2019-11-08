@@ -13,8 +13,14 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 final class UserPersister implements ContextAwareDataPersisterInterface
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -56,12 +62,18 @@ final class UserPersister implements ContextAwareDataPersisterInterface
     {
         $workScheduleProfile = $user->getDefaultWorkScheduleProfile();
         $profileProperties = $workScheduleProfile->getProperties();
+        /**
+         * Individual profile
+         */
         if ($profileProperties['dayStartTimeFrom'] !== $profileProperties['dayStartTimeTo']) {
             $user
                 ->setDayStartTimeFrom($user->getDayStartTimeTo())
                 ->setDayEndTimeFrom($user->getDayEndTimeTo())
             ;
         }
+        /**
+         * Default profile
+         */
         if (!$profileProperties['dayStartTimeFrom'] && !$profileProperties['dayStartTimeTo']) {
             $user
                 ->setDayStartTimeFrom($workScheduleProfile->getDayStartTimeFrom())

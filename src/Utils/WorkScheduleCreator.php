@@ -35,6 +35,10 @@ class WorkScheduleCreator
      */
     private $workScheduleStatus = null;
 
+    /**
+     * @param ReferencePeriod $referencePeriod
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(ReferencePeriod $referencePeriod, EntityManagerInterface $entityManager)
     {
         $this->referencePeriod = $referencePeriod;
