@@ -83,6 +83,14 @@ class UserUtil implements UserUtilsInterface
      */
     public function getCurrentUser(bool $refreshFromDb = true): ?User
     {
+        if (PHP_SAPI === 'cli') {
+            return $this
+                ->entityManager
+                ->getRepository(User::class)
+                ->findSystemUser()
+                ;
+        }
+
         $token = $this->token;
         if ($token !== null) {
             if (!$refreshFromDb) {
