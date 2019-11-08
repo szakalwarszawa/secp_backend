@@ -155,6 +155,11 @@ class User implements UserInterface, LoggableEntityInterface
     use LoggableEntityTrait;
 
     /**
+     * @var string
+     */
+    public const SYSTEM_USERNAME = 'system';
+
+    /**
      * @var int
      *
      * @ORM\Id()
