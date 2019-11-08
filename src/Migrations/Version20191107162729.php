@@ -1,5 +1,9 @@
 <?php
-/** @noinspection LongLine */
+
+/**
+ * @noinspection LongLine
+ * @phpcs:disable Generic.Files.LineLength
+ */
 
 declare(strict_types=1);
 
