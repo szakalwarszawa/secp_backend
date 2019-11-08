@@ -21,7 +21,10 @@ class UserUtilTest extends AbstractWebTestCase
      */
     public function testGetCurrentUserEmptyTokenStorage(): void
     {
-        $currentUserShouldBeNull = self::$container->get(UserUtil::class)->getCurrentUser();
+        $currentUserShouldBeNull = self::$container
+            ->get(UserUtil::class)
+            ->disableSystemUser()
+            ->getCurrentUser();
         $this->assertNull($currentUserShouldBeNull);
     }
 

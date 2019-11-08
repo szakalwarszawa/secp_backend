@@ -35,6 +35,11 @@ class UserUtil implements UserUtilsInterface
     private $jwtToken = null;
 
     /**
+     * @var bool
+     */
+    private $disableSystemUser = false;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param TokenStorageInterface $tokenStorage
      * @param RequestStack $requestStack
@@ -111,7 +116,7 @@ class UserUtil implements UserUtilsInterface
             ;
         }
 
-        if (PHP_SAPI === 'cli') {
+        if (PHP_SAPI === 'cli' && !$this->disableSystemUser) {
             return $this
                 ->entityManager
                 ->getRepository(User::class)
@@ -120,5 +125,15 @@ class UserUtil implements UserUtilsInterface
         }
 
         return null;
+    }
+
+    /**
+     * @return UserUtilsInterface
+     */
+    public function disableSystemUser(): UserUtilsInterface
+    {
+        $this->disableSystemUser = true;
+
+        return $this;
     }
 }
