@@ -57,8 +57,10 @@ final class UserPersister implements ContextAwareDataPersisterInterface
      * has ex. default profile.
      *
      * @param User $user
+     *
+     * @return void
      */
-    private function manageUserProfileSettings(User $user)
+    private function manageUserProfileSettings(User $user): void
     {
         $workScheduleProfile = $user->getDefaultWorkScheduleProfile();
         $profileProperties = $workScheduleProfile->getProperties();

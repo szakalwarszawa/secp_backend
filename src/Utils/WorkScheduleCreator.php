@@ -13,7 +13,6 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class WorkScheduleCreator
@@ -93,7 +92,7 @@ class WorkScheduleCreator
 
     /**
      * @param User $user
-     * @param DateTimeInterface[]|array $dateRange
+     * @param DateTimeInterface[] $dateRange
      *
      * @return void
      */

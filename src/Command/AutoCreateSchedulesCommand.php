@@ -18,10 +18,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class AutoCreateSchedulesCommand
@@ -267,6 +265,8 @@ TXT
      * Loop to create schedules for single user.
      *
      * @param array $userList
+     *
+     * @return void
      */
     private function createSchedulesFor(array $userList): void
     {
@@ -283,6 +283,8 @@ TXT
      * Pass data to WorkScheduleCreator.
      *
      * @param User $user
+     *
+     * @return void
      */
     private function createScheduleForUser(User $user): void
     {

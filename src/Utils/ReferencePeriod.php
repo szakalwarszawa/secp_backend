@@ -117,6 +117,7 @@ class ReferencePeriod
      *
      * @return array
      * @throws Exception
+     * @throws InvalidArgumentException when consts are invalid
      */
     public function getCurrentPeriod(bool $includeIndex = false): array
     {
