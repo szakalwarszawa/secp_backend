@@ -37,7 +37,7 @@ class UserRepository extends ServiceEntityRepository
             ->where('u.username = :systemUsername')
             ->setParameter('systemUsername', User::SYSTEM_USERNAME)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
         if (!$queryResult) {
             throw new EntityNotFoundException('There is no system user in database.');
