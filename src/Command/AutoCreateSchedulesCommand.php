@@ -264,7 +264,7 @@ TXT
     /**
      * Loop to create schedules for single user.
      *
-     * @param array $userList
+     * @param User[] $userList
      *
      * @return void
      */
