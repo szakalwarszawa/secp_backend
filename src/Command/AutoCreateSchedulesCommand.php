@@ -99,7 +99,7 @@ TXT
                 null,
                 InputOption::VALUE_REQUIRED,
                 sprintf(
-                    'Create shedules for user/users by (this is an User::class property name) %s',
+                    'Create schedules for user/users by (this is an User::class property name) %s',
                     implode(', ', $this->availableOptions())
                 ),
                 self::ALL_USERS
