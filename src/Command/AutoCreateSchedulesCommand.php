@@ -166,10 +166,10 @@ TXT
     {
         switch ($target) {
             case self::ALL_USERS:
-                $this->createSchedulesFor($this->getData($target));
+                $this->createSchedulesForUserList($this->getUsersList($target));
                 break;
             case self::SINGLE_USER:
-                $this->createSchedulesFor($this->getData($target, $value));
+                $this->createSchedulesForUserList($this->getUsersList($target, $value));
                 break;
             case self::ONLY_DEPARTMENT:
                 $this->createSchedulesForOrganizationalUnit(self::ONLY_DEPARTMENT, $value);
@@ -222,7 +222,7 @@ TXT
                 return;
             }
 
-            $this->createSchedulesFor($this->getData($target, $ouEntity->getId()));
+            $this->createSchedulesForUserList($this->getUsersList($target, $ouEntity->getId()));
 
             return;
         }
@@ -244,7 +244,7 @@ TXT
      *
      * @return User[]
      */
-    private function getData(string $target, $value = null): array
+    private function getUsersList(string $target, $value = null): array
     {
         $repository = $this
             ->entityManager
