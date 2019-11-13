@@ -268,7 +268,7 @@ TXT
      *
      * @return void
      */
-    private function createSchedulesFor(array $userList): void
+    private function createSchedulesForUserList(array $userList): void
     {
         $this->symfonyStyle->progressStart(count($userList));
         foreach ($userList as $user) {
