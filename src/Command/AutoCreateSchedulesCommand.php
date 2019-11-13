@@ -108,7 +108,7 @@ TXT
                 'value',
                 'val',
                 InputOption::VALUE_OPTIONAL,
-                'Target value to search users. (ommit when target is `all`)'
+                'Target value to search users. (omit when target is `all`)'
             )
             ->addOption('fromDate', 'f', InputOption::VALUE_OPTIONAL, 'Schedule will be created from date.')
             ->addOption('toDate', 't', InputOption::VALUE_OPTIONAL, 'Schedule will be created to date.')
