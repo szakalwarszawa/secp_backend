@@ -40,7 +40,6 @@ use App\Traits\LoggableEntityTrait;
  * @UserAware(
  *     userFieldName="id"
  * )
- *
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity("username", errorPath="username", groups={"post", "put"})
@@ -153,6 +152,11 @@ use App\Traits\LoggableEntityTrait;
 class User implements UserInterface, LoggableEntityInterface
 {
     use LoggableEntityTrait;
+
+    /**
+     * @var string
+     */
+    public const SYSTEM_USERNAME = 'system';
 
     /**
      * @var int

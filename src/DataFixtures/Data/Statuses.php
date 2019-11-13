@@ -33,6 +33,16 @@ class Statuses
                     'ROLE_USER' => [
                         $classConstants['REF_STATUS_OWNER_ACCEPT'],
                     ],
+                    'ROLE_SECRETARY' => [
+                        $classConstants['REF_STATUS_OWNER_ACCEPT'],
+                    ],
+                    'ROLE_SECTION_MANAGER' => [
+                        $classConstants['REF_STATUS_OWNER_ACCEPT'],
+                    ],
+                    'ROLE_DEPARTMENT_MANAGER' => [
+                        $classConstants['REF_STATUS_OWNER_ACCEPT'],
+                        $classConstants['REF_STATUS_MANAGER_ACCEPT'],
+                    ],
                     'ROLE_HR' => [
                         $classConstants['REF_STATUS_OWNER_ACCEPT'],
                         $classConstants['REF_STATUS_MANAGER_ACCEPT'],
