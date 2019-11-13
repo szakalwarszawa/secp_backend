@@ -307,7 +307,7 @@ TXT
     private function resolveOptions(InputInterface $input): void
     {
         $options = $input->getOptions();
-        if (isset($options['fromDate']) <> isset($options['toDate'])) {
+        if (isset($options['fromDate']) !== isset($options['toDate'])) {
             throw new InvalidOptionException('If you provide date range, it must be two values - fromDate and toDate');
         }
 
