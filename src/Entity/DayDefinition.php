@@ -8,7 +8,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Annotations\AnnotatedLogEntity;
 use App\Entity\Types\LoggableEntityInterface;
 use App\Traits\LoggableEntityTrait;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -145,5 +147,17 @@ class DayDefinition implements LoggableEntityInterface
         $this->notice = $notice;
 
         return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getAsDateTime(): ?DateTime
+    {
+        try {
+            return new DateTime($this->id);
+        } catch (Exception $e) {
+            return null;
+        }
     }
 }
