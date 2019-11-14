@@ -56,8 +56,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          },
  *          "get-active-owner-work-schedule"={
  *              "method"="GET",
- *              "path"="/user_work_schedule_days/own/active/{dateFrom}/{dateTo}",
- *              "requirements"={"dateFrom"="\d{4}-\d{2}-\d{2}", "dateTo"="\d{4}-\d{2}-\d{2}"},
+ *              "path"="/user_work_schedule_days/{userId}/active/{dateFrom}/{dateTo}",
+ *              "requirements"={
+ *                  "userId"="\d+",
+ *                  "dateFrom"="\d{4}-\d{2}-\d{2}",
+ *                  "dateTo"="\d{4}-\d{2}-\d{2}"
+ *              },
  *              "controller"=OwnerActiveWorkScheduleRangeAction::class,
  *              "normalization_context"={
  *                  "groups"={

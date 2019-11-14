@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use App\DataFixtures\UserFixtures;
+use App\Entity\Department;
 use App\Entity\User;
+use App\Entity\WorkScheduleProfile;
 use App\Tests\AbstractWebTestCase;
 use App\Tests\NotFoundReferencedUserException;
 use Exception;
@@ -159,10 +161,10 @@ JSON;
      */
     public function apiPutUser(): void
     {
-        $userREF = $this->fixtures->getReference('user_' . random_int(0, 99));
+        $userREF = $this->getEntityFromReference('user_' . random_int(0, 99));
         /* @var $userREF User */
         $userBeforeUpdate = clone $userREF;
-        $departmentRef = $this->fixtures->getReference('department_admin');
+        $departmentRef = $this->getEntityFromReference('department_admin');
         /* @var $departmentRef Department */
 
         $payload = <<<JSON

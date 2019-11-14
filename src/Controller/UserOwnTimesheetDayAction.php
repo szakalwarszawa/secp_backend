@@ -4,21 +4,20 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserTimesheetDay;
+use App\Utils\UserUtil;
+use App\Utils\UserUtilsInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Class UserOwnTimesheetDayAction
- * @package App\Controller
  */
 class UserOwnTimesheetDayAction
 {
     /**
-     * @var TokenInterface|null
+     * @var UserUtil|null
      */
-    private $token;
+    private $userUtil;
 
     /**
      * @var EntityManager
@@ -27,30 +26,35 @@ class UserOwnTimesheetDayAction
 
     /**
      * UserMe constructor.
+     *
      * @param EntityManagerInterface $entityManager
-     * @param TokenStorageInterface $tokenStorage
+     * @param UserUtilsInterface $userUtil
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage
+        UserUtilsInterface $userUtil
     ) {
-        $this->token = $tokenStorage->getToken();
+        $this->userUtil = $userUtil;
         $this->entityManager = $entityManager;
     }
 
     /**
+     * @param int $userId
      * @param string $dateFrom
      * @param string $dateTo
+     *
      * @return UserTimesheetDay[]
      */
-    public function __invoke($dateFrom, $dateTo): array
+    public function __invoke(int $userId, string $dateFrom, string $dateTo): array
     {
-        $currentUser = $this->token->getUser();
-        /* @var $currentUser User */
+        $currentUser =  $userId
+            ? $this->entityManager->getRepository(User::class)->find($userId)
+            : $this->userUtil->getCurrentUser();
 
-        $userTimesheetDays = $this->entityManager->getRepository(UserTimesheetDay::class)
-            ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo);
-
-        return $userTimesheetDays;
+        return $this
+            ->entityManager
+            ->getRepository(UserTimesheetDay::class)
+            ->findWorkDayBetweenDate($currentUser, $dateFrom, $dateTo)
+        ;
     }
 }
