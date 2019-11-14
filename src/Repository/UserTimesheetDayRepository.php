@@ -48,4 +48,49 @@ class UserTimesheetDayRepository extends ServiceEntityRepository
 
         return $result ?? null;
     }
+
+    /**
+     * @param User $user
+     * @param string $dayFromDate
+     * @param string $dayToDate
+     * @param bool $asObjects
+     *
+     * @return UserTimesheetDay[]|null
+     */
+    public function findTimesheetDaysBetweenDate(
+        User $user,
+        string $dayFromDate,
+        string $dayToDate,
+        bool $asObjects = false
+    ): ?array {
+        $queryBuilder = $this->createQueryBuilder('p');
+        if (!$asObjects) {
+            $queryBuilder->select('
+                dayDefinition.id as dayId,
+                p.dayStartTime,
+                p.dayEndTime,
+                p.workingTime,
+                absenceType.shortName as absenceShortName,
+                case when absenceType != 0 then owner.dailyWorkingTime else 0 end as absenceTime
+            ');
+        }
+        $queryBuilder
+            ->innerJoin('p.userTimesheet', 'userTimesheet')
+            ->leftJoin('p.absenceType', 'absenceType')
+            ->innerJoin('userTimesheet.owner', 'owner')
+            ->innerJoin('p.userWorkScheduleDay', 'userWorkScheduleDay')
+            ->innerJoin('userWorkScheduleDay.dayDefinition', 'dayDefinition')
+            ->andWhere('userTimesheet.owner = :owner')
+            ->setParameter('owner', $user)
+            ->andWhere('dayDefinition.id >= :dateFrom')
+            ->setParameter('dateFrom', $dayFromDate)
+            ->andWhere('dayDefinition.id <= :dateTo')
+            ->setParameter('dateTo', $dayToDate)
+            ->orderBy('dayDefinition.id')
+        ;
+
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return $result ?? null;
+    }
 }
