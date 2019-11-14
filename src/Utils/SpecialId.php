@@ -79,6 +79,7 @@ class SpecialId
      * @param string $specialIdKey
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function findAbsenceToBeCompletedId(string $specialIdKey): void
     {
@@ -105,6 +106,7 @@ class SpecialId
      * @param string $specialIdKey
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function findPresenceAbsenceId(string $specialIdKey): void
     {
