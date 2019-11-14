@@ -250,7 +250,7 @@ abstract class AbstractWebTestCase extends WebTestCase
                 );
             }
 
-            if ($arrayItem->$keyName == $value) {
+            if ($arrayItem[$keyName] == $value) {
                 $this->assertTrue(true);
                 return;
             }

@@ -231,14 +231,14 @@ JSON;
             200
         );
 
-        $departmentJSON = json_decode($response->getContent(), false);
+        $departmentJSON = json_decode($response->getContent(), true);
 
         $this->assertCount(
             $originalSectionCount + 1,
-            $departmentJSON->sections
+            $departmentJSON['sections']
         );
 
-        $this->assertArrayContainsSameKeyWithValue($departmentJSON->sections, 'id', $newSectionId);
+        $this->assertArrayContainsSameKeyWithValue($departmentJSON['sections'], 'id', $newSectionId);
         $this->assertListContainsSameObjectWithValue($departmentDB->getSections(), 'getId', $newSectionId);
     }
 

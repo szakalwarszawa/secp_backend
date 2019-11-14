@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\AbsenceType;
+use App\Entity\PresenceType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -18,11 +19,6 @@ use InvalidArgumentException;
 class SpecialId
 {
     /**
-     * @var string
-     */
-    public const TO_BE_COMPLETED_ABSENCE_PARAM_KEY = 'toBeCompletedAbsence';
-
-    /**
      * @var EntityManager
      */
     private $entityManager;
@@ -33,9 +29,9 @@ class SpecialId
     private $params;
 
     /**
-     * @var null
+     * @var array
      */
-    private $toBeCompletedAbsenceId = null;
+    private $specialObjects = [];
 
     /**
      * SpecialId constructor.
@@ -48,32 +44,48 @@ class SpecialId
         $this->entityManager = $entityManager;
         $this->params = $params;
 
-        $this->findToBeCompletedAbsenceId();
+        foreach (array_keys($params) as $specialIdKey) {
+            $finderFunction = 'find' . ucfirst($specialIdKey);
+            if (!method_exists($this, $finderFunction)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        "Expect finder method for object key: '%s', missing method: '%s'",
+                        $specialIdKey,
+                        $finderFunction
+                    )
+                );
+            }
+            $this->$finderFunction($specialIdKey);
+        }
     }
 
     /**
+     * @param string $objectKey
+     *
      * @return integer|null
      */
-    public function getToBeCompletedAbsenceId(): ?int
+    public function getIdForSpecialObjectKey(string $objectKey): ?int
     {
-        return $this->toBeCompletedAbsenceId;
-    }
-
-    /**
-     * @return void
-     */
-    private function findToBeCompletedAbsenceId(): void
-    {
-        if (!isset($this->params[self::TO_BE_COMPLETED_ABSENCE_PARAM_KEY])) {
+        if (!array_key_exists($objectKey, $this->specialObjects)) {
             throw new InvalidArgumentException(
-                sprintf("Expect service param: '%s'", self::TO_BE_COMPLETED_ABSENCE_PARAM_KEY)
+                sprintf("You try to get wrong object key: '%s'", $objectKey)
             );
         }
 
+        return $this->specialObjects[$objectKey];
+    }
+
+    /**
+     * @param string $specialIdKey
+     *
+     * @return void
+     */
+    private function findAbsenceToBeCompletedId(string $specialIdKey): void
+    {
         $toBeCompletedAbsence = $this->entityManager
             ->getRepository(AbsenceType::class)
             ->findOneBy([
-                'shortName' => $this->params[self::TO_BE_COMPLETED_ABSENCE_PARAM_KEY],
+                'shortName' => $this->params[$specialIdKey],
             ])
         ;
 
@@ -81,11 +93,37 @@ class SpecialId
             throw new InvalidArgumentException(
                 sprintf(
                     "Don't find special object to be completed absence for given key: '%s'",
-                    $this->params[self::TO_BE_COMPLETED_ABSENCE_PARAM_KEY]
+                    $this->params[$specialIdKey]
                 )
             );
         }
 
-        $this->toBeCompletedAbsenceId = $toBeCompletedAbsence->getId();
+        $this->specialObjects[$specialIdKey] = $toBeCompletedAbsence->getId();
+    }
+
+    /**
+     * @param string $specialIdKey
+     *
+     * @return void
+     */
+    private function findPresenceAbsenceId(string $specialIdKey): void
+    {
+        $presenceAbsence = $this->entityManager
+            ->getRepository(PresenceType::class)
+            ->findOneBy([
+                'shortName' => $this->params[$specialIdKey],
+            ])
+        ;
+
+        if ($presenceAbsence === null) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    "Don't find special object to be absence type of presence given key: '%s'",
+                    $this->params[$specialIdKey]
+                )
+            );
+        }
+
+        $this->specialObjects[$specialIdKey] = $presenceAbsence->getId();
     }
 }

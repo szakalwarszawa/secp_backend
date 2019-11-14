@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Utils;
 
 use App\Entity\AbsenceType;
+use App\Entity\PresenceType;
 use App\Tests\AbstractWebTestCase;
 use App\Utils\SpecialId;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,14 +21,19 @@ class SpecialIdTest extends AbstractWebTestCase
      */
     public function testGetToBeCompletedAbsenceObjectId(): void
     {
-        $toBeCompletedAbsenceId = $this->makeSpecialIdClass()->getToBeCompletedAbsenceId();
+        $specialIdServiceParams = self::$container->getParameter('app.special_id.parameters');
+        $toBeCompletedAbsenceId = $this->makeSpecialIdClass()
+            ->getIdForSpecialObjectKey(
+                'absenceToBeCompletedId'
+            )
+        ;
         $this->assertNotNull($toBeCompletedAbsenceId);
         $this->assertIsNumeric($toBeCompletedAbsenceId);
 
         $toBeCompletedAbsenceIdFromDb = $this->entityManager
             ->getRepository(AbsenceType::class)
             ->findOneBy([
-                'shortName' => self::$container->getParameter('app.absence_type.to_be_completed_absence'),
+                'shortName' => $specialIdServiceParams['absenceToBeCompletedId'],
             ])
         ;
         $this->assertInstanceOf(AbsenceType::class, $toBeCompletedAbsenceIdFromDb);
@@ -37,20 +43,49 @@ class SpecialIdTest extends AbstractWebTestCase
     /**
      * @return void
      */
-    public function testThrowMissedExpectedParameter(): void
+    public function testGetPresenceAbsenceObjectId(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            "Expect service param: 'toBeCompletedAbsence'"
-        );
+        $specialIdServiceParams = self::$container->getParameter('app.special_id.parameters');
+        $presenceAbsenceId = $this->makeSpecialIdClass()
+            ->getIdForSpecialObjectKey(
+                'presenceAbsenceId'
+            )
+        ;
+        $this->assertNotNull($presenceAbsenceId);
+        $this->assertIsNumeric($presenceAbsenceId);
 
-        $this->makeSpecialIdClass([]);
+        $presenceAbsenceIdFromDb = $this->entityManager
+            ->getRepository(PresenceType::class)
+            ->findOneBy([
+                'shortName' => $specialIdServiceParams['presenceAbsenceId'],
+            ])
+        ;
+        $this->assertInstanceOf(PresenceType::class, $presenceAbsenceIdFromDb);
+        $this->assertEquals($presenceAbsenceIdFromDb->getId(), $presenceAbsenceId);
     }
 
     /**
      * @return void
      */
-    public function testThrowNotFindObjectRecord(): void
+    public function testThrowMissedExpectedParameter(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            "Expect finder method for object key: 'nonExistingSpecialObjectKey', " .
+            "missing method: 'findNonExistingSpecialObjectKey'"
+        );
+
+        $this->makeSpecialIdClass(
+            [
+                'nonExistingSpecialObjectKey' => 'any value',
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testThrowNotFindObjectRecordToBeCompletedAbsence(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -59,9 +94,39 @@ class SpecialIdTest extends AbstractWebTestCase
 
         $this->makeSpecialIdClass(
             [
-                SpecialId::TO_BE_COMPLETED_ABSENCE_PARAM_KEY => 'non existing record'
+                'absenceToBeCompletedId' => 'non existing record'
             ]
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function testThrowNotFindObjectRecordPresenceAbsence(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            "Don't find special object to be absence type of presence given key: 'non existing record'"
+        );
+
+        $this->makeSpecialIdClass(
+            [
+                'presenceAbsenceId' => 'non existing record'
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testThrowGetWrongObjectKeyRecord(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            "You try to get wrong object key: 'nonExistObjectKey'"
+        );
+
+        $this->makeSpecialIdClass()->getIdForSpecialObjectKey('nonExistObjectKey');
     }
 
     /**
