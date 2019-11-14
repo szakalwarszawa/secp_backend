@@ -16,18 +16,6 @@ use InvalidArgumentException;
 class ReferencePeriod
 {
     /**
-     * @var string
-     */
-    private const REFERENCE_PERIOD_DURATION = '4 months';
-
-    /**
-     * How many periods will be created.
-     *
-     * @var int
-     */
-    private const PERIODS_COUNT = 5;
-
-    /**
      * @var array
      */
     public $referencePeriods = [];
@@ -35,17 +23,17 @@ class ReferencePeriod
     /**
      * ReferencePeriod constructor.
      *
-     * @param string $referencePeriodStart
+     * @param string $referencePeriodsRanges
      */
-    public function __construct(string $referencePeriodStart)
+    public function __construct(string $referencePeriodsRanges)
     {
         try {
-            $this->referencePeriods = $this->createReferencePeriods($referencePeriodStart);
+            $this->referencePeriods = $this->createReferencePeriods($referencePeriodsRanges);
         } catch (Exception $e) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Unable to create periods, check period start configuration - %s',
-                    $referencePeriodStart
+                    $referencePeriodsRanges
                 )
             );
         }
@@ -54,47 +42,36 @@ class ReferencePeriod
     /**
      * Creates ranges of reference periods based on start date.
      *
-     * @param string $referencePeriodStart
+     * @param string $referencePeriodsRanges
      *
      * @return array
      * @throws Exception
      */
-    private function createReferencePeriods(string $referencePeriodStart): array
+    private function createReferencePeriods(string $referencePeriodsRanges): array
     {
-        $periods = [];
-        $lastDate = null;
-        $currentYear = (int) date('Y');
-        for ($i = 0; $i < self::PERIODS_COUNT; $i++) {
-            $startDate = new DateTimeImmutable(
-                sprintf(
-                    '%s-%s',
-                    $currentYear,
-                    $lastDate ?? $referencePeriodStart
-                )
-            );
-
-            $endDate = $startDate
-                ->modify(self::REFERENCE_PERIOD_DURATION)
-                ->modify('-1 day');
-
-            $lastDate = $endDate->modify('+1 day')->format('m-d');
-
-            $periods[] = [
-                $startDate,
-                $endDate,
+        $referencePeriodsRanges = explode(',', $referencePeriodsRanges);
+        $periodDates = [];
+        $firstPeriod = null;
+        foreach ($referencePeriodsRanges as $period) {
+            [$periodStart, $periodEnd] = explode('--', $period);
+            $period = [
+                new DateTimeImmutable(date('Y-' . $periodStart)),
+                new DateTimeImmutable(date('Y-' . $periodEnd))
             ];
 
-            $dateYear = (int) $startDate
-                ->modify(self::REFERENCE_PERIOD_DURATION)
-                ->format('Y')
-            ;
-
-            if ($dateYear !== $currentYear) {
-                $currentYear++;
+            if (!$firstPeriod) {
+                $firstPeriod = $period;
             }
+
+            $periodDates[] = $period;
         }
 
-        return $periods;
+        $periodDates[] = [
+            $firstPeriod[0]->modify('+1 year'),
+            $firstPeriod[1]->modify('+1 year'),
+        ];
+
+        return $periodDates;
     }
 
     /**

@@ -134,4 +134,4 @@ services:
             - '%env(int:resolve:REDMINE_REPORTER_CUSTOM_FIELD_ID)%'
     App\Utils\ReferencePeriod:
         arguments:
-            - '%env(string:resolve:REFERENCE_PERIOD_START)%'
+            - '%env(string:resolve:REFERENCE_PERIODS)%'

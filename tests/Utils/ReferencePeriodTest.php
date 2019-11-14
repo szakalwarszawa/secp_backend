@@ -53,20 +53,13 @@ class ReferencePeriodTest extends AbstractWebTestCase
      * getPeriods() test
      *
      * @return void
-     * @throws ReflectionException
      */
     public function testGetPeriods(): void
     {
         $allPeriods = $this->referencePeriod->getPeriods();
         $this->assertIsArray($allPeriods);
-
-        $reflection = new ReflectionClass(ReferencePeriod::class);
-        /**
-         * Constant is private.
-         */
-        $periodsCount = $reflection->getConstant('PERIODS_COUNT');
         $this->assertGreaterThan(1, count($allPeriods));
-        $this->assertEquals($periodsCount, count($allPeriods));
+        $this->assertEquals(4, count($allPeriods));
     }
 
     /**
