@@ -47,8 +47,6 @@ class ReferencePeriodTest extends AbstractWebTestCase
          */
         $this->assertGreaterThanOrEqual($rangeFrom, $currentDate);
         $this->assertLessThanOrEqual($rangeTo, $currentDate);
-
-        return;
     }
 
     /**
@@ -69,8 +67,6 @@ class ReferencePeriodTest extends AbstractWebTestCase
         $periodsCount = $reflection->getConstant('PERIODS_COUNT');
         $this->assertGreaterThan(1, count($allPeriods));
         $this->assertEquals($periodsCount, count($allPeriods));
-
-        return;
     }
 
     /**
@@ -102,8 +98,6 @@ class ReferencePeriodTest extends AbstractWebTestCase
          */
         $this->assertEquals(1, $daysDiff);
         $this->assertEquals($currentPeriodTo, $nextPeriodFrom->modify('-1 day'));
-
-        return;
     }
 
     /**
@@ -114,7 +108,5 @@ class ReferencePeriodTest extends AbstractWebTestCase
         parent::setUp();
 
         $this->referencePeriod = self::$container->get(ReferencePeriod::class);
-
-        return;
     }
 }

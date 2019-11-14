@@ -109,8 +109,6 @@ class WorkScheduleCreator
             ;
 
         $this->entityManager->persist($userWorkSchedule);
-
-        return;
     }
 
     /**

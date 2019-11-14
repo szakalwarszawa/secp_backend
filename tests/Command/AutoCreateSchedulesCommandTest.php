@@ -42,8 +42,6 @@ class AutoCreateSchedulesCommandTest extends AbstractWebTestCase
                 '--fromDate' => '2019-01-01',
             ]
         );
-
-        return;
     }
 
     /**
@@ -59,8 +57,6 @@ class AutoCreateSchedulesCommandTest extends AbstractWebTestCase
                 '--toDate' => '2019-01-01',
             ]
         );
-
-        return;
     }
 
     /**
@@ -76,8 +72,6 @@ class AutoCreateSchedulesCommandTest extends AbstractWebTestCase
                 '--target' => 'department',
             ]
         );
-
-        return;
     }
 
     /**
@@ -95,8 +89,6 @@ class AutoCreateSchedulesCommandTest extends AbstractWebTestCase
                 '--target' => bin2hex(random_bytes(5)),
             ]
         );
-
-        return;
     }
 
     /**
@@ -119,8 +111,6 @@ class AutoCreateSchedulesCommandTest extends AbstractWebTestCase
          * Created 0 schedules.
          */
         $this->assertStringContainsString('0 [', $commandDisplay);
-
-        return;
     }
 
     /**
@@ -146,8 +136,6 @@ class AutoCreateSchedulesCommandTest extends AbstractWebTestCase
          * Created only 1 schedule.
          */
         $this->assertStringContainsString('1/1', $commandDisplay);
-
-        return;
     }
 
     /**
@@ -168,8 +156,6 @@ class AutoCreateSchedulesCommandTest extends AbstractWebTestCase
                 '--value' => $this->getEntityFromReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN)->getName(),
             ]
         );
-
-        return;
     }
 
     /**
@@ -217,8 +203,6 @@ class AutoCreateSchedulesCommandTest extends AbstractWebTestCase
             sprintf('%s/%s', $usersInSection, $usersInSection),
             $commandDisplay
         );
-
-        return;
     }
 
     /**

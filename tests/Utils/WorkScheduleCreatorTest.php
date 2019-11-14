@@ -70,8 +70,6 @@ class WorkScheduleCreatorTest extends AbstractWebTestCase
          * but 3 workScheduleDays has been created (01-01, 01-02, 01-03).
          */
         $this->assertCount($daysInRange + 1, $currentScheduleDays);
-
-        return;
     }
 
     /**
@@ -154,8 +152,6 @@ class WorkScheduleCreatorTest extends AbstractWebTestCase
         [$rangeFrom, $rangeTo] = $range;
 
         $this->assertGreaterThan($rangeFrom, $dayDefinition->getAsDateTime());
-
-        return;
     }
 
     /**
@@ -166,7 +162,5 @@ class WorkScheduleCreatorTest extends AbstractWebTestCase
         parent::setUp();
 
         $this->workScheduleCreator = self::$container->get(WorkScheduleCreator::class);
-
-        return;
     }
 }

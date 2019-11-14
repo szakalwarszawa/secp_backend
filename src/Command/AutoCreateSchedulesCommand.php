@@ -178,8 +178,6 @@ TXT
                 $this->createSchedulesForOrganizationalUnit(self::ONLY_SECTION, $value);
                 break;
         }
-
-        return;
     }
 
     /**
@@ -275,8 +273,6 @@ TXT
             $this->symfonyStyle->progressAdvance();
             $this->createScheduleForUser($user);
         }
-
-        return;
     }
 
     /**
@@ -289,8 +285,6 @@ TXT
     private function createScheduleForUser(User $user): void
     {
         $this->workScheduleCreator->createWorkSchedule($user, $this->dateRange);
-
-        return;
     }
 
     /**
@@ -332,7 +326,5 @@ TXT
                 new DateTime($options['toDate'])
             ];
         }
-
-        return;
     }
 }
