@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.absence_type.to_be_completed_absence: 'DU'
 
 services:
     # default configuration for services in *this* file
@@ -132,3 +133,11 @@ services:
             - '%env(int:resolve:REDMINE_CATEGORY_ID)%'
             - '%env(int:resolve:REDMINE_TRACKER_ID)%'
             - '%env(int:resolve:REDMINE_REPORTER_CUSTOM_FIELD_ID)%'
+
+    App\Utils\SpecialId:
+        class: App\Utils\SpecialId
+        public: true
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $params:
+                !php/const App\Utils\SpecialId::TO_BE_COMPLETED_ABSENCE_PARAM_KEY: '%app.absence_type.to_be_completed_absence%'
