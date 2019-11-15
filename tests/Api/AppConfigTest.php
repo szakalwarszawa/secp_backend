@@ -20,10 +20,7 @@ class AppConfigTest extends AbstractWebTestCase
     {
         $response = $this->getActionResponse(
             'GET',
-            '/api/app_config',
-            null,
-            [],
-            200
+            '/api/app_config'
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
