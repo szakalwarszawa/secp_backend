@@ -14,9 +14,9 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Class AutoCreateSchedulesCommandTest
+ * Class MonthlyTimesheetReportCommandTest
  */
-class AutoCreateSchedulesCommandTest extends AbstractWebTestCase
+class MonthlyTimesheetReportCommandTest extends AbstractWebTestCase
 {
     /**
      * @var CommandTester
