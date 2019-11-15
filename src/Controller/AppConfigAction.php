@@ -45,6 +45,7 @@ class AppConfigAction extends AbstractController
             ;
             $configs[] = $appConfig;
         }
+
         return $configs;
     }
 }
