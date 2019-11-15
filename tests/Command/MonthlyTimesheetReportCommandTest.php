@@ -8,7 +8,6 @@ use App\Command\MonthlyTimesheetReportCommand;
 use App\DataFixtures\DepartmentFixtures;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\EntityNotFoundException;
-use PHPUnit\Exception;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -98,21 +97,23 @@ class MonthlyTimesheetReportCommandTest extends AbstractWebTestCase
 
     /**
      * Test case #5
-     * Execute with existing department.
-     * It will throw error due to invalid phpunit exception catch.
-     * MonthlyReportGenerator->catch{}
+     * Execute with existing department, but there is no sample data.
      *
      * @return void
      */
     public function testCase5(): void
     {
         $departmentAdmin = $this->getEntityFromReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN);
-        $this->expectException(Exception::class);
         $this->commandTester->execute(
             [
                 'month' => random_int(1, 11),
                 '--department' => $departmentAdmin->getName(),
             ]
+        );
+
+        $this->assertStringContainsString(
+            'Report was not created. Probably there is no data in given month.',
+            $this->commandTester->getDisplay()
         );
     }
 

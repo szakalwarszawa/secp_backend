@@ -145,7 +145,7 @@ class MonthlyReportGenerator
     private function initializeZipArchive(): void
     {
         $zipArchive = new ZipArchive();
-        $zipArchive->open($this->fullFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $zipArchive->open($this->fullFilePath, ZipArchive::CREATE);
         $this->zipArchive = $zipArchive;
     }
 
@@ -226,17 +226,13 @@ class MonthlyReportGenerator
             }
         }
 
-        try {
-            $this->zipArchive->close();
-        } catch (ErrorException $exception) {
-            if (strpos($exception->getMessage(), 'Failure to create temporary file')) {
-                throw new InvalidArgumentException('Invalid file directory or name.');
-            }
-
+        if (!$this->zipArchive->numFiles) {
             unset($this->zipArchive);
 
             return null;
         }
+
+        $this->zipArchive->close();
 
         return $this->fullFilePath;
     }
