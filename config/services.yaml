@@ -144,5 +144,4 @@ services:
         class: App\Utils\SpecialId
         public: true
         arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
             $params: '%app.special_id.parameters%'
