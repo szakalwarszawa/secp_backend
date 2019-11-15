@@ -69,6 +69,7 @@ class AppConfig
     public function setConfigValue(string $configValue): AppConfig
     {
         $this->configValue = $configValue;
+
         return $this;
     }
 }
