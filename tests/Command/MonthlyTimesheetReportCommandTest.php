@@ -8,7 +8,7 @@ use App\Command\MonthlyTimesheetReportCommand;
 use App\DataFixtures\DepartmentFixtures;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\EntityNotFoundException;
-use PHPUnit\Framework\Exception;
+use PHPUnit\Exception;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
