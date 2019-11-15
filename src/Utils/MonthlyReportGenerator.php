@@ -147,6 +147,7 @@ class MonthlyReportGenerator
     {
         $zipArchive = new ZipArchive();
         $zipArchive->open($this->fullFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        VarDumper::dump(__DIR__);
         VarDumper::dump($this->fullFilePath);
         $this->zipArchive = $zipArchive;
     }
@@ -220,7 +221,6 @@ class MonthlyReportGenerator
                     $reportMonth,
                     $currentDate->format('Y-m-d_H:i:s')
                 );
-                VarDumper::dump($csvData);
 
                 $this->zipArchive->addFromString(
                     $fileName,
