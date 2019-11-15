@@ -13,8 +13,6 @@ use InvalidArgumentException;
 /**
  * Class SpecialId
  * Simple service to find ID for special object
- *
- * @package App\Utils
  */
 class SpecialId
 {
