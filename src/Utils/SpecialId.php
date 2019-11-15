@@ -6,8 +6,10 @@ namespace App\Utils;
 
 use App\Entity\AbsenceType;
 use App\Entity\PresenceType;
+use BadMethodCallException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use InvalidArgumentException;
 
 /**
@@ -36,6 +38,8 @@ class SpecialId
      *
      * @param EntityManagerInterface $entityManager
      * @param array $params
+     *
+     * @throws BadMethodCallException
      */
     public function __construct(EntityManagerInterface $entityManager, array $params)
     {
@@ -45,7 +49,7 @@ class SpecialId
         foreach (array_keys($params) as $specialIdKey) {
             $finderFunction = 'find' . ucfirst($specialIdKey);
             if (!method_exists($this, $finderFunction)) {
-                throw new InvalidArgumentException(
+                throw new BadMethodCallException(
                     sprintf(
                         "Expect finder method for object key: '%s', missing method: '%s'",
                         $specialIdKey,
@@ -60,9 +64,10 @@ class SpecialId
     /**
      * @param string $objectKey
      *
-     * @return int|null
+     * @return string|null
+     * @throws InvalidArgumentException
      */
-    public function getIdForSpecialObjectKey(string $objectKey): ?int
+    public function getIdForSpecialObjectKey(string $objectKey): ?string
     {
         if (!array_key_exists($objectKey, $this->specialObjects)) {
             throw new InvalidArgumentException(
@@ -77,6 +82,7 @@ class SpecialId
      * @param string $specialIdKey
      *
      * @return void
+     * @throws EntityNotFoundException
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function findAbsenceToBeCompletedId(string $specialIdKey): void
@@ -89,7 +95,7 @@ class SpecialId
         ;
 
         if (!$toBeCompletedAbsence) {
-            throw new InvalidArgumentException(
+            throw new EntityNotFoundException(
                 sprintf(
                     "Don't find special object to be completed absence for given key: '%s'",
                     $this->params[$specialIdKey]
@@ -97,13 +103,14 @@ class SpecialId
             );
         }
 
-        $this->specialObjects[$specialIdKey] = $toBeCompletedAbsence->getId();
+        $this->specialObjects[$specialIdKey] = (string) $toBeCompletedAbsence->getId();
     }
 
     /**
      * @param string $specialIdKey
      *
      * @return void
+     * @throws EntityNotFoundException
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function findPresenceAbsenceId(string $specialIdKey): void
@@ -115,8 +122,8 @@ class SpecialId
             ])
         ;
 
-        if ($presenceAbsence === null) {
-            throw new InvalidArgumentException(
+        if (!$presenceAbsence) {
+            throw new EntityNotFoundException(
                 sprintf(
                     "Don't find special object to be absence type of presence given key: '%s'",
                     $this->params[$specialIdKey]
@@ -124,6 +131,6 @@ class SpecialId
             );
         }
 
-        $this->specialObjects[$specialIdKey] = $presenceAbsence->getId();
+        $this->specialObjects[$specialIdKey] = (string) $presenceAbsence->getId();
     }
 }

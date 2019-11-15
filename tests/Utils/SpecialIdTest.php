@@ -8,7 +8,9 @@ use App\Entity\AbsenceType;
 use App\Entity\PresenceType;
 use App\Tests\AbstractWebTestCase;
 use App\Utils\SpecialId;
+use BadMethodCallException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use InvalidArgumentException;
 
 /**
@@ -69,7 +71,7 @@ class SpecialIdTest extends AbstractWebTestCase
      */
     public function testThrowMissedExpectedParameter(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage(
             "Expect finder method for object key: 'nonExistingSpecialObjectKey', " .
             "missing method: 'findNonExistingSpecialObjectKey'"
@@ -87,7 +89,7 @@ class SpecialIdTest extends AbstractWebTestCase
      */
     public function testThrowNotFindObjectRecordToBeCompletedAbsence(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(EntityNotFoundException::class);
         $this->expectExceptionMessage(
             "Don't find special object to be completed absence for given key: 'non existing record'"
         );
@@ -104,7 +106,7 @@ class SpecialIdTest extends AbstractWebTestCase
      */
     public function testThrowNotFindObjectRecordPresenceAbsence(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(EntityNotFoundException::class);
         $this->expectExceptionMessage(
             "Don't find special object to be absence type of presence given key: 'non existing record'"
         );
