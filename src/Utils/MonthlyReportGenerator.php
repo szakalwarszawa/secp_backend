@@ -9,6 +9,7 @@ use App\Entity\Section;
 use App\Entity\User;
 use App\Entity\UserTimesheetDay;
 use App\Exception\GeneratorNotReadyException;
+use App\Repository\UserTimesheetDayRepository;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -84,6 +85,8 @@ class MonthlyReportGenerator
     /**
      * Build full path to report file.
      *
+     * @todo Probably path should be built with __DIR__ const.
+     *
      * @return void
      */
     private function buildSavePath(): void
@@ -108,7 +111,7 @@ class MonthlyReportGenerator
      * @param int $month
      *
      * @return MonthlyReportGenerator
-     * @throws InvalidArgumentException when month number is not in range 1-12.
+     * @throws GeneratorNotReadyException when month number is not in range 1-12.
      * @throws Exception
      */
     public function setMonthRange(int $month): MonthlyReportGenerator
@@ -191,6 +194,7 @@ class MonthlyReportGenerator
      * @return null if report was not created
      * @return string if report was created
      * @throws GeneratorNotReadyException due to invalid month (not in range 1-12)
+     * @throws InvalidArgumentException Invalid file directory or name.
      */
     private function createReportForUserList($userList): ?string
     {
@@ -250,7 +254,8 @@ class MonthlyReportGenerator
            ->findTimesheetDaysBetweenDate(
                $user,
                $rangeStart->format('Y-m-d'),
-               $rangeEnd->format('Y-m-d')
+               $rangeEnd->format('Y-m-d'),
+               UserTimesheetDayRepository::RETURN_AS_REPORT_ARRAY
            )
         ;
 

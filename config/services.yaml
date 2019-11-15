@@ -137,6 +137,7 @@ services:
             - '%env(string:resolve:REFERENCE_PERIODS)%'
 
     App\Utils\MonthlyReportGenerator:
+        public: true
         arguments:
             $reportSavePath: '%env(string:resolve:MONTHLY_REPORT_ZIP_PATH)%'
             $reportFilename: '%env(string:resolve:MONTHLY_REPORT_ZIP_FILENAME)%'

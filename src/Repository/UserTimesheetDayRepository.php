@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\User;
@@ -15,6 +17,18 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class UserTimesheetDayRepository extends ServiceEntityRepository
 {
+    /**
+     * @var int
+     */
+    public const RETURN_AS_REPORT_ARRAY = 1;
+
+    /**
+     * Flat values intended for report.
+     *
+     * @var int
+     */
+    public const RETURN_AS_DEFAULT_OBJECTS = 2;
+
     /**
      * UserTimesheetDayRepository constructor.
      * @param RegistryInterface $registry
@@ -50,10 +64,14 @@ class UserTimesheetDayRepository extends ServiceEntityRepository
     }
 
     /**
+     * Finds user`s timesheetdays between two dates.
+     * Depending on the parameter `returnType` it could be flatten array for report
+     * or default UserTimesheetDay objects.
+     *
      * @param User $user
      * @param string $dayFromDate
      * @param string $dayToDate
-     * @param bool $asObjects
+     * @param int $returnType
      *
      * @return UserTimesheetDay[]|null
      */
@@ -61,10 +79,10 @@ class UserTimesheetDayRepository extends ServiceEntityRepository
         User $user,
         string $dayFromDate,
         string $dayToDate,
-        bool $asObjects = false
+        int $returnType = self::RETURN_AS_DEFAULT_OBJECTS
     ): ?array {
         $queryBuilder = $this->createQueryBuilder('p');
-        if (!$asObjects) {
+        if ($returnType === self::RETURN_AS_REPORT_ARRAY) {
             $queryBuilder->select('
                 dayDefinition.id as dayId,
                 p.dayStartTime,
