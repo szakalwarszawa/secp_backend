@@ -61,8 +61,7 @@ yamllint:
     stage: tests
     allow_failure: false
     script:
-        - /root/.composer/vendor/bin/yaml-lint --format txt src/
-        - /root/.composer/vendor/bin/yaml-lint --format txt config/
+        - php bin/console lint:yaml config/
 
 psr12:
     stage: standards

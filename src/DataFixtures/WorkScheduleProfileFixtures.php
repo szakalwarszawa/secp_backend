@@ -40,7 +40,7 @@ class WorkScheduleProfileFixtures extends Fixture
      */
     private $profiles = [
         ['Domyślny', '08:30', '08:30', '16:30', '16:30', 8.00, 'FFFFF'],
-        ['Indywidualny', '08:30', '08:30', '16:30', '16:30', 8.00, 'TFTFT'],
+        ['Indywidualny', '08:30', '08:30', '16:30', '16:30', 8.00, 'TTFFT'],
         ['Ruchomy', '08:00', '10:00', '16:00', '18:00', 8.00, 'TTTTT'],
         ['Harmonogram', '08:30', '08:30', '16:30', '16:30', 8.00, 'TFFFF'],
         ['Brak', '08:30', '08:30', '16:30', '16:30', 8.00, 'FFFFF'],

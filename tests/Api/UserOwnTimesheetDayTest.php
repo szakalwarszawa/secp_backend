@@ -15,16 +15,17 @@ class UserOwnTimesheetDayTest extends AbstractWebTestCase
      */
     public function apiGetUserWorkSchedulesOwnActive(): void
     {
+        $owner = $this->fixtures->getReference(UserFixtures::REF_USER_ADMIN);
         $userTimesheetDaysDB = $this->entityManager->getRepository(UserTimesheetDay::class)
             ->findWorkDayBetweenDate(
-                $this->fixtures->getReference(UserFixtures::REF_USER_ADMIN),
+                $owner,
                 '2019-06-01',
                 '2019-06-10'
             );
         /* @var $userTimesheetDaysDB UserTimesheetDay */
         $response = $this->getActionResponse(
             self::HTTP_GET,
-            '/api/user_timesheet_days/own/2019-06-01/2019-06-10'
+            "/api/user_timesheet_days/{$owner->getId()}/2019-06-01/2019-06-10"
         );
         $this->assertJson($response->getContent());
         $userWorkScheduleJSON = json_decode($response->getContent(), false);
