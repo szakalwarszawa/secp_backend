@@ -8,11 +8,10 @@ use App\Command\MonthlyTimesheetReportCommand;
 use App\DataFixtures\DepartmentFixtures;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\EntityNotFoundException;
-use PHPUnit\Framework\Error\Warning;
+use PHPUnit\Framework\Exception;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class MonthlyTimesheetReportCommandTest
@@ -108,15 +107,13 @@ class MonthlyTimesheetReportCommandTest extends AbstractWebTestCase
     public function testCase5(): void
     {
         $departmentAdmin = $this->getEntityFromReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN);
-
+        $this->expectException(Exception::class);
         $this->commandTester->execute(
             [
                 'month' => random_int(1, 11),
                 '--department' => $departmentAdmin->getName(),
             ]
         );
-
-        VarDumper::dump($this->commandTester->getDisplay());
     }
 
     /**
