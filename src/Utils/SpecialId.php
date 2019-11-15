@@ -60,7 +60,7 @@ class SpecialId
     /**
      * @param string $objectKey
      *
-     * @return integer|null
+     * @return int|null
      */
     public function getIdForSpecialObjectKey(string $objectKey): ?int
     {
