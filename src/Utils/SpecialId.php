@@ -88,7 +88,7 @@ class SpecialId
             ])
         ;
 
-        if ($toBeCompletedAbsence === null) {
+        if (!$toBeCompletedAbsence) {
             throw new InvalidArgumentException(
                 sprintf(
                     "Don't find special object to be completed absence for given key: '%s'",
