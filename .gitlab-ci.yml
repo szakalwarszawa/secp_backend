@@ -17,10 +17,11 @@ build:
         - php -d memory_limit=5G /usr/bin/composer.phar install --prefer-dist --no-suggest --no-progress --no-interaction --no-scripts
         - apk add openssl
         - mkdir ./var
+        - mkdir ./var/temp
         - mkdir ./var/log
         - KEY_PASS=`date | sha256sum | cut -d " " -f 1`
         - JWT_KEY_PATH="./config/jwt"
-        - mkdir "$JWT_KEY_PATH" 
+        - mkdir "$JWT_KEY_PATH"
         - openssl genrsa -out "$JWT_KEY_PATH"/private.pem -aes256 -passout pass:"$KEY_PASS" 4096 2> /dev/null
         - openssl rsa -passin pass:"$KEY_PASS" -pubout -in "$JWT_KEY_PATH"/private.pem -out "$JWT_KEY_PATH"/public.pem 2> /dev/null
         - cat ./.env.test
@@ -39,6 +40,7 @@ phpunit:
     before_script:
         - apk add openssl
         - mkdir ./var
+        - mkdir ./var/temp
         - mkdir ./var/log
         - KEY_PASS=`date | sha256sum | cut -d " " -f 1`
         - JWT_KEY_PATH="./config/jwt"
