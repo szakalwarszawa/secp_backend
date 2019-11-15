@@ -134,7 +134,7 @@ class SpecialIdTest extends AbstractWebTestCase
      *
      * @return SpecialId
      */
-    private function makeSpecialIdClass($params = null): SpecialId
+    private function makeSpecialIdClass(?array $params = null): SpecialId
     {
         if ($params === null) {
             return self::$container->get(SpecialId::class);
