@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.special_id.parameters:
+      absenceToBeCompletedId: 'DU'
+      presenceAbsenceId: 'N'
 
 services:
     # default configuration for services in *this* file
@@ -132,12 +135,20 @@ services:
             - '%env(int:resolve:REDMINE_CATEGORY_ID)%'
             - '%env(int:resolve:REDMINE_TRACKER_ID)%'
             - '%env(int:resolve:REDMINE_REPORTER_CUSTOM_FIELD_ID)%'
+
     App\Utils\ReferencePeriod:
         arguments:
             - '%env(string:resolve:REFERENCE_PERIODS)%'
+
 
     App\Utils\MonthlyReportGenerator:
         public: true
         arguments:
             $reportSavePath: '%env(string:resolve:MONTHLY_REPORT_ZIP_PATH)%'
             $reportFilename: '%env(string:resolve:MONTHLY_REPORT_ZIP_FILENAME)%'
+
+    App\Utils\SpecialId:
+        class: App\Utils\SpecialId
+        public: true
+        arguments:
+            $params: '%app.special_id.parameters%'

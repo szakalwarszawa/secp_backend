@@ -104,8 +104,12 @@ use App\Annotations\AnnotatedLogEntity;
  *          },
  *          "get-users-own-timesheet-days"={
  *              "method"="GET",
- *              "path"="/user_timesheet_days/own/{dateFrom}/{dateTo}",
- *              "requirements"={"dateFrom"="\d{4}-\d{2}-\d{2}", "dateTo"="\d{4}-\d{2}-\d{2}"},
+ *              "path"="/user_timesheet_days/{userId}/{dateFrom}/{dateTo}",
+ *              "requirements"={
+ *                  "userId"="\d+",
+ *                  "dateFrom"="\d{4}-\d{2}-\d{2}",
+ *                  "dateTo"="\d{4}-\d{2}-\d{2}"
+ *              },
  *              "controller"=UserOwnTimesheetDayAction::class,
  *              "normalization_context"={
  *                  "groups"={

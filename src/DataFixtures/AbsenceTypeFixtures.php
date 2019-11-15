@@ -12,8 +12,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class AbsenceTypeFixtures extends Fixture
 {
-    public const FIXTURES_RECORD_COUNT = 27;
+    /**
+     * @var int
+     */
+    public const FIXTURES_RECORD_COUNT = 29;
 
+    /**
+     * @var array
+     */
     private $absenceTypes = [
         ['UW', 'urlop wypoczynkowy', true],
         ['UR', 'dodatkowy urlop dla niepełnosprawnego', true],
@@ -43,12 +49,15 @@ class AbsenceTypeFixtures extends Fixture
         ['WN', 'niedziela wolna od pracy/ dzień wolny za pracę w niedzielę', true],
         ['WR', 'dzień wolny z harmonogramu', true],
         ['WŚ', 'dzień wolny z tytułu święta', true],
+        ['DU', 'do uzupełnienia przez pracownika', true],
     ];
 
     /**
      * @param ObjectManager $manager
+     *
+     * @return void
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $i = 0;
         foreach ($this->absenceTypes as $absenceType) {
