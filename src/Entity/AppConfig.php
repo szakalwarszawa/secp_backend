@@ -49,6 +49,7 @@ class AppConfig
     public function setConfigKey(string $configKey): AppConfig
     {
         $this->configKey = $configKey;
+
         return $this;
     }
 
