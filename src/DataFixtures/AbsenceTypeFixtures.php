@@ -4,13 +4,14 @@ namespace App\DataFixtures;
 
 use App\Entity\AbsenceType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class AbsenceTypeFixtures
  * @package App\DataFixtures
  */
-class AbsenceTypeFixtures extends Fixture
+class AbsenceTypeFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
      * @var int
@@ -51,6 +52,16 @@ class AbsenceTypeFixtures extends Fixture
         ['WŚ', 'dzień wolny z tytułu święta', true],
         ['DU', 'do uzupełnienia przez pracownika', true],
     ];
+
+    /**
+     * @return array
+     */
+    public function getDependencies(): array
+    {
+        return array(
+            UserSystemFixtures::class,
+        );
+    }
 
     /**
      * @param ObjectManager $manager

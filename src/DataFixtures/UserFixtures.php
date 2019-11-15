@@ -92,6 +92,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return array(
+            UserSystemFixtures::class,
             DepartmentFixtures::class,
             SectionFixtures::class,
             WorkScheduleProfileFixtures::class,
@@ -107,6 +108,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
+        $this->cleanSystemWorkScheduleProfile($manager);
         $this->makeFixedUserBi($manager);
         $this->makeFixedUserHr($manager);
 
@@ -291,10 +293,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     /**
      * @param ObjectManager $manager
      *
-     *
-     * /**
-     * @var string@return void
-     *
+     * @return void
      */
     private function makeFixedUserHr(ObjectManager $manager): void
     {
@@ -369,5 +368,30 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user->getDepartment()->addUser($user);
         $user->getSection()->addUser($user);
         $manager->flush();
+    }
+
+    /**
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
+    private function cleanSystemWorkScheduleProfile(ObjectManager $manager): void
+    {
+        $tableName = 'dictionary.work_schedule_profiles';
+        if ($manager->getConnection()->getDatabasePlatform()->getName() === 'sqlite') {
+            $tableName = 'dictionary__work_schedule_profiles';
+        }
+
+        $manager->getConnection()->exec(<<<SQL
+UPDATE users SET 
+    default_work_schedule_profile_id = (SELECT id from $tableName p WHERE p.name='Domyślny')
+WHERE id = 0;
+SQL
+        );
+
+        $manager->getConnection()->exec(<<<SQL
+DELETE FROM $tableName WHERE id = 0;
+SQL
+        );
     }
 }
