@@ -101,7 +101,11 @@ class MonthlyReportGenerator
         }
 
         if (strpos($this->reportFilename, self::MONTH_PLACEHOLDER)) {
-            $this->reportFilename = str_replace(self::MONTH_PLACEHOLDER, current($this->dateRange)->format('F'), $this->reportFilename);
+            $this->reportFilename = str_replace(
+                self::MONTH_PLACEHOLDER,
+                current($this->dateRange)->format('F'),
+                $this->reportFilename
+            );
         }
 
         $this->fullFilePath = $this->reportSavePath . $this->reportFilename . self::FILE_EXTENSION;
@@ -189,10 +193,9 @@ class MonthlyReportGenerator
     }
 
     /**
-     * @param Collection $userList
+     * @param Collection|User[]|array $userList
      *
-     * @return null if report was not created
-     * @return string if report was created
+     * @return string|null null if report was not created
      * @throws GeneratorNotReadyException due to invalid month (not in range 1-12)
      * @throws InvalidArgumentException Invalid file directory or name.
      */
@@ -207,7 +210,7 @@ class MonthlyReportGenerator
         $reportMonth = current($this->dateRange)->format('F');
         $currentDate = new DateTime();
         foreach ($userList as $user) {
-            $csvData = $this->getUserCsvContent($user);
+            $csvData = $this->getUserTimesheetDaysAsCsv($user);
             if ($csvData) {
                 $fileName = sprintf(
                     '%s_%s_%s.csv',
@@ -245,7 +248,7 @@ class MonthlyReportGenerator
      *
      * @return string|null
      */
-    public function getUserCsvContent(User $user): ?string
+    public function getUserTimesheetDaysAsCsv(User $user): ?string
     {
         [$rangeStart, $rangeEnd] = $this->dateRange;
         $userData = $this

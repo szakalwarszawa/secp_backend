@@ -38,6 +38,7 @@ class MonthlyTimesheetReportCommand extends Command
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param MonthlyReportGenerator $monthlyReportGenerator
      */
     public function __construct(EntityManagerInterface $entityManager, MonthlyReportGenerator $monthlyReportGenerator)
     {

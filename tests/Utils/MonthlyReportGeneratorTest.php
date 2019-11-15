@@ -44,11 +44,11 @@ class MonthlyReportGeneratorTest extends AbstractWebTestCase
      *
      * @return void
      */
-    public function testGetUserCsvContent(): void
+    public function testGetUserTimesheetDaysAsCsv(): void
     {
         $this->insertTimesheetDaysSample($this->user, $this->monthNumber);
         $monthlyReportGenerator = $this->monthlyReportGenerator;
-        $csvData = $monthlyReportGenerator->setMonthRange($this->monthNumber)->getUserCsvContent($this->user);
+        $csvData = $monthlyReportGenerator->setMonthRange($this->monthNumber)->getUserTimesheetDaysAsCsv($this->user);
         $this->assertContentCsv($csvData);
     }
 
