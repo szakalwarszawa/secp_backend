@@ -19,7 +19,6 @@ use InvalidArgumentException;
 use League\Csv\Writer;
 use ZipArchive;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class MonthlyReportGenerator
@@ -147,8 +146,6 @@ class MonthlyReportGenerator
     {
         $zipArchive = new ZipArchive();
         $zipArchive->open($this->fullFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-        VarDumper::dump(__DIR__);
-        VarDumper::dump($zipArchive);
         $this->zipArchive = $zipArchive;
     }
 
