@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\Entity\Department;
 use App\Entity\Section;
+use App\Exception\GeneratorNotReadyException;
 use App\Utils\MonthlyReportGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -70,57 +71,82 @@ class MonthlyTimesheetReportCommand extends Command
     /**
      * {@inheritDoc}
      *
-     * @throws EntityNotFoundException when department/section not found.
+     * @throws EntityNotFoundException
+     * @throws GeneratorNotReadyException
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $this->symfonyStyle = new SymfonyStyle($input, $output);
         $this->monthlyReportGenerator->setMonthRange((int) $input->getArgument('month'));
 
-        $executedStatus = false;
-        if ($input->getOption('all') && !$executedStatus) {
+        if ($input->getOption('all')) {
             $result = $this->monthlyReportGenerator->generateAllReport();
-            $executedStatus = true;
-        }
-
-        if ($input->getOption('department') && !$executedStatus) {
-            $department = $this
-                ->entityManager
-                ->getRepository(Department::class)
-                ->findOneBy([
-                    'name' => $input->getOption('department'),
-                ]);
-            if (!$department) {
-                throw new EntityNotFoundException(
-                    sprintf('Department %s not found.', $input->getOption('department'))
-                );
-            }
-            $result = $this->monthlyReportGenerator->generateDepartmentReport($department);
-            $executedStatus = true;
-        }
-
-        if ($input->getOption('section') && !$executedStatus) {
-            $section = $this
-                ->entityManager
-                ->getRepository(Section::class)
-                ->findOneBy([
-                    'name' => $input->getOption('section'),
-                ]);
-            if (!$section) {
-                throw new EntityNotFoundException(
-                    sprintf('Section %s not found.', $input->getOption('section'))
-                );
-            }
-            $result = $this->monthlyReportGenerator->generateSectionReport($section);
-            $executedStatus = true;
-        }
-
-        if (!$executedStatus) {
-            $this->symfonyStyle->caution('Source not provided.');
+            $this->printResult($result);
 
             return;
         }
 
+        if ($input->getOption('department')) {
+            $this->generateReportForDepartment($input->getOption('department'));
+
+            return;
+        }
+
+        if ($input->getOption('section')) {
+            $this->generateReportForSection($input->getOption('section'));
+
+            return;
+        }
+
+        $this->symfonyStyle->caution('Source not provided.');
+    }
+
+    /**
+     * @param string $departmentName
+     *
+     * @return void
+     * @throws EntityNotFoundException
+     * @throws GeneratorNotReadyException
+     */
+    private function generateReportForDepartment(string $departmentName): void
+    {
+        $department = $this
+            ->entityManager
+            ->getRepository(Department::class)
+            ->findOneBy([
+                'name' => $departmentName
+            ]);
+        if (!$department) {
+            throw new EntityNotFoundException(
+                sprintf('Department %s not found.', $departmentName)
+            );
+        }
+
+        $result = $this->monthlyReportGenerator->generateDepartmentReport($department);
+        $this->printResult($result);
+    }
+
+    /**
+     * @param string $sectionName
+     *
+     * @return void
+     * @throws EntityNotFoundException
+     * @throws GeneratorNotReadyException
+     */
+    private function generateReportForSection(string $sectionName): void
+    {
+        $section = $this
+            ->entityManager
+            ->getRepository(Section::class)
+            ->findOneBy([
+                'name' => $sectionName,
+            ]);
+        if (!$section) {
+            throw new EntityNotFoundException(
+                sprintf('Section %s not found.', $sectionName)
+            );
+        }
+        $result = $this->monthlyReportGenerator->generateSectionReport($section);
         $this->printResult($result);
     }
 

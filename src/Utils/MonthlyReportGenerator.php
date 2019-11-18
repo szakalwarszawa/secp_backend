@@ -13,7 +13,6 @@ use App\Repository\UserTimesheetDayRepository;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use ErrorException;
 use Exception;
 use InvalidArgumentException;
 use League\Csv\Writer;
@@ -85,9 +84,9 @@ class MonthlyReportGenerator
     /**
      * Build full path to report file.
      *
-     * @todo Probably path should be built with __DIR__ const.
-     *
      * @return void
+     * @throws Exception
+     * @todo Probably path should be built with __DIR__ const.
      */
     private function buildSavePath(): void
     {
@@ -95,18 +94,14 @@ class MonthlyReportGenerator
             $this->reportSavePath .= '/';
         }
 
-        if (strpos($this->reportFilename, self::DATE_PLACEHOLDER)) {
-            $currentDate = (new DateTime())->format('Y-m-d_H:i:s');
-            $this->reportFilename = str_replace(self::DATE_PLACEHOLDER, $currentDate, $this->reportFilename);
-        }
+        $currentDate = (new DateTime())->format('Y-m-d_His');
+        $this->reportFilename = str_replace(self::DATE_PLACEHOLDER, $currentDate, $this->reportFilename);
 
-        if (strpos($this->reportFilename, self::MONTH_PLACEHOLDER)) {
-            $this->reportFilename = str_replace(
-                self::MONTH_PLACEHOLDER,
-                current($this->dateRange)->format('F'),
-                $this->reportFilename
-            );
-        }
+        $this->reportFilename = str_replace(
+            self::MONTH_PLACEHOLDER,
+            current($this->dateRange)->format('F'),
+            $this->reportFilename
+        );
 
         $this->fullFilePath = $this->reportSavePath . $this->reportFilename . self::FILE_EXTENSION;
     }
@@ -124,7 +119,7 @@ class MonthlyReportGenerator
             throw new GeneratorNotReadyException('Invalid month');
         }
 
-        $monthFirstDay = date(sprintf('Y-%s-1', $month));
+        $monthFirstDay = date(sprintf('Y-%s-01', $month));
         $dateTimeFirstDay = new DateTimeImmutable($monthFirstDay);
 
         $this->dateRange = [
@@ -216,7 +211,7 @@ class MonthlyReportGenerator
                     '%s_%s_%s.csv',
                     $user->getUsername(),
                     $reportMonth,
-                    $currentDate->format('Y-m-d_H:i:s')
+                    $currentDate->format('Y-m-d_His')
                 );
 
                 $this->zipArchive->addFromString(
