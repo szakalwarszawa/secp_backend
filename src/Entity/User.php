@@ -969,6 +969,6 @@ class User implements UserInterface, LoggableEntityInterface
      */
     public function __toString(): string
     {
-        return sprintf("[User]: '%s'", $this->username);
+        return $this->username;
     }
 }
