@@ -963,4 +963,12 @@ class User implements UserInterface, LoggableEntityInterface
     {
         return $this->firstName . ' ' . $this->lastName;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->username;
+    }
 }

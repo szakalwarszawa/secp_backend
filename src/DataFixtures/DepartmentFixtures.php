@@ -6,13 +6,14 @@ namespace App\DataFixtures;
 
 use App\Entity\Department;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory as Faker;
 
 /**
  * Class DepartmentFixtures
  */
-class DepartmentFixtures extends Fixture
+class DepartmentFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
      * @var string
@@ -42,6 +43,15 @@ class DepartmentFixtures extends Fixture
         $this->faker = Faker::create('pl_PL');
     }
 
+    /**
+     * @return array
+     */
+    public function getDependencies(): array
+    {
+        return array(
+            UserSystemFixtures::class,
+        );
+    }
     /**
      * @param ObjectManager $manager
      */
