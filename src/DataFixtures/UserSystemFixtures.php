@@ -40,7 +40,7 @@ class UserSystemFixtures extends Fixture
         }
 
         $manager->getConnection()->exec(<<<SQL
-INSERT INTO $tableName (id, name, notice) 
+INSERT INTO $tableName (id, name, notice)
 VALUES (0, 'System', 'SYSTEM')
 SQL
         );
@@ -54,8 +54,8 @@ SQL
     private function makeSystemDepartment(ObjectManager $manager): void
     {
         $manager->getConnection()->exec(<<<SQL
-INSERT INTO departments (id, name, short_name, active) 
-VALUES (0, 'System', 'SYSTEM', true )
+INSERT INTO departments (id, name, short_name, active)
+VALUES (0, 'System', 'SYSTEM', 'true' )
 SQL
         );
     }
@@ -72,24 +72,24 @@ SQL
 
         $manager->getConnection()->exec(<<<SQL
 INSERT INTO users (
-        id, 
-        email, 
-        roles, 
+        id,
+        email,
+        roles,
         password,
-        department_id, 
-        section_id, 
-        sam_account_name, 
-        username, 
-        first_name, 
-        last_name, 
+        department_id,
+        section_id,
+        sam_account_name,
+        username,
+        first_name,
+        last_name,
         default_work_schedule_profile_id
     ) VALUES (
-        0, 
+        0,
         'system@system',
-        'ROLE_ADMIN', 
+        'ROLE_ADMIN',
         '{$randomPassword}',
         0,
-        null, 
+        null,
         '{$systemUsername}',
         '{$systemUsername}',
         '{$systemUsername}',
