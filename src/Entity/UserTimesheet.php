@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Exception;
+use DateTimeImmutable;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
@@ -19,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\ValueExists;
+use App\Validator\TimesheetCompleteness;
 
 /**
  * @ORM\Table(
@@ -142,6 +145,7 @@ class UserTimesheet implements LoggableEntityInterface
      * @Assert\NotBlank()
      * @ValueExists(entity="App\Entity\UserTimesheetStatus", searchField="id")
      * @ORM\ManyToOne(targetEntity="App\Entity\UserTimesheetStatus")
+     * @TimesheetCompleteness
      * @Groups({"get", "post", "put"})
      * @AnnotatedLogEntity(options={
      *      "message": "Zmiana statusu z %s na %s"
@@ -270,5 +274,20 @@ class UserTimesheet implements LoggableEntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getPeriodRange(): array
+    {
+        $startDate = new DateTimeImmutable(date($this->period . '-01'));
+        $endDate = $startDate->modify('Last day of this month');
+
+        return [
+            $startDate,
+            $endDate,
+        ];
     }
 }

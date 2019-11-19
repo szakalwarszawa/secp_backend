@@ -12,6 +12,7 @@ use App\Entity\UserTimesheetDay;
 use App\Entity\UserTimesheetStatus;
 use App\Entity\UserWorkSchedule;
 use App\Entity\UserWorkScheduleDay;
+use App\Utils\DateTimeHelper;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -27,6 +28,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
     public const REF_USER_TIMESHEET_MANAGER_EDIT = 'user_timesheet_manager_edit';
     public const REF_USER_TIMESHEET_USER_HR = 'user_timesheet_user_hr';
     public const REF_USER_TIMESHEET_USER_EDIT = 'user_timesheet_user_edit';
+    public const REF_USER_FILLED_DAYS_TIMESHEET_USER_EDIT = 'user_timesheet_filled_days_user_edit';
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
             UserTimesheetStatusFixtures::class
         );
     }
-
     /**
      * @param ObjectManager $manager
      *
@@ -54,6 +55,16 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
+        $this->makeUserTimesheetSets(
+            $manager,
+            self::REF_USER_FILLED_DAYS_TIMESHEET_USER_EDIT,
+            $this->getReference(UserFixtures::REF_USER_USER),
+            date('Y-m'),
+            $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_EDIT),
+            $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR),
+            DateTimeHelper::getMonthDays((int) date('m'))
+        );
+
         $this->makeUserTimesheetSets(
             $manager,
             self::REF_USER_TIMESHEET_ADMIN_EDIT,
