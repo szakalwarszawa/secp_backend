@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -10,11 +12,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\UserCreateTimesheetDayAction;
 use App\Controller\UserOwnTimesheetDayAction;
 use App\Entity\Utils\UserAware;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Entity\Types\LoggableEntityInterface;
 use App\Traits\LoggableEntityTrait;
 use App\Validator\PresenceRestriction;
@@ -53,6 +52,8 @@ use App\Annotations\AnnotatedLogEntity;
  *              }
  *          },
  *          "put"={
+ *              "security"="is_granted('EDIT_TIMESHEET_DAY', object)",
+ *              "security_message"="You do not have permission to edit the timesheet at this stage.",
  *              "normalization_context"={
  *                  "groups"={
  *                      "get",
@@ -77,6 +78,8 @@ use App\Annotations\AnnotatedLogEntity;
  *              }
  *          },
  *          "post"={
+ *              "security"="is_granted('CREATE_TIMESHEET_DAY', object)",
+ *              "security_message"="You do not have permission to edit the timesheet at this stage.",
  *              "denormalization_context"={
  *                  "groups"={"post"}
  *              },
@@ -393,7 +396,7 @@ class UserTimesheetDay implements LoggableEntityInterface
      */
     public function getWorkingTime(): float
     {
-        return $this->workingTime;
+        return (float) $this->workingTime;
     }
 
     /**

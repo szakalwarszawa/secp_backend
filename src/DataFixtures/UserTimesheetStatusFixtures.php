@@ -50,6 +50,7 @@ class UserTimesheetStatusFixtures extends Fixture
                 ->setId($key)
                 ->setName($value['title'])
                 ->setRules(json_encode($value['rules']))
+                ->setEditPrivileges(['owner', 'ROLE_USER'])
             ;
 
             $manager->persist($userTimesheetStatus);

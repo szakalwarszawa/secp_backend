@@ -25,8 +25,17 @@ class ValueExists extends Constraint
     public $entity;
 
     /**
+     * @var string
+     *
      * Field name by which value will be searched.
      * ex. `name`.
      */
     public $searchField;
+
+    /**
+     * Custom element values that are also valid but do not exist in the database.
+     *
+     * @var array
+     */
+    public $customElements = [];
 }

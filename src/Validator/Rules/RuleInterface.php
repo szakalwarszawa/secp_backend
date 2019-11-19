@@ -7,6 +7,11 @@ namespace App\Validator\Rules;
 interface RuleInterface
 {
     /**
+     * @var string
+     */
+    public const OBJECT_OWNER = 'owner';
+
+    /**
      * Get rules of status change
      * ex.
      * "ROLE_USER": [
