@@ -194,5 +194,4 @@ class DayDefinition implements LoggableEntityInterface
     {
         return (int) $this->getAsDateTime()->format('Y');
     }
-
 }

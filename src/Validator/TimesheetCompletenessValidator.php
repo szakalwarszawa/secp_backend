@@ -52,11 +52,10 @@ class TimesheetCompletenessValidator extends ConstraintValidator
         $this->userUtil = $userUtil;
     }
 
-
     /**
      * Is supported type data.
      *
-     * @param $value
+     * @param mixed $value
      *
      * @return bool
      */
@@ -89,8 +88,7 @@ class TimesheetCompletenessValidator extends ConstraintValidator
             return;
         }
 
-        $periodRange = $userTimesheet->getPeriodRange();
-        [$periodStart, $periodEnd] = $periodRange;
+        [$periodStart, $periodEnd] = $userTimesheet->getPeriodRange();
         $timesheetWorkScheduleDays = $this
             ->entityManager
             ->getRepository(UserWorkScheduleDay::class)

@@ -108,7 +108,9 @@ class TimesheetCompletenessValidatorTest extends AbstractWebTestCase
     {
         parent::setUp();
 
-        $this->timesheet = $this->getEntityFromReference(UserTimesheetFixtures::REF_USER_FILLED_DAYS_TIMESHEET_USER_EDIT);
+        $this->timesheet = $this->getEntityFromReference(
+            UserTimesheetFixtures::REF_USER_FILLED_DAYS_TIMESHEET_USER_EDIT
+        );
 
         $periodRange = $this->timesheet->getPeriodRange();
         [$periodStart, $periodEnd] = $periodRange;

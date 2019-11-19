@@ -146,5 +146,4 @@ class SpecialId
 
         $this->specialObjects[$specialIdKey] = (string) $ownerAcceptTimesheetStatus->getId();
     }
-
 }

@@ -24,8 +24,8 @@ class DateTimeHelper
         $dateTime = new DateTime(
             date(
                 sprintf(
-                'Y-%s-01',
-                $monthNumber
+                    'Y-%s-01',
+                    $monthNumber
                 )
             )
         );

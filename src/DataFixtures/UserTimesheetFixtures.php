@@ -20,6 +20,7 @@ use Exception;
 
 /**
  * Class UserTimesheetFixtures
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
 {

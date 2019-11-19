@@ -123,7 +123,6 @@ class SpecialIdTest extends AbstractWebTestCase
                 'Special object with provided key (%s) was not found in database.',
                 'non existing record'
             )
-
         );
 
         $this->makeSpecialIdClass(
