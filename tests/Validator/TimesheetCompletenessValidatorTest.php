@@ -46,7 +46,7 @@ class TimesheetCompletenessValidatorTest extends AbstractWebTestCase
         $this->timesheet->setStatus($newStatus);
 
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessageMatches('/(?=.*?\bTimesheet is not complete\b)^.*$/');
+        $this->expectExceptionMessageRegExp('/(?=.*?\bTimesheet is not complete\b)^.*$/');
 
         $apiPlatformValidator = self::$container->get(ValidatorInterface::class);
         $apiPlatformValidator->validate($this->timesheet);
@@ -95,7 +95,7 @@ class TimesheetCompletenessValidatorTest extends AbstractWebTestCase
         $this->timesheet->setStatus($newStatus);
 
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessageMatches('/(?=.*?\bTimesheet is not complete\b)^.*$/');
+        $this->expectExceptionMessageRegExp('/(?=.*?\bTimesheet is not complete\b)^.*$/');
 
         $apiPlatformValidator = self::$container->get(ValidatorInterface::class);
         $apiPlatformValidator->validate($this->timesheet);
