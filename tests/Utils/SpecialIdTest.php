@@ -120,7 +120,7 @@ class SpecialIdTest extends AbstractWebTestCase
         $this->expectException(SpecialObjectNotFoundException::class);
         $this->expectExceptionMessage(
             sprintf(
-                'Special object with provided key (%s) was not found in database.',
+                'Special object with provided key (%s) was not found.',
                 'non existing record'
             )
         );
@@ -140,7 +140,7 @@ class SpecialIdTest extends AbstractWebTestCase
         $this->expectException(SpecialObjectNotFoundException::class);
         $this->expectExceptionMessage(
             sprintf(
-                'Special object with provided key (%s) was not found in database.',
+                'Special object with provided key (%s) was not found.',
                 'non existing record'
             )
         );
