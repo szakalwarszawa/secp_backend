@@ -75,9 +75,8 @@ class UserTimesheetEditVoter extends Voter
     /**
      * {@inheritDoc}
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
-        return true;
         /**
          * @var $currentTimesheetStatus UserTimesheetStatus
          */

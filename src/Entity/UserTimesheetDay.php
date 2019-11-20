@@ -78,8 +78,6 @@ use App\Annotations\AnnotatedLogEntity;
  *              }
  *          },
  *          "post"={
- *              "security"="is_granted('CREATE_TIMESHEET_DAY', object)",
- *              "security_message"="You do not have permission to edit the timesheet at this stage.",
  *              "denormalization_context"={
  *                  "groups"={"post"}
  *              },
@@ -91,6 +89,8 @@ use App\Annotations\AnnotatedLogEntity;
  *              }
  *          },
  *          "post-users-create-timesheet-day"={
+ *              "security"="is_granted('CREATE_TIMESHEET_DAY', object)",
+ *              "security_message"="You do not have permission to edit the timesheet at this stage.",
  *              "method"="POST",
  *              "path"="/user_timesheet_days/own/create/{day}",
  *              "requirements"={"day"="\d{4}-\d{2}-\d{2}"},
