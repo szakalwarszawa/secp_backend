@@ -17,6 +17,7 @@ use App\Tests\AbstractWebTestCase;
 use App\Utils\SpecialId;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 
 /**
  * Class TimesheetCompletenessValidatorTest
@@ -103,6 +104,7 @@ class TimesheetCompletenessValidatorTest extends AbstractWebTestCase
 
     /**
      * {@inheritDoc}
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -112,15 +114,13 @@ class TimesheetCompletenessValidatorTest extends AbstractWebTestCase
             UserTimesheetFixtures::REF_USER_FILLED_DAYS_TIMESHEET_USER_EDIT
         );
 
-        $periodRange = $this->timesheet->getPeriodRange();
-        [$periodStart, $periodEnd] = $periodRange;
         $this->timesheetWorkScheduleDays = $this
             ->entityManager
             ->getRepository(UserWorkScheduleDay::class)
             ->findWorkDayBetweenDate(
                 $this->timesheet->getOwner(),
-                $periodStart->format('Y-m-d'),
-                $periodEnd->format('Y-m-d')
+                $this->timesheet->getPeriodStartDate()->format('Y-m-d'),
+                $this->timesheet->getPeriodEndDate()->format('Y-m-d'),
             );
     }
 }
