@@ -88,14 +88,13 @@ class TimesheetCompletenessValidator extends ConstraintValidator
             return;
         }
 
-        [$periodStart, $periodEnd] = $userTimesheet->getPeriodRange();
         $timesheetWorkScheduleDays = $this
             ->entityManager
             ->getRepository(UserWorkScheduleDay::class)
             ->findWorkDayBetweenDate(
                 $userTimesheet->getOwner(),
-                $periodStart->format('Y-m-d'),
-                $periodEnd->format('Y-m-d')
+                $userTimesheet->getPeriodStartDate(),
+                $userTimesheet->getPeriodEndDate()
             );
 
         $missingDays = [];
