@@ -13,7 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class UserTimesheetEditVoter
@@ -102,8 +101,11 @@ class UserTimesheetEditVoter extends Voter
             return true;
         }
 
-        if (in_array(RuleInterface::OBJECT_OWNER, $editPrivileges)) {
-            return $currentUser->getId() === $userTimesheet->getOwner()->getId();
+        if (
+            in_array(RuleInterface::OBJECT_OWNER, $editPrivileges) &&
+            $currentUser->getId() === $userTimesheet->getOwner()->getId()
+        ) {
+            return true;
         }
 
         foreach ($editPrivileges as $roleName) {
