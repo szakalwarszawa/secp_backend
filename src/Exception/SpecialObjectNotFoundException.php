@@ -15,7 +15,7 @@ class SpecialObjectNotFoundException extends EntityNotFoundException
     /**
      * @var string
      */
-    private $messageFormat = 'Special object with provided key (%s) was not found in database.';
+    private $messageFormat = 'Special object with provided key (%s) was not found.';
 
     /**
      * {@inheritDoc}

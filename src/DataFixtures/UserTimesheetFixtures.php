@@ -63,7 +63,7 @@ class UserTimesheetFixtures extends Fixture implements DependentFixtureInterface
             date('Y-m'),
             $this->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_EDIT),
             $this->getReference(UserWorkScheduleFixtures::REF_FIXED_USER_WORK_SCHEDULE_ADMIN_HR),
-            DateTimeHelper::getMonthDays((int) date('m'))
+            DateTimeHelper::getMonthDaysForCurrentYear((int) date('m'))
         );
 
         $this->makeUserTimesheetSets(

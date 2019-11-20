@@ -40,5 +40,10 @@ class AppConfigTest extends AbstractWebTestCase
             'configKey',
             'presenceAbsenceId'
         );
+        $this->assertArrayContainsSameKeyWithValue(
+            $responseData['hydra:member'],
+            'configKey',
+            'ownerAcceptTimesheetStatus'
+        );
     }
 }

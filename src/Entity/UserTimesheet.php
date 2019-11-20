@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Exception;
 use DateTimeImmutable;
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -277,7 +278,9 @@ class UserTimesheet implements LoggableEntityInterface
     }
 
     /**
-     * @return array
+     * Returns this timesheet period range from first to last month day.
+     *
+     * @return DateTimeImmutable[]
      * @throws Exception
      */
     public function getPeriodRange(): array
@@ -289,5 +292,23 @@ class UserTimesheet implements LoggableEntityInterface
             $startDate,
             $endDate,
         ];
+    }
+
+    /**
+     * @return DateTimeInterface
+     * @throws Exception
+     */
+    public function getPeriodStart(): DateTimeInterface
+    {
+        return $this->getPeriodRange()[0];
+    }
+
+    /**
+     * @return DateTimeInterface
+     * @throws Exception
+     */
+    public function getPeriodEnd(): DateTimeInterface
+    {
+        return $this->getPeriodRange()[1];
     }
 }

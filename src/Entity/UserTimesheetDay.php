@@ -349,7 +349,6 @@ class UserTimesheetDay implements LoggableEntityInterface
             $userWorkScheduleDay->setUserTimesheetDay($this);
         }
 
-
         return $this;
     }
 

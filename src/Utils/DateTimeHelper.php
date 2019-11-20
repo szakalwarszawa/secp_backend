@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use DateTime;
+use Exception;
 
 /**
  * Class DateTimeHelper
@@ -18,21 +19,15 @@ class DateTimeHelper
      * @param int $monthNumber
      *
      * @return array
+     * @throws Exception
      */
-    public static function getMonthDays(int $monthNumber): array
+    public static function getMonthDaysForCurrentYear(int $monthNumber): array
     {
         $dateTime = new DateTime(
-            date(
-                sprintf(
-                    'Y-%s-01',
-                    $monthNumber
-                )
-            )
+            date(sprintf('Y-%02d-01', $monthNumber))
         );
-        $monthDays = [];
-        $monthDays[] = $dateTime->format('Y-m-d');
-        $monthDaysCount = $dateTime->format('t');
-        for ($i = 1; $i < $monthDaysCount; $i++) {
+        $monthDays = [$dateTime->format('Y-m-d')];
+        for ($i = 1; $i < $dateTime->format('t'); $i++) {
             $monthDays[] = $dateTime->modify('+1 day')->format('Y-m-d');
         }
 
