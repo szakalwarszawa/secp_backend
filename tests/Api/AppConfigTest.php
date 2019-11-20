@@ -29,7 +29,7 @@ class AppConfigTest extends AbstractWebTestCase
         $this->assertNotFalse($responseData);
         $this->assertArrayHasKey('hydra:member', $responseData);
         $this->assertArrayHasKey('hydra:totalItems', $responseData);
-        $this->assertEquals(2, $responseData['hydra:totalItems']);
+        $this->assertEquals(3, $responseData['hydra:totalItems']);
         $this->assertArrayContainsSameKeyWithValue(
             $responseData['hydra:member'],
             'configKey',
@@ -39,6 +39,11 @@ class AppConfigTest extends AbstractWebTestCase
             $responseData['hydra:member'],
             'configKey',
             'presenceAbsenceId'
+        );
+        $this->assertArrayContainsSameKeyWithValue(
+            $responseData['hydra:member'],
+            'configKey',
+            'ownerAcceptTimesheetStatus'
         );
     }
 }

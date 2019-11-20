@@ -9,8 +9,9 @@ use App\Entity\PresenceType;
 use BadMethodCallException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
+use App\Exception\SpecialObjectNotFoundException;
 use InvalidArgumentException;
+use App\Entity\UserTimesheetStatus;
 
 /**
  * Class SpecialId
@@ -82,7 +83,7 @@ class SpecialId
      * @param string $specialIdKey
      *
      * @return void
-     * @throws EntityNotFoundException
+     * @throws SpecialObjectNotFoundException
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function findAbsenceToBeCompletedId(string $specialIdKey): void
@@ -95,12 +96,7 @@ class SpecialId
         ;
 
         if (!$toBeCompletedAbsence) {
-            throw new EntityNotFoundException(
-                sprintf(
-                    "Don't find special object to be completed absence for given key: '%s'",
-                    $this->params[$specialIdKey]
-                )
-            );
+            throw new SpecialObjectNotFoundException($this->params[$specialIdKey]);
         }
 
         $this->specialObjects[$specialIdKey] = (string) $toBeCompletedAbsence->getId();
@@ -110,7 +106,7 @@ class SpecialId
      * @param string $specialIdKey
      *
      * @return void
-     * @throws EntityNotFoundException
+     * @throws SpecialObjectNotFoundException
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function findPresenceAbsenceId(string $specialIdKey): void
@@ -123,14 +119,31 @@ class SpecialId
         ;
 
         if (!$presenceAbsence) {
-            throw new EntityNotFoundException(
-                sprintf(
-                    "Don't find special object to be absence type of presence given key: '%s'",
-                    $this->params[$specialIdKey]
-                )
-            );
+            throw new SpecialObjectNotFoundException($this->params[$specialIdKey]);
         }
 
         $this->specialObjects[$specialIdKey] = (string) $presenceAbsence->getId();
+    }
+
+    /**
+     * @param string $specialIdKey
+     *
+     * @return void
+     * @throws SpecialObjectNotFoundException
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
+    private function findOwnerAcceptTimesheetStatus(string $specialIdKey): void
+    {
+        $ownerAcceptTimesheetStatus = $this
+            ->entityManager
+            ->getRepository(UserTimesheetStatus::class)
+            ->findOneById($this->params[$specialIdKey])
+            ;
+
+        if (!$ownerAcceptTimesheetStatus) {
+            throw new SpecialObjectNotFoundException($this->params[$specialIdKey]);
+        }
+
+        $this->specialObjects[$specialIdKey] = (string) $ownerAcceptTimesheetStatus->getId();
     }
 }

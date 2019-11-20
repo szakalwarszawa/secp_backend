@@ -175,10 +175,10 @@ JSON;
      */
     public function apiPutUserTimesheet(): void
     {
-        $userTimesheetREF = $this->fixtures->getReference(UserTimesheetFixtures::REF_USER_TIMESHEET_USER_EDIT);
+        $userTimesheetREF = $this->fixtures->getReference(UserTimesheetFixtures::REF_USER_TIMESHEET_MANAGER_EDIT);
         /* @var $userTimesheetREF UserTimesheet */
 
-        $timesheetStatusRef = $this->fixtures->getReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_ACCEPT);
+        $timesheetStatusRef = $this->fixtures->getReference(UserTimesheetStatusFixtures::REF_STATUS_MANAGER_ACCEPT);
 
         $payload = <<<JSON
 {
@@ -192,7 +192,7 @@ JSON;
             $payload,
             [],
             200,
-            UserFixtures::REF_USER_USER
+            UserFixtures::REF_USER_HR_MANAGER
         );
 
         $userJSON = json_decode($response->getContent(), false);

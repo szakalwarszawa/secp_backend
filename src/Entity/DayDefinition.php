@@ -112,6 +112,16 @@ class DayDefinition implements LoggableEntityInterface
     /**
      * @return bool|null
      */
+    public function isWorkingDay(): ?bool
+    {
+        return $this->workingDay;
+    }
+
+    /**
+     * @return bool|null
+     *
+     * @deprecated use isWorkingDay()
+     */
     public function getWorkingDay(): ?bool
     {
         return $this->workingDay;
@@ -159,5 +169,29 @@ class DayDefinition implements LoggableEntityInterface
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getDay(): int
+    {
+        return (int) $this->getAsDateTime()->format('d');
+    }
+
+    /**
+     * @return int
+     */
+    public function getMonth(): int
+    {
+        return (int) $this->getAsDateTime()->format('m');
+    }
+
+    /**
+     * @return int
+     */
+    public function getYear(): int
+    {
+        return (int) $this->getAsDateTime()->format('Y');
     }
 }

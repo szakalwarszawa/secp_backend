@@ -106,7 +106,7 @@ class MonthlyTimesheetReportCommandTest extends AbstractWebTestCase
         $departmentAdmin = $this->getEntityFromReference(DepartmentFixtures::REF_DEPARTMENT_ADMIN);
         $this->commandTester->execute(
             [
-                'month' => random_int(1, 11),
+                'month' => random_int(6, 12),
                 '--department' => $departmentAdmin->getName(),
             ]
         );

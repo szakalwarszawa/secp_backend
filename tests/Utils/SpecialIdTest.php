@@ -10,14 +10,42 @@ use App\Tests\AbstractWebTestCase;
 use App\Utils\SpecialId;
 use BadMethodCallException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
+use App\Exception\SpecialObjectNotFoundException;
 use InvalidArgumentException;
+use App\DataFixtures\UserTimesheetStatusFixtures;
+use App\Entity\UserTimesheetStatus;
 
 /**
  * Class SpecialIdTest
  */
 class SpecialIdTest extends AbstractWebTestCase
 {
+    /**
+     * @return void
+     */
+    public function testFindOwnerAcceptTimesheetStatus(): void
+    {
+        $specialIdServiceParams = self::$container->getParameter('app.special_id.parameters');
+        $ownerAcceptTimesheetStatusId = $this->makeSpecialIdClass()
+            ->getIdForSpecialObjectKey(
+                'ownerAcceptTimesheetStatus'
+            )
+        ;
+        $this->assertNotNull($ownerAcceptTimesheetStatusId);
+        $this->assertEquals(
+            $this->getEntityFromReference(UserTimesheetStatusFixtures::REF_STATUS_OWNER_ACCEPT)->getId(),
+            $ownerAcceptTimesheetStatusId
+        );
+
+        $ownerAcceptTimesheetStatusDb = $this->entityManager
+            ->getRepository(UserTimesheetStatus::class)
+            ->findOneById($specialIdServiceParams['ownerAcceptTimesheetStatus'])
+        ;
+        $this->assertInstanceOf(UserTimesheetStatus::class, $ownerAcceptTimesheetStatusDb);
+        $this->assertEquals($ownerAcceptTimesheetStatusDb->getId(), $ownerAcceptTimesheetStatusId);
+    }
+
+
     /**
      * @return void
      */
@@ -89,9 +117,12 @@ class SpecialIdTest extends AbstractWebTestCase
      */
     public function testThrowNotFindObjectRecordToBeCompletedAbsence(): void
     {
-        $this->expectException(EntityNotFoundException::class);
+        $this->expectException(SpecialObjectNotFoundException::class);
         $this->expectExceptionMessage(
-            "Don't find special object to be completed absence for given key: 'non existing record'"
+            sprintf(
+                'Special object with provided key (%s) was not found.',
+                'non existing record'
+            )
         );
 
         $this->makeSpecialIdClass(
@@ -106,9 +137,12 @@ class SpecialIdTest extends AbstractWebTestCase
      */
     public function testThrowNotFindObjectRecordPresenceAbsence(): void
     {
-        $this->expectException(EntityNotFoundException::class);
+        $this->expectException(SpecialObjectNotFoundException::class);
         $this->expectExceptionMessage(
-            "Don't find special object to be absence type of presence given key: 'non existing record'"
+            sprintf(
+                'Special object with provided key (%s) was not found.',
+                'non existing record'
+            )
         );
 
         $this->makeSpecialIdClass(
