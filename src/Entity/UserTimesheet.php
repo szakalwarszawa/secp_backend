@@ -283,7 +283,7 @@ class UserTimesheet implements LoggableEntityInterface
      * @return DateTimeImmutable[]
      * @throws Exception
      */
-    public function getPeriodRange(): array
+    private function getPeriodRange(): array
     {
         $startDate = new DateTimeImmutable(date($this->period . '-01'));
         $endDate = $startDate->modify('Last day of this month');
@@ -298,7 +298,7 @@ class UserTimesheet implements LoggableEntityInterface
      * @return DateTimeInterface
      * @throws Exception
      */
-    public function getPeriodStart(): DateTimeInterface
+    public function getPeriodStartDate(): DateTimeInterface
     {
         return $this->getPeriodRange()[0];
     }
@@ -307,7 +307,7 @@ class UserTimesheet implements LoggableEntityInterface
      * @return DateTimeInterface
      * @throws Exception
      */
-    public function getPeriodEnd(): DateTimeInterface
+    public function getPeriodEndDate(): DateTimeInterface
     {
         return $this->getPeriodRange()[1];
     }

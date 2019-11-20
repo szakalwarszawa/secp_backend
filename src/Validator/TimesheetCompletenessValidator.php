@@ -93,8 +93,8 @@ class TimesheetCompletenessValidator extends ConstraintValidator
             ->getRepository(UserWorkScheduleDay::class)
             ->findWorkDayBetweenDate(
                 $userTimesheet->getOwner(),
-                $userTimesheet->getPeriodStartDate(),
-                $userTimesheet->getPeriodEndDate()
+                $userTimesheet->getPeriodStartDate()->format('Y-m-d'),
+                $userTimesheet->getPeriodEndDate()->format('Y-m-d')
             );
 
         $missingDays = [];
