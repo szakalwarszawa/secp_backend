@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Entity\UserTimesheet;
 use App\Entity\UserTimesheetDay;
 use App\Entity\UserTimesheetStatus;
-use App\Validator\Rules\RuleInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -82,7 +81,7 @@ class UserTimesheetEditVoter extends Voter
         $currentTimesheetStatus = $subject->getUserTimesheet()->getStatus();
         $this->entityManager->initializeObject($currentTimesheetStatus);
         return $this->canIEditThis(
-            $currentTimesheetStatus->getEditPrivileges(),
+            array_keys(json_decode($currentTimesheetStatus->getRules(), true)),
             $subject->getUserTimesheet(),
             $token->getUser()
         );
@@ -102,7 +101,7 @@ class UserTimesheetEditVoter extends Voter
         }
 
         if (
-            in_array(RuleInterface::OBJECT_OWNER, $editPrivileges) &&
+            in_array('ROLE_USER', $editPrivileges) &&
             $currentUser->getId() === $userTimesheet->getOwner()->getId()
         ) {
             return true;

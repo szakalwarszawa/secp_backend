@@ -79,19 +79,6 @@ class UserTimesheetStatus implements RuleInterface
     protected $rules;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(type="simple_array", nullable=true)
-     * @ValueExists(
-     *     entity="App\Entity\Role",
-     *     searchField="name",
-     *     customElements={RuleInterface::OBJECT_OWNER}
-     *     )
-     * @Groups({"get"})
-     */
-    protected $editPrivileges;
-
-    /**
      * @return string
      */
     public function __toString(): string
@@ -159,26 +146,6 @@ class UserTimesheetStatus implements RuleInterface
     public function setRules(string $rules): UserTimesheetStatus
     {
         $this->rules = $rules;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getEditPrivileges(): array
-    {
-        return $this->editPrivileges;
-    }
-
-    /**
-     * @param array $editPrivileges
-     *
-     * @return UserTimesheetStatus
-     */
-    public function setEditPrivileges(array $editPrivileges): UserTimesheetStatus
-    {
-        $this->editPrivileges = $editPrivileges;
 
         return $this;
     }

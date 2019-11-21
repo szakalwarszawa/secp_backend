@@ -38,20 +38,13 @@ class UserTimesheetEditVoterTest extends AbstractWebTestCase
      *      Voter should return true.
      *
      * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testUserTimesheetEditVoterCase0(): void
     {
         $currentTimesheetStatus = $this->userTimesheet->getStatus();
         $this->entityManager->initializeObject($currentTimesheetStatus);
-        /**
-         * Make sure that current status is editable for everyone.
-         */
-        $currentTimesheetStatus->setEditPrivileges(['ROLE_USER']);
-        $this->entityManager->flush();
-        $voteResult = $this->security->isGranted(UserTimesheetEditVoter::EDIT_TIMESHEET_DAY, $this->userTimesheetDay);
 
+        $voteResult = $this->security->isGranted(UserTimesheetEditVoter::EDIT_TIMESHEET_DAY, $this->userTimesheetDay);
         $this->assertTrue($voteResult);
     }
 
@@ -73,7 +66,7 @@ class UserTimesheetEditVoterTest extends AbstractWebTestCase
          * Make sure that current status is editable only for ROLE_ADMIN.
          * Current user should not be able to edit this.
          */
-        $currentTimesheetStatus->setEditPrivileges(['ROLE_ADMIN']);
+        $currentTimesheetStatus->setRules(json_encode(['ROLE_ADMIN' => 1]));
         $this->entityManager->flush();
         $voteResult = $this->security->isGranted(UserTimesheetEditVoter::EDIT_TIMESHEET_DAY, $this->userTimesheetDay);
 
@@ -99,7 +92,7 @@ class UserTimesheetEditVoterTest extends AbstractWebTestCase
          * Make sure that current status is editable only for ROLE_ADMIN.
          * Current user should not be able to edit this.
          */
-        $currentTimesheetStatus->setEditPrivileges(['ROLE_ADMIN']);
+        $currentTimesheetStatus->setRules(json_encode(['ROLE_ADMIN' => 1]));
         $this->entityManager->flush();
 
         /**
@@ -118,34 +111,11 @@ class UserTimesheetEditVoterTest extends AbstractWebTestCase
         $voteResult = $this->security->isGranted(UserTimesheetEditVoter::CREATE_TIMESHEET_DAY, $timesheetDay);
         $this->assertFalse($voteResult);
 
-        $currentTimesheetStatus->setEditPrivileges(['ROLE_USER']);
+        $currentTimesheetStatus->setRules(json_encode(['ROLE_USER' => 1]));
         $this->entityManager->flush();
 
         $voteResult = $this->security->isGranted(UserTimesheetEditVoter::CREATE_TIMESHEET_DAY, $timesheetDay);
 
-        $this->assertTrue($voteResult);
-    }
-
-    /**
-     * Test case 3:
-     *  - Attempt to edit UserTimesheetDay.
-     *      UserTimesheet has edit privileges set as `owner` so only owner can manage days at this stage.
-     *
-     * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function testUserTimesheetEditVoterCase3(): void
-    {
-        $currentTimesheetStatus = $this->userTimesheet->getStatus();
-        $this->entityManager->initializeObject($currentTimesheetStatus);
-        /**
-         * Make sure that current status is editable only for owner.
-         */
-        $currentTimesheetStatus->setEditPrivileges([RuleInterface::OBJECT_OWNER]);
-        $this->entityManager->flush();
-
-        $voteResult = $this->security->isGranted(UserTimesheetEditVoter::EDIT_TIMESHEET_DAY, $this->userTimesheetDay);
         $this->assertTrue($voteResult);
     }
 

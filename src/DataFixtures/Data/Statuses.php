@@ -50,13 +50,6 @@ class Statuses
                         $classConstants['REF_STATUS_HR_ACCEPT'],
                     ],
                 ],
-                'edit_privileges' => [
-                    RuleInterface::OBJECT_OWNER,
-                    'ROLE_SECRETARY',
-                    'ROLE_DEPARTMENT_MANAGER',
-                    'ROLE_SECTION_MANAGER',
-                    'ROLE_HR',
-                ],
             ],
             $classConstants['REF_STATUS_OWNER_ACCEPT'] => [
                 'title' => 'Zatwierdzona przez pracownika',
@@ -71,10 +64,6 @@ class Statuses
                         $classConstants['REF_STATUS_HR_ACCEPT'],
                     ],
                 ],
-                'edit_privileges' => [
-                    'ROLE_DEPARTMENT_MANAGER',
-                    'ROLE_HR',
-                ],
             ],
             $classConstants['REF_STATUS_MANAGER_ACCEPT'] => [
                 'title' => 'Zatwierdzona przez przełożonego',
@@ -86,9 +75,6 @@ class Statuses
                         $classConstants['REF_STATUS_HR_ACCEPT'],
                     ],
                 ],
-                'edit_privileges' => [
-                    'ROLE_HR',
-                ],
             ],
             $classConstants['REF_STATUS_HR_ACCEPT'] => [
                 'title' => 'Zatwierdzona przez HR',
@@ -98,9 +84,6 @@ class Statuses
                         $classConstants['REF_STATUS_OWNER_ACCEPT'],
                         $classConstants['REF_STATUS_MANAGER_ACCEPT'],
                     ],
-                ],
-                'edit_privileges' => [
-                    'ROLE_HR',
                 ],
             ]
         ];
