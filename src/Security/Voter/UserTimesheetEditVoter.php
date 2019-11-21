@@ -39,11 +39,6 @@ class UserTimesheetEditVoter extends Voter
     public const CREATE_TIMESHEET_DAY = 'CREATE_TIMESHEET_DAY';
 
     /**
-     * @var string
-     */
-    public const REMOVE_TIMESHEET_DAY = 'REMOVE_TIMESHEET_DAY';
-
-    /**
      * UserTimesheetPutVoter constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -64,8 +59,7 @@ class UserTimesheetEditVoter extends Voter
             $attribute,
             [
                 self::EDIT_TIMESHEET_DAY,
-                self::CREATE_TIMESHEET_DAY,
-                self::REMOVE_TIMESHEET_DAY,
+                self::CREATE_TIMESHEET_DAY
             ]
         ) && $subject instanceof UserTimesheetDay;
     }
