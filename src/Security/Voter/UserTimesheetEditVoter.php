@@ -88,7 +88,7 @@ class UserTimesheetEditVoter extends Voter
      *
      * @return bool
      */
-    private function canIEditThis(array $editPrivileges, UserTimesheet $userTimesheet, User $currentUser)
+    private function canIEditThis(array $editPrivileges, UserTimesheet $userTimesheet, User $currentUser): bool
     {
         if (empty($editPrivileges)) {
             return true;
