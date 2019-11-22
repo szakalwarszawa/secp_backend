@@ -81,6 +81,7 @@ class ValueExistsValidator extends ConstraintValidator
 
         $result = self::RESULT_VALID;
         $existingValues = $this->getEntityValuesAsArray($constraint->entity, $constraint->searchField);
+        $existingValues = array_merge($existingValues, $constraint->customElements);
 
         if (empty($existingValues)) {
             return;

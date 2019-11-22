@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures\Data;
 
+use App\Validator\Rules\RuleInterface;
 use ReflectionClass;
 
 /**
@@ -48,7 +49,7 @@ class Statuses
                         $classConstants['REF_STATUS_MANAGER_ACCEPT'],
                         $classConstants['REF_STATUS_HR_ACCEPT'],
                     ],
-                ]
+                ],
             ],
             $classConstants['REF_STATUS_OWNER_ACCEPT'] => [
                 'title' => 'Zatwierdzona przez pracownika',
@@ -62,7 +63,7 @@ class Statuses
                         $classConstants['REF_STATUS_MANAGER_ACCEPT'],
                         $classConstants['REF_STATUS_HR_ACCEPT'],
                     ],
-                ]
+                ],
             ],
             $classConstants['REF_STATUS_MANAGER_ACCEPT'] => [
                 'title' => 'Zatwierdzona przez przełożonego',
