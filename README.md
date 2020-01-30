@@ -101,3 +101,4 @@ Do wykonania testów jednostkowych służy komenda:
 php bin/phpunit
 ```
 
+# secp_backend
